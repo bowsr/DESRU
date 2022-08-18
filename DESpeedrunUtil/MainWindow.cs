@@ -1,8 +1,8 @@
 using DESpeedrunUtil.Hotkeys;
 using DESpeedrunUtil.Macro;
+using DESpeedrunUtil.Memory;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Drawing;
 using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil {
@@ -11,10 +11,12 @@ namespace DESpeedrunUtil {
         public bool Hooked = false;
 
         FreescrollMacro MacroProcess;
-        bool AutoRunMacro = false;
+        bool AutoRunMacro = true;
 
         HotkeyHandler Hotkeys;
         int fps0, fps1, fps2;
+
+        MemoryHandler Memory;
 
         Timer FormTimer;
 
@@ -22,10 +24,22 @@ namespace DESpeedrunUtil {
         Label SelectedHKField = null;
         string PrevHKFieldText = "";
 
+        int Version = -1;
+        bool UnsupportedVersion = false;
+
         Keys[] InvalidKeys = { Keys.Escape, Keys.Oemtilde, Keys.LButton, Keys.RButton};
+
+        List<Label> HotkeyFields;
 
         public MainWindow() {
             InitializeComponent();
+
+            HotkeyFields = new List<Label>();
+            HotkeyFields.Add(hotkeyField1);
+            HotkeyFields.Add(hotkeyField2);
+            HotkeyFields.Add(hotkeyField3);
+            HotkeyFields.Add(hotkeyField4);
+            HotkeyFields.Add(hotkeyField5);
 
             FormTimer = new Timer();
             FormTimer.Interval = 8;
@@ -38,6 +52,9 @@ namespace DESpeedrunUtil {
 
             hotkeyField1.Click += new EventHandler(HotkeyAssignment_FieldSelected);
             hotkeyField2.Click += new EventHandler(HotkeyAssignment_FieldSelected);
+            hotkeyField3.Click += new EventHandler(HotkeyAssignment_FieldSelected);
+            hotkeyField4.Click += new EventHandler(HotkeyAssignment_FieldSelected);
+            hotkeyField5.Click += new EventHandler(HotkeyAssignment_FieldSelected);
 
             AddMouseIntercepts(this);
         }
@@ -50,12 +67,20 @@ namespace DESpeedrunUtil {
                 MacroProcess.Stop(true);
             }
 
-            macroStatusText.Text = (MacroProcess.IsRunning) ? "Macro Enabled" : "Macro Disabled";
+            if(MacroProcess.IsRunning) {
+                macroStatus.Text = "Running";
+                macroStatus.ForeColor = Color.Lime;
+            }else {
+                macroStatus.Text = "Stopped";
+                macroStatus.ForeColor = Color.Red;
+            }
 
             if(!Hooked) Hooked = Hook();
             if(!Hooked) return;
 
             if(AutoRunMacro) MacroProcess.Start();
+
+            //Memory.DerefPointers();
         }
         #region EVENTS
         private void HotkeyAssignment_KeyDown(object sender, KeyEventArgs e) {
@@ -68,22 +93,30 @@ namespace DESpeedrunUtil {
             else pressedKey = e.KeyCode;
             bool isValid = !InvalidKeys.Contains(pressedKey);
 
-            if(SelectedHKField != null) {
-                SelectedHKField.Text = (isValid) ? HotkeyHandler.TranslateKeyNames(pressedKey) : PrevHKFieldText;
-                SelectedHKField.BackColor = Color.FromKnownColor(KnownColor.Control);
-            }
             string tag = (string) SelectedHKField.Tag;
             HKAssignmentMode = false;
             SelectedHKField = null;
             if(isValid) {
+                int type = -1;
                 switch(tag) {
                     case "macroDown":
-                        MacroProcess.ChangeHotkey(pressedKey, true);
+                        type = 3;
                         break;
                     case "macroUp":
-                        MacroProcess.ChangeHotkey(pressedKey, false);
+                        type = 4;
+                        break;
+                    case "fps0":
+                        type = 0;
+                        break;
+                    case "fps1":
+                        type = 1;
+                        break;
+                    case "fps2":
+                        type = 2;
                         break;
                 }
+                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, MacroProcess, Hotkeys);
+                UpdateHotkeyFields();
             }
             e.Handled = true;
         }
@@ -93,23 +126,31 @@ namespace DESpeedrunUtil {
             Keys pressedKey = HotkeyHandler.ConvertMouseButton(e.Button);
             bool isValid = !InvalidKeys.Contains(pressedKey);
 
-            if(SelectedHKField != null) {
-                SelectedHKField.Text = (isValid) ? HotkeyHandler.TranslateKeyNames(pressedKey) : PrevHKFieldText;
-                SelectedHKField.BackColor = Color.FromKnownColor(KnownColor.Control);
-            }
             string tag = (string) SelectedHKField.Tag;
             HKAssignmentMode = false;
             if(pressedKey == Keys.LButton && sender.Equals(SelectedHKField)) Mouse1Pressed = true;
             SelectedHKField = null;
             if(isValid) {
+                int type = -1;
                 switch(tag) {
                     case "macroDown":
-                        MacroProcess.ChangeHotkey(pressedKey, true);
+                        type = 3;
                         break;
                     case "macroUp":
-                        MacroProcess.ChangeHotkey(pressedKey, false);
+                        type = 4;
+                        break;
+                    case "fps0":
+                        type = 0;
+                        break;
+                    case "fps1":
+                        type = 1;
+                        break;
+                    case "fps2":
+                        type = 2;
                         break;
                 }
+                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, MacroProcess, Hotkeys);
+                UpdateHotkeyFields();
             }
         }
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
@@ -129,10 +170,8 @@ namespace DESpeedrunUtil {
         private void MainWindow_Load(object sender, EventArgs e) {
             // User Settings
             MacroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
-            hotkeyField1.Text = HotkeyHandler.TranslateKeyNames(MacroProcess.DownScrollKey);
-            hotkeyField2.Text = HotkeyHandler.TranslateKeyNames(MacroProcess.UpScrollKey);
-
             Hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key, (Keys) Properties.Settings.Default.FPS2Key, this);
+            UpdateHotkeyFields();
 
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
@@ -146,17 +185,45 @@ namespace DESpeedrunUtil {
             Hotkeys.DisableHotkeys();
 
             // User Settings
-            Properties.Settings.Default.DownScrollKey = (int) MacroProcess.DownScrollKey;
-            Properties.Settings.Default.UpScrollKey = (int) MacroProcess.UpScrollKey;
-            Properties.Settings.Default.FPS0Key = (int) Hotkeys.FPSHotkey0;
-            Properties.Settings.Default.FPS1Key = (int) Hotkeys.FPSHotkey1;
-            Properties.Settings.Default.FPS2Key = (int) Hotkeys.FPSHotkey2;
+            Properties.Settings.Default.DownScrollKey = (int) MacroProcess.GetHotkey(true);
+            Properties.Settings.Default.UpScrollKey = (int) MacroProcess.GetHotkey(false);
+            Properties.Settings.Default.FPS0Key = (int) Hotkeys.GetHotkeyByNumber(0);
+            Properties.Settings.Default.FPS1Key = (int) Hotkeys.GetHotkeyByNumber(1);
+            Properties.Settings.Default.FPS2Key = (int) Hotkeys.GetHotkeyByNumber(2);
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 
             Properties.Settings.Default.Save();
         }
         #endregion
+
+        /// <summary>
+        /// Updates all hotkey selection fields with their respective current hotkeys.
+        /// </summary>
+        public void UpdateHotkeyFields() {
+            foreach(Label l in HotkeyFields) {
+                Keys key = Keys.None;
+                switch(l.Tag) {
+                    case "macroDown":
+                        key = MacroProcess.GetHotkey(true);
+                        break;
+                    case "macroUp":
+                        key = MacroProcess.GetHotkey(false);
+                        break;
+                    case "fps0":
+                        key = Hotkeys.GetHotkeyByNumber(0);
+                        break;
+                    case "fps1":
+                        key = Hotkeys.GetHotkeyByNumber(1);
+                        break;
+                    case "fps2":
+                        key = Hotkeys.GetHotkeyByNumber(2);
+                        break;
+                }
+                l.Text = HotkeyHandler.TranslateKeyNames(key);
+                l.BackColor = Color.FromKnownColor(KnownColor.Control);
+            }
+        }
 
         /// <summary>
         /// Sets <c>com_adaptiveTickMaxHz</c> to the desired cap value. Sets to <c>250</c> if already at the desired cap.
@@ -199,13 +266,18 @@ namespace DESpeedrunUtil {
             if(GameProcess.HasExited) return false;
 
             try {
-                int mainModuleSize = GameProcess.MainModule.ModuleMemorySize;
-                // Pointers TODO
+                Memory = new MemoryHandler(GameProcess);
+                SetGameInfoByModuleSize();
                 return true;
             }catch (Win32Exception ex) {
-                Console.WriteLine(ex.ErrorCode);
+                Debug.WriteLine(ex.ErrorCode);
                 return false;
             }
+        }
+
+        // Sets various game info variables and memory pointers based on the detected module size.
+        private void SetGameInfoByModuleSize() {
+            gameVersion.Text = Memory.VersionString();
         }
     }
 }

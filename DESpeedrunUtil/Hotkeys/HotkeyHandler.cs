@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using DESpeedrunUtil.Macro;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace DESpeedrunUtil.Hotkeys {
@@ -8,9 +9,9 @@ namespace DESpeedrunUtil.Hotkeys {
         private MainWindow Parent;
 
         public bool Enabled { get; private set; }
-        public Keys FPSHotkey0 { get; private set; }
-        public Keys FPSHotkey1 { get; private set; }
-        public Keys FPSHotkey2 { get; private set; }
+        private Keys FPSHotkey0 { get; set; }
+        private Keys FPSHotkey1 { get; set; }
+        private Keys FPSHotkey2 { get; set; }
 
         public HotkeyHandler(Keys fps0, Keys fps1, Keys fps2, MainWindow parent) {
             Hook = new globalKeyboardHook();
@@ -23,6 +24,32 @@ namespace DESpeedrunUtil.Hotkeys {
             Hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
         }
 
+        public Keys GetHotkeyByNumber(int num) {
+            switch(num) {
+                case 0:
+                    return FPSHotkey0;
+                case 1:
+                    return FPSHotkey1;
+                case 2:
+                    return FPSHotkey2;
+                default:
+                    return Keys.None;
+            }
+        }
+        public void ChangeHotkey(Keys key, int fps) {
+            switch(fps) {
+                case 0:
+                    FPSHotkey0 = key;
+                    break;
+                case 1:
+                    FPSHotkey1 = key;
+                    break;
+                case 2:
+                    FPSHotkey2 = key;
+                    break;
+            }
+            RefreshKeys();
+        }
         public void EnableHotkeys() {
             if(Enabled) return;
             AddHotkeys();
@@ -77,7 +104,47 @@ namespace DESpeedrunUtil.Hotkeys {
             e.Handled = true;
         }
 
-#region STATIC METHODS
+        #region STATIC METHODS
+        /// <summary>
+        /// Changes the desired hotkey specified by an int <paramref name="type"/>. Includes duplicate checking and resolving.
+        /// </summary>
+        /// <param name="key">New Keys value to assign</param>
+        /// <param name="type">Which hotkey to change</param>
+        /// <param name="macro"><see cref="FreescrollMacro"/> Instance</param>
+        /// <param name="hotkeys"><see cref="HotkeyHandler"/> Instance</param>
+        public static void ChangeHotkeys(Keys key, int type, FreescrollMacro macro, HotkeyHandler hotkeys) {
+            // Duplicate check
+            //  If a dupe is found, sets dupe to the old key of the currently changing field
+            //   type: 0-2 -> HotkeyHandler FPSHotkeysX
+            //         3-4 -> FreescrollMacro (type == 3) DownScrollKey if true, UpScrollKey if false
+            Keys oldKey;
+            if(type <= 2) {
+                oldKey = hotkeys.GetHotkeyByNumber(type);
+            }else {
+                oldKey = macro.GetHotkey(type == 3);
+            }
+            for(int i = 0; i < 5; i++) {
+                if(i == type) continue;
+                if(i <= 2) {
+                    if(key == hotkeys.GetHotkeyByNumber(i)) {
+                        hotkeys.ChangeHotkey(oldKey, i);
+                        break;
+                    }
+                }else {
+                    var down = (i == 3);
+                    if(key == macro.GetHotkey(down)) {
+                        macro.ChangeHotkey(oldKey, down);
+                        break;
+                    }
+                }
+            }
+
+            if(type <= 2) {
+                hotkeys.ChangeHotkey(key, type);
+            }else {
+                macro.ChangeHotkey(key, type == 3);
+            }
+        }
         public static Keys ModKeySelector(int modifier) {
             Keys pressedKey;
 
@@ -165,6 +232,9 @@ namespace DESpeedrunUtil.Hotkeys {
                     break;
                 case Keys.RWin:
                     name = "RWin";
+                    break;
+                case Keys.None:
+                    name = "";
                     break;
                 default:
                     name = key.ToString();
