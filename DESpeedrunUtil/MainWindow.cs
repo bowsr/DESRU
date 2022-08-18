@@ -112,12 +112,12 @@ namespace DESpeedrunUtil {
                 Mouse1Pressed = false;
                 return;
             }
-            PrevHKFieldText = ((Label) sender).Text;
-            ((Label) sender).Text = "Press a key";
-            ((Label) sender).BackColor = Color.Gold;
+            SelectedHKField = (Label) sender;
+            PrevHKFieldText = SelectedHKField.Text;
+            SelectedHKField.Text = "Press a key";
+            SelectedHKField.BackColor = Color.Gold;
 
             HKAssignmentMode = true;
-            SelectedHKField = (Label) sender;
         }
         /// <summary>
         /// Event method that runs upon loading of the <c>MainWindow</c> form.
@@ -125,6 +125,7 @@ namespace DESpeedrunUtil {
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void MainWindow_Load(object sender, EventArgs e) {
+            // User Settings
             MacroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
             hotkeyField1.Text = HotkeyHandler.TranslateKeyNames(MacroProcess.DownScrollKey);
             hotkeyField2.Text = HotkeyHandler.TranslateKeyNames(MacroProcess.UpScrollKey);
@@ -142,6 +143,7 @@ namespace DESpeedrunUtil {
         private void MainWindow_Closing(object sender, FormClosingEventArgs e) {
             MacroProcess.Stop();
 
+            // User Settings
             Properties.Settings.Default.DownScrollKey = (int) MacroProcess.DownScrollKey;
             Properties.Settings.Default.UpScrollKey = (int) MacroProcess.UpScrollKey;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
@@ -175,7 +177,7 @@ namespace DESpeedrunUtil {
 
             try {
                 int mainModuleSize = GameProcess.MainModule.ModuleMemorySize;
-                // Pointers
+                // Pointers TODO
                 return true;
             }catch (Win32Exception ex) {
                 Console.WriteLine(ex.ErrorCode);

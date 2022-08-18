@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Macro {
     internal class FreescrollMacro {
@@ -11,6 +12,8 @@ namespace DESpeedrunUtil.Macro {
         private readonly ProcessStartInfo macroStartInfo;
         private Process macroProcess = null;
 
+        private Timer timer;
+
         public bool IsRunning { get; private set; }
         public Keys DownScrollKey { get; private set; }
         public Keys UpScrollKey { get; private set; }
@@ -22,6 +25,11 @@ namespace DESpeedrunUtil.Macro {
             macroStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
             IsRunning = false;
 
+            // Timer that runs every five seconds to prevent unmanaged macro processes
+            timer = new Timer();
+            timer.Interval = 5000;
+            timer.Tick += new EventHandler(MacroCheck);
+
             DownScrollKey = downScroll;
             UpScrollKey = upScroll;
             CreateBindingsFile();
@@ -30,17 +38,26 @@ namespace DESpeedrunUtil.Macro {
         public bool CanStart() => macroProcess == null && (DownScrollKey != Keys.None || UpScrollKey != Keys.None);
         public void Start() {
             if(!CanStart()) return;
+            TerminateUnmanagedMacros(); // One final check before running our own macro instance
             macroProcess = Process.Start(macroStartInfo);
             IsRunning = true;
+            if(timer.Enabled) timer.Stop();
         }
         public void Stop() {
             if(macroProcess == null) return;
             macroProcess.Kill();
             macroProcess = null;
             IsRunning = false;
+            timer.Start();
+        }
+        private void StopNoTimer() {
+            if(macroProcess == null) return;
+            macroProcess.Kill();
+            macroProcess = null;
+            IsRunning = false;
         }
         public void Restart() {
-            Stop();
+            StopNoTimer();
             Start();
         }
 
@@ -49,7 +66,7 @@ namespace DESpeedrunUtil.Macro {
             else UpScrollKey = newKey;
 
             CreateBindingsFile();
-            if(IsRunning) Restart();
+            if(IsRunning) Restart(); // Macro is restarted for binding changes to take place
         }
 
         private void CreateBindingsFile() {
@@ -60,6 +77,20 @@ namespace DESpeedrunUtil.Macro {
             else binds = string.Format(downAndUpFormat, (int) DownScrollKey, (int) UpScrollKey);
 
             File.WriteAllText(bindingsFile, binds);
+        }
+        /// <summary>
+        /// Timer method that periodically terminates any Macro processes.
+        /// </summary>
+        private void MacroCheck(object sender, EventArgs e) {
+            if(macroProcess == null) TerminateUnmanagedMacros(); // Prevents the user from running the macro outside the scope of this utility
+        }
+        /// <summary>
+        /// Terminates any DOOMEternalMacro.exe processes that are running outside the scope of this utility.
+        /// </summary>
+        public static void TerminateUnmanagedMacros() {
+            List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro"));
+            if(procList.Count == 0) return;
+            foreach(Process proc in procList) proc.Kill();
         }
     }
 }
