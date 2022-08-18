@@ -35,7 +35,15 @@ namespace DESpeedrunUtil.Macro {
             CreateBindingsFile();
         }
 
+        /// <summary>
+        /// Checks if the macro can start.
+        /// </summary>
+        /// <returns>Returns <see langword="true"/> if the macro process doesn't exist and at least one bind is enabled.</returns>
         public bool CanStart() => macroProcess == null && (DownScrollKey != Keys.None || UpScrollKey != Keys.None);
+
+        /// <summary>
+        /// Starts the macro process.
+        /// </summary>
         public void Start() {
             if(!CanStart()) return;
             TerminateUnmanagedMacros(); // One final check before running our own macro instance
@@ -43,24 +51,32 @@ namespace DESpeedrunUtil.Macro {
             IsRunning = true;
             if(timer.Enabled) timer.Stop();
         }
-        public void Stop() {
+
+        /// <summary>
+        /// Stops the macro process and starts a timer periodically terminating any other macro processes.
+        /// </summary>
+        /// <param name="startTimer"></param>
+        public void Stop(bool startTimer) {
             if(macroProcess == null) return;
             macroProcess.Kill();
             macroProcess = null;
             IsRunning = false;
-            timer.Start();
+            if(startTimer) timer.Start();
         }
-        private void StopNoTimer() {
-            if(macroProcess == null) return;
-            macroProcess.Kill();
-            macroProcess = null;
-            IsRunning = false;
-        }
+
+        /// <summary>
+        /// Restarts the macro process.
+        /// </summary>
         public void Restart() {
-            StopNoTimer();
+            Stop(false);
             Start();
         }
 
+        /// <summary>
+        /// Changes the desired hotkey then refreshes the bindings file and restarts the macro process.
+        /// </summary>
+        /// <param name="newKey"></param>
+        /// <param name="downKey"></param>
         public void ChangeHotkey(Keys newKey, bool downKey) {
             if(downKey) DownScrollKey = newKey;
             else UpScrollKey = newKey;
@@ -69,6 +85,7 @@ namespace DESpeedrunUtil.Macro {
             if(IsRunning) Restart(); // Macro is restarted for binding changes to take place
         }
 
+        // Overwrites the bindings.txt file for the DOOMEternalMacro
         private void CreateBindingsFile() {
             string binds;
 
@@ -78,9 +95,8 @@ namespace DESpeedrunUtil.Macro {
 
             File.WriteAllText(bindingsFile, binds);
         }
-        /// <summary>
-        /// Timer method that periodically terminates any Macro processes.
-        /// </summary>
+
+        // Timer method that periodically terminates any Macro processes.
         private void MacroCheck(object sender, EventArgs e) {
             if(macroProcess == null) TerminateUnmanagedMacros(); // Prevents the user from running the macro outside the scope of this utility
         }

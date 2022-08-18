@@ -4,6 +4,80 @@ using System.Runtime.InteropServices;
 namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
 
+        private globalKeyboardHook Hook;
+        private MainWindow Parent;
+
+        public bool Enabled { get; private set; }
+        public Keys FPSHotkey0 { get; private set; }
+        public Keys FPSHotkey1 { get; private set; }
+        public Keys FPSHotkey2 { get; private set; }
+
+        public HotkeyHandler(Keys fps0, Keys fps1, Keys fps2, MainWindow parent) {
+            Hook = new globalKeyboardHook();
+            Parent = parent;
+            FPSHotkey0 = fps0;
+            FPSHotkey1 = fps1;
+            FPSHotkey2 = fps2;
+
+            Hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
+            Hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
+        }
+
+        public void EnableHotkeys() {
+            if(Enabled) return;
+            AddHotkeys();
+            Enabled = true;
+        }
+        public void DisableHotkeys() {
+            if(!Enabled) return;
+            Hook.HookedKeys.Clear();
+            Enabled = false;
+        }
+        public void RefreshKeys() {
+            if(!Enabled) return;
+            AddHotkeys();
+        }
+
+        private void AddHotkeys() {
+            Hook.HookedKeys.Clear();
+            if(FPSHotkey0 != Keys.None) Hook.HookedKeys.Add(FPSHotkey0);
+            if(FPSHotkey1 != Keys.None) Hook.HookedKeys.Add(FPSHotkey1);
+            if(FPSHotkey2 != Keys.None) Hook.HookedKeys.Add(FPSHotkey2);
+        }
+
+        private void Hook_KeyDown(object sender, KeyEventArgs e) {
+            int hk = -1;
+            if(e.KeyCode == FPSHotkey0) {
+                if(e.KeyCode == Keys.None) {
+                    e.Handled = false;
+                    return;
+                }
+                hk = 0;
+            }else if(e.KeyCode == FPSHotkey1) {
+                if(e.KeyCode == Keys.None) {
+                    e.Handled = false;
+                    return;
+                }
+                hk = 1;
+            }else if(e.KeyCode == FPSHotkey2) {
+                if(e.KeyCode == Keys.None) {
+                    e.Handled = false;
+                    return;
+                }
+                hk = 2;
+            }
+            Parent.ToggleFPSCap(hk);
+            e.Handled = true;
+        }
+        private void Hook_KeyUp(object sender, KeyEventArgs e) {
+            if(e.KeyCode == Keys.None) {
+                e.Handled = false;
+                return;
+            }
+            e.Handled = true;
+        }
+
+#region STATIC METHODS
         public static Keys ModKeySelector(int modifier) {
             Keys pressedKey;
 
@@ -98,6 +172,7 @@ namespace DESpeedrunUtil.Hotkeys {
             }
             return name;
         }
+        #endregion
 
         [DllImport("user32.dll")]
         private static extern ushort GetAsyncKeyState(Keys vKey);

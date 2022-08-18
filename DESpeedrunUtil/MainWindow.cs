@@ -11,6 +11,10 @@ namespace DESpeedrunUtil {
         public bool Hooked = false;
 
         FreescrollMacro MacroProcess;
+        bool AutoRunMacro = false;
+
+        HotkeyHandler Hotkeys;
+        int fps0, fps1, fps2;
 
         Timer FormTimer;
 
@@ -31,17 +35,19 @@ namespace DESpeedrunUtil {
             this.MouseDown += new MouseEventHandler(HotkeyAssignment_MouseDown);
             this.FormClosing += new FormClosingEventHandler(MainWindow_Closing);
             this.Load += new EventHandler(MainWindow_Load);
+
             hotkeyField1.Click += new EventHandler(HotkeyAssignment_FieldSelected);
             hotkeyField2.Click += new EventHandler(HotkeyAssignment_FieldSelected);
 
             AddMouseIntercepts(this);
         }
-
+        
+        // Main timer method that runs this utility's logic.
         private void UpdateTick(object sender, EventArgs e) {
             if(GameProcess == null || GameProcess.HasExited) {
                 GameProcess = null;
                 Hooked = false;
-                MacroProcess.Stop();
+                MacroProcess.Stop(true);
             }
 
             macroStatusText.Text = (MacroProcess.IsRunning) ? "Macro Enabled" : "Macro Disabled";
@@ -49,9 +55,9 @@ namespace DESpeedrunUtil {
             if(!Hooked) Hooked = Hook();
             if(!Hooked) return;
 
-            MacroProcess.Start();
+            if(AutoRunMacro) MacroProcess.Start();
         }
-
+        #region EVENTS
         private void HotkeyAssignment_KeyDown(object sender, KeyEventArgs e) {
             if(!HKAssignmentMode) return;
             Keys pressedKey;
@@ -106,7 +112,6 @@ namespace DESpeedrunUtil {
                 }
             }
         }
-
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
             if(Mouse1Pressed) {
                 Mouse1Pressed = false;
@@ -119,53 +124,71 @@ namespace DESpeedrunUtil {
 
             HKAssignmentMode = true;
         }
-        /// <summary>
-        /// Event method that runs upon loading of the <c>MainWindow</c> form.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+
+        // Event method that runs upon loading of the <c>MainWindow</c> form.
         private void MainWindow_Load(object sender, EventArgs e) {
             // User Settings
             MacroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
             hotkeyField1.Text = HotkeyHandler.TranslateKeyNames(MacroProcess.DownScrollKey);
             hotkeyField2.Text = HotkeyHandler.TranslateKeyNames(MacroProcess.UpScrollKey);
 
+            Hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key, (Keys) Properties.Settings.Default.FPS2Key, this);
+
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
 
             FormTimer.Start();
         }
-        /// <summary>
-        /// Event method that runs upon closing of the <c>MainWindow</c> form.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        
+        // Event method that runs upon closing of the <c>MainWindow</c> form.
         private void MainWindow_Closing(object sender, FormClosingEventArgs e) {
-            MacroProcess.Stop();
+            MacroProcess.Stop(false);
+            Hotkeys.DisableHotkeys();
 
             // User Settings
             Properties.Settings.Default.DownScrollKey = (int) MacroProcess.DownScrollKey;
             Properties.Settings.Default.UpScrollKey = (int) MacroProcess.UpScrollKey;
+            Properties.Settings.Default.FPS0Key = (int) Hotkeys.FPSHotkey0;
+            Properties.Settings.Default.FPS1Key = (int) Hotkeys.FPSHotkey1;
+            Properties.Settings.Default.FPS2Key = (int) Hotkeys.FPSHotkey2;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 
             Properties.Settings.Default.Save();
         }
+        #endregion
+
         /// <summary>
-        /// Adds a MouseDown event to every control in the form, recursively.
+        /// Sets <c>com_adaptiveTickMaxHz</c> to the desired cap value. Sets to <c>250</c> if already at the desired cap.
         /// </summary>
-        /// <param name="control"></param>
+        /// <param name="fpsHotkey"></param>
+        public void ToggleFPSCap(int fpsHotkey) {
+            switch(fpsHotkey) {
+                case 0:
+                    // toggleFPS
+                    break;
+                case 1:
+                    // toggleFPS1
+                    break;
+                case 2:
+                    // toggleFPS2
+                    break;
+                default:
+                    return;
+            }
+        }
+
+        
+        // Adds a MouseDown event to every control in the form, recursively.
         private void AddMouseIntercepts(Control control) {
             foreach(Control c in control.Controls) {
                 c.MouseDown += new MouseEventHandler(HotkeyAssignment_MouseDown);
                 if(c.Controls.Count > 0) AddMouseIntercepts(c);
             }
         }
-        /// <summary>
-        /// Hooks into the DOOMEternalx64vk.exe process, then sets up pointers for memory reading/writing.
-        /// </summary>
-        /// <returns>Returns true if the hook is sucessful, otherwise returns false.</returns>
-        public bool Hook() {
+        
+        // Hooks into the DOOMEternalx64vk.exe process, then sets up pointers for memory reading/writing.
+        private bool Hook() {
             List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalx64vk"));
             if(procList.Count == 0) {
                 GameProcess = null;

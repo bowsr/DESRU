@@ -58,5 +58,41 @@ namespace DESpeedrunUtil.Properties {
                 this["Location"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FPS0Key {
+            get {
+                return ((int)(this["FPS0Key"]));
+            }
+            set {
+                this["FPS0Key"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FPS1Key {
+            get {
+                return ((int)(this["FPS1Key"]));
+            }
+            set {
+                this["FPS1Key"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int FPS2Key {
+            get {
+                return ((int)(this["FPS2Key"]));
+            }
+            set {
+                this["FPS2Key"] = value;
+            }
+        }
     }
 }
