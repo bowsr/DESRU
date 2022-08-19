@@ -261,6 +261,6 @@ namespace DESpeedrunUtil.Hotkeys {
         #endregion
 
         [DllImport("user32.dll")]
-        private static extern ushort GetAsyncKeyState(Keys vKey);
+        public static extern ushort GetAsyncKeyState(Keys vKey);
     }
 }

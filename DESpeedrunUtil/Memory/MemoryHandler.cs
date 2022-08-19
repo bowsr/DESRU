@@ -4,6 +4,8 @@ using System.Text;
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
         private readonly string SigScanFPS = "2569204650530000252E32666D7300004672616D65203A202575";
+        // DLSS does not show up if you have a capable gpu (NVIDIA RTX)
+        // Potentially RT doesn't show up either, so have to account for that with more sigscans for specific rows like HDR.
         private readonly string SigScanDLSS = "444C5353203A2025730000000000000056756C6B616E202573";
 
         DeepPointer MaxHzDP, PerfMetricsDP,
@@ -95,54 +97,30 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <returns>Returns a <see langword="string"/> representing the game's version.</returns>
         public string VersionString() {
-            switch(ModuleSize) {
-                case 507191296:
-                case 515133440:
-                case 510681088:
-                    return "Release (1.0)";
-                case 482037760:
-                    return "May Patch Steam";
-                case 546783232:
-                    return "May Hotfix Steam";
-                case 492113920:
-                    return "1.1";
-                case 490299392:
-                    return "2.0";
-                case 505344000:
-                    return "2.1";
-                case 475557888:
-                    return "3.0";
-                case 504107008:
-                    return "3.1";
-                case 478056448:
-                    return "4.0";
-                case 472821760:
-                    return "4.1";
-                case 475787264:
-                    return "5.0";
-                case 459132928:
-                    return "5.1";
-                case 481435648:
-                    return "6.0";
-                case 465915904:
-                    return "6.1";
-                case 464543744:
-                    return "6.2";
-                case 483786752:
-                    return "6.3";
-                case 494395392:
-                    return "6.4";
-                case 508350464:
-                    return "6.66";
-                case 478367744:
-                    return "6.66 Rev 1";
-                case 475570176:
-                    return "6.66 Rev 1.1";
-                case 510251008:
-                    return "6.66 Rev 2";
-                default:
-                    return "Unknown (" + ModuleSize.ToString() + ")";
-            }
+            return ModuleSize switch {
+                507191296 or 515133440 or 510681088 => "Release (1.0)",
+                482037760 => "May Patch Steam",
+                546783232 => "May Hotfix Steam",
+                492113920 => "1.1",
+                490299392 => "2.0",
+                505344000 => "2.1",
+                475557888 => "3.0",
+                504107008 => "3.1",
+                478056448 => "4.0",
+                472821760 => "4.1",
+                475787264 => "5.0",
+                459132928 => "5.1",
+                481435648 => "6.0",
+                465915904 => "6.1",
+                464543744 => "6.2",
+                483786752 => "6.3",
+                494395392 => "6.4",
+                508350464 => "6.66",
+                478367744 => "6.66 Rev 1",
+                475570176 => "6.66 Rev 1.1",
+                510251008 => "6.66 Rev 2",
+                _ => "Unknown (" + ModuleSize.ToString() + ")",
+            };
         }
 
         private void SetUpPointers() {
@@ -278,6 +256,32 @@ namespace DESpeedrunUtil.Memory {
                     }
                 }
             }
+        }
+        public static bool IsValidVersionString(string version) {
+            return version switch {
+                "Release (1.0)" => true,
+                "May Patch Steam" => true,
+                "May Hotfix Steam" => true,
+                "1.1" => true,
+                "2.0" => true,
+                "2.1" => true,
+                "3.0" => true,
+                "3.1" => true,
+                "4.0" => true,
+                "4.1" => true,
+                "5.0" => true,
+                "5.1" => true,
+                "6.0" => true,
+                "6.1" => true,
+                "6.2" => true,
+                "6.3" => true,
+                "6.4" => true,
+                "6.66" => true,
+                "6.66 Rev 1" => true,
+                "6.66 Rev 1.1" => true,
+                "6.66 Rev 2" => true,
+                _ => false,
+            };
         }
     }
 }

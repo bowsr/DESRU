@@ -24,9 +24,6 @@ namespace DESpeedrunUtil {
 
         bool HKAssignmentMode = false, Mouse1Pressed = false;
         Label SelectedHKField = null;
-        string PrevHKFieldText = "";
-
-        int Version = -1;
 
         Keys[] InvalidKeys = { Keys.Escape, Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
@@ -36,6 +33,7 @@ namespace DESpeedrunUtil {
 
         public MainWindow() {
             InitializeComponent();
+            SearchForSteamGameDir();
 
             HotkeyFields = new List<Label>();
             HotkeyFields.Add(hotkeyField0);
@@ -67,55 +65,8 @@ namespace DESpeedrunUtil {
             hotkeyField4.Click += new EventHandler(HotkeyAssignment_FieldSelected);
 
             AddMouseIntercepts(this);
-            SearchForSteamGameDir();
         }
 
-        private void SearchForSteamGameDir() {
-            List<string> SteamLibraryDrives = new List<string>();
-            string steamPath, vdfPath;
-            RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\");
-
-            using(RegistryKey subKey = key.OpenSubKey("Steam")) {
-                try {
-                    steamPath = subKey.GetValue("InstallPath").ToString();
-                }catch(Exception) {
-                    Debug.WriteLine("Couldn't find Steam install path! Does it even exist?");
-                    // TODO - Popup window to manually select game dir
-                    return;
-                }
-
-                vdfPath = steamPath + @"\steamapps\libraryfolders.vdf";
-                string driveRegex = @"[A-Z]:\\";
-                if(File.Exists(vdfPath)) {
-                    string[] vdfLines = File.ReadAllLines(vdfPath);
-
-                    foreach(string s in vdfLines) {
-                        Match match = Regex.Match(s, driveRegex);
-                        if(s != string.Empty && match.Success) {
-                            string matched = match.ToString();
-                            string item = s.Substring(s.IndexOf(matched));
-                            item = item.Replace("\\\\", "\\");
-                            item = item.Replace("\"", "\\steamapps\\common\\");
-                            SteamLibraryDrives.Add(item);
-                        }
-                    }
-                }
-            }
-            foreach(string dir in SteamLibraryDrives) {
-                if(dir != string.Empty) {
-                    if(Directory.Exists(dir + "DOOMEternal")) {
-                        var exe = dir + "DOOMEternal\\DOOMEternalx64vk.exe";
-                        if(File.Exists(exe)) {
-                            Debug.WriteLine("Found Game! - " + exe);
-                            SteamDirectory = dir;
-                            GameDirectory = dir + "DOOMEternal\\";
-                            break;
-                        }
-                    }
-                    Debug.WriteLine(dir);
-                }
-            }
-        }
         
         // Main timer method that runs this utility's logic.
         private void UpdateTick(object sender, EventArgs e) {
@@ -175,8 +126,8 @@ namespace DESpeedrunUtil {
                         break;
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, MacroProcess, Hotkeys);
-                UpdateHotkeyFields();
             }
+            UpdateHotkeyFields();
             e.Handled = true;
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
@@ -209,20 +160,23 @@ namespace DESpeedrunUtil {
                         break;
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, MacroProcess, Hotkeys);
-                UpdateHotkeyFields();
             }
+            UpdateHotkeyFields();
         }
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
             if(Mouse1Pressed) {
                 Mouse1Pressed = false;
                 return;
             }
-            SelectedHKField = (Label) sender;
-            PrevHKFieldText = SelectedHKField.Text;
-            SelectedHKField.Text = "Press a key";
-            SelectedHKField.BackColor = Color.Gold;
 
-            HKAssignmentMode = true;
+            if((HotkeyHandler.GetAsyncKeyState(Keys.LButton) & 0x01) == 1) {
+                SelectedHKField = (Label) sender;
+                SelectedHKField.Text = "Press a key";
+                SelectedHKField.BackColor = Color.Gold;
+                this.ActiveControl = null;
+
+                HKAssignmentMode = true;
+            }
         }
         private void FPSInput_KeyPressNumericOnly(object sender, KeyPressEventArgs e) {
             if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) {
@@ -325,7 +279,7 @@ namespace DESpeedrunUtil {
         /// <summary>
         /// Sets <c>com_adaptiveTickMaxHz</c> to the desired cap value. Sets to <c>250</c> if already at the desired cap.
         /// </summary>
-        /// <param name="fpsHotkey"></param>
+        /// <param name="fpsHotkey">Which hotkey to trigger</param>
         public void ToggleFPSCap(int fpsHotkey) {
             switch(fpsHotkey) {
                 case 0:
@@ -341,13 +295,80 @@ namespace DESpeedrunUtil {
                     return;
             }
         }
-
         
         // Adds a MouseDown event to every control in the form, recursively.
         private void AddMouseIntercepts(Control control) {
             foreach(Control c in control.Controls) {
                 c.MouseDown += new MouseEventHandler(HotkeyAssignment_MouseDown);
                 if(c.Controls.Count > 0) AddMouseIntercepts(c);
+            }
+        }
+
+        // Auto-detects game directory. Asks for manual selection if it cannot be found.
+        private void SearchForSteamGameDir() {
+            List<string> SteamLibraryDrives = new List<string>();
+            string steamPath, vdfPath;
+            RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\");
+
+            // Finding every Steam Library
+            using(RegistryKey subKey = key.OpenSubKey("Steam")) {
+                try {
+                    steamPath = subKey.GetValue("InstallPath").ToString();
+                }catch(Exception) {
+                    Debug.WriteLine("Couldn't find Steam install path! Does it even exist?");
+                    // TODO - Popup window to manually select game dir
+                    return;
+                }
+
+                vdfPath = steamPath + @"\steamapps\libraryfolders.vdf";
+                string driveRegex = @"[A-Z]:\\";
+                if(File.Exists(vdfPath)) {
+                    string[] vdfLines = File.ReadAllLines(vdfPath);
+
+                    foreach(string s in vdfLines) {
+                        Match match = Regex.Match(s, driveRegex);
+                        if(s != string.Empty && match.Success) {
+                            string matched = match.ToString();
+                            string item = s.Substring(s.IndexOf(matched));
+                            item = item.Replace("\\\\", "\\");
+                            item = item.Replace("\"", "\\steamapps\\common\\");
+                            SteamLibraryDrives.Add(item);
+                        }
+                    }
+                }
+            }
+
+            // Finding which library contains the game
+            foreach(string dir in SteamLibraryDrives) {
+                if(dir != string.Empty) {
+                    if(Directory.Exists(dir + "DOOMEternal")) {
+                        var exe = dir + "DOOMEternal\\DOOMEternalx64vk.exe";
+                        if(File.Exists(exe)) {
+                            Debug.WriteLine("Found Game! - " + exe);
+                            SteamDirectory = dir;
+                            GameDirectory = dir + "DOOMEternal\\";
+                            break;
+                        }
+                    }
+                    Debug.WriteLine(dir);
+                }
+            }
+
+            // Detects any extra game dirs in the same library for downpatching purposes
+            // Downpatch folders MUST be in the format "DOOMEternal <versionString>"
+            // List of valid version strings can be found in MemoryHandler.IsValidVersionString(); will have an info button with this list in the program window
+            if(SteamDirectory != string.Empty) {
+                string[] gameDirs = Directory.GetDirectories(SteamDirectory);
+                foreach(var dir in gameDirs) {
+                    if(!dir.Contains("DOOMEternal")) continue;
+
+                    var subDir = dir.Substring(dir.IndexOf("DOOMEternal"));
+                    if(!subDir.StartsWith("DOOMEternal ")) continue;
+                    Debug.WriteLine(subDir);
+
+                    var ver = dir.Substring(dir.IndexOf(' ') + 1);
+                    if(MemoryHandler.IsValidVersionString(ver)) File.WriteAllText(dir + "\\gameVersion.txt", "version=" + ver);
+                }
             }
         }
         
@@ -376,7 +397,7 @@ namespace DESpeedrunUtil {
         private void SetGameInfoByModuleSize() {
             gameVersion.Text = Memory.VersionString();
             if(GameDirectory != string.Empty) {
-                File.WriteAllText(GameDirectory + "\\DOOMEternal\\gameVersion.txt", "version=" + Memory.VersionString());
+                File.WriteAllText(GameDirectory + "\\gameVersion.txt", "version=" + Memory.VersionString());
             }
         }
     }
