@@ -64,6 +64,10 @@ namespace DESpeedrunUtil {
 
             AddMouseIntercepts(this);
         }
+
+        private void SearchForSteamGameDir() {
+            // TEST TODO
+        }
         
         // Main timer method that runs this utility's logic.
         private void UpdateTick(object sender, EventArgs e) {
@@ -87,6 +91,7 @@ namespace DESpeedrunUtil {
             if(AutoRunMacro) MacroProcess.Start();
 
             //Memory.DerefPointers();
+            //Memory.TestRows();
         }
         #region EVENTS
         private void HotkeyAssignment_KeyDown(object sender, KeyEventArgs e) {
