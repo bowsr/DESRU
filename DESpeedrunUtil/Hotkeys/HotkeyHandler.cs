@@ -9,6 +9,7 @@ namespace DESpeedrunUtil.Hotkeys {
         private MainWindow Parent;
 
         public bool Enabled { get; private set; }
+        private bool Key0Enabled = false, Key1Enabled = false, Key2Enabled = false;
         private Keys FPSHotkey0 { get; set; }
         private Keys FPSHotkey1 { get; set; }
         private Keys FPSHotkey2 { get; set; }
@@ -64,12 +65,26 @@ namespace DESpeedrunUtil.Hotkeys {
             if(!Enabled) return;
             AddHotkeys();
         }
+        public void ToggleIndividualHotkeys(int hotkey, bool enabled) {
+            switch(hotkey) {
+                case 0:
+                    Key0Enabled = enabled;
+                    break;
+                case 1:
+                    Key1Enabled = enabled;
+                    break;
+                case 2:
+                    Key2Enabled = enabled;
+                    break;
+            }
+            RefreshKeys();
+        }
 
         private void AddHotkeys() {
             Hook.HookedKeys.Clear();
-            if(FPSHotkey0 != Keys.None) Hook.HookedKeys.Add(FPSHotkey0);
-            if(FPSHotkey1 != Keys.None) Hook.HookedKeys.Add(FPSHotkey1);
-            if(FPSHotkey2 != Keys.None) Hook.HookedKeys.Add(FPSHotkey2);
+            if(FPSHotkey0 != Keys.None && Key0Enabled) Hook.HookedKeys.Add(FPSHotkey0);
+            if(FPSHotkey1 != Keys.None && Key1Enabled) Hook.HookedKeys.Add(FPSHotkey1);
+            if(FPSHotkey2 != Keys.None && Key2Enabled) Hook.HookedKeys.Add(FPSHotkey2);
         }
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
@@ -114,9 +129,10 @@ namespace DESpeedrunUtil.Hotkeys {
         /// <param name="hotkeys"><see cref="HotkeyHandler"/> Instance</param>
         public static void ChangeHotkeys(Keys key, int type, FreescrollMacro macro, HotkeyHandler hotkeys) {
             // Duplicate check
-            //  If a dupe is found, sets dupe to the old key of the currently changing field
-            //   type: 0-2 -> HotkeyHandler FPSHotkeysX
+            // If a dupe is found, sets dupe to the old key of the currently changing field
+            //   type: 0-2 -> HotkeyHandler FPSHotkeyX
             //         3-4 -> FreescrollMacro (type == 3) DownScrollKey if true, UpScrollKey if false
+            if(type < 0 || type > 4) return;
             Keys oldKey;
             if(type <= 2) {
                 oldKey = hotkeys.GetHotkeyByNumber(type);

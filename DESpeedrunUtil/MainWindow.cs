@@ -25,9 +25,8 @@ namespace DESpeedrunUtil {
         string PrevHKFieldText = "";
 
         int Version = -1;
-        bool UnsupportedVersion = false;
 
-        Keys[] InvalidKeys = { Keys.Escape, Keys.Oemtilde, Keys.LButton, Keys.RButton};
+        Keys[] InvalidKeys = { Keys.Escape, Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
         List<Label> HotkeyFields;
 
@@ -35,11 +34,11 @@ namespace DESpeedrunUtil {
             InitializeComponent();
 
             HotkeyFields = new List<Label>();
+            HotkeyFields.Add(hotkeyField0);
             HotkeyFields.Add(hotkeyField1);
             HotkeyFields.Add(hotkeyField2);
             HotkeyFields.Add(hotkeyField3);
             HotkeyFields.Add(hotkeyField4);
-            HotkeyFields.Add(hotkeyField5);
 
             FormTimer = new Timer();
             FormTimer.Interval = 8;
@@ -50,11 +49,18 @@ namespace DESpeedrunUtil {
             this.FormClosing += new FormClosingEventHandler(MainWindow_Closing);
             this.Load += new EventHandler(MainWindow_Load);
 
+            fpsInput0.KeyPress += new KeyPressEventHandler(FPSInput_KeyPressNumericOnly);
+            fpsInput1.KeyPress += new KeyPressEventHandler(FPSInput_KeyPressNumericOnly);
+            fpsInput2.KeyPress += new KeyPressEventHandler(FPSInput_KeyPressNumericOnly);
+            fpsInput0.KeyUp += new KeyEventHandler(FPSInput_KeyUp);
+            fpsInput1.KeyUp += new KeyEventHandler(FPSInput_KeyUp);
+            fpsInput2.KeyUp += new KeyEventHandler(FPSInput_KeyUp);
+
+            hotkeyField0.Click += new EventHandler(HotkeyAssignment_FieldSelected);
             hotkeyField1.Click += new EventHandler(HotkeyAssignment_FieldSelected);
             hotkeyField2.Click += new EventHandler(HotkeyAssignment_FieldSelected);
             hotkeyField3.Click += new EventHandler(HotkeyAssignment_FieldSelected);
             hotkeyField4.Click += new EventHandler(HotkeyAssignment_FieldSelected);
-            hotkeyField5.Click += new EventHandler(HotkeyAssignment_FieldSelected);
 
             AddMouseIntercepts(this);
         }
@@ -164,6 +170,44 @@ namespace DESpeedrunUtil {
             SelectedHKField.BackColor = Color.Gold;
 
             HKAssignmentMode = true;
+        }
+        private void FPSInput_KeyPressNumericOnly(object sender, KeyPressEventArgs e) {
+            if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) {
+                e.Handled = true;
+                return;
+            }
+        }
+        private void FPSInput_KeyUp(object sender, KeyEventArgs e) {
+            var text = ((TextBox) sender).Text;
+            int p;
+            try {
+                p = int.Parse(text);
+            }catch(FormatException) {
+                p = -1;
+            }
+            if(p > 250) p = 250;
+            if(p != -1) {
+                if(p == 0) p = 1;
+                ((TextBox) sender).Text = p.ToString();
+            }else {
+                ((TextBox) sender).Text = "";
+            }
+
+            var tag = ((Control) sender).Tag;
+            switch(tag) {
+                case "fpscap0":
+                    fps0 = p;
+                    break;
+                case "fpscap1":
+                    fps1 = p;
+                    break;
+                case "fpscap2":
+                    fps2 = p;
+                    break;
+            }
+            if(fps0 == -1) Hotkeys.ToggleIndividualHotkeys(0, false);
+            if(fps1 == -1) Hotkeys.ToggleIndividualHotkeys(1, false);
+            if(fps2 == -1) Hotkeys.ToggleIndividualHotkeys(2, false);
         }
 
         // Event method that runs upon loading of the <c>MainWindow</c> form.
@@ -275,7 +319,7 @@ namespace DESpeedrunUtil {
             }
         }
 
-        // Sets various game info variables and memory pointers based on the detected module size.
+        // Sets various game info variables based on the detected module size.
         private void SetGameInfoByModuleSize() {
             gameVersion.Text = Memory.VersionString();
         }

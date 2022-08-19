@@ -71,12 +71,14 @@ namespace DESpeedrunUtil.Macro {
             Stop(false);
             Start();
         }
+
         /// <summary>
         /// Retrieves the hotkey specified by the bool parameter.
         /// </summary>
         /// <param name="downKey"></param>
         /// <returns>Returns <see cref="DownScrollKey"/> if <see langword="true"/>, <see cref="UpScrollKey"/> if <see langword="false"/>.</returns>
         public Keys GetHotkey(bool downKey) => downKey ? DownScrollKey : UpScrollKey;
+
         /// <summary>
         /// Changes the desired hotkey then refreshes the bindings file and restarts the macro process.
         /// </summary>

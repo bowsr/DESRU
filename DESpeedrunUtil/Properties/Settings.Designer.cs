@@ -94,5 +94,41 @@ namespace DESpeedrunUtil.Properties {
                 this["FPS2Key"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int FPSCap0 {
+            get {
+                return ((int)(this["FPSCap0"]));
+            }
+            set {
+                this["FPSCap0"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int FPSCap1 {
+            get {
+                return ((int)(this["FPSCap1"]));
+            }
+            set {
+                this["FPSCap1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int FPSCap2 {
+            get {
+                return ((int)(this["FPSCap2"]));
+            }
+            set {
+                this["FPSCap2"] = value;
+            }
+        }
     }
 }

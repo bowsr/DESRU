@@ -23,8 +23,8 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.hotkeyField0 = new System.Windows.Forms.Label();
             this.hotkeyField1 = new System.Windows.Forms.Label();
-            this.hotkeyField2 = new System.Windows.Forms.Label();
             this.macroGroupBox = new System.Windows.Forms.GroupBox();
             this.macroUpKeyLabel = new System.Windows.Forms.Label();
             this.macroDownKeyLabel = new System.Windows.Forms.Label();
@@ -33,38 +33,41 @@
             this.gameVersionLabel = new System.Windows.Forms.Label();
             this.gameVersion = new System.Windows.Forms.Label();
             this.fpsGroupBox = new System.Windows.Forms.GroupBox();
+            this.fpsInput0 = new System.Windows.Forms.TextBox();
             this.fpsKey2Label = new System.Windows.Forms.Label();
-            this.hotkeyField5 = new System.Windows.Forms.Label();
-            this.fpsKey1Label = new System.Windows.Forms.Label();
-            this.hotkeyField3 = new System.Windows.Forms.Label();
-            this.fpsKey0Label = new System.Windows.Forms.Label();
             this.hotkeyField4 = new System.Windows.Forms.Label();
+            this.fpsKey1Label = new System.Windows.Forms.Label();
+            this.hotkeyField2 = new System.Windows.Forms.Label();
+            this.fpsKey0Label = new System.Windows.Forms.Label();
+            this.hotkeyField3 = new System.Windows.Forms.Label();
+            this.fpsInput1 = new System.Windows.Forms.TextBox();
+            this.fpsInput2 = new System.Windows.Forms.TextBox();
             this.macroGroupBox.SuspendLayout();
             this.fpsGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
+            // hotkeyField0
+            // 
+            this.hotkeyField0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField0.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField0.Location = new System.Drawing.Point(105, 44);
+            this.hotkeyField0.Name = "hotkeyField0";
+            this.hotkeyField0.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
+            this.hotkeyField0.Size = new System.Drawing.Size(100, 23);
+            this.hotkeyField0.TabIndex = 2;
+            this.hotkeyField0.Tag = "macroDown";
+            // 
             // hotkeyField1
             // 
+            this.hotkeyField1.BackColor = System.Drawing.SystemColors.Control;
             this.hotkeyField1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hotkeyField1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField1.Location = new System.Drawing.Point(105, 47);
+            this.hotkeyField1.Location = new System.Drawing.Point(105, 68);
             this.hotkeyField1.Name = "hotkeyField1";
             this.hotkeyField1.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.hotkeyField1.Size = new System.Drawing.Size(100, 19);
-            this.hotkeyField1.TabIndex = 2;
-            this.hotkeyField1.Tag = "macroDown";
-            // 
-            // hotkeyField2
-            // 
-            this.hotkeyField2.BackColor = System.Drawing.SystemColors.Control;
-            this.hotkeyField2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.hotkeyField2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField2.Location = new System.Drawing.Point(105, 68);
-            this.hotkeyField2.Name = "hotkeyField2";
-            this.hotkeyField2.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.hotkeyField2.Size = new System.Drawing.Size(100, 19);
-            this.hotkeyField2.TabIndex = 3;
-            this.hotkeyField2.Tag = "macroUp";
+            this.hotkeyField1.Size = new System.Drawing.Size(100, 23);
+            this.hotkeyField1.TabIndex = 3;
+            this.hotkeyField1.Tag = "macroUp";
             // 
             // macroGroupBox
             // 
@@ -72,8 +75,8 @@
             this.macroGroupBox.Controls.Add(this.macroDownKeyLabel);
             this.macroGroupBox.Controls.Add(this.macroStatus);
             this.macroGroupBox.Controls.Add(this.macroStatusLabel);
+            this.macroGroupBox.Controls.Add(this.hotkeyField0);
             this.macroGroupBox.Controls.Add(this.hotkeyField1);
-            this.macroGroupBox.Controls.Add(this.hotkeyField2);
             this.macroGroupBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.macroGroupBox.Location = new System.Drawing.Point(12, 159);
             this.macroGroupBox.Name = "macroGroupBox";
@@ -86,7 +89,7 @@
             // 
             this.macroUpKeyLabel.AutoSize = true;
             this.macroUpKeyLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.macroUpKeyLabel.Location = new System.Drawing.Point(27, 70);
+            this.macroUpKeyLabel.Location = new System.Drawing.Point(27, 72);
             this.macroUpKeyLabel.Name = "macroUpKeyLabel";
             this.macroUpKeyLabel.Size = new System.Drawing.Size(72, 15);
             this.macroUpKeyLabel.TabIndex = 7;
@@ -96,7 +99,7 @@
             // 
             this.macroDownKeyLabel.AutoSize = true;
             this.macroDownKeyLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.macroDownKeyLabel.Location = new System.Drawing.Point(11, 49);
+            this.macroDownKeyLabel.Location = new System.Drawing.Point(11, 48);
             this.macroDownKeyLabel.Name = "macroDownKeyLabel";
             this.macroDownKeyLabel.Size = new System.Drawing.Size(88, 15);
             this.macroDownKeyLabel.TabIndex = 6;
@@ -144,12 +147,15 @@
             // 
             // fpsGroupBox
             // 
+            this.fpsGroupBox.Controls.Add(this.fpsInput2);
+            this.fpsGroupBox.Controls.Add(this.fpsInput1);
+            this.fpsGroupBox.Controls.Add(this.fpsInput0);
             this.fpsGroupBox.Controls.Add(this.fpsKey2Label);
-            this.fpsGroupBox.Controls.Add(this.hotkeyField5);
-            this.fpsGroupBox.Controls.Add(this.fpsKey1Label);
-            this.fpsGroupBox.Controls.Add(this.hotkeyField3);
-            this.fpsGroupBox.Controls.Add(this.fpsKey0Label);
             this.fpsGroupBox.Controls.Add(this.hotkeyField4);
+            this.fpsGroupBox.Controls.Add(this.fpsKey1Label);
+            this.fpsGroupBox.Controls.Add(this.hotkeyField2);
+            this.fpsGroupBox.Controls.Add(this.fpsKey0Label);
+            this.fpsGroupBox.Controls.Add(this.hotkeyField3);
             this.fpsGroupBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fpsGroupBox.Location = new System.Drawing.Point(12, 265);
             this.fpsGroupBox.Name = "fpsGroupBox";
@@ -158,70 +164,100 @@
             this.fpsGroupBox.TabStop = false;
             this.fpsGroupBox.Text = "FPS Cap Toggles";
             // 
+            // fpsInput0
+            // 
+            this.fpsInput0.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput0.Location = new System.Drawing.Point(211, 23);
+            this.fpsInput0.MaxLength = 3;
+            this.fpsInput0.Name = "fpsInput0";
+            this.fpsInput0.Size = new System.Drawing.Size(29, 23);
+            this.fpsInput0.TabIndex = 14;
+            this.fpsInput0.Tag = "fpscap0";
+            // 
             // fpsKey2Label
             // 
             this.fpsKey2Label.AutoSize = true;
             this.fpsKey2Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsKey2Label.Location = new System.Drawing.Point(16, 71);
+            this.fpsKey2Label.Location = new System.Drawing.Point(16, 75);
             this.fpsKey2Label.Name = "fpsKey2Label";
             this.fpsKey2Label.Size = new System.Drawing.Size(83, 15);
             this.fpsKey2Label.TabIndex = 13;
             this.fpsKey2Label.Text = "FPS Hotkey #3";
-            // 
-            // hotkeyField5
-            // 
-            this.hotkeyField5.BackColor = System.Drawing.SystemColors.Control;
-            this.hotkeyField5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.hotkeyField5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField5.Location = new System.Drawing.Point(105, 69);
-            this.hotkeyField5.Name = "hotkeyField5";
-            this.hotkeyField5.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.hotkeyField5.Size = new System.Drawing.Size(100, 19);
-            this.hotkeyField5.TabIndex = 12;
-            this.hotkeyField5.Tag = "fps2";
-            // 
-            // fpsKey1Label
-            // 
-            this.fpsKey1Label.AutoSize = true;
-            this.fpsKey1Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsKey1Label.Location = new System.Drawing.Point(16, 50);
-            this.fpsKey1Label.Name = "fpsKey1Label";
-            this.fpsKey1Label.Size = new System.Drawing.Size(83, 15);
-            this.fpsKey1Label.TabIndex = 11;
-            this.fpsKey1Label.Text = "FPS Hotkey #2";
-            // 
-            // hotkeyField3
-            // 
-            this.hotkeyField3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.hotkeyField3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField3.Location = new System.Drawing.Point(105, 27);
-            this.hotkeyField3.Name = "hotkeyField3";
-            this.hotkeyField3.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.hotkeyField3.Size = new System.Drawing.Size(100, 19);
-            this.hotkeyField3.TabIndex = 8;
-            this.hotkeyField3.Tag = "fps0";
-            // 
-            // fpsKey0Label
-            // 
-            this.fpsKey0Label.AutoSize = true;
-            this.fpsKey0Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsKey0Label.Location = new System.Drawing.Point(16, 28);
-            this.fpsKey0Label.Name = "fpsKey0Label";
-            this.fpsKey0Label.Size = new System.Drawing.Size(83, 15);
-            this.fpsKey0Label.TabIndex = 10;
-            this.fpsKey0Label.Text = "FPS Hotkey #1";
             // 
             // hotkeyField4
             // 
             this.hotkeyField4.BackColor = System.Drawing.SystemColors.Control;
             this.hotkeyField4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hotkeyField4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField4.Location = new System.Drawing.Point(105, 48);
+            this.hotkeyField4.Location = new System.Drawing.Point(105, 71);
             this.hotkeyField4.Name = "hotkeyField4";
             this.hotkeyField4.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
-            this.hotkeyField4.Size = new System.Drawing.Size(100, 19);
-            this.hotkeyField4.TabIndex = 9;
-            this.hotkeyField4.Tag = "fps1";
+            this.hotkeyField4.Size = new System.Drawing.Size(100, 23);
+            this.hotkeyField4.TabIndex = 12;
+            this.hotkeyField4.Tag = "fps2";
+            // 
+            // fpsKey1Label
+            // 
+            this.fpsKey1Label.AutoSize = true;
+            this.fpsKey1Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsKey1Label.Location = new System.Drawing.Point(16, 51);
+            this.fpsKey1Label.Name = "fpsKey1Label";
+            this.fpsKey1Label.Size = new System.Drawing.Size(83, 15);
+            this.fpsKey1Label.TabIndex = 11;
+            this.fpsKey1Label.Text = "FPS Hotkey #2";
+            // 
+            // hotkeyField2
+            // 
+            this.hotkeyField2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField2.Location = new System.Drawing.Point(105, 23);
+            this.hotkeyField2.Name = "hotkeyField2";
+            this.hotkeyField2.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
+            this.hotkeyField2.Size = new System.Drawing.Size(100, 23);
+            this.hotkeyField2.TabIndex = 8;
+            this.hotkeyField2.Tag = "fps0";
+            // 
+            // fpsKey0Label
+            // 
+            this.fpsKey0Label.AutoSize = true;
+            this.fpsKey0Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsKey0Label.Location = new System.Drawing.Point(16, 27);
+            this.fpsKey0Label.Name = "fpsKey0Label";
+            this.fpsKey0Label.Size = new System.Drawing.Size(83, 15);
+            this.fpsKey0Label.TabIndex = 10;
+            this.fpsKey0Label.Text = "FPS Hotkey #1";
+            // 
+            // hotkeyField3
+            // 
+            this.hotkeyField3.BackColor = System.Drawing.SystemColors.Control;
+            this.hotkeyField3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField3.Location = new System.Drawing.Point(105, 47);
+            this.hotkeyField3.Name = "hotkeyField3";
+            this.hotkeyField3.Padding = new System.Windows.Forms.Padding(0, 1, 0, 0);
+            this.hotkeyField3.Size = new System.Drawing.Size(100, 23);
+            this.hotkeyField3.TabIndex = 9;
+            this.hotkeyField3.Tag = "fps1";
+            // 
+            // fpsInput1
+            // 
+            this.fpsInput1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput1.Location = new System.Drawing.Point(211, 47);
+            this.fpsInput1.MaxLength = 3;
+            this.fpsInput1.Name = "fpsInput1";
+            this.fpsInput1.Size = new System.Drawing.Size(29, 23);
+            this.fpsInput1.TabIndex = 15;
+            this.fpsInput1.Tag = "fpscap1";
+            // 
+            // fpsInput2
+            // 
+            this.fpsInput2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput2.Location = new System.Drawing.Point(211, 72);
+            this.fpsInput2.MaxLength = 3;
+            this.fpsInput2.Name = "fpsInput2";
+            this.fpsInput2.Size = new System.Drawing.Size(29, 23);
+            this.fpsInput2.TabIndex = 16;
+            this.fpsInput2.Tag = "fpscap2";
             // 
             // MainWindow
             // 
@@ -248,8 +284,8 @@
         }
 
         #endregion
+        private Label hotkeyField0;
         private Label hotkeyField1;
-        private Label hotkeyField2;
         private GroupBox macroGroupBox;
         private Label macroStatus;
         private Label macroStatusLabel;
@@ -259,10 +295,13 @@
         private Label gameVersion;
         private GroupBox fpsGroupBox;
         private Label fpsKey2Label;
-        private Label hotkeyField5;
-        private Label fpsKey1Label;
-        private Label hotkeyField3;
-        private Label fpsKey0Label;
         private Label hotkeyField4;
+        private Label fpsKey1Label;
+        private Label hotkeyField2;
+        private Label fpsKey0Label;
+        private Label hotkeyField3;
+        private TextBox fpsInput0;
+        private TextBox fpsInput2;
+        private TextBox fpsInput1;
     }
 }
