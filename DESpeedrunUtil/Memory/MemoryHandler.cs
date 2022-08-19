@@ -42,6 +42,19 @@ namespace DESpeedrunUtil.Memory {
                 Game.WriteBytes(MetricsRow8Ptr, ToByteArray("Row 8", 34));
                 Game.WriteBytes(MetricsRow9Ptr, ToByteArray("Row 9", 34));
             }
+
+            if(PerfMetricsType >= 1 && CPUPtr.ToInt64() != 0) {
+                Game.VirtualProtect(CPUPtr, 1024, MemPageProtect.PAGE_READWRITE);
+                Game.WriteBytes(CPUPtr, ToByteArray("CPU", 64));
+            }
+            if(GPUVendorPtr.ToInt64() != 0) {
+                Game.VirtualProtect(GPUVendorPtr, 1024, MemPageProtect.PAGE_READWRITE);
+                Game.WriteBytes(GPUVendorPtr, ToByteArray("GPU Vendor", 64));
+            }
+            if(GPUNamePtr.ToInt64() != 0) {
+                Game.VirtualProtect(GPUNamePtr, 1024, MemPageProtect.PAGE_READWRITE);
+                Game.WriteBytes(GPUNamePtr, ToByteArray("GPU Name", 64));
+            }
         }
 
         /// <summary>
@@ -49,11 +62,21 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         public void DerefPointers() {
             if(!VersionIsSupported) return;
+
             if(MaxHzDP != null) MaxHzDP.DerefOffsets(Game, out MaxHzPtr);
+            else MaxHzPtr = new IntPtr(0);
+
             if(PerfMetricsDP != null) PerfMetricsDP.DerefOffsets(Game, out PerfMetricsPtr);
+            else PerfMetricsPtr = new IntPtr(0);
+
             if(GPUVendorDP != null) GPUVendorDP.DerefOffsets(Game, out GPUVendorPtr);
+            else GPUVendorPtr = new IntPtr(0);
+
             if(GPUNameDP != null) GPUNameDP.DerefOffsets(Game, out GPUNamePtr);
+            else GPUNamePtr = new IntPtr(0);
+
             if(CPUDP != null && PerfMetricsType >= 1) CPUDP.DerefOffsets(Game, out CPUPtr);
+            else CPUPtr = new IntPtr(0);
         }
 
         public byte[] ToByteArray(string text, int length) {
