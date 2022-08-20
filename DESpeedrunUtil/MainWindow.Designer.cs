@@ -26,6 +26,7 @@
             this.hotkeyField0 = new System.Windows.Forms.Label();
             this.hotkeyField1 = new System.Windows.Forms.Label();
             this.macroGroupBox = new System.Windows.Forms.GroupBox();
+            this.autorunMacroCheckbox = new System.Windows.Forms.CheckBox();
             this.macroUpKeyLabel = new System.Windows.Forms.Label();
             this.macroDownKeyLabel = new System.Windows.Forms.Label();
             this.macroStatus = new System.Windows.Forms.Label();
@@ -33,6 +34,10 @@
             this.gameVersionLabel = new System.Windows.Forms.Label();
             this.gameVersion = new System.Windows.Forms.Label();
             this.fpsGroupBox = new System.Windows.Forms.GroupBox();
+            this.fpsLabel2 = new System.Windows.Forms.Label();
+            this.fpsLabel1 = new System.Windows.Forms.Label();
+            this.fpsLabel0 = new System.Windows.Forms.Label();
+            this.enableHotkeysCheckbox = new System.Windows.Forms.CheckBox();
             this.fpsInput2 = new System.Windows.Forms.TextBox();
             this.fpsInput1 = new System.Windows.Forms.TextBox();
             this.fpsInput0 = new System.Windows.Forms.TextBox();
@@ -42,15 +47,20 @@
             this.hotkeyField2 = new System.Windows.Forms.Label();
             this.fpsKey0Label = new System.Windows.Forms.Label();
             this.hotkeyField3 = new System.Windows.Forms.Label();
+            this.versionDropDownSelector = new System.Windows.Forms.ComboBox();
+            this.versionGroupBox = new System.Windows.Forms.GroupBox();
+            this.refreshVersionsButton = new System.Windows.Forms.Button();
+            this.changeVersionButton = new System.Windows.Forms.Button();
             this.macroGroupBox.SuspendLayout();
             this.fpsGroupBox.SuspendLayout();
+            this.versionGroupBox.SuspendLayout();
             this.SuspendLayout();
             // 
             // hotkeyField0
             // 
             this.hotkeyField0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hotkeyField0.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField0.Location = new System.Drawing.Point(105, 44);
+            this.hotkeyField0.Location = new System.Drawing.Point(105, 70);
             this.hotkeyField0.Name = "hotkeyField0";
             this.hotkeyField0.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField0.Size = new System.Drawing.Size(100, 23);
@@ -62,7 +72,7 @@
             this.hotkeyField1.BackColor = System.Drawing.SystemColors.Control;
             this.hotkeyField1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hotkeyField1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField1.Location = new System.Drawing.Point(105, 68);
+            this.hotkeyField1.Location = new System.Drawing.Point(105, 46);
             this.hotkeyField1.Name = "hotkeyField1";
             this.hotkeyField1.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField1.Size = new System.Drawing.Size(100, 23);
@@ -71,6 +81,7 @@
             // 
             // macroGroupBox
             // 
+            this.macroGroupBox.Controls.Add(this.autorunMacroCheckbox);
             this.macroGroupBox.Controls.Add(this.macroUpKeyLabel);
             this.macroGroupBox.Controls.Add(this.macroDownKeyLabel);
             this.macroGroupBox.Controls.Add(this.macroStatus);
@@ -80,16 +91,27 @@
             this.macroGroupBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.macroGroupBox.Location = new System.Drawing.Point(12, 159);
             this.macroGroupBox.Name = "macroGroupBox";
-            this.macroGroupBox.Size = new System.Drawing.Size(305, 100);
+            this.macroGroupBox.Size = new System.Drawing.Size(305, 102);
             this.macroGroupBox.TabIndex = 4;
             this.macroGroupBox.TabStop = false;
             this.macroGroupBox.Text = "Freescroll Macro";
+            // 
+            // autorunMacroCheckbox
+            // 
+            this.autorunMacroCheckbox.AutoSize = true;
+            this.autorunMacroCheckbox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.autorunMacroCheckbox.Location = new System.Drawing.Point(11, 24);
+            this.autorunMacroCheckbox.Name = "autorunMacroCheckbox";
+            this.autorunMacroCheckbox.Size = new System.Drawing.Size(98, 19);
+            this.autorunMacroCheckbox.TabIndex = 8;
+            this.autorunMacroCheckbox.Text = "Enable Macro";
+            this.autorunMacroCheckbox.UseVisualStyleBackColor = true;
             // 
             // macroUpKeyLabel
             // 
             this.macroUpKeyLabel.AutoSize = true;
             this.macroUpKeyLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.macroUpKeyLabel.Location = new System.Drawing.Point(27, 72);
+            this.macroUpKeyLabel.Location = new System.Drawing.Point(27, 50);
             this.macroUpKeyLabel.Name = "macroUpKeyLabel";
             this.macroUpKeyLabel.Size = new System.Drawing.Size(72, 15);
             this.macroUpKeyLabel.TabIndex = 7;
@@ -99,7 +121,7 @@
             // 
             this.macroDownKeyLabel.AutoSize = true;
             this.macroDownKeyLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.macroDownKeyLabel.Location = new System.Drawing.Point(11, 48);
+            this.macroDownKeyLabel.Location = new System.Drawing.Point(11, 74);
             this.macroDownKeyLabel.Name = "macroDownKeyLabel";
             this.macroDownKeyLabel.Size = new System.Drawing.Size(88, 15);
             this.macroDownKeyLabel.TabIndex = 6;
@@ -109,7 +131,7 @@
             // 
             this.macroStatus.AutoSize = true;
             this.macroStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.macroStatus.Location = new System.Drawing.Point(51, 19);
+            this.macroStatus.Location = new System.Drawing.Point(237, 25);
             this.macroStatus.Name = "macroStatus";
             this.macroStatus.Size = new System.Drawing.Size(51, 15);
             this.macroStatus.TabIndex = 5;
@@ -119,7 +141,7 @@
             // 
             this.macroStatusLabel.AutoSize = true;
             this.macroStatusLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.macroStatusLabel.Location = new System.Drawing.Point(11, 19);
+            this.macroStatusLabel.Location = new System.Drawing.Point(197, 25);
             this.macroStatusLabel.Name = "macroStatusLabel";
             this.macroStatusLabel.Size = new System.Drawing.Size(42, 15);
             this.macroStatusLabel.TabIndex = 4;
@@ -147,6 +169,10 @@
             // 
             // fpsGroupBox
             // 
+            this.fpsGroupBox.Controls.Add(this.fpsLabel2);
+            this.fpsGroupBox.Controls.Add(this.fpsLabel1);
+            this.fpsGroupBox.Controls.Add(this.fpsLabel0);
+            this.fpsGroupBox.Controls.Add(this.enableHotkeysCheckbox);
             this.fpsGroupBox.Controls.Add(this.fpsInput2);
             this.fpsGroupBox.Controls.Add(this.fpsInput1);
             this.fpsGroupBox.Controls.Add(this.fpsInput0);
@@ -159,15 +185,56 @@
             this.fpsGroupBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fpsGroupBox.Location = new System.Drawing.Point(12, 265);
             this.fpsGroupBox.Name = "fpsGroupBox";
-            this.fpsGroupBox.Size = new System.Drawing.Size(305, 100);
+            this.fpsGroupBox.Size = new System.Drawing.Size(305, 126);
             this.fpsGroupBox.TabIndex = 8;
             this.fpsGroupBox.TabStop = false;
             this.fpsGroupBox.Text = "FPS Cap Toggles";
             // 
+            // fpsLabel2
+            // 
+            this.fpsLabel2.AutoSize = true;
+            this.fpsLabel2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsLabel2.Location = new System.Drawing.Point(240, 98);
+            this.fpsLabel2.Name = "fpsLabel2";
+            this.fpsLabel2.Size = new System.Drawing.Size(26, 15);
+            this.fpsLabel2.TabIndex = 19;
+            this.fpsLabel2.Text = "FPS";
+            // 
+            // fpsLabel1
+            // 
+            this.fpsLabel1.AutoSize = true;
+            this.fpsLabel1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsLabel1.Location = new System.Drawing.Point(240, 74);
+            this.fpsLabel1.Name = "fpsLabel1";
+            this.fpsLabel1.Size = new System.Drawing.Size(26, 15);
+            this.fpsLabel1.TabIndex = 18;
+            this.fpsLabel1.Text = "FPS";
+            // 
+            // fpsLabel0
+            // 
+            this.fpsLabel0.AutoSize = true;
+            this.fpsLabel0.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsLabel0.Location = new System.Drawing.Point(240, 50);
+            this.fpsLabel0.Name = "fpsLabel0";
+            this.fpsLabel0.Size = new System.Drawing.Size(26, 15);
+            this.fpsLabel0.TabIndex = 17;
+            this.fpsLabel0.Text = "FPS";
+            // 
+            // enableHotkeysCheckbox
+            // 
+            this.enableHotkeysCheckbox.AutoSize = true;
+            this.enableHotkeysCheckbox.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.enableHotkeysCheckbox.Location = new System.Drawing.Point(15, 24);
+            this.enableHotkeysCheckbox.Name = "enableHotkeysCheckbox";
+            this.enableHotkeysCheckbox.Size = new System.Drawing.Size(107, 19);
+            this.enableHotkeysCheckbox.TabIndex = 9;
+            this.enableHotkeysCheckbox.Text = "Enable Hotkeys";
+            this.enableHotkeysCheckbox.UseVisualStyleBackColor = true;
+            // 
             // fpsInput2
             // 
             this.fpsInput2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsInput2.Location = new System.Drawing.Point(211, 72);
+            this.fpsInput2.Location = new System.Drawing.Point(210, 95);
             this.fpsInput2.MaxLength = 3;
             this.fpsInput2.Name = "fpsInput2";
             this.fpsInput2.Size = new System.Drawing.Size(29, 23);
@@ -177,7 +244,7 @@
             // fpsInput1
             // 
             this.fpsInput1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsInput1.Location = new System.Drawing.Point(211, 47);
+            this.fpsInput1.Location = new System.Drawing.Point(210, 70);
             this.fpsInput1.MaxLength = 3;
             this.fpsInput1.Name = "fpsInput1";
             this.fpsInput1.Size = new System.Drawing.Size(29, 23);
@@ -187,7 +254,7 @@
             // fpsInput0
             // 
             this.fpsInput0.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsInput0.Location = new System.Drawing.Point(211, 23);
+            this.fpsInput0.Location = new System.Drawing.Point(210, 46);
             this.fpsInput0.MaxLength = 3;
             this.fpsInput0.Name = "fpsInput0";
             this.fpsInput0.Size = new System.Drawing.Size(29, 23);
@@ -198,7 +265,7 @@
             // 
             this.fpsKey2Label.AutoSize = true;
             this.fpsKey2Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsKey2Label.Location = new System.Drawing.Point(16, 75);
+            this.fpsKey2Label.Location = new System.Drawing.Point(15, 98);
             this.fpsKey2Label.Name = "fpsKey2Label";
             this.fpsKey2Label.Size = new System.Drawing.Size(83, 15);
             this.fpsKey2Label.TabIndex = 13;
@@ -209,7 +276,7 @@
             this.hotkeyField4.BackColor = System.Drawing.SystemColors.Control;
             this.hotkeyField4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hotkeyField4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField4.Location = new System.Drawing.Point(105, 71);
+            this.hotkeyField4.Location = new System.Drawing.Point(104, 94);
             this.hotkeyField4.Name = "hotkeyField4";
             this.hotkeyField4.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField4.Size = new System.Drawing.Size(100, 23);
@@ -220,7 +287,7 @@
             // 
             this.fpsKey1Label.AutoSize = true;
             this.fpsKey1Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsKey1Label.Location = new System.Drawing.Point(16, 51);
+            this.fpsKey1Label.Location = new System.Drawing.Point(15, 74);
             this.fpsKey1Label.Name = "fpsKey1Label";
             this.fpsKey1Label.Size = new System.Drawing.Size(83, 15);
             this.fpsKey1Label.TabIndex = 11;
@@ -230,7 +297,7 @@
             // 
             this.hotkeyField2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hotkeyField2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField2.Location = new System.Drawing.Point(105, 23);
+            this.hotkeyField2.Location = new System.Drawing.Point(104, 46);
             this.hotkeyField2.Name = "hotkeyField2";
             this.hotkeyField2.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField2.Size = new System.Drawing.Size(100, 23);
@@ -241,7 +308,7 @@
             // 
             this.fpsKey0Label.AutoSize = true;
             this.fpsKey0Label.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.fpsKey0Label.Location = new System.Drawing.Point(16, 27);
+            this.fpsKey0Label.Location = new System.Drawing.Point(15, 50);
             this.fpsKey0Label.Name = "fpsKey0Label";
             this.fpsKey0Label.Size = new System.Drawing.Size(83, 15);
             this.fpsKey0Label.TabIndex = 10;
@@ -252,18 +319,62 @@
             this.hotkeyField3.BackColor = System.Drawing.SystemColors.Control;
             this.hotkeyField3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.hotkeyField3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.hotkeyField3.Location = new System.Drawing.Point(105, 47);
+            this.hotkeyField3.Location = new System.Drawing.Point(104, 70);
             this.hotkeyField3.Name = "hotkeyField3";
             this.hotkeyField3.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField3.Size = new System.Drawing.Size(100, 23);
             this.hotkeyField3.TabIndex = 9;
             this.hotkeyField3.Tag = "fps1";
             // 
+            // versionDropDownSelector
+            // 
+            this.versionDropDownSelector.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.versionDropDownSelector.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.versionDropDownSelector.FormattingEnabled = true;
+            this.versionDropDownSelector.Location = new System.Drawing.Point(104, 24);
+            this.versionDropDownSelector.Name = "versionDropDownSelector";
+            this.versionDropDownSelector.Size = new System.Drawing.Size(92, 23);
+            this.versionDropDownSelector.TabIndex = 9;
+            // 
+            // versionGroupBox
+            // 
+            this.versionGroupBox.Controls.Add(this.refreshVersionsButton);
+            this.versionGroupBox.Controls.Add(this.changeVersionButton);
+            this.versionGroupBox.Controls.Add(this.versionDropDownSelector);
+            this.versionGroupBox.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.versionGroupBox.Location = new System.Drawing.Point(12, 397);
+            this.versionGroupBox.Name = "versionGroupBox";
+            this.versionGroupBox.Size = new System.Drawing.Size(305, 126);
+            this.versionGroupBox.TabIndex = 20;
+            this.versionGroupBox.TabStop = false;
+            this.versionGroupBox.Text = "Version Switching";
+            // 
+            // refreshVersionsButton
+            // 
+            this.refreshVersionsButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.refreshVersionsButton.Location = new System.Drawing.Point(202, 53);
+            this.refreshVersionsButton.Name = "refreshVersionsButton";
+            this.refreshVersionsButton.Size = new System.Drawing.Size(97, 23);
+            this.refreshVersionsButton.TabIndex = 11;
+            this.refreshVersionsButton.Text = "Refresh List";
+            this.refreshVersionsButton.UseVisualStyleBackColor = true;
+            // 
+            // changeVersionButton
+            // 
+            this.changeVersionButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.changeVersionButton.Location = new System.Drawing.Point(202, 24);
+            this.changeVersionButton.Name = "changeVersionButton";
+            this.changeVersionButton.Size = new System.Drawing.Size(97, 23);
+            this.changeVersionButton.TabIndex = 10;
+            this.changeVersionButton.Text = "Change Version";
+            this.changeVersionButton.UseVisualStyleBackColor = true;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(639, 764);
+            this.Controls.Add(this.versionGroupBox);
             this.Controls.Add(this.fpsGroupBox);
             this.Controls.Add(this.gameVersion);
             this.Controls.Add(this.gameVersionLabel);
@@ -278,6 +389,7 @@
             this.macroGroupBox.PerformLayout();
             this.fpsGroupBox.ResumeLayout(false);
             this.fpsGroupBox.PerformLayout();
+            this.versionGroupBox.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -303,5 +415,14 @@
         private TextBox fpsInput0;
         private TextBox fpsInput2;
         private TextBox fpsInput1;
+        private CheckBox autorunMacroCheckbox;
+        private CheckBox enableHotkeysCheckbox;
+        private Label fpsLabel2;
+        private Label fpsLabel1;
+        private Label fpsLabel0;
+        private ComboBox versionDropDownSelector;
+        private GroupBox versionGroupBox;
+        private Button refreshVersionsButton;
+        private Button changeVersionButton;
     }
 }

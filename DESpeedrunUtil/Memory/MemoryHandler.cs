@@ -59,6 +59,20 @@ namespace DESpeedrunUtil.Memory {
             }
         }
 
+        public bool CanCapFPS() => MaxHzPtr.ToInt64() != 0;
+
+        public void CapFPS(int cap) {
+            if(CanCapFPS()) {
+                Game.WriteBytes(MaxHzPtr, BitConverter.GetBytes((short) cap));
+            }
+        }
+
+        public int ReadMaxHz() {
+            int cap = -1;
+            if(CanCapFPS()) Game.ReadValue(MaxHzPtr, out cap);
+            return cap;
+        }
+
         /// <summary>
         /// Dereferences the <see cref="DeepPointer"/> addresses and offsets into an <see cref="IntPtr"/> that can be read from/written to.
         /// </summary>

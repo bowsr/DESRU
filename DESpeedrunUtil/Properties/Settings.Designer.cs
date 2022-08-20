@@ -130,5 +130,29 @@ namespace DESpeedrunUtil.Properties {
                 this["FPSCap2"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MacroEnabled {
+            get {
+                return ((bool)(this["MacroEnabled"]));
+            }
+            set {
+                this["MacroEnabled"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool FPSHotkeysEnabled {
+            get {
+                return ((bool)(this["FPSHotkeysEnabled"]));
+            }
+            set {
+                this["FPSHotkeysEnabled"] = value;
+            }
+        }
     }
 }

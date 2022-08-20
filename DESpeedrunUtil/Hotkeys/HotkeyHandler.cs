@@ -132,25 +132,27 @@ namespace DESpeedrunUtil.Hotkeys {
             // If a dupe is found, sets dupe to the old key of the currently changing field
             //   type: 0-2 -> HotkeyHandler FPSHotkeyX
             //         3-4 -> FreescrollMacro (type == 3) DownScrollKey if true, UpScrollKey if false
-            if(type < 0 || type > 4) return;
-            Keys oldKey;
-            if(type <= 2) {
-                oldKey = hotkeys.GetHotkeyByNumber(type);
-            }else {
-                oldKey = macro.GetHotkey(type == 3);
-            }
-            for(int i = 0; i < 5; i++) {
-                if(i == type) continue;
-                if(i <= 2) {
-                    if(key == hotkeys.GetHotkeyByNumber(i)) {
-                        hotkeys.ChangeHotkey(oldKey, i);
-                        break;
-                    }
-                }else {
-                    var down = (i == 3);
-                    if(key == macro.GetHotkey(down)) {
-                        macro.ChangeHotkey(oldKey, down);
-                        break;
+            if(key != Keys.None) {
+                if(type < 0 || type > 4) return;
+                Keys oldKey;
+                if(type <= 2) {
+                    oldKey = hotkeys.GetHotkeyByNumber(type);
+                } else {
+                    oldKey = macro.GetHotkey(type == 3);
+                }
+                for(int i = 0; i < 5; i++) {
+                    if(i == type) continue;
+                    if(i <= 2) {
+                        if(key == hotkeys.GetHotkeyByNumber(i)) {
+                            hotkeys.ChangeHotkey(oldKey, i);
+                            break;
+                        }
+                    } else {
+                        var down = (i == 3);
+                        if(key == macro.GetHotkey(down)) {
+                            macro.ChangeHotkey(oldKey, down);
+                            break;
+                        }
                     }
                 }
             }
