@@ -154,5 +154,17 @@ namespace DESpeedrunUtil.Properties {
                 this["FPSHotkeysEnabled"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SteamVDFLocation {
+            get {
+                return ((string)(this["SteamVDFLocation"]));
+            }
+            set {
+                this["SteamVDFLocation"] = value;
+            }
+        }
     }
 }

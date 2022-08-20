@@ -29,14 +29,14 @@ namespace DESpeedrunUtil {
 
         List<Label> HotkeyFields;
 
-        string GameDirectory = "", SteamDirectory = "";
-        List<VersionDirectory> GameVersions;
+        string GameDirectory = "", SteamDirectory = "", LibraryVDFLocation = "";
+        List<string> GameVersions;
 
         public MainWindow() {
             InitializeComponent();
             SearchForSteamGameDir();
 
-            HotkeyFields = new List<Label>();
+            HotkeyFields = new();
             HotkeyFields.Add(hotkeyField0);
             HotkeyFields.Add(hotkeyField1);
             HotkeyFields.Add(hotkeyField2);
@@ -68,7 +68,10 @@ namespace DESpeedrunUtil {
             autorunMacroCheckbox.CheckedChanged += new EventHandler(AutoStartMacro_CheckChanged);
             enableHotkeysCheckbox.CheckedChanged += new EventHandler(EnableHotkeys_CheckChanged);
 
+            changeVersionButton.Click += new EventHandler(ChangeVersion_Click);
             refreshVersionsButton.Click += new EventHandler(RefreshVersions_Click);
+
+            versionDropDownSelector.SelectedIndexChanged += new EventHandler(DropDown_IndexChanged);
 
             AddMouseIntercepts(this);
         }
@@ -76,10 +79,10 @@ namespace DESpeedrunUtil {
         // Main timer method that runs this utility's logic.
         private void UpdateTick(object sender, EventArgs e) {
             if(GameProcess == null || GameProcess.HasExited) {
-                GameProcess = null;
                 Hooked = false;
                 MacroProcess.Stop(true);
-                changeVersionButton.Enabled = true;
+                if(GameProcess != null) changeVersionButton.Enabled = true;
+                GameProcess = null;
             }
 
             if(MacroProcess.IsRunning) {
@@ -233,7 +236,18 @@ namespace DESpeedrunUtil {
             }
         }
         private void RefreshVersions_Click(object sender, EventArgs e) {
-
+            if(SteamDirectory != string.Empty) DetectAllGameVersions();
+        }
+        private void ChangeVersion_Click(object sender, EventArgs e) {
+            string current = GetCurrentVersion(), desired = versionDropDownSelector.Text;
+            if(current == desired) return;
+            if(Directory.Exists(SteamDirectory + "\\DOOMEternal " + current)) return; // Eventually add a popup saying there's a folder conflict
+            Directory.Move(GameDirectory, GameDirectory + " " + current);
+            Directory.Move(GameDirectory + " " + desired, GameDirectory);
+            changeVersionButton.Enabled = false;
+        }
+        private void DropDown_IndexChanged(object sender, EventArgs e) {
+            if(!Hooked) changeVersionButton.Enabled = ((ComboBox) sender).Text != GetCurrentVersion();
         }
 
         // Event method that runs upon loading of the MainWindow form.
@@ -246,6 +260,7 @@ namespace DESpeedrunUtil {
             FPS2 = Properties.Settings.Default.FPSCap2;
             EnableMacro = Properties.Settings.Default.MacroEnabled;
             if(Properties.Settings.Default.FPSHotkeysEnabled) Hotkeys.EnableHotkeys();
+            LibraryVDFLocation = Properties.Settings.Default.SteamVDFLocation;
             ToggleIndividualHotkeys();
             UpdateHotkeyFields();
 
@@ -268,6 +283,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.FPSCap2 = FPS2;
             Properties.Settings.Default.MacroEnabled = EnableMacro;
             Properties.Settings.Default.FPSHotkeysEnabled = Hotkeys.Enabled;
+            Properties.Settings.Default.SteamVDFLocation = LibraryVDFLocation;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 
@@ -310,11 +326,13 @@ namespace DESpeedrunUtil {
         }
 
         public void PopulateVersionDropDown() {
+            versionDropDownSelector.Items.Clear();
             for(int i = 0; i < GameVersions.Count; i++) {
-                string v = GameVersions.ElementAt(i).Version;
+                string v = GameVersions.ElementAt(i);
                 versionDropDownSelector.Items.Add(v);
                 if(v == GetCurrentVersion()) versionDropDownSelector.SelectedIndex = i;
             }
+            if(!Hooked) changeVersionButton.Enabled = false;
         }
 
         public string GetCurrentVersion() {
@@ -361,34 +379,37 @@ namespace DESpeedrunUtil {
 
         // Auto-detects game directory. Asks for manual selection if it cannot be found.
         private void SearchForSteamGameDir() {
-            List<string> SteamLibraryDrives = new List<string>();
-            string steamPath, vdfPath;
-            RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\");
+            List<string> SteamLibraryDrives = new();
+            if(LibraryVDFLocation == string.Empty) {
+                string steamPath, vdfPath;
+                RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\");
 
-            // Finding every Steam Library
-            using(RegistryKey subKey = key.OpenSubKey("Steam")) {
+                // Finding every Steam Library
+                using RegistryKey subKey = key.OpenSubKey("Steam");
                 try {
                     steamPath = subKey.GetValue("InstallPath").ToString();
-                }catch(Exception) {
+                } catch(Exception) {
                     Debug.WriteLine("Couldn't find Steam install path! Does it even exist?");
+
                     // TODO - Popup window to manually select game dir
                     return;
                 }
 
                 vdfPath = steamPath + @"\steamapps\libraryfolders.vdf";
-                string driveRegex = @"[A-Z]:\\";
-                if(File.Exists(vdfPath)) {
-                    string[] vdfLines = File.ReadAllLines(vdfPath);
+                LibraryVDFLocation = vdfPath;
+            }
+            string driveRegex = @"[A-Z]:\\";
+            if(File.Exists(LibraryVDFLocation)) {
+                string[] vdfLines = File.ReadAllLines(LibraryVDFLocation);
 
-                    foreach(string s in vdfLines) {
-                        Match match = Regex.Match(s, driveRegex);
-                        if(s != string.Empty && match.Success) {
-                            string matched = match.ToString();
-                            string item = s.Substring(s.IndexOf(matched));
-                            item = item.Replace("\\\\", "\\");
-                            item = item.Replace("\"", "\\steamapps\\common\\");
-                            SteamLibraryDrives.Add(item);
-                        }
+                foreach(string s in vdfLines) {
+                    Match match = Regex.Match(s, driveRegex);
+                    if(s != string.Empty && match.Success) {
+                        string matched = match.ToString();
+                        string item = s.Substring(s.IndexOf(matched));
+                        item = item.Replace("\\\\", "\\");
+                        item = item.Replace("\"", "\\steamapps\\common\\");
+                        SteamLibraryDrives.Add(item);
                     }
                 }
             }
@@ -400,20 +421,21 @@ namespace DESpeedrunUtil {
                         var exe = dir + "DOOMEternal\\DOOMEternalx64vk.exe";
                         if(File.Exists(exe)) {
                             SteamDirectory = dir;
-                            GameDirectory = dir + "DOOMEternal\\";
+                            GameDirectory = dir + "DOOMEternal";
                             break;
                         }
                     }
                 }
             }
             DetectAllGameVersions();
+            Debug.WriteLine(GameDirectory);
         }
 
         // Detects any extra game dirs in the same library and adds a gameVersion.txt for version swapping purposes
         // Folders MUST be in the format "DOOMEternal <versionString>"
         // List of valid version strings can be found in MemoryHandler.IsValidVersionString(); will have an info button with this list in the program window
         private void DetectAllGameVersions() {
-            List<string> Directories = new List<string>();
+            List<string> Directories = new();
             if(SteamDirectory != string.Empty) {
                 string[] gameDirs = Directory.GetDirectories(SteamDirectory);
                 foreach(var dir in gameDirs) {
@@ -429,12 +451,12 @@ namespace DESpeedrunUtil {
             }
 
             // Once all the gameVersion.txt files are in place, this populates the dropdown selector for version swapping
-            GameVersions = new List<VersionDirectory>();
+            GameVersions = new();
             if(Directories.Count > 0) {
                 foreach(var dir in Directories) {
                     string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
                     string v = txt.Substring(txt.IndexOf('=') + 1);
-                    if(MemoryHandler.IsValidVersionString(v)) GameVersions.Add(new VersionDirectory(dir, v));
+                    if(MemoryHandler.IsValidVersionString(v)) GameVersions.Add(v);
                 }
             }
             GameVersions.Sort();
@@ -471,19 +493,6 @@ namespace DESpeedrunUtil {
                 File.WriteAllText(GameDirectory + "\\gameVersion.txt", "version=" + Memory.VersionString());
             }
             if(!Memory.CanCapFPS()) Hotkeys.DisableHotkeys();
-        }
-
-        public struct VersionDirectory: IComparable<VersionDirectory> {
-            public string Directory { get; set; }
-            public string Version { get; init; }
-
-            public VersionDirectory(string dir, string ver) {
-                Directory = dir;
-                Version = ver;
-            }
-            public int CompareTo(VersionDirectory other) {
-                return Version.CompareTo(other.Version);
-            }
         }
     }
 }
