@@ -3,35 +3,35 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Macro {
     internal class FreescrollMacro {
-        private readonly string bindingsFile = @".\macro\bindings.txt";
+        private readonly string BINDINGS_FILE = @".\macro\bindings.txt";
 
-        private readonly string downOnlyFormat = "0x{0:X2}";
-        private readonly string upOnlyFormat = "0x{0:X2} Up";
-        private readonly string downAndUpFormat = "0x{0:X2} 0x{1:X2}";
+        private readonly string DOWN_ONLY_FORMAT = "0x{0:X2}";
+        private readonly string UP_ONLY_FORMAT = "0x{0:X2} Up";
+        private readonly string DOWN_UP_FORMAT = "0x{0:X2} 0x{1:X2}";
 
-        private readonly ProcessStartInfo macroStartInfo;
-        private Process macroProcess = null;
+        private readonly ProcessStartInfo MACRO_START_INFO;
+        private Process _macroProcess = null;
 
-        private Timer timer;
+        private Timer _timer;
 
         public bool IsRunning { get; private set; }
-        private Keys DownScrollKey { get; set; }
-        private Keys UpScrollKey { get; set; }
+        private Keys _downScrollKey { get; set; }
+        private Keys _upScrollKey { get; set; }
 
         public FreescrollMacro(Keys downScroll, Keys upScroll) {
-            macroStartInfo = new ProcessStartInfo(@".\DOOMEternalMacro.exe");
-            macroStartInfo.WorkingDirectory = @".\macro";
-            macroStartInfo.UseShellExecute = true;
-            macroStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            MACRO_START_INFO = new ProcessStartInfo(@".\DOOMEternalMacro.exe");
+            MACRO_START_INFO.WorkingDirectory = @".\macro";
+            MACRO_START_INFO.UseShellExecute = true;
+            MACRO_START_INFO.WindowStyle = ProcessWindowStyle.Hidden;
             IsRunning = false;
 
             // Timer that runs every five seconds to prevent unmanaged macro processes
-            timer = new Timer();
-            timer.Interval = 5000;
-            timer.Tick += new EventHandler(MacroCheck);
+            _timer = new Timer();
+            _timer.Interval = 5000;
+            _timer.Tick += new EventHandler(MacroCheck);
 
-            DownScrollKey = downScroll;
-            UpScrollKey = upScroll;
+            _downScrollKey = downScroll;
+            _upScrollKey = upScroll;
             CreateBindingsFile();
         }
 
@@ -39,7 +39,7 @@ namespace DESpeedrunUtil.Macro {
         /// Checks if the macro can start.
         /// </summary>
         /// <returns>Returns <see langword="true"/> if the macro process doesn't exist and at least one bind is enabled.</returns>
-        public bool CanStart() => macroProcess == null && (DownScrollKey != Keys.None || UpScrollKey != Keys.None);
+        public bool CanStart() => _macroProcess == null && (_downScrollKey != Keys.None || _upScrollKey != Keys.None);
 
         /// <summary>
         /// Starts the macro process.
@@ -47,9 +47,9 @@ namespace DESpeedrunUtil.Macro {
         public void Start() {
             if(!CanStart()) return;
             TerminateUnmanagedMacros(); // One final check before running our own macro instance
-            macroProcess = Process.Start(macroStartInfo);
+            _macroProcess = Process.Start(MACRO_START_INFO);
             IsRunning = true;
-            if(timer.Enabled) timer.Stop();
+            if(_timer.Enabled) _timer.Stop();
         }
 
         /// <summary>
@@ -57,11 +57,11 @@ namespace DESpeedrunUtil.Macro {
         /// </summary>
         /// <param name="startTimer"></param>
         public void Stop(bool startTimer) {
-            if(macroProcess == null) return;
-            macroProcess.Kill();
-            macroProcess = null;
+            if(_macroProcess == null) return;
+            _macroProcess.Kill();
+            _macroProcess = null;
             IsRunning = false;
-            if(startTimer) timer.Start();
+            if(startTimer) _timer.Start();
         }
 
         /// <summary>
@@ -76,8 +76,8 @@ namespace DESpeedrunUtil.Macro {
         /// Retrieves the hotkey specified by the bool parameter.
         /// </summary>
         /// <param name="downKey"></param>
-        /// <returns>Returns <see cref="DownScrollKey"/> if <see langword="true"/>, <see cref="UpScrollKey"/> if <see langword="false"/>.</returns>
-        public Keys GetHotkey(bool downKey) => downKey ? DownScrollKey : UpScrollKey;
+        /// <returns>Returns <see cref="_downScrollKey"/> if <see langword="true"/>, <see cref="_upScrollKey"/> if <see langword="false"/>.</returns>
+        public Keys GetHotkey(bool downKey) => downKey ? _downScrollKey : _upScrollKey;
 
         /// <summary>
         /// Changes the desired hotkey then refreshes the bindings file and restarts the macro process.
@@ -85,8 +85,8 @@ namespace DESpeedrunUtil.Macro {
         /// <param name="newKey"></param>
         /// <param name="downKey"></param>
         public void ChangeHotkey(Keys newKey, bool downKey) {
-            if(downKey) DownScrollKey = newKey;
-            else UpScrollKey = newKey;
+            if(downKey) _downScrollKey = newKey;
+            else _upScrollKey = newKey;
 
             CreateBindingsFile();
             if(IsRunning) Restart(); // Macro is restarted for binding changes to take place
@@ -96,16 +96,16 @@ namespace DESpeedrunUtil.Macro {
         private void CreateBindingsFile() {
             string binds;
 
-            if(DownScrollKey == Keys.None && UpScrollKey != Keys.None) binds = string.Format(upOnlyFormat, (int) UpScrollKey);
-            else if(DownScrollKey != Keys.None && UpScrollKey == Keys.None) binds = string.Format(downOnlyFormat, (int) DownScrollKey);
-            else binds = string.Format(downAndUpFormat, (int) DownScrollKey, (int) UpScrollKey);
+            if(_downScrollKey == Keys.None && _upScrollKey != Keys.None) binds = string.Format(UP_ONLY_FORMAT, (int) _upScrollKey);
+            else if(_downScrollKey != Keys.None && _upScrollKey == Keys.None) binds = string.Format(DOWN_ONLY_FORMAT, (int) _downScrollKey);
+            else binds = string.Format(DOWN_UP_FORMAT, (int) _downScrollKey, (int) _upScrollKey);
 
-            File.WriteAllText(bindingsFile, binds);
+            File.WriteAllText(BINDINGS_FILE, binds);
         }
 
         // Timer method that periodically terminates any Macro processes.
         private void MacroCheck(object sender, EventArgs e) {
-            if(macroProcess == null) TerminateUnmanagedMacros(); // Prevents the user from running the macro outside the scope of this utility
+            if(_macroProcess == null) TerminateUnmanagedMacros(); // Prevents the user from running the macro outside the scope of this utility
         }
         /// <summary>
         /// Terminates any DOOMEternalMacro.exe processes that are running outside the scope of this utility.

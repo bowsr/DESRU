@@ -1,70 +1,84 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
 
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
-        private readonly string SigScanFPS = "2569204650530000252E32666D7300004672616D65203A202575";
+        private readonly string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";
         // DLSS does not show up if you don't have a capable gpu (NVIDIA RTX) BUT it still exists in memory in the exact same spot.
-        private readonly string SigScanDLSS = "444C5353203A2025730000000000000056756C6B616E202573";
+        private readonly string SIGSCAN_DLSS = "444C5353203A2025730000000000000056756C6B616E202573";
 
         public static List<KnownOffsets> OffsetList = new();
-        KnownOffsets CurrentOffsets;
+        KnownOffsets _currentOffsets;
 
-        DeepPointer CPUDP;
+        DeepPointer _cpuDP;
 
-        IntPtr MaxHzPtr, MetricsPtr,
-               Row1Ptr, Row2Ptr, Row3Ptr, Row4Ptr, Row5Ptr, Row6Ptr, Row7Ptr, Row8Ptr, Row9Ptr,
-               GPUVendorPtr, GPUNamePtr, CPUPtr;
+        IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr,
+               _row1Ptr, _row2Ptr, _row3Ptr, _row4Ptr, _row5Ptr, _row6Ptr, _row7Ptr, _row8Ptr, _row9Ptr,
+               _gpuVendorPtr, _gpuNamePtr, _cpuPtr;
 
-        Process Game;
-        int ModuleSize;
+        Process _game;
+        int _moduleSize;
         public string Version { get; init; }
 
+        bool _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false;
+
         public MemoryHandler(Process game) {
-            Game = game;
-            ModuleSize = game.MainModule.ModuleMemorySize;
+            _game = game;
+            _moduleSize = game.MainModule.ModuleMemorySize;
             Version = TranslateModuleSize();
-            
+
             Initialize();
         }
 
         public void TestRows() {
-            Game.VirtualProtect(Row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
-            Game.WriteBytes(Row1Ptr, ToByteArray("Row 1", 8));
-            Game.WriteBytes(Row2Ptr, ToByteArray("Row 2", 79));
-            Game.WriteBytes(Row3Ptr, ToByteArray("Row 3", 19));
-            Game.WriteBytes(Row4Ptr, ToByteArray("Row 4", 7));
-            Game.WriteBytes(Row5Ptr, ToByteArray("Row 5", 34));
-            Game.WriteBytes(Row6Ptr, ToByteArray("Row 6", 34));
-            Game.WriteBytes(Row7Ptr, ToByteArray("Row 7", 34));
-            if(Row8Ptr.ToInt64() != 0) Game.WriteBytes(Row8Ptr, ToByteArray("Row 8", 34));
-            if(Row9Ptr.ToInt64() != 0) Game.WriteBytes(Row9Ptr, ToByteArray("Row 9", 34));
-            if(CPUPtr.ToInt64() != 0) {
-                Game.VirtualProtect(CPUPtr, 1024, MemPageProtect.PAGE_READWRITE);
-                Game.WriteBytes(CPUPtr, ToByteArray("CPU", 64));
+            _game.VirtualProtect(_row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
+            _game.WriteBytes(_row1Ptr, ToByteArray("Row 1", 8));
+            _game.WriteBytes(_row2Ptr, ToByteArray("Row 2", 79));
+            _game.WriteBytes(_row3Ptr, ToByteArray("Row 3", 19));
+            _game.WriteBytes(_row4Ptr, ToByteArray("Row 4", 7));
+            _game.WriteBytes(_row5Ptr, ToByteArray("Row 5", 34));
+            _game.WriteBytes(_row6Ptr, ToByteArray("Row 6", 34));
+            _game.WriteBytes(_row7Ptr, ToByteArray("Row 7", 34));
+            if(_row8Ptr.ToInt64() != 0) _game.WriteBytes(_row8Ptr, ToByteArray("Row 8", 34));
+            if(_row9Ptr.ToInt64() != 0) _game.WriteBytes(_row9Ptr, ToByteArray("Row 9", 34));
+            if(_cpuPtr.ToInt64() != 0) {
+                _game.VirtualProtect(_cpuPtr, 1024, MemPageProtect.PAGE_READWRITE);
+                _game.WriteBytes(_cpuPtr, ToByteArray("CPU", 64));
             }
-            if(GPUVendorPtr.ToInt64() != 0) {
-                Game.VirtualProtect(GPUVendorPtr, 1024, MemPageProtect.PAGE_READWRITE);
-                Game.WriteBytes(GPUVendorPtr, ToByteArray("GPU Vendor", 64));
+            if(_gpuVendorPtr.ToInt64() != 0) {
+                _game.VirtualProtect(_gpuVendorPtr, 1024, MemPageProtect.PAGE_READWRITE);
+                _game.WriteBytes(_gpuVendorPtr, ToByteArray("GPU Vendor", 64));
             }
-            if(GPUNamePtr.ToInt64() != 0) {
-                Game.VirtualProtect(GPUNamePtr, 1024, MemPageProtect.PAGE_READWRITE);
-                Game.WriteBytes(GPUNamePtr, ToByteArray("GPU Name", 64));
+            if(_gpuNamePtr.ToInt64() != 0) {
+                _game.VirtualProtect(_gpuNamePtr, 1024, MemPageProtect.PAGE_READWRITE);
+                _game.WriteBytes(_gpuNamePtr, ToByteArray("GPU Name", 64));
             }
         }
 
-        public bool CanCapFPS() => MaxHzPtr.ToInt64() != 0;
+        /// <summary>
+        /// Sets the state of the flags that will be shown next to the FPS counter.
+        /// </summary>
+        /// <param name="macro">Status of the Macro</param>
+        /// <param name="fw">Status of the Firewall Rule</param>
+        public void SetFlags(bool macro, bool fw) {
+            _macroFlag = macro;
+            _firewallFlag = fw;
+            if(Version == "1.0 (Release)") _slopeboostFlag = _game.ReadBytes(_rampJumpPtr, 1)[0] == 0;
+        }
+
+        public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
 
         public void CapFPS(int cap) {
             if(CanCapFPS()) {
-                Game.WriteBytes(MaxHzPtr, BitConverter.GetBytes((short) cap));
+                _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) cap));
             }
         }
 
         public int ReadMaxHz() {
             int cap = -1;
-            if(CanCapFPS()) Game.ReadValue(MaxHzPtr, out cap);
+            if(CanCapFPS()) _game.ReadValue(_maxHzPtr, out cap);
             return cap;
         }
 
@@ -72,8 +86,11 @@ namespace DESpeedrunUtil.Memory {
         /// Dereferences the <see cref="DeepPointer"/> addresses and offsets into an <see cref="IntPtr"/> that can be read from/written to.
         /// </summary>
         public void DerefPointers() {
-            if(CPUDP != null) CPUDP.DerefOffsets(Game, out CPUPtr);
-            else CPUPtr = new IntPtr(0);
+            try {
+                if(_cpuDP != null) _cpuDP.DerefOffsets(_game, out _cpuPtr);
+            } catch(Win32Exception) {
+                _cpuPtr = new IntPtr(0);
+            }
         }
 
         public static byte[] ToByteArray(string text, int length) {
@@ -92,7 +109,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <returns>Returns a <see langword="string"/> representing the game's version.</returns>
         public string TranslateModuleSize() {
-            return ModuleSize switch {
+            return _moduleSize switch {
                 507191296 or 515133440 or 510681088 => "1.0 (Release)",
                 482037760 => "May Patch Steam",
                 546783232 => "May Hotfix Steam",
@@ -114,77 +131,78 @@ namespace DESpeedrunUtil.Memory {
                 478367744 => "6.66 Rev 1",
                 475570176 => "6.66 Rev 1.1",
                 510251008 => "6.66 Rev 2",
-                _ => "Unknown (" + ModuleSize.ToString() + ")",
+                _ => "Unknown (" + _moduleSize.ToString() + ")",
             };
         }
 
         private void Initialize() {
-            var moduleBase = Game.MainModule.BaseAddress;
+            var moduleBase = _game.MainModule.BaseAddress;
             if(!SetCurrentKnownOffsets(Version)) {
                 SigScanRows();
-            }else {
-                Row1Ptr = (CurrentOffsets.Row1 != 0) ? moduleBase + CurrentOffsets.Row1 : IntPtr.Zero;
-                Row2Ptr = (CurrentOffsets.Row2 != 0) ? moduleBase + CurrentOffsets.Row2 : IntPtr.Zero;
-                Row3Ptr = (CurrentOffsets.Row3 != 0) ? moduleBase + CurrentOffsets.Row3 : IntPtr.Zero;
-                Row4Ptr = (CurrentOffsets.Row4 != 0) ? moduleBase + CurrentOffsets.Row4 : IntPtr.Zero;
-                Row5Ptr = (CurrentOffsets.Row5 != 0) ? moduleBase + CurrentOffsets.Row5 : IntPtr.Zero;
-                Row6Ptr = (CurrentOffsets.Row6 != 0) ? moduleBase + CurrentOffsets.Row6 : IntPtr.Zero;
-                Row7Ptr = (CurrentOffsets.Row7 != 0) ? moduleBase + CurrentOffsets.Row7 : IntPtr.Zero;
-                Row8Ptr = (CurrentOffsets.Row8 != 0) ? moduleBase + CurrentOffsets.Row8 : IntPtr.Zero;
-                Row9Ptr = (CurrentOffsets.Row9 != 0) ? moduleBase + CurrentOffsets.Row9 : IntPtr.Zero;
+            } else {
+                _row1Ptr = (_currentOffsets.Row1 != 0) ? moduleBase + _currentOffsets.Row1 : IntPtr.Zero;
+                _row2Ptr = (_currentOffsets.Row2 != 0) ? moduleBase + _currentOffsets.Row2 : IntPtr.Zero;
+                _row3Ptr = (_currentOffsets.Row3 != 0) ? moduleBase + _currentOffsets.Row3 : IntPtr.Zero;
+                _row4Ptr = (_currentOffsets.Row4 != 0) ? moduleBase + _currentOffsets.Row4 : IntPtr.Zero;
+                _row5Ptr = (_currentOffsets.Row5 != 0) ? moduleBase + _currentOffsets.Row5 : IntPtr.Zero;
+                _row6Ptr = (_currentOffsets.Row6 != 0) ? moduleBase + _currentOffsets.Row6 : IntPtr.Zero;
+                _row7Ptr = (_currentOffsets.Row7 != 0) ? moduleBase + _currentOffsets.Row7 : IntPtr.Zero;
+                _row8Ptr = (_currentOffsets.Row8 != 0) ? moduleBase + _currentOffsets.Row8 : IntPtr.Zero;
+                _row9Ptr = (_currentOffsets.Row9 != 0) ? moduleBase + _currentOffsets.Row9 : IntPtr.Zero;
             }
-            GPUVendorPtr = (CurrentOffsets.GPUVendor != 0) ? moduleBase + CurrentOffsets.GPUVendor : IntPtr.Zero;
-            GPUNamePtr = (CurrentOffsets.GPUName != 0) ? moduleBase + CurrentOffsets.GPUName : IntPtr.Zero;
-            MetricsPtr = (CurrentOffsets.Metrics != 0) ? moduleBase + CurrentOffsets.Metrics : IntPtr.Zero;
-            MaxHzPtr = (CurrentOffsets.MaxHz != 0) ? moduleBase + CurrentOffsets.MaxHz : IntPtr.Zero;
-            CPUDP = new DeepPointer("DOOMEternalx64vk.exe", CurrentOffsets.CPU, 0x0);
+            _gpuVendorPtr = (_currentOffsets.GPUVendor != 0) ? moduleBase + _currentOffsets.GPUVendor : IntPtr.Zero;
+            _gpuNamePtr = (_currentOffsets.GPUName != 0) ? moduleBase + _currentOffsets.GPUName : IntPtr.Zero;
+            _metricsPtr = (_currentOffsets.Metrics != 0) ? moduleBase + _currentOffsets.Metrics : IntPtr.Zero;
+            _maxHzPtr = (_currentOffsets.MaxHz != 0) ? moduleBase + _currentOffsets.MaxHz : IntPtr.Zero;
+            _cpuDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.CPU, 0x0);
+            if(Version == "1.0 (Release)") _rampJumpPtr = moduleBase + 0x6126430;
         }
 
         private void SigScanRows() {
             // This only needs to be done on the first hook of the game. Offsets can be saved since they're not pointer chains.
 
-            SigScanTarget fpsTarget = new SigScanTarget(SigScanFPS);
-            SigScanTarget dlssTarget = new SigScanTarget(SigScanDLSS);
-            SignatureScanner scanner = new SignatureScanner(Game, Game.MainModule.BaseAddress, Game.MainModule.ModuleMemorySize);
-            Row1Ptr = scanner.Scan(fpsTarget);
-            if(Row1Ptr.ToInt64() != 0) {
-                Row2Ptr = Row1Ptr + 0x8;
-                Row3Ptr = Row1Ptr + 0x58;
-                Row4Ptr = Row1Ptr + 0x70;
-                Row5Ptr = Row1Ptr + 0x78;
-                Row6Ptr = Row1Ptr + 0x98;
-                Row7Ptr = Row1Ptr + 0xA8;
-                Row8Ptr = IntPtr.Zero;
-                Row9Ptr = IntPtr.Zero;
+            SigScanTarget fpsTarget = new SigScanTarget(SIGSCAN_FPS);
+            SigScanTarget dlssTarget = new SigScanTarget(SIGSCAN_DLSS);
+            SignatureScanner scanner = new SignatureScanner(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
+            _row1Ptr = scanner.Scan(fpsTarget);
+            if(_row1Ptr.ToInt64() != 0) {
+                _row2Ptr = _row1Ptr + 0x8;
+                _row3Ptr = _row1Ptr + 0x58;
+                _row4Ptr = _row1Ptr + 0x70;
+                _row5Ptr = _row1Ptr + 0x78;
+                _row6Ptr = _row1Ptr + 0x98;
+                _row7Ptr = _row1Ptr + 0xA8;
+                _row8Ptr = IntPtr.Zero;
+                _row9Ptr = IntPtr.Zero;
                 IntPtr dlss = scanner.Scan(dlssTarget);
                 if(dlss.ToInt64() != 0) {
-                    Row6Ptr = dlss;
-                    Row7Ptr = dlss + 0x10;
-                    Row8Ptr = dlss + 0x30;
-                    Row9Ptr = dlss + 0x40;
+                    _row6Ptr = dlss;
+                    _row7Ptr = dlss + 0x10;
+                    _row8Ptr = dlss + 0x30;
+                    _row9Ptr = dlss + 0x40;
                 }
-            }else {
+            } else {
                 return;
             }
-            KnownOffsets ko = new KnownOffsets(Version, GetOffset(Row1Ptr),
-                GetOffset(Row2Ptr),
-                GetOffset(Row3Ptr),
-                GetOffset(Row4Ptr),
-                GetOffset(Row5Ptr),
-                GetOffset(Row6Ptr),
-                GetOffset(Row7Ptr),
-                GetOffset(Row8Ptr),
-                GetOffset(Row9Ptr),
+            KnownOffsets ko = new KnownOffsets(Version, GetOffset(_row1Ptr),
+                GetOffset(_row2Ptr),
+                GetOffset(_row3Ptr),
+                GetOffset(_row4Ptr),
+                GetOffset(_row5Ptr),
+                GetOffset(_row6Ptr),
+                GetOffset(_row7Ptr),
+                GetOffset(_row8Ptr),
+                GetOffset(_row9Ptr),
                 0, 0, 0, 0, 0);
             OffsetList.Add(ko);
-            CurrentOffsets = ko;
+            _currentOffsets = ko;
 
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonString = JsonSerializer.Serialize(OffsetList, options);
             Debug.WriteLine(jsonString);
             File.WriteAllText(@".\offsets.json", jsonString);
         }
-        private int GetOffset(IntPtr pointer) => (pointer != IntPtr.Zero) ? (int) (pointer.ToInt64() - Game.MainModule.BaseAddress.ToInt64()) : 0;
+        private int GetOffset(IntPtr pointer) => (pointer != IntPtr.Zero) ? (int) (pointer.ToInt64() - _game.MainModule.BaseAddress.ToInt64()) : 0;
         public static bool IsValidVersionString(string version) {
             return version switch {
                 "1.0 (Release)" => true,
@@ -215,7 +233,7 @@ namespace DESpeedrunUtil.Memory {
         private bool SetCurrentKnownOffsets(string ver) {
             foreach(KnownOffsets k in OffsetList) {
                 if(k.Version == ver) {
-                    CurrentOffsets = k;
+                    _currentOffsets = k;
                     return true;
                 }
             }

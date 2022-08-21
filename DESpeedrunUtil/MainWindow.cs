@@ -1,3 +1,4 @@
+using DESpeedrunUtil.Firewall;
 using DESpeedrunUtil.Hotkeys;
 using DESpeedrunUtil.Macro;
 using DESpeedrunUtil.Memory;
@@ -10,43 +11,46 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
-        Process GameProcess;
+        Process _gameProcess;
         public bool Hooked = false;
 
-        FreescrollMacro MacroProcess;
-        bool EnableMacro = true;
+        bool _fwRuleExists = false;
 
-        HotkeyHandler Hotkeys;
-        int FPS0, FPS1, FPS2;
+        FreescrollMacro _macroProcess;
+        bool _enableMacro = true;
 
-        MemoryHandler Memory;
+        HotkeyHandler _hotkeys;
+        int _fps0, _fps1, _fps2;
 
-        Timer FormTimer;
+        MemoryHandler _memory;
 
-        bool HKAssignmentMode = false, Mouse1Pressed = false;
-        Label SelectedHKField = null;
+        Timer _formTimer;
 
-        Keys[] InvalidKeys = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
+        bool _hkAssignmentMode = false, _mouse1Pressed = false;
+        Label _selectedHKField = null;
 
-        List<Label> HotkeyFields;
+        Keys[] _invalidKeys = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
-        string GameDirectory = "", SteamDirectory = "", LibraryVDFLocation = "";
-        List<string> GameVersions;
+        List<Label> _hotkeyFields;
+
+        string _gameDirectory = "", _steamDirectory = "", _libraryVDFLocation = "";
+        List<string> _gameVersions;
 
         public MainWindow() {
             InitializeComponent();
             SearchForSteamGameDir();
+            _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
 
-            HotkeyFields = new();
-            HotkeyFields.Add(hotkeyField0);
-            HotkeyFields.Add(hotkeyField1);
-            HotkeyFields.Add(hotkeyField2);
-            HotkeyFields.Add(hotkeyField3);
-            HotkeyFields.Add(hotkeyField4);
+            _hotkeyFields = new();
+            _hotkeyFields.Add(hotkeyField0);
+            _hotkeyFields.Add(hotkeyField1);
+            _hotkeyFields.Add(hotkeyField2);
+            _hotkeyFields.Add(hotkeyField3);
+            _hotkeyFields.Add(hotkeyField4);
 
-            FormTimer = new Timer();
-            FormTimer.Interval = 8;
-            FormTimer.Tick += new EventHandler(UpdateTick);
+            _formTimer = new Timer();
+            _formTimer.Interval = 8;
+            _formTimer.Tick += new EventHandler(UpdateTick);
 
             this.KeyDown += new KeyEventHandler(HotkeyAssignment_KeyDown);
             this.MouseDown += new MouseEventHandler(HotkeyAssignment_MouseDown);
@@ -76,20 +80,20 @@ namespace DESpeedrunUtil {
 
             AddMouseIntercepts(this);
         }
-        
+
         // Main timer method that runs this utility's logic.
         private void UpdateTick(object sender, EventArgs e) {
-            if(GameProcess == null || GameProcess.HasExited) {
+            if(_gameProcess == null || _gameProcess.HasExited) {
                 Hooked = false;
-                MacroProcess.Stop(true);
-                if(GameProcess != null) changeVersionButton.Enabled = true;
-                GameProcess = null;
+                _macroProcess.Stop(true);
+                if(_gameProcess != null) changeVersionButton.Enabled = true;
+                _gameProcess = null;
             }
 
-            if(MacroProcess.IsRunning) {
+            if(_macroProcess.IsRunning) {
                 macroStatus.Text = "Running";
                 macroStatus.ForeColor = Color.Lime;
-            }else {
+            } else {
                 macroStatus.Text = "Stopped";
                 macroStatus.ForeColor = Color.Red;
             }
@@ -97,16 +101,16 @@ namespace DESpeedrunUtil {
             if(!Hooked) Hooked = Hook();
             if(!Hooked) return;
 
-            if(EnableMacro) MacroProcess.Start();
+            if(_enableMacro) _macroProcess.Start();
 
-            Memory.DerefPointers();
+            _memory.DerefPointers();
 
-            if(Memory.CanCapFPS() && Memory.ReadMaxHz() > 250) Memory.CapFPS(250);
-            Memory.TestRows();
+            if(_memory.CanCapFPS() && _memory.ReadMaxHz() > 250) _memory.CapFPS(250);
+            _memory.TestRows();
         }
         #region EVENTS
         private void HotkeyAssignment_KeyDown(object sender, KeyEventArgs e) {
-            if(!HKAssignmentMode) return;
+            if(!_hkAssignmentMode) return;
             Keys pressedKey;
 
             if(e.Control) pressedKey = HotkeyHandler.ModKeySelector(0);
@@ -114,11 +118,11 @@ namespace DESpeedrunUtil {
             else if(e.Alt) pressedKey = HotkeyHandler.ModKeySelector(2);
             else pressedKey = e.KeyCode;
             if(pressedKey == Keys.Escape) pressedKey = Keys.None;
-            bool isValid = !InvalidKeys.Contains(pressedKey);
+            bool isValid = !_invalidKeys.Contains(pressedKey);
 
-            string tag = (string) SelectedHKField.Tag;
-            HKAssignmentMode = false;
-            SelectedHKField = null;
+            string tag = (string) _selectedHKField.Tag;
+            _hkAssignmentMode = false;
+            _selectedHKField = null;
             if(isValid) {
                 int type = -1;
                 switch(tag) {
@@ -138,21 +142,21 @@ namespace DESpeedrunUtil {
                         type = 2;
                         break;
                 }
-                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, MacroProcess, Hotkeys);
+                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }
             UpdateHotkeyFields();
             e.Handled = true;
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
-            if(!HKAssignmentMode) return;
+            if(!_hkAssignmentMode) return;
 
             Keys pressedKey = HotkeyHandler.ConvertMouseButton(e.Button);
-            bool isValid = !InvalidKeys.Contains(pressedKey);
+            bool isValid = !_invalidKeys.Contains(pressedKey);
 
-            string tag = (string) SelectedHKField.Tag;
-            HKAssignmentMode = false;
-            if(pressedKey == Keys.LButton && sender.Equals(SelectedHKField)) Mouse1Pressed = true;
-            SelectedHKField = null;
+            string tag = (string) _selectedHKField.Tag;
+            _hkAssignmentMode = false;
+            if(pressedKey == Keys.LButton && sender.Equals(_selectedHKField)) _mouse1Pressed = true;
+            _selectedHKField = null;
             if(isValid) {
                 int type = -1;
                 switch(tag) {
@@ -172,23 +176,23 @@ namespace DESpeedrunUtil {
                         type = 2;
                         break;
                 }
-                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, MacroProcess, Hotkeys);
+                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }
             UpdateHotkeyFields();
         }
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
-            if(Mouse1Pressed) {
-                Mouse1Pressed = false;
+            if(_mouse1Pressed) {
+                _mouse1Pressed = false;
                 return;
             }
 
             if((HotkeyHandler.GetAsyncKeyState(Keys.LButton) & 0x01) == 1) {
-                SelectedHKField = (Label) sender;
-                SelectedHKField.Text = "Press a key";
-                SelectedHKField.BackColor = Color.Gold;
+                _selectedHKField = (Label) sender;
+                _selectedHKField.Text = "Press a key";
+                _selectedHKField.BackColor = Color.Gold;
                 this.ActiveControl = null;
 
-                HKAssignmentMode = true;
+                _hkAssignmentMode = true;
             }
         }
         private void FPSInput_KeyPressNumericOnly(object sender, KeyPressEventArgs e) {
@@ -202,49 +206,49 @@ namespace DESpeedrunUtil {
             int p;
             try {
                 p = int.Parse(text);
-            }catch(FormatException) {
+            } catch(FormatException) {
                 p = -1;
             }
             if(p > 250) p = 250;
             if(p != -1) {
                 if(p == 0) p = 1;
                 ((TextBox) sender).Text = p.ToString();
-            }else {
+            } else {
                 ((TextBox) sender).Text = "";
             }
 
             var tag = ((Control) sender).Tag;
             switch(tag) {
                 case "fpscap0":
-                    FPS0 = p;
+                    _fps0 = p;
                     break;
                 case "fpscap1":
-                    FPS1 = p;
+                    _fps1 = p;
                     break;
                 case "fpscap2":
-                    FPS2 = p;
+                    _fps2 = p;
                     break;
             }
             ToggleIndividualHotkeys();
         }
-        private void AutoStartMacro_CheckChanged(object sender, EventArgs e) => EnableMacro = ((CheckBox) sender).Checked;
+        private void AutoStartMacro_CheckChanged(object sender, EventArgs e) => _enableMacro = ((CheckBox) sender).Checked;
         private void EnableHotkeys_CheckChanged(object sender, EventArgs e) {
             bool val = ((CheckBox) sender).Checked;
             if(val) {
-                Hotkeys.EnableHotkeys();
-            }else {
-                Hotkeys.DisableHotkeys();
+                _hotkeys.EnableHotkeys();
+            } else {
+                _hotkeys.DisableHotkeys();
             }
         }
         private void RefreshVersions_Click(object sender, EventArgs e) {
-            if(SteamDirectory != string.Empty) DetectAllGameVersions();
+            if(_steamDirectory != string.Empty) DetectAllGameVersions();
         }
         private void ChangeVersion_Click(object sender, EventArgs e) {
             string current = GetCurrentVersion(), desired = versionDropDownSelector.Text;
             if(current == desired) return;
-            if(Directory.Exists(SteamDirectory + "\\DOOMEternal " + current)) return; // Eventually add a popup saying there's a folder conflict
-            Directory.Move(GameDirectory, GameDirectory + " " + current);
-            Directory.Move(GameDirectory + " " + desired, GameDirectory);
+            if(Directory.Exists(_steamDirectory + "\\DOOMEternal " + current)) return; // Eventually add a popup saying there's a folder conflict
+            Directory.Move(_gameDirectory, _gameDirectory + " " + current);
+            Directory.Move(_gameDirectory + " " + desired, _gameDirectory);
             changeVersionButton.Enabled = false;
             Task.Run(async delegate {
                 versionChangedLabel.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
@@ -262,44 +266,44 @@ namespace DESpeedrunUtil {
             MemoryHandler.OffsetList = JsonSerializer.Deserialize<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
             // User Settings
-            MacroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
-            Hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key, (Keys) Properties.Settings.Default.FPS2Key, this);
-            FPS0 = Properties.Settings.Default.FPSCap0;
-            FPS1 = Properties.Settings.Default.FPSCap1;
-            FPS2 = Properties.Settings.Default.FPSCap2;
-            EnableMacro = Properties.Settings.Default.MacroEnabled;
-            if(Properties.Settings.Default.FPSHotkeysEnabled) Hotkeys.EnableHotkeys();
-            LibraryVDFLocation = Properties.Settings.Default.SteamVDFLocation;
+            _macroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
+            _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key, (Keys) Properties.Settings.Default.FPS2Key, this);
+            _fps0 = Properties.Settings.Default.FPSCap0;
+            _fps1 = Properties.Settings.Default.FPSCap1;
+            _fps2 = Properties.Settings.Default.FPSCap2;
+            _enableMacro = Properties.Settings.Default.MacroEnabled;
+            if(Properties.Settings.Default.FPSHotkeysEnabled) _hotkeys.EnableHotkeys();
+            _libraryVDFLocation = Properties.Settings.Default.SteamVDFLocation;
             ToggleIndividualHotkeys();
             UpdateHotkeyFields();
 
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
 
-            FormTimer.Start();
+            _formTimer.Start();
         }
-        
+
         // Event method that runs upon closing of the <c>MainWindow</c> form.
         private void MainWindow_Closing(object sender, FormClosingEventArgs e) {
             // User Settings
-            Properties.Settings.Default.DownScrollKey = (int) MacroProcess.GetHotkey(true);
-            Properties.Settings.Default.UpScrollKey = (int) MacroProcess.GetHotkey(false);
-            Properties.Settings.Default.FPS0Key = (int) Hotkeys.GetHotkeyByNumber(0);
-            Properties.Settings.Default.FPS1Key = (int) Hotkeys.GetHotkeyByNumber(1);
-            Properties.Settings.Default.FPS2Key = (int) Hotkeys.GetHotkeyByNumber(2);
-            Properties.Settings.Default.FPSCap0 = FPS0;
-            Properties.Settings.Default.FPSCap1 = FPS1;
-            Properties.Settings.Default.FPSCap2 = FPS2;
-            Properties.Settings.Default.MacroEnabled = EnableMacro;
-            Properties.Settings.Default.FPSHotkeysEnabled = Hotkeys.Enabled;
-            Properties.Settings.Default.SteamVDFLocation = LibraryVDFLocation;
+            Properties.Settings.Default.DownScrollKey = (int) _macroProcess.GetHotkey(true);
+            Properties.Settings.Default.UpScrollKey = (int) _macroProcess.GetHotkey(false);
+            Properties.Settings.Default.FPS0Key = (int) _hotkeys.GetHotkeyByNumber(0);
+            Properties.Settings.Default.FPS1Key = (int) _hotkeys.GetHotkeyByNumber(1);
+            Properties.Settings.Default.FPS2Key = (int) _hotkeys.GetHotkeyByNumber(2);
+            Properties.Settings.Default.FPSCap0 = _fps0;
+            Properties.Settings.Default.FPSCap1 = _fps1;
+            Properties.Settings.Default.FPSCap2 = _fps2;
+            Properties.Settings.Default.MacroEnabled = _enableMacro;
+            Properties.Settings.Default.FPSHotkeysEnabled = _hotkeys.Enabled;
+            Properties.Settings.Default.SteamVDFLocation = _libraryVDFLocation;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 
             Properties.Settings.Default.Save();
 
-            Hotkeys.DisableHotkeys();
-            MacroProcess.Stop(false);
+            _hotkeys.DisableHotkeys();
+            _macroProcess.Stop(false);
         }
         #endregion
 
@@ -307,37 +311,37 @@ namespace DESpeedrunUtil {
         /// Updates all hotkey selection fields with their respective current hotkeys.
         /// </summary>
         public void UpdateHotkeyFields() {
-            foreach(Label l in HotkeyFields) {
+            foreach(Label l in _hotkeyFields) {
                 Keys key = Keys.None;
                 switch(l.Tag) {
                     case "macroDown":
-                        key = MacroProcess.GetHotkey(true);
+                        key = _macroProcess.GetHotkey(true);
                         break;
                     case "macroUp":
-                        key = MacroProcess.GetHotkey(false);
+                        key = _macroProcess.GetHotkey(false);
                         break;
                     case "fps0":
-                        key = Hotkeys.GetHotkeyByNumber(0);
+                        key = _hotkeys.GetHotkeyByNumber(0);
                         break;
                     case "fps1":
-                        key = Hotkeys.GetHotkeyByNumber(1);
+                        key = _hotkeys.GetHotkeyByNumber(1);
                         break;
                     case "fps2":
-                        key = Hotkeys.GetHotkeyByNumber(2);
+                        key = _hotkeys.GetHotkeyByNumber(2);
                         break;
                 }
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
                 l.BackColor = Color.FromKnownColor(KnownColor.Control);
             }
-            fpsInput0.Text = FPS0.ToString();
-            fpsInput1.Text = FPS1.ToString();
-            fpsInput2.Text = FPS2.ToString();
+            fpsInput0.Text = _fps0.ToString();
+            fpsInput1.Text = _fps1.ToString();
+            fpsInput2.Text = _fps2.ToString();
         }
 
         public void PopulateVersionDropDown() {
             versionDropDownSelector.Items.Clear();
-            for(int i = 0; i < GameVersions.Count; i++) {
-                string v = GameVersions.ElementAt(i);
+            for(int i = 0; i < _gameVersions.Count; i++) {
+                string v = _gameVersions.ElementAt(i);
                 versionDropDownSelector.Items.Add(v);
                 if(v == GetCurrentVersion()) versionDropDownSelector.SelectedIndex = i;
             }
@@ -345,8 +349,8 @@ namespace DESpeedrunUtil {
         }
 
         public string GetCurrentVersion() {
-            if(GameDirectory != string.Empty) {
-                string s = File.ReadAllText(GameDirectory + "\\gameVersion.txt").Trim();
+            if(_gameDirectory != string.Empty) {
+                string s = File.ReadAllText(_gameDirectory + "\\gameVersion.txt").Trim();
                 return s.Substring(s.IndexOf('=') + 1);
             }
             return "Unknown";
@@ -360,24 +364,24 @@ namespace DESpeedrunUtil {
             int newFPS = 250;
             switch(fpsHotkey) {
                 case 0:
-                    if(FPS0 != -1) if(Memory.ReadMaxHz() != FPS0) newFPS = FPS0;
+                    if(_fps0 != -1) if(_memory.ReadMaxHz() != _fps0) newFPS = _fps0;
                     break;
                 case 1:
-                    if(FPS1 != -1) if(Memory.ReadMaxHz() != FPS1) newFPS = FPS1;
+                    if(_fps1 != -1) if(_memory.ReadMaxHz() != _fps1) newFPS = _fps1;
                     break;
                 case 2:
-                    if(FPS2 != -1) if(Memory.ReadMaxHz() != FPS2) newFPS = FPS2;
+                    if(_fps2 != -1) if(_memory.ReadMaxHz() != _fps2) newFPS = _fps2;
                     break;
             }
-            Memory.CapFPS(newFPS);
+            _memory.CapFPS(newFPS);
         }
 
         private void ToggleIndividualHotkeys() {
-            Hotkeys.ToggleIndividualHotkeys(0, !(FPS0 == -1));
-            Hotkeys.ToggleIndividualHotkeys(1, !(FPS1 == -1));
-            Hotkeys.ToggleIndividualHotkeys(2, !(FPS2 == -1));
+            _hotkeys.ToggleIndividualHotkeys(0, !(_fps0 == -1));
+            _hotkeys.ToggleIndividualHotkeys(1, !(_fps1 == -1));
+            _hotkeys.ToggleIndividualHotkeys(2, !(_fps2 == -1));
         }
-        
+
         // Adds a MouseDown event to every control in the form, recursively.
         private void AddMouseIntercepts(Control control) {
             foreach(Control c in control.Controls) {
@@ -389,7 +393,7 @@ namespace DESpeedrunUtil {
         // Auto-detects game directory. Asks for manual selection if it cannot be found.
         private void SearchForSteamGameDir() {
             List<string> SteamLibraryDrives = new();
-            if(LibraryVDFLocation == string.Empty) {
+            if(_libraryVDFLocation == string.Empty) {
                 string steamPath, vdfPath;
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\");
 
@@ -405,11 +409,11 @@ namespace DESpeedrunUtil {
                 }
 
                 vdfPath = steamPath + @"\steamapps\libraryfolders.vdf";
-                LibraryVDFLocation = vdfPath;
+                _libraryVDFLocation = vdfPath;
             }
             string driveRegex = @"[A-Z]:\\";
-            if(File.Exists(LibraryVDFLocation)) {
-                string[] vdfLines = File.ReadAllLines(LibraryVDFLocation);
+            if(File.Exists(_libraryVDFLocation)) {
+                string[] vdfLines = File.ReadAllLines(_libraryVDFLocation);
 
                 foreach(string s in vdfLines) {
                     Match match = Regex.Match(s, driveRegex);
@@ -429,15 +433,15 @@ namespace DESpeedrunUtil {
                     if(Directory.Exists(dir + "DOOMEternal")) {
                         var exe = dir + "DOOMEternal\\DOOMEternalx64vk.exe";
                         if(File.Exists(exe)) {
-                            SteamDirectory = dir;
-                            GameDirectory = dir + "DOOMEternal";
+                            _steamDirectory = dir;
+                            _gameDirectory = dir + "DOOMEternal";
                             break;
                         }
                     }
                 }
             }
             DetectAllGameVersions();
-            Debug.WriteLine(GameDirectory);
+            Debug.WriteLine(_gameDirectory);
         }
 
         // Detects any extra game dirs in the same library and adds a gameVersion.txt for version swapping purposes
@@ -445,8 +449,8 @@ namespace DESpeedrunUtil {
         // List of valid version strings can be found in MemoryHandler.IsValidVersionString(); will have an info button with this list in the program window
         private void DetectAllGameVersions() {
             List<string> Directories = new();
-            if(SteamDirectory != string.Empty) {
-                string[] gameDirs = Directory.GetDirectories(SteamDirectory);
+            if(_steamDirectory != string.Empty) {
+                string[] gameDirs = Directory.GetDirectories(_steamDirectory);
                 foreach(var dir in gameDirs) {
                     if(!dir.Contains("DOOMEternal")) continue;
                     Directories.Add(dir);
@@ -460,36 +464,36 @@ namespace DESpeedrunUtil {
             }
 
             // Once all the gameVersion.txt files are in place, this populates the dropdown selector for version swapping
-            GameVersions = new();
+            _gameVersions = new();
             if(Directories.Count > 0) {
                 foreach(var dir in Directories) {
                     string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
                     string v = txt.Substring(txt.IndexOf('=') + 1);
-                    if(MemoryHandler.IsValidVersionString(v)) GameVersions.Add(v);
+                    if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
                 }
             }
-            GameVersions.Sort();
+            _gameVersions.Sort();
             PopulateVersionDropDown();
         }
-        
+
         // Hooks into the DOOMEternalx64vk.exe process, then sets up pointers for memory reading/writing.
         private bool Hook() {
             List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalx64vk"));
             if(procList.Count == 0) {
-                GameProcess = null;
+                _gameProcess = null;
                 return false;
             }
-            GameProcess = procList[0];
+            _gameProcess = procList[0];
             changeVersionButton.Enabled = false;
 
-            if(GameProcess.HasExited) return false;
+            if(_gameProcess.HasExited) return false;
 
             try {
-                Memory = new MemoryHandler(GameProcess);
+                _memory = new MemoryHandler(_gameProcess);
                 SetGameInfoByModuleSize();
-                Hotkeys.EnableHotkeys();
+                _hotkeys.EnableHotkeys();
                 return true;
-            }catch (Win32Exception ex) {
+            } catch(Win32Exception ex) {
                 Debug.WriteLine(ex.ErrorCode);
                 return false;
             }
@@ -497,11 +501,11 @@ namespace DESpeedrunUtil {
 
         // Sets various game info variables based on the detected module size.
         private void SetGameInfoByModuleSize() {
-            gameVersion.Text = Memory.Version;
-            if(GameDirectory != string.Empty) {
-                File.WriteAllText(GameDirectory + "\\gameVersion.txt", "version=" + Memory.Version);
+            gameVersion.Text = _memory.Version;
+            if(_gameDirectory != string.Empty) {
+                File.WriteAllText(_gameDirectory + "\\gameVersion.txt", "version=" + _memory.Version);
             }
-            if(!Memory.CanCapFPS()) Hotkeys.DisableHotkeys();
+            if(!_memory.CanCapFPS()) _hotkeys.DisableHotkeys();
         }
     }
 }

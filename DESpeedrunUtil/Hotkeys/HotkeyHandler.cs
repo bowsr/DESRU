@@ -1,38 +1,37 @@
 ﻿using DESpeedrunUtil.Macro;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
 
-        private globalKeyboardHook Hook;
-        private MainWindow Parent;
+        private globalKeyboardHook _hook;
+        private MainWindow _parent;
 
         public bool Enabled { get; private set; }
-        private bool Key0Enabled = false, Key1Enabled = false, Key2Enabled = false;
-        private Keys FPSHotkey0 { get; set; }
-        private Keys FPSHotkey1 { get; set; }
-        private Keys FPSHotkey2 { get; set; }
+        private bool _key0Enabled = false, _key1Enabled = false, _key2Enabled = false;
+        private Keys _fpsHotkey0 { get; set; }
+        private Keys _fpsHotkey1 { get; set; }
+        private Keys _fpsHotkey2 { get; set; }
 
         public HotkeyHandler(Keys fps0, Keys fps1, Keys fps2, MainWindow parent) {
-            Hook = new globalKeyboardHook();
-            Parent = parent;
-            FPSHotkey0 = fps0;
-            FPSHotkey1 = fps1;
-            FPSHotkey2 = fps2;
+            _hook = new globalKeyboardHook();
+            _parent = parent;
+            _fpsHotkey0 = fps0;
+            _fpsHotkey1 = fps1;
+            _fpsHotkey2 = fps2;
 
-            Hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
-            Hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
+            _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
+            _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
         }
 
         public Keys GetHotkeyByNumber(int num) {
             switch(num) {
                 case 0:
-                    return FPSHotkey0;
+                    return _fpsHotkey0;
                 case 1:
-                    return FPSHotkey1;
+                    return _fpsHotkey1;
                 case 2:
-                    return FPSHotkey2;
+                    return _fpsHotkey2;
                 default:
                     return Keys.None;
             }
@@ -40,13 +39,13 @@ namespace DESpeedrunUtil.Hotkeys {
         public void ChangeHotkey(Keys key, int fps) {
             switch(fps) {
                 case 0:
-                    FPSHotkey0 = key;
+                    _fpsHotkey0 = key;
                     break;
                 case 1:
-                    FPSHotkey1 = key;
+                    _fpsHotkey1 = key;
                     break;
                 case 2:
-                    FPSHotkey2 = key;
+                    _fpsHotkey2 = key;
                     break;
             }
             RefreshKeys();
@@ -58,7 +57,7 @@ namespace DESpeedrunUtil.Hotkeys {
         }
         public void DisableHotkeys() {
             if(!Enabled) return;
-            Hook.HookedKeys.Clear();
+            _hook.HookedKeys.Clear();
             Enabled = false;
         }
         public void RefreshKeys() {
@@ -68,47 +67,47 @@ namespace DESpeedrunUtil.Hotkeys {
         public void ToggleIndividualHotkeys(int hotkey, bool enabled) {
             switch(hotkey) {
                 case 0:
-                    Key0Enabled = enabled;
+                    _key0Enabled = enabled;
                     break;
                 case 1:
-                    Key1Enabled = enabled;
+                    _key1Enabled = enabled;
                     break;
                 case 2:
-                    Key2Enabled = enabled;
+                    _key2Enabled = enabled;
                     break;
             }
             RefreshKeys();
         }
 
         private void AddHotkeys() {
-            Hook.HookedKeys.Clear();
-            if(FPSHotkey0 != Keys.None && Key0Enabled) Hook.HookedKeys.Add(FPSHotkey0);
-            if(FPSHotkey1 != Keys.None && Key1Enabled) Hook.HookedKeys.Add(FPSHotkey1);
-            if(FPSHotkey2 != Keys.None && Key2Enabled) Hook.HookedKeys.Add(FPSHotkey2);
+            _hook.HookedKeys.Clear();
+            if(_fpsHotkey0 != Keys.None && _key0Enabled) _hook.HookedKeys.Add(_fpsHotkey0);
+            if(_fpsHotkey1 != Keys.None && _key1Enabled) _hook.HookedKeys.Add(_fpsHotkey1);
+            if(_fpsHotkey2 != Keys.None && _key2Enabled) _hook.HookedKeys.Add(_fpsHotkey2);
         }
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
             int hk = -1;
-            if(e.KeyCode == FPSHotkey0) {
+            if(e.KeyCode == _fpsHotkey0) {
                 if(e.KeyCode == Keys.None) {
                     e.Handled = false;
                     return;
                 }
                 hk = 0;
-            }else if(e.KeyCode == FPSHotkey1) {
+            } else if(e.KeyCode == _fpsHotkey1) {
                 if(e.KeyCode == Keys.None) {
                     e.Handled = false;
                     return;
                 }
                 hk = 1;
-            }else if(e.KeyCode == FPSHotkey2) {
+            } else if(e.KeyCode == _fpsHotkey2) {
                 if(e.KeyCode == Keys.None) {
                     e.Handled = false;
                     return;
                 }
                 hk = 2;
             }
-            Parent.ToggleFPSCap(hk);
+            _parent.ToggleFPSCap(hk);
             e.Handled = true;
         }
         private void Hook_KeyUp(object sender, KeyEventArgs e) {
@@ -159,7 +158,7 @@ namespace DESpeedrunUtil.Hotkeys {
 
             if(type <= 2) {
                 hotkeys.ChangeHotkey(key, type);
-            }else {
+            } else {
                 macro.ChangeHotkey(key, type == 3);
             }
         }
