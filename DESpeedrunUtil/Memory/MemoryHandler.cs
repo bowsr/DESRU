@@ -34,29 +34,45 @@ namespace DESpeedrunUtil.Memory {
             Initialize();
         }
 
-        public void TestRows() {
+        public void ModifyMetricRows() {
+            var row1 = "%i FPS";
+            var row2 = _currentOffsets.Version.Replace(" Rev ", "r");
+            if(row2 == "1.0 (Release)") row2 = "Release";
+            if(_macroFlag || _firewallFlag || _slopeboostFlag) row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_slopeboostFlag) ? "R" : "R") + ")";
+            var cpu = ""; var row3 = "";
+            var cheatString = (_cheatsFlag) ? "CHEATS ENABLED" : "";
+            if(_cpuPtr.ToInt64() == 0) {
+                row3 = cheatString;
+            }else {
+                cpu = cheatString;
+            }
             _game.VirtualProtect(_row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
-            _game.WriteBytes(_row1Ptr, ToByteArray("Row 1", 8));
-            _game.WriteBytes(_row2Ptr, ToByteArray("Row 2", 79));
-            _game.WriteBytes(_row3Ptr, ToByteArray("Row 3", 19));
-            _game.WriteBytes(_row4Ptr, ToByteArray("Row 4", 7));
-            _game.WriteBytes(_row5Ptr, ToByteArray("Row 5", 34));
-            _game.WriteBytes(_row6Ptr, ToByteArray("Row 6", 34));
-            _game.WriteBytes(_row7Ptr, ToByteArray("Row 7", 34));
-            if(_row8Ptr.ToInt64() != 0) _game.WriteBytes(_row8Ptr, ToByteArray("Row 8", 34));
-            if(_row9Ptr.ToInt64() != 0) _game.WriteBytes(_row9Ptr, ToByteArray("Row 9", 34));
+            _game.WriteBytes(_row1Ptr, ToByteArray(row1, 20));
+            _game.WriteBytes(_row2Ptr, ToByteArray(row2, 16));
+            _game.WriteBytes(_row3Ptr, ToByteArray(row3, 19));
+            _game.WriteBytes(_row4Ptr, ToByteArray("", 7));
+            _game.WriteBytes(_row5Ptr, ToByteArray("", 34));
+            _game.WriteBytes(_row6Ptr, ToByteArray("", 34));
+            _game.WriteBytes(_row7Ptr, ToByteArray("", 34));
+            if(_row8Ptr.ToInt64() != 0) _game.WriteBytes(_row8Ptr, ToByteArray("", 34));
+            if(_row9Ptr.ToInt64() != 0) _game.WriteBytes(_row9Ptr, ToByteArray("", 34));
             if(_cpuPtr.ToInt64() != 0) {
                 _game.VirtualProtect(_cpuPtr, 1024, MemPageProtect.PAGE_READWRITE);
-                _game.WriteBytes(_cpuPtr, ToByteArray("CPU", 64));
+                _game.WriteBytes(_cpuPtr, ToByteArray(cpu, 64));
             }
             if(_gpuVendorPtr.ToInt64() != 0) {
                 _game.VirtualProtect(_gpuVendorPtr, 1024, MemPageProtect.PAGE_READWRITE);
-                _game.WriteBytes(_gpuVendorPtr, ToByteArray("GPU Vendor", 64));
+                _game.WriteBytes(_gpuVendorPtr, ToByteArray("", 64));
             }
             if(_gpuNamePtr.ToInt64() != 0) {
                 _game.VirtualProtect(_gpuNamePtr, 1024, MemPageProtect.PAGE_READWRITE);
-                _game.WriteBytes(_gpuNamePtr, ToByteArray("GPU Name", 64));
+                _game.WriteBytes(_gpuNamePtr, ToByteArray("", 64));
             }
+        }
+
+        public void SetMetrics(byte val) {
+            if(val > 6) return;
+            _game.WriteBytes(_metricsPtr, new byte[] { val });
         }
 
         /// <summary>
