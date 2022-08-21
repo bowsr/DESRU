@@ -12,7 +12,9 @@ namespace DESpeedrunUtil.Memory {
         public static List<KnownOffsets> OffsetList = new();
         KnownOffsets _currentOffsets;
 
-        DeepPointer _cpuDP;
+        DeepPointer _maxHzDP, _metricsDP, 
+                    _row1DP, _row2DP, _row3DP, _row4DP, _row5DP, _row6DP, _row7DP, _row8DP, _row9DP,
+                    _gpuVendorDP, _gpuNameDP, _cpuDP;
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr,
                _row1Ptr, _row2Ptr, _row3Ptr, _row4Ptr, _row5Ptr, _row6Ptr, _row7Ptr, _row8Ptr, _row9Ptr,
@@ -22,7 +24,7 @@ namespace DESpeedrunUtil.Memory {
         int _moduleSize;
         public string Version { get; init; }
 
-        bool _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false;
+        bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false;
 
         public MemoryHandler(Process game) {
             _game = game;
@@ -60,12 +62,28 @@ namespace DESpeedrunUtil.Memory {
         /// <summary>
         /// Sets the state of the flags that will be shown next to the FPS counter.
         /// </summary>
-        /// <param name="macro">Status of the Macro</param>
-        /// <param name="fw">Status of the Firewall Rule</param>
-        public void SetFlags(bool macro, bool fw) {
-            _macroFlag = macro;
-            _firewallFlag = fw;
-            if(Version == "1.0 (Release)") _slopeboostFlag = _game.ReadBytes(_rampJumpPtr, 1)[0] == 0;
+        /// <param name="flag">State of the flag</param>
+        /// <param name="flagName">Name of the flag being set</param>
+        public void SetFlag(bool flag, string flagName) {
+            switch(flagName) {
+                case "cheats":
+                    _cheatsFlag = flag;
+                    break;
+                case "macro":
+                    _macroFlag = flag;
+                    break;
+                case "firewall":
+                    _firewallFlag = flag;
+                    break;
+            }
+        }
+        public bool GetFlag(string flagName) {
+            return flagName switch {
+                "cheats" => _cheatsFlag,
+                "macro" => _macroFlag,
+                "firewall" => _firewallFlag,
+                _ => false
+            };
         }
 
         public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
@@ -86,7 +104,21 @@ namespace DESpeedrunUtil.Memory {
         /// Dereferences the <see cref="DeepPointer"/> addresses and offsets into an <see cref="IntPtr"/> that can be read from/written to.
         /// </summary>
         public void DerefPointers() {
+            if(Version == "1.0 (Release)") _slopeboostFlag = _game.ReadBytes(_rampJumpPtr, 1)[0] == 0;
             try {
+                if(_row1DP != null) _row1DP.DerefOffsets(_game, out _row1Ptr);
+                if(_row2DP != null) _row2DP.DerefOffsets(_game, out _row2Ptr);
+                if(_row3DP != null) _row3DP.DerefOffsets(_game, out _row3Ptr);
+                if(_row4DP != null) _row4DP.DerefOffsets(_game, out _row4Ptr);
+                if(_row5DP != null) _row5DP.DerefOffsets(_game, out _row5Ptr);
+                if(_row6DP != null) _row6DP.DerefOffsets(_game, out _row6Ptr);
+                if(_row7DP != null) _row7DP.DerefOffsets(_game, out _row7Ptr);
+                if(_row8DP != null) _row8DP.DerefOffsets(_game, out _row8Ptr);
+                if(_row9DP != null) _row9DP.DerefOffsets(_game, out _row9Ptr);
+                if(_gpuVendorDP != null) _gpuVendorDP.DerefOffsets(_game, out _gpuVendorPtr);
+                if(_gpuNameDP != null) _gpuNameDP.DerefOffsets(_game, out _gpuNamePtr);
+                if(_metricsDP != null) _metricsDP.DerefOffsets(_game, out _metricsPtr);
+                if(_maxHzDP != null) _maxHzDP.DerefOffsets(_game, out _maxHzPtr);
                 if(_cpuDP != null) _cpuDP.DerefOffsets(_game, out _cpuPtr);
             } catch(Win32Exception) {
                 _cpuPtr = new IntPtr(0);
@@ -137,24 +169,26 @@ namespace DESpeedrunUtil.Memory {
 
         private void Initialize() {
             var moduleBase = _game.MainModule.BaseAddress;
+            _row1DP = _row2DP = _row3DP = _row4DP = _row5DP = _row6DP = _row7DP = _row8DP = _row9DP = null;
+            _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = null;
             if(!SetCurrentKnownOffsets(Version)) {
                 SigScanRows();
             } else {
-                _row1Ptr = (_currentOffsets.Row1 != 0) ? moduleBase + _currentOffsets.Row1 : IntPtr.Zero;
-                _row2Ptr = (_currentOffsets.Row2 != 0) ? moduleBase + _currentOffsets.Row2 : IntPtr.Zero;
-                _row3Ptr = (_currentOffsets.Row3 != 0) ? moduleBase + _currentOffsets.Row3 : IntPtr.Zero;
-                _row4Ptr = (_currentOffsets.Row4 != 0) ? moduleBase + _currentOffsets.Row4 : IntPtr.Zero;
-                _row5Ptr = (_currentOffsets.Row5 != 0) ? moduleBase + _currentOffsets.Row5 : IntPtr.Zero;
-                _row6Ptr = (_currentOffsets.Row6 != 0) ? moduleBase + _currentOffsets.Row6 : IntPtr.Zero;
-                _row7Ptr = (_currentOffsets.Row7 != 0) ? moduleBase + _currentOffsets.Row7 : IntPtr.Zero;
-                _row8Ptr = (_currentOffsets.Row8 != 0) ? moduleBase + _currentOffsets.Row8 : IntPtr.Zero;
-                _row9Ptr = (_currentOffsets.Row9 != 0) ? moduleBase + _currentOffsets.Row9 : IntPtr.Zero;
+                if(_currentOffsets.Row1 != 0) _row1DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row1);
+                if(_currentOffsets.Row2 != 0) _row2DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row2);
+                if(_currentOffsets.Row3 != 0) _row3DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row3);
+                if(_currentOffsets.Row4 != 0) _row4DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row4);
+                if(_currentOffsets.Row5 != 0) _row5DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row5);
+                if(_currentOffsets.Row6 != 0) _row6DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row6);
+                if(_currentOffsets.Row7 != 0) _row7DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row7);
+                if(_currentOffsets.Row8 != 0) _row8DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row8);
+                if(_currentOffsets.Row9 != 0) _row9DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row9);
             }
-            _gpuVendorPtr = (_currentOffsets.GPUVendor != 0) ? moduleBase + _currentOffsets.GPUVendor : IntPtr.Zero;
-            _gpuNamePtr = (_currentOffsets.GPUName != 0) ? moduleBase + _currentOffsets.GPUName : IntPtr.Zero;
-            _metricsPtr = (_currentOffsets.Metrics != 0) ? moduleBase + _currentOffsets.Metrics : IntPtr.Zero;
-            _maxHzPtr = (_currentOffsets.MaxHz != 0) ? moduleBase + _currentOffsets.MaxHz : IntPtr.Zero;
-            _cpuDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.CPU, 0x0);
+            if(_currentOffsets.GPUVendor != 0) _gpuVendorDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.GPUVendor);
+            if(_currentOffsets.GPUName != 0) _gpuNameDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.GPUName);
+            if(_currentOffsets.Metrics != 0) _metricsDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Metrics);
+            if(_currentOffsets.MaxHz != 0) _maxHzDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MaxHz);
+            if(_currentOffsets.CPU != 0) _cpuDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.CPU, 0x0);
             if(Version == "1.0 (Release)") _rampJumpPtr = moduleBase + 0x6126430;
         }
 
