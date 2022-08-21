@@ -9,13 +9,13 @@ namespace DESpeedrunUtil.Memory {
         private readonly string SigScanDLSS = "444C5353203A2025730000000000000056756C6B616E202573";
 
         public static List<KnownOffsets> OffsetList = new();
+        KnownOffsets CurrentOffsets;
 
-        DeepPointer MaxHzDP, MetricsDP,
-                    GPUVendorDP, GPUNameDP, CPUDP;
+        DeepPointer CPUDP;
 
-        IntPtr      MaxHzPtr, MetricsPtr,
-                    Row1Ptr, Row2Ptr, Row3Ptr, Row4Ptr, Row5Ptr, Row6Ptr, Row7Ptr, Row8Ptr, Row9Ptr,
-                    GPUVendorPtr, GPUNamePtr, CPUPtr;
+        IntPtr MaxHzPtr, MetricsPtr,
+               Row1Ptr, Row2Ptr, Row3Ptr, Row4Ptr, Row5Ptr, Row6Ptr, Row7Ptr, Row8Ptr, Row9Ptr,
+               GPUVendorPtr, GPUNamePtr, CPUPtr;
 
         Process Game;
         int ModuleSize;
@@ -72,18 +72,6 @@ namespace DESpeedrunUtil.Memory {
         /// Dereferences the <see cref="DeepPointer"/> addresses and offsets into an <see cref="IntPtr"/> that can be read from/written to.
         /// </summary>
         public void DerefPointers() {
-            if(MaxHzDP != null) MaxHzDP.DerefOffsets(Game, out MaxHzPtr);
-            else MaxHzPtr = new IntPtr(0);
-
-            if(MetricsDP != null) MetricsDP.DerefOffsets(Game, out MetricsPtr);
-            else MetricsPtr = new IntPtr(0);
-
-            if(GPUVendorDP != null) GPUVendorDP.DerefOffsets(Game, out GPUVendorPtr);
-            else GPUVendorPtr = new IntPtr(0);
-
-            if(GPUNameDP != null) GPUNameDP.DerefOffsets(Game, out GPUNamePtr);
-            else GPUNamePtr = new IntPtr(0);
-
             if(CPUDP != null) CPUDP.DerefOffsets(Game, out CPUPtr);
             else CPUPtr = new IntPtr(0);
         }
@@ -131,74 +119,25 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void Initialize() {
-            GPUVendorDP = null;
-            GPUNameDP = null;
-            CPUDP = null;
-            MetricsDP = null;
-            MaxHzDP = null;
-            switch(ModuleSize) {
-                case 507191296:
-                case 515133440:
-                case 510681088: // Release (1.0)
-                    GPUVendorDP = new DeepPointer("DOOMEternalx64vk.exe", 0x5B83BC0);
-                    GPUNameDP = new DeepPointer("DOOMEternalx64vk.exe", 0x5B83244);
-                    CPUDP = null;
-                    MetricsDP = new DeepPointer("DoomEternalx64vk.exe", 0x3D11B20);
-                    MaxHzDP = new DeepPointer("DOOMEternalx64vk.exe", 0x3D13E60);
-                    break;
-                case 492113920: // 1.1
-                    GPUVendorDP = new DeepPointer("DOOMEternalx64vk.exe", 0x5B754D0);
-                    GPUNameDP = new DeepPointer("DOOMEternalx64vk.exe", 0x5B74B54);
-                    CPUDP = null;
-                    MetricsDP = new DeepPointer("DOOMEternalx64vk.exe", 0x3D83420);
-                    MaxHzDP = new DeepPointer("DOOMEternalx64vk.exe", 0x3D85760);
-                    break;
-                case 504107008: // 3.1
-                    GPUVendorDP = new DeepPointer("DOOMEternalx64vk.exe", 0x618E550);
-                    GPUNameDP = new DeepPointer("DOOMEternalx64vk.exe", 0x618DB94);
-                    CPUDP = null;
-                    MetricsDP = new DeepPointer("DOOMEternalx64vk.exe", 0x3FC0F40);
-                    MaxHzDP = new DeepPointer("DOOMEternalx64vk.exe", 0x3FC3300);
-                    break;
-                case 472821760: // 4.1
-                    GPUVendorDP = new DeepPointer("DOOMEternalx64vk.exe", 0x614BEF0);
-                    GPUNameDP = new DeepPointer("DOOMEternalx64vk.exe", 0x614B534);
-                    CPUDP = null;
-                    MetricsDP = new DeepPointer("DOOMEternalx64vk.exe", 0x3F50850);
-                    MaxHzDP = new DeepPointer("DOOMEternalx64vk.exe", 0x3F52C10);
-                    break;
-                case 475787264: // 5.0
-                    GPUVendorDP = new DeepPointer("DOOMEternalx64vk.exe", 0x5E44BE0);
-                    GPUNameDP = new DeepPointer("DOOMEternalx64vk.exe", 0x5E44224);
-                    CPUDP = new DeepPointer("DOOMEternalx64vk.exe", 0x489A1A0, 0x0);
-                    MetricsDP = new DeepPointer("DOOMEternalx64vk.exe", 0x4088BE0);
-                    MaxHzDP = new DeepPointer("DOOMEternalx64vk.exe", 0x408AFA0);
-                    break;
-                case 459132928: // 5.1
-                    GPUVendorDP = new DeepPointer("DOOMEternalx64vk.exe", 0x5E44BE0);
-                    GPUNameDP = new DeepPointer("DOOMEternalx64vk.exe", 0x5E44224);
-                    CPUDP = new DeepPointer("DOOMEternalx64vk.exe", 0x489A1A0, 0x0);
-                    MetricsDP = new DeepPointer("DOOMEternalx64vk.exe", 0x4088BE0);
-                    MaxHzDP = new DeepPointer("DOOMEternalx64vk.exe", 0x408AFA0);
-                    break;
-                case 494395392: // 6.4
-                    GPUVendorDP = new DeepPointer("DOOMEternalx64vk.exe", 0x6226398);
-                    GPUNameDP = new DeepPointer("DOOMEternalx64vk.exe", 0x6225874);
-                    CPUDP = new DeepPointer("DOOMEternalx64vk.exe", 0x499EFA0, 0x0);
-                    MetricsDP = new DeepPointer("DOOMEternalx64vk.exe", 0x42537B0);
-                    MaxHzDP = null;
-                    break;
-                case 510251008: // 6.66 Rev 2
-                    GPUVendorDP = new DeepPointer("DOOMEternalx64vk.exe", 0x63FC378);
-                    GPUNameDP = new DeepPointer("DOOMEternalx64vk.exe", 0x63FB854);
-                    CPUDP = new DeepPointer("DOOMEternalx64vk.exe", 0x4B7F018, 0x0);
-                    MetricsDP = new DeepPointer("DOOMEternalx64vk.exe", 0x44333D0);
-                    MaxHzDP = new DeepPointer("DOOMEternalx64vk.exe", 0x4435790);
-                    break;
-                default:
-                    break;
+            var moduleBase = Game.MainModule.BaseAddress;
+            if(!SetCurrentKnownOffsets(Version)) {
+                SigScanRows();
+            }else {
+                Row1Ptr = (CurrentOffsets.Row1 != 0) ? moduleBase + CurrentOffsets.Row1 : IntPtr.Zero;
+                Row2Ptr = (CurrentOffsets.Row2 != 0) ? moduleBase + CurrentOffsets.Row2 : IntPtr.Zero;
+                Row3Ptr = (CurrentOffsets.Row3 != 0) ? moduleBase + CurrentOffsets.Row3 : IntPtr.Zero;
+                Row4Ptr = (CurrentOffsets.Row4 != 0) ? moduleBase + CurrentOffsets.Row4 : IntPtr.Zero;
+                Row5Ptr = (CurrentOffsets.Row5 != 0) ? moduleBase + CurrentOffsets.Row5 : IntPtr.Zero;
+                Row6Ptr = (CurrentOffsets.Row6 != 0) ? moduleBase + CurrentOffsets.Row6 : IntPtr.Zero;
+                Row7Ptr = (CurrentOffsets.Row7 != 0) ? moduleBase + CurrentOffsets.Row7 : IntPtr.Zero;
+                Row8Ptr = (CurrentOffsets.Row8 != 0) ? moduleBase + CurrentOffsets.Row8 : IntPtr.Zero;
+                Row9Ptr = (CurrentOffsets.Row9 != 0) ? moduleBase + CurrentOffsets.Row9 : IntPtr.Zero;
             }
-            if(!OffsetListContainsVersion(Version)) SigScanRows();
+            GPUVendorPtr = (CurrentOffsets.GPUVendor != 0) ? moduleBase + CurrentOffsets.GPUVendor : IntPtr.Zero;
+            GPUNamePtr = (CurrentOffsets.GPUName != 0) ? moduleBase + CurrentOffsets.GPUName : IntPtr.Zero;
+            MetricsPtr = (CurrentOffsets.Metrics != 0) ? moduleBase + CurrentOffsets.Metrics : IntPtr.Zero;
+            MaxHzPtr = (CurrentOffsets.MaxHz != 0) ? moduleBase + CurrentOffsets.MaxHz : IntPtr.Zero;
+            CPUDP = new DeepPointer("DOOMEternalx64vk.exe", CurrentOffsets.CPU, 0x0);
         }
 
         private void SigScanRows() {
@@ -224,6 +163,8 @@ namespace DESpeedrunUtil.Memory {
                     Row8Ptr = dlss + 0x30;
                     Row9Ptr = dlss + 0x40;
                 }
+            }else {
+                return;
             }
             KnownOffsets ko = new KnownOffsets(Version, GetOffset(Row1Ptr),
                 GetOffset(Row2Ptr),
@@ -236,6 +177,7 @@ namespace DESpeedrunUtil.Memory {
                 GetOffset(Row9Ptr),
                 0, 0, 0, 0, 0);
             OffsetList.Add(ko);
+            CurrentOffsets = ko;
 
             var options = new JsonSerializerOptions { WriteIndented = true };
             string jsonString = JsonSerializer.Serialize(OffsetList, options);
@@ -270,9 +212,12 @@ namespace DESpeedrunUtil.Memory {
             };
         }
 
-        private static bool OffsetListContainsVersion(string ver) {
+        private bool SetCurrentKnownOffsets(string ver) {
             foreach(KnownOffsets k in OffsetList) {
-                if(k.Version == ver) return true;
+                if(k.Version == ver) {
+                    CurrentOffsets = k;
+                    return true;
+                }
             }
             Debug.WriteLine("Offset List does not contain " + ver);
             return false;

@@ -102,7 +102,7 @@ namespace DESpeedrunUtil {
             Memory.DerefPointers();
 
             if(Memory.CanCapFPS() && Memory.ReadMaxHz() > 250) Memory.CapFPS(250);
-            //Memory.TestRows();
+            Memory.TestRows();
         }
         #region EVENTS
         private void HotkeyAssignment_KeyDown(object sender, KeyEventArgs e) {
@@ -258,6 +258,7 @@ namespace DESpeedrunUtil {
 
         // Event method that runs upon loading of the MainWindow form.
         private void MainWindow_Load(object sender, EventArgs e) {
+            if(!File.Exists(@".\offsets.json")) File.WriteAllText(@".\offsets.json", System.Text.Encoding.UTF8.GetString(Properties.Resources.OffsetsJSON));
             MemoryHandler.OffsetList = JsonSerializer.Deserialize<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
             // User Settings
