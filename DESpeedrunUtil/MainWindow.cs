@@ -4,6 +4,7 @@ using DESpeedrunUtil.Memory;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
 
@@ -245,6 +246,11 @@ namespace DESpeedrunUtil {
             Directory.Move(GameDirectory, GameDirectory + " " + current);
             Directory.Move(GameDirectory + " " + desired, GameDirectory);
             changeVersionButton.Enabled = false;
+            Task.Run(async delegate {
+                versionChangedLabel.ForeColor = Color.FromKnownColor(KnownColor.ControlText);
+                await Task.Delay(3000);
+                versionChangedLabel.ForeColor = Color.FromKnownColor(KnownColor.Control);
+            });
         }
         private void DropDown_IndexChanged(object sender, EventArgs e) {
             if(!Hooked) changeVersionButton.Enabled = ((ComboBox) sender).Text != GetCurrentVersion();
@@ -252,6 +258,8 @@ namespace DESpeedrunUtil {
 
         // Event method that runs upon loading of the MainWindow form.
         private void MainWindow_Load(object sender, EventArgs e) {
+            MemoryHandler.OffsetList = JsonSerializer.Deserialize<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
+
             // User Settings
             MacroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
             Hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key, (Keys) Properties.Settings.Default.FPS2Key, this);
@@ -488,9 +496,9 @@ namespace DESpeedrunUtil {
 
         // Sets various game info variables based on the detected module size.
         private void SetGameInfoByModuleSize() {
-            gameVersion.Text = Memory.VersionString();
+            gameVersion.Text = Memory.Version;
             if(GameDirectory != string.Empty) {
-                File.WriteAllText(GameDirectory + "\\gameVersion.txt", "version=" + Memory.VersionString());
+                File.WriteAllText(GameDirectory + "\\gameVersion.txt", "version=" + Memory.Version);
             }
             if(!Memory.CanCapFPS()) Hotkeys.DisableHotkeys();
         }

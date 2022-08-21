@@ -49,6 +49,7 @@
             this.hotkeyField3 = new System.Windows.Forms.Label();
             this.versionDropDownSelector = new System.Windows.Forms.ComboBox();
             this.versionGroupBox = new System.Windows.Forms.GroupBox();
+            this.versionChangedLabel = new System.Windows.Forms.Label();
             this.refreshVersionsButton = new System.Windows.Forms.Button();
             this.changeVersionButton = new System.Windows.Forms.Button();
             this.macroGroupBox.SuspendLayout();
@@ -338,6 +339,7 @@
             // 
             // versionGroupBox
             // 
+            this.versionGroupBox.Controls.Add(this.versionChangedLabel);
             this.versionGroupBox.Controls.Add(this.refreshVersionsButton);
             this.versionGroupBox.Controls.Add(this.changeVersionButton);
             this.versionGroupBox.Controls.Add(this.versionDropDownSelector);
@@ -348,6 +350,17 @@
             this.versionGroupBox.TabIndex = 20;
             this.versionGroupBox.TabStop = false;
             this.versionGroupBox.Text = "Version Switching";
+            // 
+            // versionChangedLabel
+            // 
+            this.versionChangedLabel.AutoSize = true;
+            this.versionChangedLabel.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.versionChangedLabel.ForeColor = System.Drawing.SystemColors.Control;
+            this.versionChangedLabel.Location = new System.Drawing.Point(6, 28);
+            this.versionChangedLabel.Name = "versionChangedLabel";
+            this.versionChangedLabel.Size = new System.Drawing.Size(96, 15);
+            this.versionChangedLabel.TabIndex = 9;
+            this.versionChangedLabel.Text = "Version Swapped";
             // 
             // refreshVersionsButton
             // 
@@ -390,6 +403,7 @@
             this.fpsGroupBox.ResumeLayout(false);
             this.fpsGroupBox.PerformLayout();
             this.versionGroupBox.ResumeLayout(false);
+            this.versionGroupBox.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -424,5 +438,6 @@
         private GroupBox versionGroupBox;
         private Button refreshVersionsButton;
         private Button changeVersionButton;
+        private Label versionChangedLabel;
     }
 }
