@@ -17,6 +17,8 @@ namespace DESpeedrunUtil {
         Process _gameProcess;
         public bool Hooked = false;
 
+        bool _closeForm = false;
+
         bool _fwRuleExists = false;
         bool _fwRestart = false;
 
@@ -40,16 +42,11 @@ namespace DESpeedrunUtil {
 
         List<Label> _hotkeyFields;
 
-        string _gameDirectory = "", _steamDirectory = "", _libraryVDFLocation = "";
+        string _gameDirectory = "", _steamDirectory = "";
         List<string> _gameVersions;
 
         public MainWindow() {
             InitializeComponent();
-            SearchForSteamGameDir();
-            _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
-            firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
-            _mhExists = File.Exists(_gameDirectory + "\\XINPUT1_3.dll");
-            meathookToggleButton.Text = _mhExists ? "Disable meath00k" : "Enable meath00k";
 
             _hotkeyFields = new();
             _hotkeyFields.Add(hotkeyField0);
@@ -62,34 +59,6 @@ namespace DESpeedrunUtil {
             _formTimer.Interval = 8;
             _formTimer.Tick += new EventHandler(UpdateTick);
 
-            this.KeyDown += new KeyEventHandler(HotkeyAssignment_KeyDown);
-            this.MouseDown += new MouseEventHandler(HotkeyAssignment_MouseDown);
-            this.FormClosing += new FormClosingEventHandler(MainWindow_Closing);
-            this.Load += new EventHandler(MainWindow_Load);
-
-            fpsInput0.KeyPress += new KeyPressEventHandler(FPSInput_KeyPressNumericOnly);
-            fpsInput1.KeyPress += new KeyPressEventHandler(FPSInput_KeyPressNumericOnly);
-            fpsInput2.KeyPress += new KeyPressEventHandler(FPSInput_KeyPressNumericOnly);
-            fpsInput0.KeyUp += new KeyEventHandler(FPSInput_KeyUp);
-            fpsInput1.KeyUp += new KeyEventHandler(FPSInput_KeyUp);
-            fpsInput2.KeyUp += new KeyEventHandler(FPSInput_KeyUp);
-
-            hotkeyField0.Click += new EventHandler(HotkeyAssignment_FieldSelected);
-            hotkeyField1.Click += new EventHandler(HotkeyAssignment_FieldSelected);
-            hotkeyField2.Click += new EventHandler(HotkeyAssignment_FieldSelected);
-            hotkeyField3.Click += new EventHandler(HotkeyAssignment_FieldSelected);
-            hotkeyField4.Click += new EventHandler(HotkeyAssignment_FieldSelected);
-
-            autorunMacroCheckbox.CheckedChanged += new EventHandler(AutoStartMacro_CheckChanged);
-            enableHotkeysCheckbox.CheckedChanged += new EventHandler(EnableHotkeys_CheckChanged);
-
-            changeVersionButton.Click += new EventHandler(ChangeVersion_Click);
-            refreshVersionsButton.Click += new EventHandler(RefreshVersions_Click);
-            firewallToggleButton.Click += new EventHandler(FirewallToggle_Click);
-            meathookToggleButton.Click += new EventHandler(MeathookToggle_Click);
-
-            versionDropDownSelector.SelectedIndexChanged += new EventHandler(DropDown_IndexChanged);
-
             AddMouseIntercepts(this);
         }
 
@@ -101,8 +70,12 @@ namespace DESpeedrunUtil {
                 _memory = null;
             }
             _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
+            firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
+            _mhExists = File.Exists(_gameDirectory + "\\XINPUT1_3.dll");
+            meathookToggleButton.Text = _mhExists ? "Disable meath00k" : "Enable meath00k";
             MeathookRemoval();
             _mhExists = CheckForMeathook();
+
             if(!meathookToggleButton.Enabled) {
                 meathookToggleButton.Enabled = !_mhScheduleRemoval && !_mhExists;
             }
@@ -117,8 +90,8 @@ namespace DESpeedrunUtil {
 
             if(!Hooked) Hooked = Hook();
             if(!Hooked) {
+                versionDropDownSelector.Enabled = true;
                 _macroProcess.Stop(true);
-                if(_gameProcess != null) changeVersionButton.Enabled = true;
                 _fwRestart = false;
                 _mhRestart = false;
                 return;
@@ -175,7 +148,7 @@ namespace DESpeedrunUtil {
                 versionDropDownSelector.Items.Add(v);
                 if(v == GetCurrentVersion()) versionDropDownSelector.SelectedIndex = i;
             }
-            if(!Hooked) changeVersionButton.Enabled = false;
+            changeVersionButton.Enabled = false;
         }
 
         public string GetCurrentVersion() {
@@ -223,7 +196,8 @@ namespace DESpeedrunUtil {
         // Auto-detects game directory. Asks for manual selection if it cannot be found.
         private void SearchForSteamGameDir() {
             List<string> SteamLibraryDrives = new();
-            if(_libraryVDFLocation == string.Empty) {
+            var vdfLocation = "";
+            if(_gameDirectory == string.Empty) {
                 string steamPath, vdfPath;
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\");
 
@@ -234,16 +208,23 @@ namespace DESpeedrunUtil {
                 } catch(Exception) {
                     Debug.WriteLine("Couldn't find Steam install path! Does it even exist?");
 
-                    // TODO - Popup window to manually select game dir
+                    using GameDirectoryDialog gameSelection = new();
+                    if(gameSelection.ShowDialog() == DialogResult.OK) {
+                        _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
+                        _steamDirectory = _gameDirectory.Remove(_gameDirectory.IndexOf("\\DOOMEternal"));
+                        DetectAllGameVersions();
+                    } else {
+                        this.Close();
+                    }
                     return;
                 }
 
                 vdfPath = steamPath + @"\steamapps\libraryfolders.vdf";
-                _libraryVDFLocation = vdfPath;
+                vdfLocation = vdfPath;
             }
             string driveRegex = @"[A-Z]:\\";
-            if(File.Exists(_libraryVDFLocation)) {
-                string[] vdfLines = File.ReadAllLines(_libraryVDFLocation);
+            if(File.Exists(vdfLocation)) {
+                string[] vdfLines = File.ReadAllLines(vdfLocation);
 
                 foreach(string s in vdfLines) {
                     Match match = Regex.Match(s, driveRegex);
@@ -270,6 +251,17 @@ namespace DESpeedrunUtil {
                     }
                 }
             }
+            if(_gameDirectory == string.Empty) {
+                using GameDirectoryDialog gameSelection = new();
+                if(gameSelection.ShowDialog() == DialogResult.OK) {
+                    _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
+                    DetectAllGameVersions();
+                }else {
+                    this.Close();
+                }
+                gameSelection.Dispose();
+            }
+            _steamDirectory = _gameDirectory.Remove(_gameDirectory.IndexOf("\\DOOMEternal"));
             DetectAllGameVersions();
         }
 
@@ -279,6 +271,7 @@ namespace DESpeedrunUtil {
         private void DetectAllGameVersions() {
             List<string> Directories = new();
             if(_steamDirectory != string.Empty) {
+                if(!_steamDirectory.ToLower().Contains("steam")) return;
                 string[] gameDirs = Directory.GetDirectories(_steamDirectory);
                 foreach(var dir in gameDirs) {
                     if(!dir.Contains("DOOMEternal")) continue;
@@ -353,6 +346,8 @@ namespace DESpeedrunUtil {
             }
             _gameProcess = procList[0];
             changeVersionButton.Enabled = false;
+            versionDropDownSelector.SelectedItem = GetCurrentVersion();
+            versionDropDownSelector.Enabled = false;
 
             if(_gameProcess.HasExited) return false;
 
@@ -514,6 +509,7 @@ namespace DESpeedrunUtil {
             if(_steamDirectory != string.Empty) DetectAllGameVersions();
         }
         private void ChangeVersion_Click(object sender, EventArgs e) {
+            if(versionDropDownSelector.Text == string.Empty) return;
             string current = GetCurrentVersion(), desired = versionDropDownSelector.Text;
             if(current == desired) return;
             if(Directory.Exists(_steamDirectory + "\\DOOMEternal " + current)) return; // Eventually add a popup saying there's a folder conflict
@@ -569,13 +565,14 @@ namespace DESpeedrunUtil {
             _fps2 = Properties.Settings.Default.FPSCap2;
             autorunMacroCheckbox.Checked = Properties.Settings.Default.MacroEnabled;
             enableHotkeysCheckbox.Checked = Properties.Settings.Default.FPSHotkeysEnabled;
-            _libraryVDFLocation = Properties.Settings.Default.SteamVDFLocation;
+            _gameDirectory = Properties.Settings.Default.GameLocation;
             ToggleIndividualHotkeys();
             UpdateHotkeyFields();
 
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
 
+            SearchForSteamGameDir();
             _formTimer.Start();
         }
 
@@ -592,7 +589,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.FPSCap2 = _fps2;
             Properties.Settings.Default.MacroEnabled = _enableMacro;
             Properties.Settings.Default.FPSHotkeysEnabled = _hotkeys.Enabled;
-            Properties.Settings.Default.SteamVDFLocation = _libraryVDFLocation;
+            Properties.Settings.Default.GameLocation = _gameDirectory;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 

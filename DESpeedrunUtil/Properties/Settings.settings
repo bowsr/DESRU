@@ -35,7 +35,7 @@
     <Setting Name="FPSHotkeysEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="SteamVDFLocation" Type="System.String" Scope="User">
+    <Setting Name="GameLocation" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
   </Settings>

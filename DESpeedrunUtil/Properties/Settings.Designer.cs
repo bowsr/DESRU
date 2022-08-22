@@ -158,12 +158,12 @@ namespace DESpeedrunUtil.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string SteamVDFLocation {
+        public string GameLocation {
             get {
-                return ((string)(this["SteamVDFLocation"]));
+                return ((string)(this["GameLocation"]));
             }
             set {
-                this["SteamVDFLocation"] = value;
+                this["GameLocation"] = value;
             }
         }
     }

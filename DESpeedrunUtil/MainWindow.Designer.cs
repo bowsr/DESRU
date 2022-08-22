@@ -70,6 +70,7 @@
             this.hotkeyField0.Size = new System.Drawing.Size(134, 23);
             this.hotkeyField0.TabIndex = 2;
             this.hotkeyField0.Tag = "macroDown";
+            this.hotkeyField0.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // hotkeyField1
             // 
@@ -83,6 +84,7 @@
             this.hotkeyField1.Size = new System.Drawing.Size(134, 23);
             this.hotkeyField1.TabIndex = 3;
             this.hotkeyField1.Tag = "macroUp";
+            this.hotkeyField1.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // autorunMacroCheckbox
             // 
@@ -95,6 +97,7 @@
             this.autorunMacroCheckbox.TabIndex = 8;
             this.autorunMacroCheckbox.Text = "Enable Macro";
             this.autorunMacroCheckbox.UseVisualStyleBackColor = true;
+            this.autorunMacroCheckbox.CheckedChanged += new System.EventHandler(this.AutoStartMacro_CheckChanged);
             // 
             // macroUpKeyLabel
             // 
@@ -195,6 +198,7 @@
             this.enableHotkeysCheckbox.TabIndex = 9;
             this.enableHotkeysCheckbox.Text = "Enable Hotkeys";
             this.enableHotkeysCheckbox.UseVisualStyleBackColor = true;
+            this.enableHotkeysCheckbox.CheckedChanged += new System.EventHandler(this.EnableHotkeys_CheckChanged);
             // 
             // fpsInput2
             // 
@@ -208,6 +212,8 @@
             this.fpsInput2.Size = new System.Drawing.Size(29, 23);
             this.fpsInput2.TabIndex = 16;
             this.fpsInput2.Tag = "fpscap2";
+            this.fpsInput2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FPSInput_KeyPressNumericOnly);
+            this.fpsInput2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsInput1
             // 
@@ -221,6 +227,8 @@
             this.fpsInput1.Size = new System.Drawing.Size(29, 23);
             this.fpsInput1.TabIndex = 15;
             this.fpsInput1.Tag = "fpscap1";
+            this.fpsInput1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FPSInput_KeyPressNumericOnly);
+            this.fpsInput1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsInput0
             // 
@@ -234,6 +242,8 @@
             this.fpsInput0.Size = new System.Drawing.Size(29, 23);
             this.fpsInput0.TabIndex = 14;
             this.fpsInput0.Tag = "fpscap0";
+            this.fpsInput0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FPSInput_KeyPressNumericOnly);
+            this.fpsInput0.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsKey2Label
             // 
@@ -258,6 +268,7 @@
             this.hotkeyField4.Size = new System.Drawing.Size(100, 23);
             this.hotkeyField4.TabIndex = 12;
             this.hotkeyField4.Tag = "fps2";
+            this.hotkeyField4.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // fpsKey1Label
             // 
@@ -282,6 +293,7 @@
             this.hotkeyField2.Size = new System.Drawing.Size(100, 23);
             this.hotkeyField2.TabIndex = 8;
             this.hotkeyField2.Tag = "fps0";
+            this.hotkeyField2.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // fpsKey0Label
             // 
@@ -306,6 +318,7 @@
             this.hotkeyField3.Size = new System.Drawing.Size(100, 23);
             this.hotkeyField3.TabIndex = 9;
             this.hotkeyField3.Tag = "fps1";
+            this.hotkeyField3.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // versionDropDownSelector
             // 
@@ -317,6 +330,7 @@
             this.versionDropDownSelector.Name = "versionDropDownSelector";
             this.versionDropDownSelector.Size = new System.Drawing.Size(92, 23);
             this.versionDropDownSelector.TabIndex = 9;
+            this.versionDropDownSelector.SelectedIndexChanged += new System.EventHandler(this.DropDown_IndexChanged);
             // 
             // versionChangedLabel
             // 
@@ -342,10 +356,12 @@
             this.refreshVersionsButton.TabIndex = 11;
             this.refreshVersionsButton.Text = "Refresh List";
             this.refreshVersionsButton.UseVisualStyleBackColor = false;
+            this.refreshVersionsButton.Click += new System.EventHandler(this.RefreshVersions_Click);
             // 
             // changeVersionButton
             // 
             this.changeVersionButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(60)))), ((int)(((byte)(60)))));
+            this.changeVersionButton.Enabled = false;
             this.changeVersionButton.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(75)))), ((int)(((byte)(75)))), ((int)(((byte)(75)))));
             this.changeVersionButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.changeVersionButton.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
@@ -356,6 +372,7 @@
             this.changeVersionButton.TabIndex = 10;
             this.changeVersionButton.Text = "Change Version";
             this.changeVersionButton.UseVisualStyleBackColor = false;
+            this.changeVersionButton.Click += new System.EventHandler(this.ChangeVersion_Click);
             // 
             // firewallToggleButton
             // 
@@ -370,6 +387,7 @@
             this.firewallToggleButton.TabIndex = 0;
             this.firewallToggleButton.Text = "fwToggleButton";
             this.firewallToggleButton.UseVisualStyleBackColor = false;
+            this.firewallToggleButton.Click += new System.EventHandler(this.FirewallToggle_Click);
             // 
             // label1
             // 
@@ -426,6 +444,7 @@
             this.meathookToggleButton.TabIndex = 24;
             this.meathookToggleButton.Text = "mhToggleButton";
             this.meathookToggleButton.UseVisualStyleBackColor = false;
+            this.meathookToggleButton.Click += new System.EventHandler(this.MeathookToggle_Click);
             // 
             // meathookRestartLabel
             // 
@@ -494,6 +513,10 @@
             this.Name = "MainWindow";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "DOOM Eternal Speedrun Utility";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_Closing);
+            this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HotkeyAssignment_KeyDown);
+            this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HotkeyAssignment_MouseDown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
