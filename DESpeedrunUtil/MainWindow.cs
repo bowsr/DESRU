@@ -70,6 +70,10 @@ namespace DESpeedrunUtil {
                 hotkeyField4
             };
 
+            this.Controls.Add(new TitleShadowLabel(_fontEternalBattleBold20_25, "DOOM ETERNAL SPEEDRUN UTILITY", new Point(13, 9), Color.FromArgb(190, 34, 34), FORM_BACKCOLOR));
+            this.Controls.Add(new TitleShadowLabel(_fontEternalLogoBold14, "KEYBINDS", new Point(12, 64), TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new TitleShadowLabel(_fontEternalLogoBold14, "OPTIONS", new Point(12, 268), TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new TitleShadowLabel(_fontEternalLogoBold14, "CHANGE VERSION", new Point(12, 451), TEXT_FORECOLOR, FORM_BACKCOLOR));
             gameVersion.Font = _fontEternalUIRegular11_25;
 
             _formTimer = new Timer();
@@ -417,17 +421,17 @@ namespace DESpeedrunUtil {
             foreach(FontFamily ff in fonts.Families) {
                 switch(ff.Name) {
                     case "Eternal UI 2":
-                        _fontEternalUIRegular11_25 = new(ff, 11.25f, FontStyle.Regular);
-                        _fontEternalUIBold11_25 = new(ff, 11.25f, FontStyle.Bold);
+                        _fontEternalUIRegular11_25 = new(ff, 11.25f, FontStyle.Regular, GraphicsUnit.Point);
+                        _fontEternalUIBold11_25 = new(ff, 11.25f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                     case "Eternal Ancient":
-                        _eternalAncientFont = new(ff, 11.25f);
+                        _eternalAncientFont = new(ff, 11.25f, GraphicsUnit.Point);
                         break;
                     case "Eternal Battle":
-                        _fontEternalBattleBold20_25 = new(ff, 20.25f, FontStyle.Bold);
+                        _fontEternalBattleBold20_25 = new(ff, 20.25f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                     case "Eternal Logo":
-                        _fontEternalLogoBold14 = new(ff, 14f, FontStyle.Bold);
+                        _fontEternalLogoBold14 = new(ff, 14f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                 }
             }
@@ -737,6 +741,25 @@ namespace DESpeedrunUtil {
 
             _hotkeys.DisableHotkeys();
             _macroProcess.Stop(false);
+        }
+        #endregion
+
+        #region COMPONENTS
+        public class TitleShadowLabel: Label {
+            public TitleShadowLabel(Font font, string text, Point loc, Color color, Color back) {
+                this.AutoSize = true;
+                this.Font = font;
+                this.Location = loc;
+                this.ForeColor = color;
+                this.BackColor = back;
+                this.Text = text;
+                this.Padding = new Padding(0, 0, 0, 0);
+            }
+            protected override void OnPaint(PaintEventArgs e) {
+                //base.OnPaint(e);
+                e.Graphics.DrawString(Text, Font, new SolidBrush(Color.Black), 3, 3);
+                e.Graphics.DrawString(Text, Font, new SolidBrush(ForeColor), 0, 0);
+            }
         }
         #endregion
     }

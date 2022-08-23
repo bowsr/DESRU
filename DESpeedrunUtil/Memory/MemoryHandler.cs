@@ -12,7 +12,7 @@ namespace DESpeedrunUtil.Memory {
         public static List<KnownOffsets> OffsetList = new();
         KnownOffsets _currentOffsets;
 
-        DeepPointer _maxHzDP, _metricsDP, 
+        DeepPointer _maxHzDP, _metricsDP, _rampJumpDP,
                     _row1DP, _row2DP, _row3DP, _row4DP, _row5DP, _row6DP, _row7DP, _row8DP, _row9DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP;
 
@@ -120,7 +120,6 @@ namespace DESpeedrunUtil.Memory {
         /// Dereferences the <see cref="DeepPointer"/> addresses and offsets into an <see cref="IntPtr"/> that can be read from/written to.
         /// </summary>
         public void DerefPointers() {
-            if(Version == "1.0 (Release)") _slopeboostFlag = _game.ReadBytes(_rampJumpPtr, 1)[0] == 0;
             try {
                 if(_row1DP != null) _row1DP.DerefOffsets(_game, out _row1Ptr);
                 if(_row2DP != null) _row2DP.DerefOffsets(_game, out _row2Ptr);
@@ -136,9 +135,11 @@ namespace DESpeedrunUtil.Memory {
                 if(_metricsDP != null) _metricsDP.DerefOffsets(_game, out _metricsPtr);
                 if(_maxHzDP != null) _maxHzDP.DerefOffsets(_game, out _maxHzPtr);
                 if(_cpuDP != null) _cpuDP.DerefOffsets(_game, out _cpuPtr);
-            } catch(Win32Exception) {
-                _cpuPtr = new IntPtr(0);
+                if(_rampJumpDP != null) _rampJumpDP.DerefOffsets(_game, out _rampJumpPtr);
+            } catch(Win32Exception e) {
+                Debug.WriteLine(e.StackTrace);
             }
+            if(Version == "1.0 (Release)") _slopeboostFlag = _game.ReadBytes(_rampJumpPtr, 1)[0] == 0;
         }
 
         public static byte[] ToByteArray(string text, int length) {
@@ -205,7 +206,7 @@ namespace DESpeedrunUtil.Memory {
             if(_currentOffsets.Metrics != 0) _metricsDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Metrics);
             if(_currentOffsets.MaxHz != 0) _maxHzDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MaxHz);
             if(_currentOffsets.CPU != 0) _cpuDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.CPU, 0x0);
-            if(Version == "1.0 (Release)") _rampJumpPtr = moduleBase + 0x6126430;
+            if(Version == "1.0 (Release)") _rampJumpDP = new DeepPointer("DOOMEternalx64vk.exe", 0x6126430);
         }
 
         private void SigScanRows() {

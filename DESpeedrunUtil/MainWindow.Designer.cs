@@ -159,6 +159,7 @@
             this.hotkeysTitle.Size = new System.Drawing.Size(147, 21);
             this.hotkeysTitle.TabIndex = 5;
             this.hotkeysTitle.Text = "KEYBINDS";
+            this.hotkeysTitle.Visible = false;
             // 
             // gameVersion
             // 
@@ -400,6 +401,7 @@
             this.windowTitle.Size = new System.Drawing.Size(614, 33);
             this.windowTitle.TabIndex = 21;
             this.windowTitle.Text = "DOOM ETERNAL SPEEDRUN UTILITY";
+            this.windowTitle.Visible = false;
             // 
             // versionTitle
             // 
@@ -411,6 +413,7 @@
             this.versionTitle.Size = new System.Drawing.Size(248, 21);
             this.versionTitle.TabIndex = 22;
             this.versionTitle.Text = "CHANGE VERSION";
+            this.versionTitle.Visible = false;
             // 
             // optionsTitle
             // 
@@ -422,6 +425,7 @@
             this.optionsTitle.Size = new System.Drawing.Size(129, 21);
             this.optionsTitle.TabIndex = 23;
             this.optionsTitle.Text = "OPTIONS";
+            this.optionsTitle.Visible = false;
             // 
             // meathookToggleButton
             // 
