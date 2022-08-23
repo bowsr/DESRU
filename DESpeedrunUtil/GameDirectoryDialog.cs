@@ -5,6 +5,7 @@ namespace DESpeedrunUtil {
         public string FileName { get; private set; }
         public GameDirectoryDialog() {
             InitializeComponent();
+            this.Icon = Properties.Resources.DESRU;
         }
 
         private void SelectFolder_Click(object sender, EventArgs e) {

@@ -209,55 +209,43 @@ namespace DESpeedrunUtil.Hotkeys {
         }
 
         public static string TranslateKeyNames(Keys key) {
-            string name;
-            switch(key) {
-                case Keys.LButton:
-                    name = "MOUSE1";
-                    break;
-                case Keys.RButton:
-                    name = "MOUSE2";
-                    break;
-                case Keys.MButton:
-                    name = "MOUSE3";
-                    break;
-                case Keys.XButton1:
-                    name = "MOUSE4";
-                    break;
-                case Keys.XButton2:
-                    name = "MOUSE5";
-                    break;
-                case Keys.LMenu:
-                    name = "Alt";
-                    break;
-                case Keys.RMenu:
-                    name = "RAlt";
-                    break;
-                case Keys.LShiftKey:
-                    name = "Shift";
-                    break;
-                case Keys.RShiftKey:
-                    name = "RShift";
-                    break;
-                case Keys.LControlKey:
-                    name = "Control";
-                    break;
-                case Keys.RControlKey:
-                    name = "RControl";
-                    break;
-                case Keys.LWin:
-                    name = "Win";
-                    break;
-                case Keys.RWin:
-                    name = "RWin";
-                    break;
-                case Keys.None:
-                    name = "";
-                    break;
-                default:
-                    name = key.ToString();
-                    break;
-            }
-            return name;
+            return key switch {
+                Keys.LButton => "MOUSE1",
+                Keys.RButton => "MOUSE2",
+                Keys.MButton => "MOUSE3",
+                Keys.XButton1 => "MOUSE4",
+                Keys.XButton2 => "MOUSE5",
+                Keys.LMenu => "Alt",
+                Keys.RMenu => "RAlt",
+                Keys.LShiftKey => "Shift",
+                Keys.RShiftKey => "RShift",
+                Keys.LControlKey => "Control",
+                Keys.RControlKey => "RControl",
+                Keys.LWin => "Win",
+                Keys.RWin => "RWin",
+                Keys.D1 => "1",
+                Keys.D2 => "2",
+                Keys.D3 => "3",
+                Keys.D4 => "4",
+                Keys.D5 => "5",
+                Keys.D6 => "6",
+                Keys.D7 => "7",
+                Keys.D8 => "8",
+                Keys.D9 => "9",
+                Keys.D0 => "0",
+                Keys.Oemplus => "=",
+                Keys.OemMinus => "-",
+                Keys.OemOpenBrackets => "[",
+                Keys.Oem6 => "]",
+                Keys.Oem5 => "\\",
+                Keys.Oem1 => ";",
+                Keys.Oemcomma => ",",
+                Keys.OemPeriod => ".",
+                Keys.Next => "PageDown",
+                Keys.Back => "Backspace",
+                Keys.None => "",
+                _ => key.ToString()
+            };
         }
         #endregion
 

@@ -166,5 +166,17 @@ namespace DESpeedrunUtil.Properties {
                 this["GameLocation"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("250")]
+        public int DefaultFPSCap {
+            get {
+                return ((int)(this["DefaultFPSCap"]));
+            }
+            set {
+                this["DefaultFPSCap"] = value;
+            }
+        }
     }
 }

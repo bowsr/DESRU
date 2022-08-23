@@ -5,74 +5,93 @@ using DESpeedrunUtil.Memory;
 using Microsoft.Win32;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing.Text;
+using System.Runtime.InteropServices;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
-        private readonly Color FORM_BACKCOLOR = Color.FromArgb(45, 45, 45);
-        private readonly Color TEXT_BACKCOLOR = Color.FromArgb(60, 60, 60);
 
-        Process _gameProcess;
+        [DllImport("gdi32.dll")]
+        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv,
+            [In] ref uint pcFonts);
+
+        private readonly Color FORM_BACKCOLOR = Color.FromArgb(35, 35, 35);
+        private readonly Color PANEL_BACKCOLOR = Color.FromArgb(45, 45, 45);
+        private readonly Color TEXT_BACKCOLOR = Color.FromArgb(70, 70, 70);
+        private readonly Color TEXT_FORECOLOR = Color.FromArgb(230, 230, 230);
+
+        private readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
+
+        private PrivateFontCollection fonts = new();
+        Font _fontEternalUIRegular11_25, _fontEternalUIBold11_25, _eternalAncientFont, _fontEternalLogoBold14, _fontEternalBattleBold20_25;
+
+        Process? _gameProcess;
         public bool Hooked = false;
 
-        bool _closeForm = false;
+        bool _mouseDown;
+        Point _lastLocation;
 
         bool _fwRuleExists = false;
         bool _fwRestart = false;
 
         bool _mhExists = false, _mhScheduleRemoval = false, _mhDoRemovalTask = false;
-        bool _mhRestart = false;
 
-        FreescrollMacro _macroProcess;
+        FreescrollMacro? _macroProcess;
         bool _enableMacro = true;
 
-        HotkeyHandler _hotkeys;
-        int _fps0, _fps1, _fps2;
+        HotkeyHandler? _hotkeys;
+        int _fps0, _fps1, _fps2, _fpsDefault;
 
-        MemoryHandler _memory;
+        MemoryHandler? _memory;
 
         Timer _formTimer;
 
         bool _hkAssignmentMode = false, _mouse1Pressed = false;
         Label _selectedHKField = null;
 
-        Keys[] _invalidKeys = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
-
         List<Label> _hotkeyFields;
 
         string _gameDirectory = "", _steamDirectory = "";
-        List<string> _gameVersions;
+        List<string>? _gameVersions;
 
         public MainWindow() {
             InitializeComponent();
+            this.Icon = Properties.Resources.DESRU;
+            InitializeFonts();
 
-            _hotkeyFields = new();
-            _hotkeyFields.Add(hotkeyField0);
-            _hotkeyFields.Add(hotkeyField1);
-            _hotkeyFields.Add(hotkeyField2);
-            _hotkeyFields.Add(hotkeyField3);
-            _hotkeyFields.Add(hotkeyField4);
+            _hotkeyFields = new() {
+                hotkeyField0,
+                hotkeyField1,
+                hotkeyField2,
+                hotkeyField3,
+                hotkeyField4
+            };
+
+            gameVersion.Font = _fontEternalUIRegular11_25;
 
             _formTimer = new Timer();
             _formTimer.Interval = 8;
-            _formTimer.Tick += new EventHandler(UpdateTick);
+            _formTimer.Tick += (sender, e) => { UpdateTick(); };
 
             AddMouseIntercepts(this);
+            RemoveTabStop(this);
         }
 
+
         // Main timer method that runs this utility's logic.
-        private void UpdateTick(object sender, EventArgs e) {
+        private void UpdateTick() {
             if(_gameProcess == null || _gameProcess.HasExited) {
                 Hooked = false;
                 _gameProcess = null;
                 _memory = null;
             }
+            if(!_fwRestart) firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
             _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
             _mhExists = File.Exists(_gameDirectory + "\\XINPUT1_3.dll");
-            meathookToggleButton.Text = _mhExists ? "Disable meath00k" : "Enable meath00k";
             MeathookRemoval();
             _mhExists = CheckForMeathook();
 
@@ -93,7 +112,6 @@ namespace DESpeedrunUtil {
                 versionDropDownSelector.Enabled = true;
                 _macroProcess.Stop(true);
                 _fwRestart = false;
-                _mhRestart = false;
                 return;
             }
 
@@ -102,7 +120,7 @@ namespace DESpeedrunUtil {
 
             _memory.DerefPointers();
 
-            if(_memory.CanCapFPS() && _memory.ReadMaxHz() > 250) _memory.CapFPS(250);
+            if(_memory.CanCapFPS() && _memory.ReadMaxHz() > _fpsDefault) _memory.CapFPS(_fpsDefault);
             _memory.SetFlag(_fwRuleExists, "firewall");
             _memory.SetFlag(_macroProcess.IsRunning, "macro");
             _memory.SetMetrics(2);
@@ -133,12 +151,13 @@ namespace DESpeedrunUtil {
                         break;
                 }
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
-                l.ForeColor = Color.LightGray;
+                l.ForeColor = TEXT_FORECOLOR;
                 l.BackColor = TEXT_BACKCOLOR;
             }
             fpsInput0.Text = _fps0.ToString();
             fpsInput1.Text = _fps1.ToString();
             fpsInput2.Text = _fps2.ToString();
+            defaultFPS.Text = _fpsDefault.ToString();
         }
 
         public void PopulateVersionDropDown() {
@@ -164,7 +183,7 @@ namespace DESpeedrunUtil {
         /// </summary>
         /// <param name="fpsHotkey">Which hotkey to trigger</param>
         public void ToggleFPSCap(int fpsHotkey) {
-            int newFPS = 250;
+            int newFPS = _fpsDefault;
             switch(fpsHotkey) {
                 case 0:
                     if(_fps0 != -1) if(_memory.ReadMaxHz() != _fps0) newFPS = _fps0;
@@ -190,6 +209,13 @@ namespace DESpeedrunUtil {
             foreach(Control c in control.Controls) {
                 c.MouseDown += new MouseEventHandler(HotkeyAssignment_MouseDown);
                 if(c.Controls.Count > 0) AddMouseIntercepts(c);
+            }
+        }
+
+        private void RemoveTabStop(Control control) {
+            foreach(Control c in control.Controls) {
+                c.TabStop = false;
+                if(c.Controls.Count > 0) RemoveTabStop(c);
             }
         }
 
@@ -300,7 +326,7 @@ namespace DESpeedrunUtil {
 
         private bool CheckForMeathook() {
             bool mh = File.Exists(_gameDirectory + "\\XINPUT1_3.dll");
-            meathookToggleButton.Text = mh ? "Disable meath00k" : "Enable meath00k";
+            meathookToggleButton.Text = mh ? "Disable Cheats" : "Enable Cheats";
             return mh;
         }
 
@@ -310,7 +336,7 @@ namespace DESpeedrunUtil {
                     if(_memory.GetFlag("cheats")) {
                         _mhDoRemovalTask = true;
                         meathookToggleButton.Enabled = false;
-                        meathookRestartLabel.ForeColor = Color.LightGray;
+                        meathookRestartLabel.ForeColor = TEXT_FORECOLOR;
                         return;
                     }
                 }
@@ -326,7 +352,7 @@ namespace DESpeedrunUtil {
                                 Debug.WriteLine(e.StackTrace);
                             }
                         }
-                        meathookRestartLabel.ForeColor = Color.FromArgb(45, 45, 45);
+                        meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                     });
                 }else {
                     if(_mhScheduleRemoval == true && _mhExists) {
@@ -357,8 +383,8 @@ namespace DESpeedrunUtil {
                 Debug.WriteLine(ex.Message);
                 return false;
             }
+            if(enableHotkeysCheckbox.Checked) _hotkeys.EnableHotkeys();
             SetGameInfoByModuleSize();
-            _hotkeys.EnableHotkeys();
             if(File.Exists(_gameDirectory + "\\XINPUT1_3.dll")) _memory.SetFlag(true, "cheats");
             return true;
         }
@@ -372,6 +398,79 @@ namespace DESpeedrunUtil {
             if(!_memory.CanCapFPS()) _hotkeys.DisableHotkeys();
         }
 
+        private void InitializeFonts() {
+            List<byte[]> fontData = new() {
+                Properties.Resources.EternalUi2Regular,
+                Properties.Resources.EternalUi2Bold,
+                Properties.Resources.EternalBattleBold,
+                Properties.Resources.EternalAncient,
+                Properties.Resources.EternalLogo,
+            };
+            foreach(byte[] data in fontData) {
+                uint dummy = 0;
+                IntPtr fontPtr = Marshal.AllocCoTaskMem(data.Length);
+                Marshal.Copy(data, 0, fontPtr, data.Length);
+                fonts.AddMemoryFont(fontPtr, data.Length);
+                AddFontMemResourceEx(fontPtr, (uint) data.Length, IntPtr.Zero, ref dummy);
+                Marshal.FreeCoTaskMem(fontPtr);
+            }
+            foreach(FontFamily ff in fonts.Families) {
+                switch(ff.Name) {
+                    case "Eternal UI 2":
+                        _fontEternalUIRegular11_25 = new(ff, 11.25f, FontStyle.Regular);
+                        _fontEternalUIBold11_25 = new(ff, 11.25f, FontStyle.Bold);
+                        break;
+                    case "Eternal Ancient":
+                        _eternalAncientFont = new(ff, 11.25f);
+                        break;
+                    case "Eternal Battle":
+                        _fontEternalBattleBold20_25 = new(ff, 20.25f, FontStyle.Bold);
+                        break;
+                    case "Eternal Logo":
+                        _fontEternalLogoBold14 = new(ff, 14f, FontStyle.Bold);
+                        break;
+                }
+            }
+        }
+
+        private void SetFonts() {
+            // Eternal UI 2 Regular 11.25point
+            foreach(Control c in _hotkeyFields) c.Font = _fontEternalUIRegular11_25;
+            macroUpKeyLabel.Font = _fontEternalUIRegular11_25;
+            macroDownKeyLabel.Font = _fontEternalUIRegular11_25;
+            fpsKey0Label.Font = _fontEternalUIRegular11_25;
+            fpsKey1Label.Font = _fontEternalUIRegular11_25;
+            fpsKey2Label.Font = _fontEternalUIRegular11_25;
+            fpsInput0.Font = _fontEternalUIRegular11_25;
+            fpsInput1.Font = _fontEternalUIRegular11_25;
+            fpsInput2.Font = _fontEternalUIRegular11_25;
+            fpsLabel0.Font = _fontEternalUIRegular11_25;
+            fpsLabel1.Font = _fontEternalUIRegular11_25;
+            fpsLabel2.Font = _fontEternalUIRegular11_25;
+            defaultFPSLabel.Font = _fontEternalUIRegular11_25;
+            defaultFPS.Font = _fontEternalUIRegular11_25;
+            versionDropDownSelector.Font = _fontEternalUIRegular11_25;
+            autorunMacroCheckbox.Font = _fontEternalUIRegular11_25;
+            enableHotkeysCheckbox.Font = _fontEternalUIRegular11_25;
+
+            // Eternal UI 2 Bold 11.25point
+            versionChangedLabel.Font = _fontEternalUIBold11_25;
+            changeVersionButton.Font = _fontEternalUIBold11_25;
+            refreshVersionsButton.Font = _fontEternalUIBold11_25;
+            firewallToggleButton.Font = _fontEternalUIBold11_25;
+            meathookToggleButton.Font = _fontEternalUIBold11_25;
+            firewallRestartLabel.Font = _fontEternalUIBold11_25;
+            meathookRestartLabel.Font = _fontEternalUIBold11_25;
+
+            // Eternal Logo Bold 17.25point
+            hotkeysTitle.Font = _fontEternalLogoBold14;
+            versionTitle.Font = _fontEternalLogoBold14;
+            optionsTitle.Font = _fontEternalLogoBold14;
+
+            // Eternal Battle Bold 20.25point
+            windowTitle.Font = _fontEternalBattleBold20_25;
+        }
+
         #region EVENTS
         private void HotkeyAssignment_KeyDown(object sender, KeyEventArgs e) {
             if(!_hkAssignmentMode) return;
@@ -382,7 +481,7 @@ namespace DESpeedrunUtil {
             else if(e.Alt) pressedKey = HotkeyHandler.ModKeySelector(2);
             else pressedKey = e.KeyCode;
             if(pressedKey == Keys.Escape) pressedKey = Keys.None;
-            bool isValid = !_invalidKeys.Contains(pressedKey);
+            bool isValid = !INVALID_KEYS.Contains(pressedKey);
 
             string tag = (string) _selectedHKField.Tag;
             _hkAssignmentMode = false;
@@ -412,10 +511,16 @@ namespace DESpeedrunUtil {
             e.Handled = true;
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
-            if(!_hkAssignmentMode) return;
+            if(!_hkAssignmentMode) {
+                if(sender is MainWindow) {
+                    _mouseDown = true;
+                    _lastLocation = e.Location;
+                }
+                return;
+            }
 
             Keys pressedKey = HotkeyHandler.ConvertMouseButton(e.Button);
-            bool isValid = !_invalidKeys.Contains(pressedKey);
+            bool isValid = !INVALID_KEYS.Contains(pressedKey);
 
             string tag = (string) _selectedHKField.Tag;
             _hkAssignmentMode = false;
@@ -444,6 +549,18 @@ namespace DESpeedrunUtil {
             }
             UpdateHotkeyFields();
         }
+
+        private void MainWindow_MouseMove(object sender, MouseEventArgs e) {
+            if(_mouseDown) {
+                this.Location = new Point(
+                    (this.Location.X - _lastLocation.X) + e.X,
+                    (this.Location.Y - _lastLocation.Y) + e.Y);
+                this.Update();
+            }
+        }
+
+        private void MainWindow_MouseUp(object sender, MouseEventArgs e) => _mouseDown = false;
+
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
             if(_mouse1Pressed) {
                 _mouse1Pressed = false;
@@ -453,21 +570,37 @@ namespace DESpeedrunUtil {
             if((HotkeyHandler.GetAsyncKeyState(Keys.LButton) & 0x01) == 1) {
                 _selectedHKField = (Label) sender;
                 _selectedHKField.Text = "Press a key";
-                _selectedHKField.BackColor = Color.FromKnownColor(KnownColor.ScrollBar);
+                _selectedHKField.BackColor = Color.WhiteSmoke;
                 _selectedHKField.ForeColor = Color.Black;
                 this.ActiveControl = null;
 
                 _hkAssignmentMode = true;
             }
         }
+
+        private void MainWindow_KeyPreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
+            switch(e.KeyCode) {
+                case Keys.Up:
+                case Keys.Down:
+                case Keys.Left:
+                case Keys.Right:
+                    e.IsInputKey = true;
+                    break;
+            }
+        }
+
         private void FPSInput_KeyPressNumericOnly(object sender, KeyPressEventArgs e) {
             if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) {
                 e.Handled = true;
                 return;
             }
         }
+
+        private void ExitButton_Click(object sender, EventArgs e) => this.Close();
+
         private void FPSInput_KeyUp(object sender, KeyEventArgs e) {
             var text = ((TextBox) sender).Text;
+            var tag = ((Control) sender).Tag;
             int p;
             try {
                 p = int.Parse(text);
@@ -475,6 +608,7 @@ namespace DESpeedrunUtil {
                 p = -1;
             }
             if(p > 250) p = 250;
+            if(tag.ToString() == "fpscapDefault" && p <= 0) p = 250;
             if(p != -1) {
                 if(p == 0) p = 1;
                 ((TextBox) sender).Text = p.ToString();
@@ -482,7 +616,6 @@ namespace DESpeedrunUtil {
                 ((TextBox) sender).Text = "";
             }
 
-            var tag = ((Control) sender).Tag;
             switch(tag) {
                 case "fpscap0":
                     _fps0 = p;
@@ -492,6 +625,9 @@ namespace DESpeedrunUtil {
                     break;
                 case "fpscap2":
                     _fps2 = p;
+                    break;
+                case "fpscapDefault":
+                    _fpsDefault = p;
                     break;
             }
             ToggleIndividualHotkeys();
@@ -508,6 +644,7 @@ namespace DESpeedrunUtil {
         private void RefreshVersions_Click(object sender, EventArgs e) {
             if(_steamDirectory != string.Empty) DetectAllGameVersions();
         }
+
         private void ChangeVersion_Click(object sender, EventArgs e) {
             if(versionDropDownSelector.Text == string.Empty) return;
             string current = GetCurrentVersion(), desired = versionDropDownSelector.Text;
@@ -517,9 +654,9 @@ namespace DESpeedrunUtil {
             Directory.Move(_gameDirectory + " " + desired, _gameDirectory);
             changeVersionButton.Enabled = false;
             Task.Run(async delegate {
-                versionChangedLabel.ForeColor = Color.LightGray;
+                versionChangedLabel.ForeColor = Color.LimeGreen;
                 await Task.Delay(3000);
-                versionChangedLabel.ForeColor = FORM_BACKCOLOR;
+                versionChangedLabel.ForeColor = PANEL_BACKCOLOR;
             });
         }
         private void FirewallToggle_Click(object sender, EventArgs e) {
@@ -528,13 +665,13 @@ namespace DESpeedrunUtil {
                 firewallToggleButton.Text = "Create Firewall Rule";
                 if(_fwRestart) _fwRestart = false;
                 _fwRuleExists = false;
-                firewallRestartLabel.ForeColor = Color.FromArgb(45, 45, 45);
+                firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
             } else {
                 FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe");
                 firewallToggleButton.Text = "Remove Firewall Rule";
                 _fwRestart = true;
                 _fwRuleExists = true;
-                firewallRestartLabel.ForeColor = Color.LightGray;
+                if(Hooked) firewallRestartLabel.ForeColor = TEXT_FORECOLOR;
             }
         }
         private void MeathookToggle_Click(object sender, EventArgs e) {
@@ -545,7 +682,6 @@ namespace DESpeedrunUtil {
                 _mhScheduleRemoval = true;
             }else {
                 File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + "\\XINPUT1_3.dll");
-                _mhRestart = true;
             }
         }
         private void DropDown_IndexChanged(object sender, EventArgs e) {
@@ -557,12 +693,15 @@ namespace DESpeedrunUtil {
             if(!File.Exists(@".\offsets.json")) File.WriteAllText(@".\offsets.json", System.Text.Encoding.UTF8.GetString(Properties.Resources.OffsetsJSON));
             MemoryHandler.OffsetList = JsonSerializer.Deserialize<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
+            SetFonts();
+
             // User Settings
             _macroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
             _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key, (Keys) Properties.Settings.Default.FPS2Key, this);
             _fps0 = Properties.Settings.Default.FPSCap0;
             _fps1 = Properties.Settings.Default.FPSCap1;
             _fps2 = Properties.Settings.Default.FPSCap2;
+            _fpsDefault = Properties.Settings.Default.DefaultFPSCap;
             autorunMacroCheckbox.Checked = Properties.Settings.Default.MacroEnabled;
             enableHotkeysCheckbox.Checked = Properties.Settings.Default.FPSHotkeysEnabled;
             _gameDirectory = Properties.Settings.Default.GameLocation;
@@ -587,6 +726,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.FPSCap0 = _fps0;
             Properties.Settings.Default.FPSCap1 = _fps1;
             Properties.Settings.Default.FPSCap2 = _fps2;
+            Properties.Settings.Default.DefaultFPSCap = _fpsDefault;
             Properties.Settings.Default.MacroEnabled = _enableMacro;
             Properties.Settings.Default.FPSHotkeysEnabled = _hotkeys.Enabled;
             Properties.Settings.Default.GameLocation = _gameDirectory;

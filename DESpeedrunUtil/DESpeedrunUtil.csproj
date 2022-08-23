@@ -11,6 +11,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\DESRU.ico" />
+    <None Remove="Resources\EternalAncient.ttf" />
+    <None Remove="Resources\EternalBattleBold.ttf" />
+    <None Remove="Resources\EternalLogo.ttf" />
+    <None Remove="Resources\EternalUi2Bold.ttf" />
+    <None Remove="Resources\EternalUi2Regular.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
     <COMReference Include="NetFwTypeLib">
       <WrapperTool>tlbimp</WrapperTool>
       <VersionMinor>0</VersionMinor>
@@ -20,6 +29,15 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\DESRU.ico" />
+    <EmbeddedResource Include="Resources\EternalAncient.ttf" />
+    <EmbeddedResource Include="Resources\EternalBattleBold.ttf" />
+    <EmbeddedResource Include="Resources\EternalLogo.ttf" />
+    <EmbeddedResource Include="Resources\EternalUi2Bold.ttf" />
+    <EmbeddedResource Include="Resources\EternalUi2Regular.ttf" />
   </ItemGroup>
 
   <ItemGroup>
