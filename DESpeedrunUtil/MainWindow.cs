@@ -79,7 +79,7 @@ namespace DESpeedrunUtil {
             _formTimer = new Timer();
             _formTimer.Interval = 8;
             _formTimer.Tick += (sender, e) => { UpdateTick(); };
-
+            
             AddMouseIntercepts(this);
             RemoveTabStop(this);
         }
@@ -334,6 +334,21 @@ namespace DESpeedrunUtil {
             return mh;
         }
 
+        private bool CheckForReShade() {
+            using RegistryKey vkKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
+            var names = vkKey.GetValueNames();
+            foreach(string s in names) {
+                if(s.Contains("ReShade")) {
+                    try {
+                        return File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
+                    }catch(Exception) {
+                        return false;
+                    }
+                }
+            }
+            return false;
+        }
+
         private void MeathookRemoval() {
             if(_mhScheduleRemoval) {
                 if(Hooked) {
@@ -381,6 +396,8 @@ namespace DESpeedrunUtil {
 
             if(_gameProcess.HasExited) return false;
 
+            bool reshade = CheckForReShade();
+
             try {
                 _memory = new MemoryHandler(_gameProcess);
             } catch(Exception ex) {
@@ -390,6 +407,7 @@ namespace DESpeedrunUtil {
             if(enableHotkeysCheckbox.Checked) _hotkeys.EnableHotkeys();
             SetGameInfoByModuleSize();
             if(File.Exists(_gameDirectory + "\\XINPUT1_3.dll")) _memory.SetFlag(true, "cheats");
+            _memory.SetFlag(reshade, "reshade");
             return true;
         }
 

@@ -24,7 +24,7 @@ namespace DESpeedrunUtil.Memory {
         int _moduleSize;
         public string Version { get; init; }
 
-        bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false;
+        bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false;
 
         public MemoryHandler(Process game) {
             _game = game;
@@ -38,7 +38,7 @@ namespace DESpeedrunUtil.Memory {
             var row1 = "%i FPS";
             var row2 = _currentOffsets.Version.Replace(" Rev ", "r");
             if(row2 == "1.0 (Release)") row2 = "Release";
-            if(_macroFlag || _firewallFlag || _slopeboostFlag) row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_slopeboostFlag) ? "R" : "R") + ")";
+            if(_macroFlag || _firewallFlag || _slopeboostFlag) row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
             var cpu = ""; var row3 = "";
             var cheatString = (_cheatsFlag) ? "CHEATS ENABLED" : "";
             if(_cpuPtr.ToInt64() == 0) {
@@ -91,6 +91,9 @@ namespace DESpeedrunUtil.Memory {
                 case "firewall":
                     _firewallFlag = flag;
                     break;
+                case "reshade":
+                    _reshadeFlag = flag;
+                    break;
             }
         }
         public bool GetFlag(string flagName) {
@@ -98,6 +101,7 @@ namespace DESpeedrunUtil.Memory {
                 "cheats" => _cheatsFlag,
                 "macro" => _macroFlag,
                 "firewall" => _firewallFlag,
+                "reshade" => _reshadeFlag,
                 _ => false
             };
         }
@@ -185,7 +189,6 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void Initialize() {
-            var moduleBase = _game.MainModule.BaseAddress;
             _row1DP = _row2DP = _row3DP = _row4DP = _row5DP = _row6DP = _row7DP = _row8DP = _row9DP = null;
             _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = null;
             if(!SetCurrentKnownOffsets(Version)) {

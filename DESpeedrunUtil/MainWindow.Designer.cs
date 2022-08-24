@@ -327,7 +327,7 @@
             this.versionChangedLabel.AutoSize = true;
             this.versionChangedLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.versionChangedLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.versionChangedLabel.Location = new System.Drawing.Point(5, 16);
+            this.versionChangedLabel.Location = new System.Drawing.Point(5, 17);
             this.versionChangedLabel.Name = "versionChangedLabel";
             this.versionChangedLabel.Size = new System.Drawing.Size(141, 18);
             this.versionChangedLabel.TabIndex = 9;
