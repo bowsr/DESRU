@@ -9,15 +9,22 @@ namespace DESpeedrunUtil.Memory {
         private readonly string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";
         // DLSS does not show up if you don't have a capable gpu (NVIDIA RTX) BUT it still exists in memory in the exact same spot.
         private readonly string SIGSCAN_DLSS = "444C5353203A2025730000000000000056756C6B616E202573";
+        private readonly string SIGSCAN_RES_SCALES = "41646465642074696D6520666F722073797374656D20656E7669726F6E6D656E74";
 
-        public static List<KnownOffsets> OffsetList = new();
+        private readonly float[] ONEPERCENT_RES_SCALES = new float[32] 
+            { 1.0f, 0.968f, 0.936f, 0.904f, 0.872f, 0.84f, 0.808f, 0.776f, 
+                0.744f, 0.712f, 0.68f, 0.648f, 0.616f, 0.584f, 0.552f, 0.52f, 
+                0.488f, 0.456f, 0.424f, 0.392f, 0.36f, 0.328f, 0.296f, 0.264f, 
+                0.232f, 0.2f, 0.168f, 0.136f, 0.104f, 0.072f, 0.04f, 0.01f };
+
+    public static List<KnownOffsets> OffsetList = new();
         KnownOffsets _currentOffsets;
 
-        DeepPointer _maxHzDP, _metricsDP, _rampJumpDP,
+        DeepPointer _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP,
                     _row1DP, _row2DP, _row3DP, _row4DP, _row5DP, _row6DP, _row7DP, _row8DP, _row9DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP;
 
-        IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr,
+        IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _dynamicResPtr, _resScalesPtr,
                _row1Ptr, _row2Ptr, _row3Ptr, _row4Ptr, _row5Ptr, _row6Ptr, _row7Ptr, _row8Ptr, _row9Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr;
 
@@ -29,6 +36,7 @@ namespace DESpeedrunUtil.Memory {
         bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         int _fpsLimit = 250;
+        float _minRes = 0.01f;
 
         public MemoryHandler(Process game) {
             _game = game;
@@ -50,6 +58,7 @@ namespace DESpeedrunUtil.Memory {
             _row1 = "%i FPS";
             _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
             if(_row2 == "1.0 (Release)") _row2 = "Release";
+            if(_row2.Contains("Unknown")) _row2 = "Unknown";
             if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag)
                 _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
             var cheatString = (_cheatsFlag) ? "CHEATS ENABLED" : "";
@@ -66,7 +75,7 @@ namespace DESpeedrunUtil.Memory {
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
         }
 
-        public void ModifyMetricRows() {
+        private void ModifyMetricRows() {
             _game.VirtualProtect(_row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
             _game.WriteBytes(_row1Ptr, ToByteArray(_row1, 20));
             _game.WriteBytes(_row2Ptr, ToByteArray(_row2, 16));
@@ -75,25 +84,45 @@ namespace DESpeedrunUtil.Memory {
             _game.WriteBytes(_row5Ptr, ToByteArray(_row5, 34));
             _game.WriteBytes(_row6Ptr, ToByteArray(_row6, 34));
             _game.WriteBytes(_row7Ptr, ToByteArray(_row7, 34));
-            if(_row8Ptr.ToInt64() != 0) _game.WriteBytes(_row8Ptr, ToByteArray(_row8, 34));
-            if(_row9Ptr.ToInt64() != 0) _game.WriteBytes(_row9Ptr, ToByteArray(_row9, 34));
-            if(_cpuPtr.ToInt64() != 0) {
+            if(_row8Ptr != IntPtr.Zero) _game.WriteBytes(_row8Ptr, ToByteArray(_row8, 34));
+            if(_row9Ptr != IntPtr.Zero) _game.WriteBytes(_row9Ptr, ToByteArray(_row9, 34));
+            if(_cpuPtr != IntPtr.Zero) {
                 _game.VirtualProtect(_cpuPtr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_cpuPtr, ToByteArray(_cpu, 64));
             }
-            if(_gpuVendorPtr.ToInt64() != 0) {
+            if(_gpuVendorPtr != IntPtr.Zero) {
                 _game.VirtualProtect(_gpuVendorPtr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_gpuVendorPtr, ToByteArray(_gpuV, 64));
             }
-            if(_gpuNamePtr.ToInt64() != 0) {
+            if(_gpuNamePtr != IntPtr.Zero) {
                 _game.VirtualProtect(_gpuNamePtr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_gpuNamePtr, ToByteArray(_gpuN, 64));
             }
         }
 
-        public void SetMetrics(byte val) {
+        private void SetMetrics(byte val) {
             if(val > 6) return;
             _game.WriteBytes(_metricsPtr, new byte[] { val });
+        }
+
+        private void SetResScales() {
+            float[] scales = ONEPERCENT_RES_SCALES;
+            if(Version == "6.66 Rev 2") {
+                // rs_minimumResolutionScale does not exist on 6.66 Rev 2
+                // Because of this, we cannot set the min res scale, so a new set of res scale values needs to be generated
+                //   based off of the desired minimum resolution set by the user.
+                float min = _minRes;
+                scales = new float[32];
+                for(int i = 0; i < scales.Length; i++) {
+                    scales[i] = (1.0f - (((1.0f - min) / 31) * i));
+                }
+            }
+            byte[] resBytes = new byte[32 * 4];
+            Buffer.BlockCopy(scales, 0, resBytes, 0, resBytes.Length);
+            if(_resScalesPtr != IntPtr.Zero) {
+                _game.VirtualProtect(_resScalesPtr, 32 * 4, MemPageProtect.PAGE_READWRITE);
+                _game.WriteBytes(_resScalesPtr, resBytes);
+            }
         }
 
         /// <summary>
@@ -134,11 +163,16 @@ namespace DESpeedrunUtil.Memory {
         public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
 
         public void SetMaxHz(int fps) => _fpsLimit = fps;
+        /// <summary>
+        /// Reads the current value of com_adaptiveTickMaxHz from memory.
+        /// </summary>
+        /// <returns>An <see langword="int"/> representing max Hz. <c>-1</c> if it cannot read the memory</returns>
         public int ReadMaxHz() {
             int cap = -1;
             if(CanCapFPS()) _game.ReadValue(_maxHzPtr, out cap);
             return cap;
         }
+        public void SetMinRes(float min) => _minRes = min;
 
         /// <summary>
         /// Dereferences the <see cref="DeepPointer"/> addresses and offsets into an <see cref="IntPtr"/> that can be read from/written to.
@@ -160,6 +194,9 @@ namespace DESpeedrunUtil.Memory {
                 if(_maxHzDP != null) _maxHzDP.DerefOffsets(_game, out _maxHzPtr);
                 if(_cpuDP != null) _cpuDP.DerefOffsets(_game, out _cpuPtr);
                 if(_rampJumpDP != null) _rampJumpDP.DerefOffsets(_game, out _rampJumpPtr);
+                if(_minResDP != null) _minResDP.DerefOffsets(_game, out _minResPtr);
+                if(_dynamicResDP != null) _dynamicResDP.DerefOffsets(_game, out _dynamicResPtr);
+                if(_resScalesDP != null) _resScalesDP.DerefOffsets(_game, out _resScalesPtr);
             } catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
                 return;
@@ -211,64 +248,74 @@ namespace DESpeedrunUtil.Memory {
 
         private void Initialize() {
             _row1DP = _row2DP = _row3DP = _row4DP = _row5DP = _row6DP = _row7DP = _row8DP = _row9DP = null;
-            _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = null;
+            _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = _resScalesDP = _minResDP = _dynamicResDP = null;
             if(!SetCurrentKnownOffsets(Version)) {
-                SigScanRows();
-            } else {
-                if(_currentOffsets.Row1 != 0) _row1DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row1);
-                if(_currentOffsets.Row2 != 0) _row2DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row2);
-                if(_currentOffsets.Row3 != 0) _row3DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row3);
-                if(_currentOffsets.Row4 != 0) _row4DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row4);
-                if(_currentOffsets.Row5 != 0) _row5DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row5);
-                if(_currentOffsets.Row6 != 0) _row6DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row6);
-                if(_currentOffsets.Row7 != 0) _row7DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row7);
-                if(_currentOffsets.Row8 != 0) _row8DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row8);
-                if(_currentOffsets.Row9 != 0) _row9DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row9);
+                SigScans();
             }
+            if(_currentOffsets.Row1 != 0) _row1DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row1);
+            if(_currentOffsets.Row2 != 0) _row2DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row2);
+            if(_currentOffsets.Row3 != 0) _row3DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row3);
+            if(_currentOffsets.Row4 != 0) _row4DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row4);
+            if(_currentOffsets.Row5 != 0) _row5DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row5);
+            if(_currentOffsets.Row6 != 0) _row6DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row6);
+            if(_currentOffsets.Row7 != 0) _row7DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row7);
+            if(_currentOffsets.Row8 != 0) _row8DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row8);
+            if(_currentOffsets.Row9 != 0) _row9DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row9);
+
+            if(_currentOffsets.ResScales != 0) _resScalesDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.ResScales);
+
             if(_currentOffsets.GPUVendor != 0) _gpuVendorDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.GPUVendor);
             if(_currentOffsets.GPUName != 0) _gpuNameDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.GPUName);
+            if(_currentOffsets.CPU != 0) _cpuDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.CPU, 0x0);
+
             if(_currentOffsets.Metrics != 0) _metricsDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Metrics);
             if(_currentOffsets.MaxHz != 0) _maxHzDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MaxHz);
-            if(_currentOffsets.CPU != 0) _cpuDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.CPU, 0x0);
+            if(_currentOffsets.MinRes != 0) _minResDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MinRes);
+            if(_currentOffsets.DynamicRes != 0) _dynamicResDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.DynamicRes);
             if(Version == "1.0 (Release)") _rampJumpDP = new DeepPointer("DOOMEternalx64vk.exe", 0x6126430);
         }
 
-        private void SigScanRows() {
+        private void SigScans() {
             // This only needs to be done on the first hook of the game. Offsets can be saved since they're not pointer chains.
-
+            IntPtr r1, r2, r3, r4, r5, r6, r7, r8, r9, res;
+            r1 = r2 = r3 = r4 = r5 = r6 = r7 = r8 = r9 = res = IntPtr.Zero;
             SigScanTarget fpsTarget = new SigScanTarget(SIGSCAN_FPS);
             SigScanTarget dlssTarget = new SigScanTarget(SIGSCAN_DLSS);
+            SigScanTarget resTarget = new SigScanTarget(SIGSCAN_RES_SCALES);
             SignatureScanner scanner = new SignatureScanner(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
-            _row1Ptr = scanner.Scan(fpsTarget);
-            if(_row1Ptr.ToInt64() != 0) {
-                _row2Ptr = _row1Ptr + 0x8;
-                _row3Ptr = _row1Ptr + 0x58;
-                _row4Ptr = _row1Ptr + 0x70;
-                _row5Ptr = _row1Ptr + 0x78;
-                _row6Ptr = _row1Ptr + 0x98;
-                _row7Ptr = _row1Ptr + 0xA8;
-                _row8Ptr = IntPtr.Zero;
-                _row9Ptr = IntPtr.Zero;
+            r1 = scanner.Scan(fpsTarget);
+            if(r1.ToInt64() != 0) {
+                r2 = r1 + 0x8;
+                r3 = r1 + 0x58;
+                r4 = r1 + 0x70;
+                r5 = r1 + 0x78;
+                r6 = r1 + 0x98;
+                r7 = r1 + 0xA8;
+                r8 = IntPtr.Zero;
+                r9 = IntPtr.Zero;
                 IntPtr dlss = scanner.Scan(dlssTarget);
                 if(dlss.ToInt64() != 0) {
-                    _row6Ptr = dlss;
-                    _row7Ptr = dlss + 0x10;
-                    _row8Ptr = dlss + 0x30;
-                    _row9Ptr = dlss + 0x40;
+                    r6 = dlss;
+                    r7 = dlss + 0x10;
+                    r8 = dlss + 0x30;
+                    r9 = dlss + 0x40;
                 }
             } else {
                 return;
             }
-            KnownOffsets ko = new KnownOffsets(Version, GetOffset(_row1Ptr),
-                GetOffset(_row2Ptr),
-                GetOffset(_row3Ptr),
-                GetOffset(_row4Ptr),
-                GetOffset(_row5Ptr),
-                GetOffset(_row6Ptr),
-                GetOffset(_row7Ptr),
-                GetOffset(_row8Ptr),
-                GetOffset(_row9Ptr),
-                0, 0, 0, 0, 0);
+            res = scanner.Scan(resTarget);
+            if(res != IntPtr.Zero) res += 64;
+            KnownOffsets ko = new KnownOffsets(Version, GetOffset(r1),
+                GetOffset(r2),
+                GetOffset(r3),
+                GetOffset(r4),
+                GetOffset(r5),
+                GetOffset(r6),
+                GetOffset(r7),
+                GetOffset(r8),
+                GetOffset(r9),
+                0, 0, 0, 0, 0,
+                0, 0, GetOffset(res));
             OffsetList.Add(ko);
             _currentOffsets = ko;
 
@@ -332,10 +379,16 @@ namespace DESpeedrunUtil.Memory {
             public int GPUVendor { get; init; }
             public int GPUName { get; init; }
             public int CPU { get; init; }
+
             public int Metrics { get; init; }
             public int MaxHz { get; init; }
+            public int MinRes { get; init; }
+            public int DynamicRes { get; init; }
 
-            public KnownOffsets(string v, int r1, int r2, int r3, int r4, int r5, int r6, int r7, int r8, int r9, int gpuv, int gpu, int cpu, int perf, int hz) {
+            public int ResScales { get; init; }
+
+            public KnownOffsets(string v, int r1, int r2, int r3, int r4, int r5, int r6, int r7, int r8, int r9,
+                                int gpuv, int gpu, int cpu, int perf, int hz, int min, int dyn, int res) {
                 Version = v;
                 Row1 = r1;
                 Row2 = r2;
@@ -351,6 +404,9 @@ namespace DESpeedrunUtil.Memory {
                 CPU = cpu;
                 Metrics = perf;
                 MaxHz = hz;
+                MinRes = min;
+                DynamicRes = dyn;
+                ResScales = res;
             }
         }
     }
