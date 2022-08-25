@@ -30,6 +30,7 @@ namespace DESpeedrunUtil {
 
         Process? _gameProcess;
         public bool Hooked = false;
+        bool _duplicateProcesses = false;
 
         bool _mouseDown;
         Point _lastLocation;
@@ -39,6 +40,8 @@ namespace DESpeedrunUtil {
 
         bool _mhExists = false, _mhScheduleRemoval = false, _mhDoRemovalTask = false;
 
+        bool _reshadeExists = false, _slopeboostsDisabled = false;
+
         FreescrollMacro? _macroProcess;
         bool _enableMacro = true;
 
@@ -47,7 +50,7 @@ namespace DESpeedrunUtil {
 
         MemoryHandler? _memory;
 
-        Timer _formTimer;
+        Timer _formTimer, _statusTimer;
 
         bool _hkAssignmentMode = false, _mouse1Pressed = false;
         Label _selectedHKField = null;
@@ -70,15 +73,19 @@ namespace DESpeedrunUtil {
                 hotkeyField4
             };
 
-            this.Controls.Add(new TitleShadowLabel(_fontEternalBattleBold20_25, "DOOM ETERNAL SPEEDRUN UTILITY", new Point(13, 9), Color.FromArgb(190, 34, 34), FORM_BACKCOLOR));
-            this.Controls.Add(new TitleShadowLabel(_fontEternalLogoBold14, "KEYBINDS", new Point(12, 64), TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new TitleShadowLabel(_fontEternalLogoBold14, "OPTIONS", new Point(12, 268), TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new TitleShadowLabel(_fontEternalLogoBold14, "CHANGE VERSION", new Point(12, 451), TEXT_FORECOLOR, FORM_BACKCOLOR));
-            gameVersion.Font = _fontEternalUIRegular11_25;
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalBattleBold20_25, "DOOM ETERNAL SPEEDRUN UTILITY", new Point(13, 9), Color.FromArgb(190, 34, 34), FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "KEYBINDS", new Point(12, 64), TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "OPTIONS", new Point(12, 268), TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "CHANGE VERSION", new Point(12, 451), TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "INFO PANEL", new Point(323, 64), TEXT_FORECOLOR, FORM_BACKCOLOR));
 
             _formTimer = new Timer();
             _formTimer.Interval = 8;
             _formTimer.Tick += (sender, e) => { UpdateTick(); };
+
+            _statusTimer = new Timer();
+            _statusTimer.Interval = 1000;
+            _statusTimer.Tick += (sender, e) => { StatusTick(); };
             
             AddMouseIntercepts(this);
             RemoveTabStop(this);
@@ -89,26 +96,19 @@ namespace DESpeedrunUtil {
         private void UpdateTick() {
             if(_gameProcess == null || _gameProcess.HasExited) {
                 Hooked = false;
+                _hotkeys.DisableHotkeys();
                 _gameProcess = null;
+                if(_memory != null) _memory.MemoryTimer.Stop();
                 _memory = null;
             }
             if(!_fwRestart) firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
             _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
-            _mhExists = File.Exists(_gameDirectory + "\\XINPUT1_3.dll");
-            MeathookRemoval();
             _mhExists = CheckForMeathook();
+            MeathookRemoval();
 
             if(!meathookToggleButton.Enabled) {
                 meathookToggleButton.Enabled = !_mhScheduleRemoval && !_mhExists;
-            }
-
-            if(_macroProcess.IsRunning) {
-                macroStatus.Text = "Running";
-                macroStatus.ForeColor = Color.Lime;
-            } else {
-                macroStatus.Text = "Stopped";
-                macroStatus.ForeColor = Color.Red;
             }
 
             if(!Hooked) Hooked = Hook();
@@ -122,13 +122,28 @@ namespace DESpeedrunUtil {
             if(_enableMacro) _macroProcess.Start();
             else _macroProcess.Stop(true);
 
-            _memory.DerefPointers();
-
-            if(_memory.CanCapFPS() && _memory.ReadMaxHz() > _fpsDefault) _memory.CapFPS(_fpsDefault);
+            if(_memory.CanCapFPS() && _memory.ReadMaxHz() > _fpsDefault) _memory.SetMaxHz(_fpsDefault);
             _memory.SetFlag(_fwRuleExists, "firewall");
             _memory.SetFlag(_macroProcess.IsRunning, "macro");
-            _memory.SetMetrics(2);
-            _memory.ModifyMetricRows();
+        }
+
+        private void StatusTick() {
+            gameStatus.Text = (Hooked) ? _memory.Version : "Not Running";
+            currentFPSCap.Text = (_memory != null) ? _memory.ReadMaxHz().ToString() : "-";
+            macroStatus.Text = (_macroProcess.IsRunning) ? "Running" : "Stopped";
+            macroStatus.ForeColor = (_macroProcess.IsRunning) ? Color.Lime : TEXT_FORECOLOR;
+
+            if(_memory != null)
+                if(_memory.Version == "1.0 (Release)")
+                    slopeboostStatus.Text = (_memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
+                else
+                    slopeboostStatus.Text = "N/A";
+            else
+                slopeboostStatus.Text = "-";
+
+            balanceStatus.Text = (_fwRuleExists) ? ((_fwRestart) ? "Allowed*" : "Blocked") : "Allowed";
+            cheatsStatus.Text = (Hooked) ? ((_mhExists) ? "Enabled" : "Disabled") : "-";
+            reshadeStatus.Text = (Hooked) ? ((_reshadeExists) ? "Enabled" : "Disabled") : "-";
         }
 
         /// <summary>
@@ -158,10 +173,14 @@ namespace DESpeedrunUtil {
                 l.ForeColor = TEXT_FORECOLOR;
                 l.BackColor = TEXT_BACKCOLOR;
             }
-            fpsInput0.Text = _fps0.ToString();
-            fpsInput1.Text = _fps1.ToString();
-            fpsInput2.Text = _fps2.ToString();
-            defaultFPS.Text = _fpsDefault.ToString();
+            var s0 = _fps0.ToString();
+            var s1 = _fps1.ToString();
+            var s2 = _fps2.ToString();
+            var d = _fpsDefault.ToString();
+            fpsInput0.Text = (s0 != "-1") ? s0 : "";
+            fpsInput1.Text = (s1 != "-1") ? s1 : "";
+            fpsInput2.Text = (s2 != "-1") ? s2 : "";
+            defaultFPS.Text = (d != "-1") ? d : "";
         }
 
         public void PopulateVersionDropDown() {
@@ -199,7 +218,7 @@ namespace DESpeedrunUtil {
                     if(_fps2 != -1) if(_memory.ReadMaxHz() != _fps2) newFPS = _fps2;
                     break;
             }
-            _memory.CapFPS(newFPS);
+            _memory.SetMaxHz(newFPS);
         }
 
         private void ToggleIndividualHotkeys() {
@@ -387,6 +406,18 @@ namespace DESpeedrunUtil {
             List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalx64vk"));
             if(procList.Count == 0) {
                 _gameProcess = null;
+                _duplicateProcesses = false;
+                return false;
+            }
+            if(procList.Count > 1) {
+                if(!_duplicateProcesses) {
+                    _duplicateProcesses = true;
+                    System.Media.SystemSounds.Asterisk.Play();
+                    MessageBox.Show(this, "Multiple instances of DOOM Eternal have been detected.\n" +
+                    "Close them or restart your system to clear them out.", "Multiple DOOMEternalx64vk.exe Instances Detected");
+                }
+                _gameProcess = null;
+                Debug.WriteLine(_duplicateProcesses);
                 return false;
             }
             _gameProcess = procList[0];
@@ -396,7 +427,7 @@ namespace DESpeedrunUtil {
 
             if(_gameProcess.HasExited) return false;
 
-            bool reshade = CheckForReShade();
+            _reshadeExists = CheckForReShade();
 
             try {
                 _memory = new MemoryHandler(_gameProcess);
@@ -406,14 +437,15 @@ namespace DESpeedrunUtil {
             }
             if(enableHotkeysCheckbox.Checked) _hotkeys.EnableHotkeys();
             SetGameInfoByModuleSize();
-            if(File.Exists(_gameDirectory + "\\XINPUT1_3.dll")) _memory.SetFlag(true, "cheats");
-            _memory.SetFlag(reshade, "reshade");
+            _memory.SetFlag(File.Exists(_gameDirectory + "\\XINPUT1_3.dll"), "cheats");
+            _memory.SetFlag(_reshadeExists, "reshade");
+            _memory.MemoryTimer.Start();
             return true;
         }
 
         // Sets various game info variables based on the detected module size.
         private void SetGameInfoByModuleSize() {
-            gameVersion.Text = _memory.Version;
+            gameStatus.Text = _memory.Version;
             if(_gameDirectory != string.Empty) {
                 File.WriteAllText(_gameDirectory + "\\gameVersion.txt", "version=" + _memory.Version);
             }
@@ -474,6 +506,13 @@ namespace DESpeedrunUtil {
             versionDropDownSelector.Font = _fontEternalUIRegular11_25;
             autorunMacroCheckbox.Font = _fontEternalUIRegular11_25;
             enableHotkeysCheckbox.Font = _fontEternalUIRegular11_25;
+            gameStatus.Font = _fontEternalUIRegular11_25;
+            currentFPSCap.Font = _fontEternalUIRegular11_25;
+            macroStatus.Font = _fontEternalUIRegular11_25;
+            slopeboostStatus.Font = _fontEternalUIRegular11_25;
+            balanceStatus.Font = _fontEternalUIRegular11_25;
+            cheatsStatus.Font = _fontEternalUIRegular11_25;
+            reshadeStatus.Font = _fontEternalUIRegular11_25;
 
             // Eternal UI 2 Bold 11.25point
             versionChangedLabel.Font = _fontEternalUIBold11_25;
@@ -483,6 +522,13 @@ namespace DESpeedrunUtil {
             meathookToggleButton.Font = _fontEternalUIBold11_25;
             firewallRestartLabel.Font = _fontEternalUIBold11_25;
             meathookRestartLabel.Font = _fontEternalUIBold11_25;
+            gameStatusLabel.Font = _fontEternalUIBold11_25;
+            fpsCapLabel.Font = _fontEternalUIBold11_25;
+            macroStatusLabel.Font = _fontEternalUIBold11_25;
+            slopeboostStatusLabel.Font = _fontEternalUIBold11_25;
+            balanceStatusLabel.Font = _fontEternalUIBold11_25;
+            cheatsStatusLabel.Font = _fontEternalUIBold11_25;
+            reshadeStatusLabel.Font = _fontEternalUIBold11_25;
 
             // Eternal Logo Bold 17.25point
             hotkeysTitle.Font = _fontEternalLogoBold14;
@@ -491,6 +537,15 @@ namespace DESpeedrunUtil {
 
             // Eternal Battle Bold 20.25point
             windowTitle.Font = _fontEternalBattleBold20_25;
+        }
+
+        public bool IsFormOnScreen() {
+            Screen[] screens = Screen.AllScreens;
+            foreach(var display in screens) {
+                Rectangle rect = new Rectangle(this.Left, this.Top, this.Width, this.Height);
+                if(display.WorkingArea.Contains(rect)) return true;
+            }
+            return false;
         }
 
         #region EVENTS
@@ -658,7 +713,7 @@ namespace DESpeedrunUtil {
         private void EnableHotkeys_CheckChanged(object sender, EventArgs e) {
             bool val = ((CheckBox) sender).Checked;
             if(val) {
-                _hotkeys.EnableHotkeys();
+                if(Hooked) _hotkeys.EnableHotkeys();
             } else {
                 _hotkeys.DisableHotkeys();
             }
@@ -730,11 +785,16 @@ namespace DESpeedrunUtil {
             ToggleIndividualHotkeys();
             UpdateHotkeyFields();
 
+            var defaultLocation = new Point(
+            Screen.PrimaryScreen.WorkingArea.Left + (Screen.PrimaryScreen.WorkingArea.Width / 2 - (this.Width / 2)),
+            Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
+            if(!IsFormOnScreen() || loc == Point.Empty) Location = defaultLocation;
 
             SearchForSteamGameDir();
             _formTimer.Start();
+            _statusTimer.Start();
         }
 
         // Event method that runs upon closing of the <c>MainWindow</c> form.
@@ -750,7 +810,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.FPSCap2 = _fps2;
             Properties.Settings.Default.DefaultFPSCap = _fpsDefault;
             Properties.Settings.Default.MacroEnabled = _enableMacro;
-            Properties.Settings.Default.FPSHotkeysEnabled = _hotkeys.Enabled;
+            Properties.Settings.Default.FPSHotkeysEnabled = enableHotkeysCheckbox.Checked;
             Properties.Settings.Default.GameLocation = _gameDirectory;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
@@ -763,8 +823,8 @@ namespace DESpeedrunUtil {
         #endregion
 
         #region COMPONENTS
-        public class TitleShadowLabel: Label {
-            public TitleShadowLabel(Font font, string text, Point loc, Color color, Color back) {
+        public class DESRUShadowLabel: Label {
+            public DESRUShadowLabel(Font font, string text, Point loc, Color color, Color back) {
                 this.AutoSize = true;
                 this.Font = font;
                 this.Location = loc;

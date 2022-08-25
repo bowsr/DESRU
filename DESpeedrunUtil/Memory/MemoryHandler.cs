@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
+using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
@@ -21,52 +22,72 @@ namespace DESpeedrunUtil.Memory {
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr;
 
         Process _game;
+        public Timer MemoryTimer { get; init; }
         int _moduleSize;
         public string Version { get; init; }
 
         bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false;
+        string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
+        int _fpsLimit = 250;
 
         public MemoryHandler(Process game) {
             _game = game;
             _moduleSize = game.MainModule.ModuleMemorySize;
             Version = TranslateModuleSize();
+            _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
+
+            MemoryTimer = new Timer();
+            MemoryTimer.Interval = 15;
+            MemoryTimer.Tick += (sender, e) => { MemoryTick(); };
 
             Initialize();
         }
 
-        public void ModifyMetricRows() {
-            var row1 = "%i FPS";
-            var row2 = _currentOffsets.Version.Replace(" Rev ", "r");
-            if(row2 == "1.0 (Release)") row2 = "Release";
-            if(_macroFlag || _firewallFlag || _slopeboostFlag) row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
-            var cpu = ""; var row3 = "";
+        private void MemoryTick() {
+            DerefPointers();
+
+            if(Version == "1.0 (Release)") SetFlag(_game.ReadBytes(_rampJumpPtr, 1)[0] == 0, "slopeboost");
+            _row1 = "%i FPS";
+            _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
+            if(_row2 == "1.0 (Release)") _row2 = "Release";
+            if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag)
+                _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
             var cheatString = (_cheatsFlag) ? "CHEATS ENABLED" : "";
             if(_cpuPtr.ToInt64() == 0) {
-                row3 = cheatString;
+                _row3 = cheatString;
+                _cpu = "";
             }else {
-                cpu = cheatString;
+                _cpu = cheatString;
+                _row3 = "";
             }
+
+            SetMetrics(2);
+            ModifyMetricRows();
+            if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
+        }
+
+        public void ModifyMetricRows() {
             _game.VirtualProtect(_row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
-            _game.WriteBytes(_row1Ptr, ToByteArray(row1, 20));
-            _game.WriteBytes(_row2Ptr, ToByteArray(row2, 16));
-            _game.WriteBytes(_row3Ptr, ToByteArray(row3, 19));
-            _game.WriteBytes(_row4Ptr, ToByteArray("", 7));
-            _game.WriteBytes(_row5Ptr, ToByteArray("", 34));
-            _game.WriteBytes(_row6Ptr, ToByteArray("", 34));
-            _game.WriteBytes(_row7Ptr, ToByteArray("", 34));
-            if(_row8Ptr.ToInt64() != 0) _game.WriteBytes(_row8Ptr, ToByteArray("", 34));
-            if(_row9Ptr.ToInt64() != 0) _game.WriteBytes(_row9Ptr, ToByteArray("", 34));
+            _game.WriteBytes(_row1Ptr, ToByteArray(_row1, 20));
+            _game.WriteBytes(_row2Ptr, ToByteArray(_row2, 16));
+            _game.WriteBytes(_row3Ptr, ToByteArray(_row3, 19));
+            _game.WriteBytes(_row4Ptr, ToByteArray(_row4, 7));
+            _game.WriteBytes(_row5Ptr, ToByteArray(_row5, 34));
+            _game.WriteBytes(_row6Ptr, ToByteArray(_row6, 34));
+            _game.WriteBytes(_row7Ptr, ToByteArray(_row7, 34));
+            if(_row8Ptr.ToInt64() != 0) _game.WriteBytes(_row8Ptr, ToByteArray(_row8, 34));
+            if(_row9Ptr.ToInt64() != 0) _game.WriteBytes(_row9Ptr, ToByteArray(_row9, 34));
             if(_cpuPtr.ToInt64() != 0) {
                 _game.VirtualProtect(_cpuPtr, 1024, MemPageProtect.PAGE_READWRITE);
-                _game.WriteBytes(_cpuPtr, ToByteArray(cpu, 64));
+                _game.WriteBytes(_cpuPtr, ToByteArray(_cpu, 64));
             }
             if(_gpuVendorPtr.ToInt64() != 0) {
                 _game.VirtualProtect(_gpuVendorPtr, 1024, MemPageProtect.PAGE_READWRITE);
-                _game.WriteBytes(_gpuVendorPtr, ToByteArray("", 64));
+                _game.WriteBytes(_gpuVendorPtr, ToByteArray(_gpuV, 64));
             }
             if(_gpuNamePtr.ToInt64() != 0) {
                 _game.VirtualProtect(_gpuNamePtr, 1024, MemPageProtect.PAGE_READWRITE);
-                _game.WriteBytes(_gpuNamePtr, ToByteArray("", 64));
+                _game.WriteBytes(_gpuNamePtr, ToByteArray(_gpuN, 64));
             }
         }
 
@@ -94,6 +115,9 @@ namespace DESpeedrunUtil.Memory {
                 case "reshade":
                     _reshadeFlag = flag;
                     break;
+                case "slopeboost":
+                    _slopeboostFlag = flag;
+                    break;
             }
         }
         public bool GetFlag(string flagName) {
@@ -102,18 +126,14 @@ namespace DESpeedrunUtil.Memory {
                 "macro" => _macroFlag,
                 "firewall" => _firewallFlag,
                 "reshade" => _reshadeFlag,
+                "slopeboost" => _slopeboostFlag,
                 _ => false
             };
         }
 
         public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
 
-        public void CapFPS(int cap) {
-            if(CanCapFPS()) {
-                _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) cap));
-            }
-        }
-
+        public void SetMaxHz(int fps) => _fpsLimit = fps;
         public int ReadMaxHz() {
             int cap = -1;
             if(CanCapFPS()) _game.ReadValue(_maxHzPtr, out cap);
@@ -142,6 +162,7 @@ namespace DESpeedrunUtil.Memory {
                 if(_rampJumpDP != null) _rampJumpDP.DerefOffsets(_game, out _rampJumpPtr);
             } catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
+                return;
             }
             if(Version == "1.0 (Release)") _slopeboostFlag = _game.ReadBytes(_rampJumpPtr, 1)[0] == 0;
         }

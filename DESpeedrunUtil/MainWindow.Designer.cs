@@ -30,7 +30,7 @@
             this.macroDownKeyLabel = new System.Windows.Forms.Label();
             this.macroStatus = new System.Windows.Forms.Label();
             this.hotkeysTitle = new System.Windows.Forms.Label();
-            this.gameVersion = new System.Windows.Forms.Label();
+            this.gameStatus = new System.Windows.Forms.Label();
             this.fpsLabel2 = new System.Windows.Forms.Label();
             this.fpsLabel1 = new System.Windows.Forms.Label();
             this.fpsLabel0 = new System.Windows.Forms.Label();
@@ -66,6 +66,20 @@
             this.defaultFPS = new System.Windows.Forms.TextBox();
             this.titleSeparator = new System.Windows.Forms.Panel();
             this.exitButton = new System.Windows.Forms.Button();
+            this.statusPanel = new System.Windows.Forms.Panel();
+            this.reshadeStatus = new System.Windows.Forms.Label();
+            this.reshadeStatusLabel = new System.Windows.Forms.Label();
+            this.cheatsStatus = new System.Windows.Forms.Label();
+            this.balanceStatus = new System.Windows.Forms.Label();
+            this.slopeboostStatus = new System.Windows.Forms.Label();
+            this.currentFPSCap = new System.Windows.Forms.Label();
+            this.cheatsStatusLabel = new System.Windows.Forms.Label();
+            this.balanceStatusLabel = new System.Windows.Forms.Label();
+            this.slopeboostStatusLabel = new System.Windows.Forms.Label();
+            this.macroStatusLabel = new System.Windows.Forms.Label();
+            this.fpsCapLabel = new System.Windows.Forms.Label();
+            this.gameStatusLabel = new System.Windows.Forms.Label();
+            this.infoPanelTitle = new System.Windows.Forms.Label();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -73,6 +87,7 @@
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.statusPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // hotkeyField0
@@ -110,9 +125,9 @@
             this.autorunMacroCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.autorunMacroCheckbox.Location = new System.Drawing.Point(6, 8);
             this.autorunMacroCheckbox.Name = "autorunMacroCheckbox";
-            this.autorunMacroCheckbox.Size = new System.Drawing.Size(113, 22);
+            this.autorunMacroCheckbox.Size = new System.Drawing.Size(179, 22);
             this.autorunMacroCheckbox.TabIndex = 8;
-            this.autorunMacroCheckbox.Text = "Enable Macro";
+            this.autorunMacroCheckbox.Text = "Enable Freescroll Macro";
             this.autorunMacroCheckbox.UseVisualStyleBackColor = true;
             this.autorunMacroCheckbox.CheckedChanged += new System.EventHandler(this.AutoStartMacro_CheckChanged);
             // 
@@ -141,11 +156,11 @@
             // macroStatus
             // 
             this.macroStatus.AutoSize = true;
-            this.macroStatus.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.macroStatus.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.macroStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.macroStatus.Location = new System.Drawing.Point(432, 264);
+            this.macroStatus.Location = new System.Drawing.Point(164, 56);
             this.macroStatus.Name = "macroStatus";
-            this.macroStatus.Size = new System.Drawing.Size(51, 15);
+            this.macroStatus.Size = new System.Drawing.Size(62, 18);
             this.macroStatus.TabIndex = 5;
             this.macroStatus.Text = "Stopped";
             // 
@@ -161,16 +176,16 @@
             this.hotkeysTitle.Text = "KEYBINDS";
             this.hotkeysTitle.Visible = false;
             // 
-            // gameVersion
+            // gameStatus
             // 
-            this.gameVersion.AutoSize = true;
-            this.gameVersion.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.gameVersion.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.gameVersion.Location = new System.Drawing.Point(484, 324);
-            this.gameVersion.Name = "gameVersion";
-            this.gameVersion.Size = new System.Drawing.Size(99, 21);
-            this.gameVersion.TabIndex = 6;
-            this.gameVersion.Text = "Not Running";
+            this.gameStatus.AutoSize = true;
+            this.gameStatus.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.gameStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.gameStatus.Location = new System.Drawing.Point(164, 8);
+            this.gameStatus.Name = "gameStatus";
+            this.gameStatus.Size = new System.Drawing.Size(87, 18);
+            this.gameStatus.TabIndex = 6;
+            this.gameStatus.Text = "Not Running";
             // 
             // fpsLabel2
             // 
@@ -513,6 +528,7 @@
             this.fpsInput1.TabIndex = 14;
             this.fpsInput1.Tag = "fpscap1";
             this.fpsInput1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.fpsInput1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsPanel2
             // 
@@ -538,6 +554,7 @@
             this.fpsInput2.TabIndex = 14;
             this.fpsInput2.Tag = "fpscap2";
             this.fpsInput2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.fpsInput2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsPanel0
             // 
@@ -631,6 +648,173 @@
             this.exitButton.UseVisualStyleBackColor = false;
             this.exitButton.Click += new System.EventHandler(this.ExitButton_Click);
             // 
+            // statusPanel
+            // 
+            this.statusPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.statusPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.statusPanel.Controls.Add(this.reshadeStatus);
+            this.statusPanel.Controls.Add(this.reshadeStatusLabel);
+            this.statusPanel.Controls.Add(this.cheatsStatus);
+            this.statusPanel.Controls.Add(this.balanceStatus);
+            this.statusPanel.Controls.Add(this.slopeboostStatus);
+            this.statusPanel.Controls.Add(this.currentFPSCap);
+            this.statusPanel.Controls.Add(this.cheatsStatusLabel);
+            this.statusPanel.Controls.Add(this.balanceStatusLabel);
+            this.statusPanel.Controls.Add(this.slopeboostStatusLabel);
+            this.statusPanel.Controls.Add(this.macroStatusLabel);
+            this.statusPanel.Controls.Add(this.fpsCapLabel);
+            this.statusPanel.Controls.Add(this.gameStatusLabel);
+            this.statusPanel.Controls.Add(this.macroStatus);
+            this.statusPanel.Controls.Add(this.gameStatus);
+            this.statusPanel.Location = new System.Drawing.Point(323, 93);
+            this.statusPanel.Name = "statusPanel";
+            this.statusPanel.Size = new System.Drawing.Size(304, 338);
+            this.statusPanel.TabIndex = 31;
+            // 
+            // reshadeStatus
+            // 
+            this.reshadeStatus.AutoSize = true;
+            this.reshadeStatus.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.reshadeStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.reshadeStatus.Location = new System.Drawing.Point(164, 152);
+            this.reshadeStatus.Name = "reshadeStatus";
+            this.reshadeStatus.Size = new System.Drawing.Size(14, 18);
+            this.reshadeStatus.TabIndex = 41;
+            this.reshadeStatus.Text = "-";
+            // 
+            // reshadeStatusLabel
+            // 
+            this.reshadeStatusLabel.AutoSize = true;
+            this.reshadeStatusLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.reshadeStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.reshadeStatusLabel.Location = new System.Drawing.Point(3, 152);
+            this.reshadeStatusLabel.Name = "reshadeStatusLabel";
+            this.reshadeStatusLabel.Size = new System.Drawing.Size(75, 18);
+            this.reshadeStatusLabel.TabIndex = 40;
+            this.reshadeStatusLabel.Text = "ReShade:";
+            // 
+            // cheatsStatus
+            // 
+            this.cheatsStatus.AutoSize = true;
+            this.cheatsStatus.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.cheatsStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.cheatsStatus.Location = new System.Drawing.Point(164, 127);
+            this.cheatsStatus.Name = "cheatsStatus";
+            this.cheatsStatus.Size = new System.Drawing.Size(14, 18);
+            this.cheatsStatus.TabIndex = 39;
+            this.cheatsStatus.Text = "-";
+            // 
+            // balanceStatus
+            // 
+            this.balanceStatus.AutoSize = true;
+            this.balanceStatus.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.balanceStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.balanceStatus.Location = new System.Drawing.Point(164, 104);
+            this.balanceStatus.Name = "balanceStatus";
+            this.balanceStatus.Size = new System.Drawing.Size(14, 18);
+            this.balanceStatus.TabIndex = 38;
+            this.balanceStatus.Text = "-";
+            // 
+            // slopeboostStatus
+            // 
+            this.slopeboostStatus.AutoSize = true;
+            this.slopeboostStatus.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.slopeboostStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.slopeboostStatus.Location = new System.Drawing.Point(164, 80);
+            this.slopeboostStatus.Name = "slopeboostStatus";
+            this.slopeboostStatus.Size = new System.Drawing.Size(14, 18);
+            this.slopeboostStatus.TabIndex = 37;
+            this.slopeboostStatus.Text = "-";
+            // 
+            // currentFPSCap
+            // 
+            this.currentFPSCap.AutoSize = true;
+            this.currentFPSCap.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.currentFPSCap.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.currentFPSCap.Location = new System.Drawing.Point(164, 32);
+            this.currentFPSCap.Name = "currentFPSCap";
+            this.currentFPSCap.Size = new System.Drawing.Size(14, 18);
+            this.currentFPSCap.TabIndex = 36;
+            this.currentFPSCap.Text = "-";
+            // 
+            // cheatsStatusLabel
+            // 
+            this.cheatsStatusLabel.AutoSize = true;
+            this.cheatsStatusLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.cheatsStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.cheatsStatusLabel.Location = new System.Drawing.Point(3, 128);
+            this.cheatsStatusLabel.Name = "cheatsStatusLabel";
+            this.cheatsStatusLabel.Size = new System.Drawing.Size(64, 18);
+            this.cheatsStatusLabel.TabIndex = 35;
+            this.cheatsStatusLabel.Text = "Cheats:";
+            // 
+            // balanceStatusLabel
+            // 
+            this.balanceStatusLabel.AutoSize = true;
+            this.balanceStatusLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.balanceStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.balanceStatusLabel.Location = new System.Drawing.Point(3, 104);
+            this.balanceStatusLabel.Name = "balanceStatusLabel";
+            this.balanceStatusLabel.Size = new System.Drawing.Size(141, 18);
+            this.balanceStatusLabel.TabIndex = 34;
+            this.balanceStatusLabel.Text = "Balance Updates:";
+            // 
+            // slopeboostStatusLabel
+            // 
+            this.slopeboostStatusLabel.AutoSize = true;
+            this.slopeboostStatusLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.slopeboostStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.slopeboostStatusLabel.Location = new System.Drawing.Point(3, 80);
+            this.slopeboostStatusLabel.Name = "slopeboostStatusLabel";
+            this.slopeboostStatusLabel.Size = new System.Drawing.Size(129, 18);
+            this.slopeboostStatusLabel.TabIndex = 33;
+            this.slopeboostStatusLabel.Text = "Slopeboosting:";
+            // 
+            // macroStatusLabel
+            // 
+            this.macroStatusLabel.AutoSize = true;
+            this.macroStatusLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.macroStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.macroStatusLabel.Location = new System.Drawing.Point(3, 56);
+            this.macroStatusLabel.Name = "macroStatusLabel";
+            this.macroStatusLabel.Size = new System.Drawing.Size(155, 18);
+            this.macroStatusLabel.TabIndex = 32;
+            this.macroStatusLabel.Text = "Freescroll Macro:";
+            // 
+            // fpsCapLabel
+            // 
+            this.fpsCapLabel.AutoSize = true;
+            this.fpsCapLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.fpsCapLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsCapLabel.Location = new System.Drawing.Point(3, 32);
+            this.fpsCapLabel.Name = "fpsCapLabel";
+            this.fpsCapLabel.Size = new System.Drawing.Size(76, 18);
+            this.fpsCapLabel.TabIndex = 31;
+            this.fpsCapLabel.Text = "FPS Limit:";
+            // 
+            // gameStatusLabel
+            // 
+            this.gameStatusLabel.AutoSize = true;
+            this.gameStatusLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.gameStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.gameStatusLabel.Location = new System.Drawing.Point(3, 8);
+            this.gameStatusLabel.Name = "gameStatusLabel";
+            this.gameStatusLabel.Size = new System.Drawing.Size(122, 18);
+            this.gameStatusLabel.TabIndex = 30;
+            this.gameStatusLabel.Text = "DOOM Eternal:";
+            // 
+            // infoPanelTitle
+            // 
+            this.infoPanelTitle.AutoSize = true;
+            this.infoPanelTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.infoPanelTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.infoPanelTitle.Location = new System.Drawing.Point(323, 64);
+            this.infoPanelTitle.Name = "infoPanelTitle";
+            this.infoPanelTitle.Size = new System.Drawing.Size(166, 21);
+            this.infoPanelTitle.TabIndex = 33;
+            this.infoPanelTitle.Text = "INFO PANEL";
+            this.infoPanelTitle.Visible = false;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -638,6 +822,8 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.ClientSize = new System.Drawing.Size(639, 764);
             this.ControlBox = false;
+            this.Controls.Add(this.infoPanelTitle);
+            this.Controls.Add(this.statusPanel);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.titleSeparator);
             this.Controls.Add(this.panel2);
@@ -646,8 +832,6 @@
             this.Controls.Add(this.optionsTitle);
             this.Controls.Add(this.versionTitle);
             this.Controls.Add(this.windowTitle);
-            this.Controls.Add(this.macroStatus);
-            this.Controls.Add(this.gameVersion);
             this.Controls.Add(this.hotkeysTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.KeyPreview = true;
@@ -675,6 +859,8 @@
             this.panel2.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.statusPanel.ResumeLayout(false);
+            this.statusPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -687,7 +873,7 @@
         private Label macroUpKeyLabel;
         private Label macroDownKeyLabel;
         private Label hotkeysTitle;
-        private Label gameVersion;
+        private Label gameStatus;
         private Label fpsKey2Label;
         private Label hotkeyField4;
         private Label fpsKey1Label;
@@ -724,5 +910,19 @@
         private Button exitButton;
         private Panel panel3;
         private TextBox defaultFPS;
+        private Panel statusPanel;
+        private Label infoPanelTitle;
+        private Label slopeboostStatusLabel;
+        private Label macroStatusLabel;
+        private Label fpsCapLabel;
+        private Label gameStatusLabel;
+        private Label cheatsStatusLabel;
+        private Label balanceStatusLabel;
+        private Label currentFPSCap;
+        private Label cheatsStatus;
+        private Label balanceStatus;
+        private Label slopeboostStatus;
+        private Label reshadeStatusLabel;
+        private Label reshadeStatus;
     }
 }
