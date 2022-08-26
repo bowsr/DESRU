@@ -23,6 +23,7 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.hotkeyField0 = new System.Windows.Forms.Label();
             this.hotkeyField1 = new System.Windows.Forms.Label();
             this.autorunMacroCheckbox = new System.Windows.Forms.CheckBox();
@@ -80,6 +81,7 @@
             this.fpsCapLabel = new System.Windows.Forms.Label();
             this.gameStatusLabel = new System.Windows.Forms.Label();
             this.infoPanelTitle = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -342,7 +344,7 @@
             this.versionChangedLabel.AutoSize = true;
             this.versionChangedLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.versionChangedLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.versionChangedLabel.Location = new System.Drawing.Point(5, 17);
+            this.versionChangedLabel.Location = new System.Drawing.Point(6, 17);
             this.versionChangedLabel.Name = "versionChangedLabel";
             this.versionChangedLabel.Size = new System.Drawing.Size(141, 18);
             this.versionChangedLabel.TabIndex = 9;
@@ -815,6 +817,15 @@
             this.infoPanelTitle.Text = "INFO PANEL";
             this.infoPanelTitle.Visible = false;
             // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Location = new System.Drawing.Point(323, 480);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(304, 175);
+            this.panel4.TabIndex = 31;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -822,6 +833,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.ClientSize = new System.Drawing.Size(639, 764);
             this.ControlBox = false;
+            this.Controls.Add(this.panel4);
             this.Controls.Add(this.infoPanelTitle);
             this.Controls.Add(this.statusPanel);
             this.Controls.Add(this.exitButton);
@@ -834,6 +846,7 @@
             this.Controls.Add(this.windowTitle);
             this.Controls.Add(this.hotkeysTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.Name = "MainWindow";
@@ -924,5 +937,6 @@
         private Label slopeboostStatus;
         private Label reshadeStatusLabel;
         private Label reshadeStatus;
+        private Panel panel4;
     }
 }

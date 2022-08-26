@@ -18,6 +18,7 @@
     <None Remove="Resources\EternalLogo.ttf" />
     <None Remove="Resources\EternalUi2Bold.ttf" />
     <None Remove="Resources\EternalUi2Regular.ttf" />
+    <None Remove="Resources\offsets.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,12 +34,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="Resources\DESRU.ico" />
-    <EmbeddedResource Include="Resources\EternalAncient.ttf" />
-    <EmbeddedResource Include="Resources\EternalBattleBold.ttf" />
-    <EmbeddedResource Include="Resources\EternalLogo.ttf" />
-    <EmbeddedResource Include="Resources\EternalUi2Bold.ttf" />
-    <EmbeddedResource Include="Resources\EternalUi2Regular.ttf" />
+    <Resource Include="Resources\DESRU.ico" />
+    <Resource Include="Resources\EternalAncient.ttf" />
+    <Resource Include="Resources\EternalBattleBold.ttf" />
+    <Resource Include="Resources\EternalLogo.ttf" />
+    <Resource Include="Resources\EternalUi2Bold.ttf" />
+    <Resource Include="Resources\EternalUi2Regular.ttf" />
+    <Resource Include="Resources\offsets.json" />
   </ItemGroup>
 
   <ItemGroup>

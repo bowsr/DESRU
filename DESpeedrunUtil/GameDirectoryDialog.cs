@@ -30,12 +30,11 @@ namespace DESpeedrunUtil {
             FileName = folder;
         }
 
-        private void Confirm_Click(object sender, EventArgs e) {
-            this.Close();
-        }
-
-        private void Exit_Click(object sender, EventArgs e) {
-            this.Close();
+        private void GameDirectoryDialog_Load(object sender, EventArgs e) {
+            System.Media.SystemSounds.Asterisk.Play();
+            this.Location = new Point(
+                Screen.PrimaryScreen.WorkingArea.Left + (Screen.PrimaryScreen.WorkingArea.Width / 2 - (this.Width / 2)),
+                Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
         }
     }
 }

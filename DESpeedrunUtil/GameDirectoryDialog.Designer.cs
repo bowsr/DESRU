@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GameDirectoryDialog));
             this.pathTextBox = new System.Windows.Forms.TextBox();
             this.exitButton = new System.Windows.Forms.Button();
             this.confirmButton = new System.Windows.Forms.Button();
@@ -102,10 +103,12 @@
             this.Controls.Add(this.confirmButton);
             this.Controls.Add(this.exitButton);
             this.Controls.Add(this.pathTextBox);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "GameDirectoryDialog";
             this.Text = "Unable to locate game";
+            this.Load += new System.EventHandler(this.GameDirectoryDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

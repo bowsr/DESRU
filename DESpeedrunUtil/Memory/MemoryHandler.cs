@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.Json;
 using Timer = System.Windows.Forms.Timer;
@@ -22,21 +23,28 @@ namespace DESpeedrunUtil.Memory {
 
         DeepPointer _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP,
                     _row1DP, _row2DP, _row3DP, _row4DP, _row5DP, _row6DP, _row7DP, _row8DP, _row9DP,
-                    _gpuVendorDP, _gpuNameDP, _cpuDP;
+                    _gpuVendorDP, _gpuNameDP, _cpuDP,
+                    _raiseMSDP, _dropMSDP;
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _dynamicResPtr, _resScalesPtr,
                _row1Ptr, _row2Ptr, _row3Ptr, _row4Ptr, _row5Ptr, _row6Ptr, _row7Ptr, _row8Ptr, _row9Ptr,
-               _gpuVendorPtr, _gpuNamePtr, _cpuPtr;
+               _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
+               _raiseMSPtr, _dropMSPtr;
 
         Process _game;
         public Timer MemoryTimer { get; init; }
         int _moduleSize;
         public string Version { get; init; }
 
-        bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false;
+        bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false,
+             _unlockResFlag = false;
+        bool _autoDynamic = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         int _fpsLimit = 250;
         float _minRes = 0.01f;
+
+        bool _windowFocused = false;
+        long _focusedTime;
 
         public MemoryHandler(Process game) {
             _game = game;
@@ -69,10 +77,27 @@ namespace DESpeedrunUtil.Memory {
                 _cpu = cheatString;
                 _row3 = "";
             }
-
+            
             SetMetrics(2);
             ModifyMetricRows();
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
+            if(_unlockResFlag) {
+                if(ReadyToUnlockRes()) {
+                    if(!_windowFocused && CheckIfGameIsFocused()) {
+                        _focusedTime = DateTime.Now.Ticks;
+                        _windowFocused = true;
+                    }
+                    if(_windowFocused) {
+                        if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 5000) {
+                            UnlockResScale();
+                            SendKeys.Send("%(~)");
+                            SendKeys.Send("%(~)");
+                            _unlockResFlag = false;
+                            _windowFocused = false;
+                        }
+                    }
+                }
+            }
         }
 
         private void ModifyMetricRows() {
@@ -100,9 +125,39 @@ namespace DESpeedrunUtil.Memory {
             }
         }
 
+        private bool CheckIfGameIsFocused() {
+            try {
+                return _game.MainWindowHandle == GetForegroundWindow();
+            }catch(Exception) {
+                return false;
+            }
+        }
+        private bool ReadyToUnlockRes() {
+            if(_raiseMSPtr == IntPtr.Zero) return false;
+            _game.ReadValue(_raiseMSPtr, out float ms);
+            return ms > 0f && ms < 16f;
+        }
+
         private void SetMetrics(byte val) {
             if(val > 6) return;
             _game.WriteBytes(_metricsPtr, new byte[] { val });
+        }
+
+        private void UnlockResScale() {
+            SetResScales();
+            if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
+            if(_autoDynamic) {
+                if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
+                if(_raiseMSPtr != IntPtr.Zero) _game.WriteBytes(_raiseMSPtr, FloatToBytes(0.95f));
+                if(_dropMSPtr != IntPtr.Zero) _game.WriteBytes(_dropMSPtr, FloatToBytes(0.99f));
+                _autoDynamic = false;
+            }
+        }
+        private static byte[] FloatToBytes(float f) {
+            byte[] output = new byte[4];
+            float[] fArr = new float[1] { f };
+            Buffer.BlockCopy(fArr, 0, output, 0, 4);
+            return output;
         }
 
         private void SetResScales() {
@@ -159,6 +214,10 @@ namespace DESpeedrunUtil.Memory {
                 _ => false
             };
         }
+        public void ScheduleResUnlock(bool auto) {
+            _unlockResFlag = true;
+            _autoDynamic = auto;
+        }
 
         public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
 
@@ -197,6 +256,8 @@ namespace DESpeedrunUtil.Memory {
                 if(_minResDP != null) _minResDP.DerefOffsets(_game, out _minResPtr);
                 if(_dynamicResDP != null) _dynamicResDP.DerefOffsets(_game, out _dynamicResPtr);
                 if(_resScalesDP != null) _resScalesDP.DerefOffsets(_game, out _resScalesPtr);
+                if(_raiseMSDP != null) _raiseMSDP.DerefOffsets(_game, out _raiseMSPtr);
+                if(_dropMSDP != null) _dropMSDP.DerefOffsets(_game, out _dropMSPtr);
             } catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
                 return;
@@ -248,7 +309,7 @@ namespace DESpeedrunUtil.Memory {
 
         private void Initialize() {
             _row1DP = _row2DP = _row3DP = _row4DP = _row5DP = _row6DP = _row7DP = _row8DP = _row9DP = null;
-            _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = _resScalesDP = _minResDP = _dynamicResDP = null;
+            _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = null;
             if(!SetCurrentKnownOffsets(Version)) {
                 SigScans();
             }
@@ -272,6 +333,8 @@ namespace DESpeedrunUtil.Memory {
             if(_currentOffsets.MaxHz != 0) _maxHzDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MaxHz);
             if(_currentOffsets.MinRes != 0) _minResDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MinRes);
             if(_currentOffsets.DynamicRes != 0) _dynamicResDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.DynamicRes);
+            if(_currentOffsets.RaiseMS != 0) _raiseMSDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.RaiseMS);
+            if(_currentOffsets.DropMS != 0) _dropMSDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.DropMS);
             if(Version == "1.0 (Release)") _rampJumpDP = new DeepPointer("DOOMEternalx64vk.exe", 0x6126430);
         }
 
@@ -315,7 +378,7 @@ namespace DESpeedrunUtil.Memory {
                 GetOffset(r8),
                 GetOffset(r9),
                 0, 0, 0, 0, 0,
-                0, 0, GetOffset(res));
+                0, 0, 0, 0, GetOffset(res));
             OffsetList.Add(ko);
             _currentOffsets = ko;
 
@@ -363,6 +426,11 @@ namespace DESpeedrunUtil.Memory {
             return false;
         }
 
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
         public struct KnownOffsets {
             public string Version { get; init; }
 
@@ -384,11 +452,13 @@ namespace DESpeedrunUtil.Memory {
             public int MaxHz { get; init; }
             public int MinRes { get; init; }
             public int DynamicRes { get; init; }
+            public int RaiseMS { get; init; }
+            public int DropMS { get; init; }
 
             public int ResScales { get; init; }
 
             public KnownOffsets(string v, int r1, int r2, int r3, int r4, int r5, int r6, int r7, int r8, int r9,
-                                int gpuv, int gpu, int cpu, int perf, int hz, int min, int dyn, int res) {
+                                int gpuv, int gpu, int cpu, int perf, int hz, int min, int dyn, int msR, int msD, int res) {
                 Version = v;
                 Row1 = r1;
                 Row2 = r2;
@@ -406,6 +476,8 @@ namespace DESpeedrunUtil.Memory {
                 MaxHz = hz;
                 MinRes = min;
                 DynamicRes = dyn;
+                RaiseMS = msR;
+                DropMS = msD;
                 ResScales = res;
             }
         }

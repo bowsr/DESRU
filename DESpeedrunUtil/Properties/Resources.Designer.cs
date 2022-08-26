@@ -123,9 +123,9 @@ namespace DESpeedrunUtil.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] OffsetsJSON {
+        internal static byte[] offsets {
             get {
-                object obj = ResourceManager.GetObject("OffsetsJSON", resourceCulture);
+                object obj = ResourceManager.GetObject("offsets", resourceCulture);
                 return ((byte[])(obj));
             }
         }
