@@ -63,14 +63,16 @@ namespace DESpeedrunUtil {
                 hotkeyField1,
                 hotkeyField2,
                 hotkeyField3,
-                hotkeyField4
+                hotkeyField4,
+                hotkeyField5
             };
             
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalBattleBold20_25, "DOOM ETERNAL SPEEDRUN UTILITY", new Point(13, 9), Color.FromArgb(190, 34, 34), FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "KEYBINDS", new Point(12, 64), TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "OPTIONS", new Point(12, 268), TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "CHANGE VERSION", new Point(12, 451), TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "INFO PANEL", new Point(323, 64), TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalBattleBold20_25, "DOOM ETERNAL SPEEDRUN UTILITY", windowTitle.Location, Color.FromArgb(190, 34, 34), FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "KEYBINDS", hotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "OPTIONS", optionsTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "CHANGE VERSION", versionTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "INFO PANEL", infoPanelTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "RESOLUTION SCALING", resTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
 
             _formTimer = new Timer();
             _formTimer.Interval = 8;
@@ -115,8 +117,12 @@ namespace DESpeedrunUtil {
                 return;
             }
 
+            // TODO: Enable/Disable Hotkeys based on if the game is focused or not
+
             if(_enableMacro) _macroProcess.Start();
             else _macroProcess.Stop(true);
+
+            if(enableHotkeysCheckbox.Checked && !_memory.GetFlag("unlockscheduled")) _hotkeys.EnableHotkeys();
 
             if(_memory.CanCapFPS() && _memory.ReadMaxHz() > _fpsDefault) _memory.SetMaxHz(_fpsDefault);
             _memory.SetFlag(_fwRuleExists, "firewall");
@@ -179,6 +185,9 @@ namespace DESpeedrunUtil {
                     case "fps2":
                         key = _hotkeys.GetHotkeyByNumber(2);
                         break;
+                    case "resToggle":
+                        key = _hotkeys.GetHotkeyByNumber(3);
+                        break;
                 }
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
                 l.ForeColor = TEXT_FORECOLOR;
@@ -218,7 +227,7 @@ namespace DESpeedrunUtil {
         /// Sets <c>com_adaptiveTickMaxHz</c> to the desired cap value. Sets to <c>250</c> if already at the desired cap.
         /// </summary>
         /// <param name="fpsHotkey">Which hotkey to trigger</param>
-        public void ToggleFPSCap(int fpsHotkey) {
+        private void ToggleFPSCap(int fpsHotkey) {
             int newFPS = _fpsDefault;
             switch(fpsHotkey) {
                 case 0:
@@ -232,6 +241,19 @@ namespace DESpeedrunUtil {
                     break;
             }
             _memory.SetMaxHz(newFPS);
+        }
+
+        public void HotkeyPressed(int hotkey) {
+            if(hotkey < 3) {
+                ToggleFPSCap(hotkey);
+                return;
+            }
+            if(hotkey == 3) {
+                if(Hooked) {
+                    _memory.SetMinRes(((int) (_memory.ReadMinRes() * 100)) == _minResPercent ? 1f : _minResPercent / 100f);
+                    _memory.ScheduleResUnlock(false, _targetFPS);
+                }
+            }
         }
 
         private void ToggleIndividualHotkeys() {
@@ -452,7 +474,10 @@ namespace DESpeedrunUtil {
             SetGameInfoByModuleSize();
             _memory.SetFlag(File.Exists(_gameDirectory + "\\XINPUT1_3.dll"), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
-            if(unlockOnStartupCheckbox.Checked) _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
+            if(unlockOnStartupCheckbox.Checked) {
+                _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
+                _hotkeys.DisableHotkeys();
+            }
             _memory.MemoryTimer.Start();
             return true;
         }
@@ -590,12 +615,6 @@ namespace DESpeedrunUtil {
             if(isValid) {
                 int type = -1;
                 switch(tag) {
-                    case "macroDown":
-                        type = 3;
-                        break;
-                    case "macroUp":
-                        type = 4;
-                        break;
                     case "fps0":
                         type = 0;
                         break;
@@ -604,6 +623,15 @@ namespace DESpeedrunUtil {
                         break;
                     case "fps2":
                         type = 2;
+                        break;
+                    case "resToggle":
+                        type = 3;
+                        break;
+                    case "macroDown":
+                        type = 4;
+                        break;
+                    case "macroUp":
+                        type = 5;
                         break;
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
@@ -630,12 +658,6 @@ namespace DESpeedrunUtil {
             if(isValid) {
                 int type = -1;
                 switch(tag) {
-                    case "macroDown":
-                        type = 3;
-                        break;
-                    case "macroUp":
-                        type = 4;
-                        break;
                     case "fps0":
                         type = 0;
                         break;
@@ -644,6 +666,15 @@ namespace DESpeedrunUtil {
                         break;
                     case "fps2":
                         type = 2;
+                        break;
+                    case "resToggle":
+                        type = 3;
+                        break;
+                    case "macroDown":
+                        type = 4;
+                        break;
+                    case "macroUp":
+                        type = 5;
                         break;
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
@@ -837,7 +868,8 @@ namespace DESpeedrunUtil {
 
             // User Settings
             _macroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
-            _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key, (Keys) Properties.Settings.Default.FPS2Key, this);
+            _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key,
+                (Keys) Properties.Settings.Default.FPS2Key, (Keys) Properties.Settings.Default.ResScaleKey, this);
             _fps0 = Properties.Settings.Default.FPSCap0;
             _fps1 = Properties.Settings.Default.FPSCap1;
             _fps2 = Properties.Settings.Default.FPSCap2;
@@ -873,6 +905,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.FPS0Key = (int) _hotkeys.GetHotkeyByNumber(0);
             Properties.Settings.Default.FPS1Key = (int) _hotkeys.GetHotkeyByNumber(1);
             Properties.Settings.Default.FPS2Key = (int) _hotkeys.GetHotkeyByNumber(2);
+            Properties.Settings.Default.ResScaleKey = (int) _hotkeys.GetHotkeyByNumber(3);
             Properties.Settings.Default.FPSCap0 = _fps0;
             Properties.Settings.Default.FPSCap1 = _fps1;
             Properties.Settings.Default.FPSCap2 = _fps2;

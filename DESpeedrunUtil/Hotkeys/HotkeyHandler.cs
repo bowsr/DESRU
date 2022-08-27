@@ -12,13 +12,15 @@ namespace DESpeedrunUtil.Hotkeys {
         private Keys _fpsHotkey0 { get; set; }
         private Keys _fpsHotkey1 { get; set; }
         private Keys _fpsHotkey2 { get; set; }
+        private Keys _resScaleHotkey { get; set; }
 
-        public HotkeyHandler(Keys fps0, Keys fps1, Keys fps2, MainWindow parent) {
+        public HotkeyHandler(Keys fps0, Keys fps1, Keys fps2, Keys res, MainWindow parent) {
             _hook = new globalKeyboardHook();
             _parent = parent;
             _fpsHotkey0 = fps0;
             _fpsHotkey1 = fps1;
             _fpsHotkey2 = fps2;
+            _resScaleHotkey = res;
 
             _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
             _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
@@ -32,6 +34,8 @@ namespace DESpeedrunUtil.Hotkeys {
                     return _fpsHotkey1;
                 case 2:
                     return _fpsHotkey2;
+                case 3:
+                    return _resScaleHotkey;
                 default:
                     return Keys.None;
             }
@@ -46,6 +50,9 @@ namespace DESpeedrunUtil.Hotkeys {
                     break;
                 case 2:
                     _fpsHotkey2 = key;
+                    break;
+                case 3:
+                    _resScaleHotkey = key;
                     break;
             }
             RefreshKeys();
@@ -84,30 +91,25 @@ namespace DESpeedrunUtil.Hotkeys {
             if(_fpsHotkey0 != Keys.None && _key0Enabled) _hook.HookedKeys.Add(_fpsHotkey0);
             if(_fpsHotkey1 != Keys.None && _key1Enabled) _hook.HookedKeys.Add(_fpsHotkey1);
             if(_fpsHotkey2 != Keys.None && _key2Enabled) _hook.HookedKeys.Add(_fpsHotkey2);
+            if(_resScaleHotkey != Keys.None) _hook.HookedKeys.Add(_resScaleHotkey);
         }
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
             int hk = -1;
-            if(e.KeyCode == _fpsHotkey0) {
-                if(e.KeyCode == Keys.None) {
-                    e.Handled = false;
-                    return;
-                }
-                hk = 0;
-            } else if(e.KeyCode == _fpsHotkey1) {
-                if(e.KeyCode == Keys.None) {
-                    e.Handled = false;
-                    return;
-                }
-                hk = 1;
-            } else if(e.KeyCode == _fpsHotkey2) {
-                if(e.KeyCode == Keys.None) {
-                    e.Handled = false;
-                    return;
-                }
-                hk = 2;
+            if(e.KeyCode == Keys.None) {
+                e.Handled = false;
+                return;
             }
-            _parent.ToggleFPSCap(hk);
+            if(e.KeyCode == _fpsHotkey0) {
+                hk = 0;
+            }else if(e.KeyCode == _fpsHotkey1) {
+                hk = 1;
+            }else if(e.KeyCode == _fpsHotkey2) {
+                hk = 2;
+            }else if(e.KeyCode == _resScaleHotkey) {
+                hk = 3;
+            }
+            _parent.HotkeyPressed(hk);
             e.Handled = true;
         }
         private void Hook_KeyUp(object sender, KeyEventArgs e) {
@@ -130,24 +132,25 @@ namespace DESpeedrunUtil.Hotkeys {
             // Duplicate check
             // If a dupe is found, sets dupe to the old key of the currently changing field
             //   type: 0-2 -> HotkeyHandler FPSHotkeyX
-            //         3-4 -> FreescrollMacro (type == 3) DownScrollKey if true, UpScrollKey if false
+            //         3   -> Res Scaling Hotkey
+            //         4-5 -> FreescrollMacro (type == 4) DownScrollKey if true, UpScrollKey if false
             if(key != Keys.None) {
-                if(type < 0 || type > 4) return;
+                if(type < 0 || type > 5) return;
                 Keys oldKey;
-                if(type <= 2) {
+                if(type <= 3) {
                     oldKey = hotkeys.GetHotkeyByNumber(type);
-                } else {
-                    oldKey = macro.GetHotkey(type == 3);
+                }else {
+                    oldKey = macro.GetHotkey(type == 4);
                 }
-                for(int i = 0; i < 5; i++) {
+                for(int i = 0; i <= 5; i++) {
                     if(i == type) continue;
-                    if(i <= 2) {
+                    if(i <= 3) {
                         if(key == hotkeys.GetHotkeyByNumber(i)) {
                             hotkeys.ChangeHotkey(oldKey, i);
                             break;
                         }
                     } else {
-                        var down = (i == 3);
+                        var down = (i == 4);
                         if(key == macro.GetHotkey(down)) {
                             macro.ChangeHotkey(oldKey, down);
                             break;
@@ -156,10 +159,10 @@ namespace DESpeedrunUtil.Hotkeys {
                 }
             }
 
-            if(type <= 2) {
+            if(type <= 3) {
                 hotkeys.ChangeHotkey(key, type);
             } else {
-                macro.ChangeHotkey(key, type == 3);
+                macro.ChangeHotkey(key, type == 4);
             }
         }
         public static Keys ModKeySelector(int modifier) {

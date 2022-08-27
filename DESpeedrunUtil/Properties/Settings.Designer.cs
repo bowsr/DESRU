@@ -226,5 +226,17 @@ namespace DESpeedrunUtil.Properties {
                 this["TargetFPSScaling"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ResScaleKey {
+            get {
+                return ((int)(this["ResScaleKey"]));
+            }
+            set {
+                this["ResScaleKey"] = value;
+            }
+        }
     }
 }
