@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using DESpeedrunUtil.Hotkeys;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -33,6 +34,7 @@ namespace DESpeedrunUtil.Memory {
                _raiseMSPtr, _dropMSPtr;
 
         Process _game;
+        HotkeyHandler _hotkeys;
         public Timer MemoryTimer { get; init; }
         System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
@@ -48,8 +50,9 @@ namespace DESpeedrunUtil.Memory {
         bool _windowFocused = false;
         long _focusedTime;
 
-        public MemoryHandler(Process game) {
+        public MemoryHandler(Process game, HotkeyHandler hotkeys) {
             _game = game;
+            _hotkeys = hotkeys;
             _moduleSize = game.MainModule.ModuleMemorySize;
             Version = TranslateModuleSize();
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
@@ -103,6 +106,7 @@ namespace DESpeedrunUtil.Memory {
                                 _unlockResFlag = false;
                                 _windowFocused = false;
                                 _resUnlocked = true;
+                                _hotkeys.ToggleIndividualHotkeys(3, true);
                             }
                         }
                     }
@@ -267,6 +271,10 @@ namespace DESpeedrunUtil.Memory {
         public float ReadRaiseMillis() {
             if(_raiseMSPtr != IntPtr.Zero) return _game.ReadValue<float>(_raiseMSPtr);
             return -1f;
+        }
+        public bool ReadDynamicRes() {
+            if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
+            return false;
         }
 
         /// <summary>

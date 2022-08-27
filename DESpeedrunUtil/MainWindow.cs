@@ -117,12 +117,18 @@ namespace DESpeedrunUtil {
                 return;
             }
 
-            // TODO: Enable/Disable Hotkeys based on if the game is focused or not
+            if(enableHotkeysCheckbox.Checked) {
+                if(!_memory.GetFlag("unlockscheduled")) {
+                    if(GetForegroundWindow() != _gameProcess.MainWindowHandle) {
+                        _hotkeys.DisableHotkeys();
+                    }else {
+                        _hotkeys.EnableHotkeys();
+                    }
+                }
+            }
 
             if(_enableMacro) _macroProcess.Start();
             else _macroProcess.Stop(true);
-
-            if(enableHotkeysCheckbox.Checked && !_memory.GetFlag("unlockscheduled")) _hotkeys.EnableHotkeys();
 
             if(_memory.CanCapFPS() && _memory.ReadMaxHz() > _fpsDefault) _memory.SetMaxHz(_fpsDefault);
             _memory.SetFlag(_fwRuleExists, "firewall");
@@ -141,26 +147,54 @@ namespace DESpeedrunUtil {
         }
 
         private void StatusTick() {
-            gameStatus.Text = (Hooked) ? _memory.Version : "Not Running";
             macroStatus.Text = (_macroProcess.IsRunning) ? "Running" : "Stopped";
             macroStatus.ForeColor = (_macroProcess.IsRunning) ? Color.Lime : TEXT_FORECOLOR;
+            hotkeyStatus.Text = (_hotkeys.Enabled) ? "Enabled" : "Disabled";
 
             if(_memory != null) {
                 var hz = _memory.ReadMaxHz();
-                if(_memory.Version == "1.0 (Release)") {
+                var v = _memory.Version;
+                gameStatus.Text = v;
+                if(v == "1.0 (Release)") {
                     slopeboostStatus.Text = (_memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
                 }else {
                     slopeboostStatus.Text = "N/A";
                 }
                 currentFPSCap.Text = (hz != -1) ? hz.ToString() : "N/A";
+                var ms = _memory.ReadRaiseMillis();
+                var min = _memory.ReadMinRes();
+                if((ms > 0 && ms < 16) && min > 0) {
+                    var rs = "Enabled (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
+                    resScaleStatus.Text = (_memory.ReadDynamicRes() && min < 1.0f) ? rs : "Disabled";
+                }else {
+                    resScaleStatus.Text = "Disabled";
+                }
             }else {
                 slopeboostStatus.Text = "-";
                 currentFPSCap.Text = "-";
+                resScaleStatus.Text = "-";
+                gameStatus.Text = "Not Running";
             }
 
             balanceStatus.Text = (_fwRuleExists) ? ((_fwRestart) ? "Allowed*" : "Blocked") : "Allowed";
-            cheatsStatus.Text = (Hooked) ? ((_mhExists) ? "Enabled" : "Disabled") : "-";
-            reshadeStatus.Text = (Hooked) ? ((_reshadeExists) ? "Enabled" : "Disabled") : "-";
+            if(Hooked) {
+                if(_mhExists) {
+                    cheatsStatus.Text = "Enabled";
+                    cheatsStatus.ForeColor = Color.Red;
+                }else {
+                    cheatsStatus.Text = "Disabled";
+                    cheatsStatus.ForeColor = TEXT_FORECOLOR;
+                }
+                if(_reshadeExists) {
+                    reshadeStatus.Text = "Enabled";
+                }else {
+                    reshadeStatus.Text = "Disabled";
+                }
+            }else {
+                cheatsStatus.Text = "-";
+                cheatsStatus.ForeColor = TEXT_FORECOLOR;
+                reshadeStatus.Text = "-";
+            }
         }
 
         /// <summary>
@@ -465,12 +499,15 @@ namespace DESpeedrunUtil {
             _reshadeExists = CheckForReShade();
 
             try {
-                _memory = new MemoryHandler(_gameProcess);
+                _memory = new MemoryHandler(_gameProcess, _hotkeys);
             } catch(Exception ex) {
                 Debug.WriteLine(ex.Message);
                 return false;
             }
-            if(enableHotkeysCheckbox.Checked) _hotkeys.EnableHotkeys();
+            if(enableHotkeysCheckbox.Checked) {
+                _hotkeys.EnableHotkeys();
+                _hotkeys.ToggleIndividualHotkeys(3, false);
+            }
             SetGameInfoByModuleSize();
             _memory.SetFlag(File.Exists(_gameDirectory + "\\XINPUT1_3.dll"), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
@@ -552,6 +589,8 @@ namespace DESpeedrunUtil {
             balanceStatus.Font = _fontEternalUIRegular11_25;
             cheatsStatus.Font = _fontEternalUIRegular11_25;
             reshadeStatus.Font = _fontEternalUIRegular11_25;
+            resScaleStatus.Font = _fontEternalUIRegular11_25;
+            hotkeyStatus.Font = _fontEternalUIRegular11_25;
             unlockOnStartupCheckbox.Font = _fontEternalUIRegular11_25;
             autoDynamicCheckbox.Font = _fontEternalUIRegular11_25;
             minResLabel.Font = _fontEternalUIRegular11_25;
@@ -576,6 +615,8 @@ namespace DESpeedrunUtil {
             balanceStatusLabel.Font = _fontEternalUIBold11_25;
             cheatsStatusLabel.Font = _fontEternalUIBold11_25;
             reshadeStatusLabel.Font = _fontEternalUIBold11_25;
+            resScaleStatusLabel.Font = _fontEternalUIBold11_25;
+            hotkeyStatusLabel.Font = _fontEternalUIBold11_25;
             exitButton.Font = _fontEternalUIBold11_25;
             unlockResButton.Font = _fontEternalUIBold11_25;
 

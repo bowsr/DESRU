@@ -8,7 +8,7 @@ namespace DESpeedrunUtil.Hotkeys {
         private MainWindow _parent;
 
         public bool Enabled { get; private set; }
-        private bool _key0Enabled = false, _key1Enabled = false, _key2Enabled = false;
+        private bool _key0Enabled = false, _key1Enabled = false, _key2Enabled = false, _key3Enabled = false;
         private Keys _fpsHotkey0 { get; set; }
         private Keys _fpsHotkey1 { get; set; }
         private Keys _fpsHotkey2 { get; set; }
@@ -82,6 +82,9 @@ namespace DESpeedrunUtil.Hotkeys {
                 case 2:
                     _key2Enabled = enabled;
                     break;
+                case 3:
+                    _key3Enabled = enabled;
+                    break;
             }
             RefreshKeys();
         }
@@ -91,7 +94,7 @@ namespace DESpeedrunUtil.Hotkeys {
             if(_fpsHotkey0 != Keys.None && _key0Enabled) _hook.HookedKeys.Add(_fpsHotkey0);
             if(_fpsHotkey1 != Keys.None && _key1Enabled) _hook.HookedKeys.Add(_fpsHotkey1);
             if(_fpsHotkey2 != Keys.None && _key2Enabled) _hook.HookedKeys.Add(_fpsHotkey2);
-            if(_resScaleHotkey != Keys.None) _hook.HookedKeys.Add(_resScaleHotkey);
+            if(_resScaleHotkey != Keys.None && _key3Enabled) _hook.HookedKeys.Add(_resScaleHotkey);
         }
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
@@ -166,49 +169,23 @@ namespace DESpeedrunUtil.Hotkeys {
             }
         }
         public static Keys ModKeySelector(int modifier) {
-            Keys pressedKey;
-
-            switch(modifier) {
-                case 0:
-                    pressedKey = (GetAsyncKeyState(Keys.RControlKey) & 0x01) == 1 ? Keys.RControlKey : Keys.LControlKey;
-                    break;
-                case 1:
-                    pressedKey = (GetAsyncKeyState(Keys.RShiftKey) & 0x01) == 1 ? Keys.RShiftKey : Keys.LShiftKey;
-                    break;
-                case 2:
-                    pressedKey = (GetAsyncKeyState(Keys.RMenu) & 0x01) == 1 ? Keys.RMenu : Keys.LMenu;
-                    break;
-                default:
-                    pressedKey = Keys.None;
-                    break;
-            }
-            return pressedKey;
+            return modifier switch {
+                0 => (GetAsyncKeyState(Keys.RControlKey) & 0x01) == 1 ? Keys.RControlKey : Keys.LControlKey,
+                1 => (GetAsyncKeyState(Keys.RShiftKey) & 0x01) == 1 ? Keys.RShiftKey : Keys.LShiftKey,
+                2 => (GetAsyncKeyState(Keys.RMenu) & 0x01) == 1 ? Keys.RMenu : Keys.LMenu,
+                _ => Keys.None,
+            };
         }
 
         public static Keys ConvertMouseButton(MouseButtons button) {
-            Keys pressedKey;
-
-            switch(button) {
-                case MouseButtons.Left:
-                    pressedKey = Keys.LButton;
-                    break;
-                case MouseButtons.Right:
-                    pressedKey = Keys.RButton;
-                    break;
-                case MouseButtons.Middle:
-                    pressedKey = Keys.MButton;
-                    break;
-                case MouseButtons.XButton1:
-                    pressedKey = Keys.XButton1;
-                    break;
-                case MouseButtons.XButton2:
-                    pressedKey = Keys.XButton2;
-                    break;
-                default:
-                    pressedKey = Keys.None;
-                    break;
-            }
-            return pressedKey;
+            return button switch {
+                MouseButtons.Left => Keys.LButton,
+                MouseButtons.Right => Keys.RButton,
+                MouseButtons.Middle => Keys.MButton,
+                MouseButtons.XButton1 => Keys.XButton1,
+                MouseButtons.XButton2 => Keys.XButton2,
+                _ => Keys.None,
+            };
         }
 
         public static string TranslateKeyNames(Keys key) {
