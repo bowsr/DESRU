@@ -82,6 +82,17 @@
             this.gameStatusLabel = new System.Windows.Forms.Label();
             this.infoPanelTitle = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.dynamicTargetLabel = new System.Windows.Forms.Label();
+            this.targetFPSLabel = new System.Windows.Forms.Label();
+            this.targetFPSPanel = new System.Windows.Forms.Panel();
+            this.targetFPSInput = new System.Windows.Forms.TextBox();
+            this.autoDynamicCheckbox = new System.Windows.Forms.CheckBox();
+            this.unlockOnStartupCheckbox = new System.Windows.Forms.CheckBox();
+            this.unlockResButton = new System.Windows.Forms.Button();
+            this.percentLabel = new System.Windows.Forms.Label();
+            this.minResLabel = new System.Windows.Forms.Label();
+            this.minResPanel = new System.Windows.Forms.Panel();
+            this.minResInput = new System.Windows.Forms.TextBox();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -90,6 +101,9 @@
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
             this.statusPanel.SuspendLayout();
+            this.panel4.SuspendLayout();
+            this.targetFPSPanel.SuspendLayout();
+            this.minResPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // hotkeyField0
@@ -248,7 +262,7 @@
             this.fpsInput0.TabIndex = 14;
             this.fpsInput0.Tag = "fpscap0";
             this.fpsInput0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.fpsInput0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FPSInput_KeyPressNumericOnly);
+            this.fpsInput0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
             this.fpsInput0.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsKey2Label
@@ -256,11 +270,11 @@
             this.fpsKey2Label.AutoSize = true;
             this.fpsKey2Label.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fpsKey2Label.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.fpsKey2Label.Location = new System.Drawing.Point(20, 127);
+            this.fpsKey2Label.Location = new System.Drawing.Point(21, 127);
             this.fpsKey2Label.Name = "fpsKey2Label";
-            this.fpsKey2Label.Size = new System.Drawing.Size(103, 18);
+            this.fpsKey2Label.Size = new System.Drawing.Size(102, 18);
             this.fpsKey2Label.TabIndex = 13;
-            this.fpsKey2Label.Text = "FPS Hotkey #3";
+            this.fpsKey2Label.Text = "FPS Toggle #3";
             // 
             // hotkeyField4
             // 
@@ -281,11 +295,11 @@
             this.fpsKey1Label.AutoSize = true;
             this.fpsKey1Label.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fpsKey1Label.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.fpsKey1Label.Location = new System.Drawing.Point(20, 98);
+            this.fpsKey1Label.Location = new System.Drawing.Point(21, 98);
             this.fpsKey1Label.Name = "fpsKey1Label";
-            this.fpsKey1Label.Size = new System.Drawing.Size(103, 18);
+            this.fpsKey1Label.Size = new System.Drawing.Size(102, 18);
             this.fpsKey1Label.TabIndex = 11;
-            this.fpsKey1Label.Text = "FPS Hotkey #2";
+            this.fpsKey1Label.Text = "FPS Toggle #2";
             // 
             // hotkeyField2
             // 
@@ -306,11 +320,11 @@
             this.fpsKey0Label.AutoSize = true;
             this.fpsKey0Label.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.fpsKey0Label.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.fpsKey0Label.Location = new System.Drawing.Point(20, 69);
+            this.fpsKey0Label.Location = new System.Drawing.Point(21, 69);
             this.fpsKey0Label.Name = "fpsKey0Label";
-            this.fpsKey0Label.Size = new System.Drawing.Size(103, 18);
+            this.fpsKey0Label.Size = new System.Drawing.Size(102, 18);
             this.fpsKey0Label.TabIndex = 10;
-            this.fpsKey0Label.Text = "FPS Hotkey #1";
+            this.fpsKey0Label.Text = "FPS Toggle #1";
             // 
             // hotkeyField3
             // 
@@ -624,7 +638,7 @@
             this.defaultFPS.Tag = "fpscapDefault";
             this.defaultFPS.Text = "250";
             this.defaultFPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.defaultFPS.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.FPSInput_KeyPressNumericOnly);
+            this.defaultFPS.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
             this.defaultFPS.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // titleSeparator
@@ -821,10 +835,158 @@
             // 
             this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel4.Controls.Add(this.dynamicTargetLabel);
+            this.panel4.Controls.Add(this.targetFPSLabel);
+            this.panel4.Controls.Add(this.targetFPSPanel);
+            this.panel4.Controls.Add(this.autoDynamicCheckbox);
+            this.panel4.Controls.Add(this.unlockOnStartupCheckbox);
+            this.panel4.Controls.Add(this.unlockResButton);
+            this.panel4.Controls.Add(this.percentLabel);
+            this.panel4.Controls.Add(this.minResLabel);
+            this.panel4.Controls.Add(this.minResPanel);
             this.panel4.Location = new System.Drawing.Point(323, 480);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(304, 175);
+            this.panel4.Size = new System.Drawing.Size(304, 162);
             this.panel4.TabIndex = 31;
+            // 
+            // dynamicTargetLabel
+            // 
+            this.dynamicTargetLabel.AutoSize = true;
+            this.dynamicTargetLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.dynamicTargetLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.dynamicTargetLabel.Location = new System.Drawing.Point(22, 96);
+            this.dynamicTargetLabel.Name = "dynamicTargetLabel";
+            this.dynamicTargetLabel.Size = new System.Drawing.Size(187, 18);
+            this.dynamicTargetLabel.TabIndex = 33;
+            this.dynamicTargetLabel.Text = "Dynamic Scaling Target FPS";
+            // 
+            // targetFPSLabel
+            // 
+            this.targetFPSLabel.AutoSize = true;
+            this.targetFPSLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.targetFPSLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.targetFPSLabel.Location = new System.Drawing.Point(264, 96);
+            this.targetFPSLabel.Name = "targetFPSLabel";
+            this.targetFPSLabel.Size = new System.Drawing.Size(33, 18);
+            this.targetFPSLabel.TabIndex = 30;
+            this.targetFPSLabel.Text = "FPS";
+            // 
+            // targetFPSPanel
+            // 
+            this.targetFPSPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.targetFPSPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.targetFPSPanel.Controls.Add(this.targetFPSInput);
+            this.targetFPSPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.targetFPSPanel.Location = new System.Drawing.Point(215, 92);
+            this.targetFPSPanel.Name = "targetFPSPanel";
+            this.targetFPSPanel.Size = new System.Drawing.Size(46, 26);
+            this.targetFPSPanel.TabIndex = 30;
+            // 
+            // targetFPSInput
+            // 
+            this.targetFPSInput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.targetFPSInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.targetFPSInput.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.targetFPSInput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.targetFPSInput.Location = new System.Drawing.Point(-1, 3);
+            this.targetFPSInput.MaxLength = 3;
+            this.targetFPSInput.Name = "targetFPSInput";
+            this.targetFPSInput.Size = new System.Drawing.Size(43, 20);
+            this.targetFPSInput.TabIndex = 14;
+            this.targetFPSInput.Tag = "minres";
+            this.targetFPSInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.targetFPSInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
+            this.targetFPSInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TargetFPS_KeyUp);
+            // 
+            // autoDynamicCheckbox
+            // 
+            this.autoDynamicCheckbox.AutoSize = true;
+            this.autoDynamicCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.autoDynamicCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.autoDynamicCheckbox.Location = new System.Drawing.Point(6, 33);
+            this.autoDynamicCheckbox.Name = "autoDynamicCheckbox";
+            this.autoDynamicCheckbox.Size = new System.Drawing.Size(209, 22);
+            this.autoDynamicCheckbox.TabIndex = 32;
+            this.autoDynamicCheckbox.Text = "Auto Enable Dynamic Scaling";
+            this.autoDynamicCheckbox.UseVisualStyleBackColor = true;
+            this.autoDynamicCheckbox.CheckedChanged += new System.EventHandler(this.AutoDynamic_CheckChanged);
+            // 
+            // unlockOnStartupCheckbox
+            // 
+            this.unlockOnStartupCheckbox.AutoSize = true;
+            this.unlockOnStartupCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.unlockOnStartupCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.unlockOnStartupCheckbox.Location = new System.Drawing.Point(6, 8);
+            this.unlockOnStartupCheckbox.Name = "unlockOnStartupCheckbox";
+            this.unlockOnStartupCheckbox.Size = new System.Drawing.Size(142, 22);
+            this.unlockOnStartupCheckbox.TabIndex = 30;
+            this.unlockOnStartupCheckbox.Text = "Unlock on Startup";
+            this.unlockOnStartupCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // unlockResButton
+            // 
+            this.unlockResButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.unlockResButton.Enabled = false;
+            this.unlockResButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
+            this.unlockResButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.unlockResButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.unlockResButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.unlockResButton.Location = new System.Drawing.Point(3, 125);
+            this.unlockResButton.Name = "unlockResButton";
+            this.unlockResButton.Size = new System.Drawing.Size(296, 32);
+            this.unlockResButton.TabIndex = 12;
+            this.unlockResButton.Text = "Unlock Resolution Scaling";
+            this.unlockResButton.UseVisualStyleBackColor = false;
+            this.unlockResButton.Click += new System.EventHandler(this.UnlockRes_Click);
+            // 
+            // percentLabel
+            // 
+            this.percentLabel.AutoSize = true;
+            this.percentLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.percentLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.percentLabel.Location = new System.Drawing.Point(263, 63);
+            this.percentLabel.Name = "percentLabel";
+            this.percentLabel.Size = new System.Drawing.Size(21, 18);
+            this.percentLabel.TabIndex = 31;
+            this.percentLabel.Text = "%";
+            // 
+            // minResLabel
+            // 
+            this.minResLabel.AutoSize = true;
+            this.minResLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.minResLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.minResLabel.Location = new System.Drawing.Point(36, 63);
+            this.minResLabel.Name = "minResLabel";
+            this.minResLabel.Size = new System.Drawing.Size(173, 18);
+            this.minResLabel.TabIndex = 30;
+            this.minResLabel.Text = "Minimum Resolution Scale";
+            // 
+            // minResPanel
+            // 
+            this.minResPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.minResPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.minResPanel.Controls.Add(this.minResInput);
+            this.minResPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.minResPanel.Location = new System.Drawing.Point(215, 59);
+            this.minResPanel.Name = "minResPanel";
+            this.minResPanel.Size = new System.Drawing.Size(46, 26);
+            this.minResPanel.TabIndex = 29;
+            // 
+            // minResInput
+            // 
+            this.minResInput.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.minResInput.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.minResInput.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.minResInput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.minResInput.Location = new System.Drawing.Point(-1, 3);
+            this.minResInput.MaxLength = 3;
+            this.minResInput.Name = "minResInput";
+            this.minResInput.Size = new System.Drawing.Size(43, 20);
+            this.minResInput.TabIndex = 14;
+            this.minResInput.Tag = "minres";
+            this.minResInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.minResInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
+            this.minResInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.MinResInput_KeyUp);
             // 
             // MainWindow
             // 
@@ -874,6 +1036,12 @@
             this.panel3.PerformLayout();
             this.statusPanel.ResumeLayout(false);
             this.statusPanel.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
+            this.targetFPSPanel.ResumeLayout(false);
+            this.targetFPSPanel.PerformLayout();
+            this.minResPanel.ResumeLayout(false);
+            this.minResPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -938,5 +1106,16 @@
         private Label reshadeStatusLabel;
         private Label reshadeStatus;
         private Panel panel4;
+        private Panel minResPanel;
+        private TextBox minResInput;
+        private Label minResLabel;
+        private Label percentLabel;
+        private Button unlockResButton;
+        private CheckBox unlockOnStartupCheckbox;
+        private CheckBox autoDynamicCheckbox;
+        private Panel targetFPSPanel;
+        private TextBox targetFPSInput;
+        private Label targetFPSLabel;
+        private Label dynamicTargetLabel;
     }
 }

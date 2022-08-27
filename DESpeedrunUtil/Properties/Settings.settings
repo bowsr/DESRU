@@ -41,5 +41,17 @@
     <Setting Name="DefaultFPSCap" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">250</Value>
     </Setting>
+    <Setting Name="StartupUnlock" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="AutoDynamic" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="MinResPercent" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">50</Value>
+    </Setting>
+    <Setting Name="TargetFPSScaling" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">1000</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

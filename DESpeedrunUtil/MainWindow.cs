@@ -40,7 +40,7 @@ namespace DESpeedrunUtil {
         bool _enableMacro = true;
 
         HotkeyHandler? _hotkeys;
-        int _fps0, _fps1, _fps2, _fpsDefault;
+        int _fps0, _fps1, _fps2, _fpsDefault, _minResPercent, _targetFPS;
 
         MemoryHandler? _memory;
 
@@ -53,9 +53,6 @@ namespace DESpeedrunUtil {
 
         string _gameDirectory = "", _steamDirectory = "";
         List<string>? _gameVersions;
-
-        bool _gainedFocus = false, _changedWindow = false;
-        long _time;
 
         public MainWindow() {
             InitializeComponent();
@@ -80,7 +77,7 @@ namespace DESpeedrunUtil {
             _formTimer.Tick += (sender, e) => { UpdateTick(); };
 
             _statusTimer = new Timer();
-            _statusTimer.Interval = 1000;
+            _statusTimer.Interval = 500;
             _statusTimer.Tick += (sender, e) => { StatusTick(); };
             
             AddMouseIntercepts(this);
@@ -96,6 +93,9 @@ namespace DESpeedrunUtil {
                 _gameProcess = null;
                 if(_memory != null) _memory.MemoryTimer.Stop();
                 _memory = null;
+
+                unlockResButton.Enabled = false;
+                unlockResButton.Text = "Unlock Resolution Scaling";
             }
             if(!_fwRestart) firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
             _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
@@ -121,24 +121,17 @@ namespace DESpeedrunUtil {
             if(_memory.CanCapFPS() && _memory.ReadMaxHz() > _fpsDefault) _memory.SetMaxHz(_fpsDefault);
             _memory.SetFlag(_fwRuleExists, "firewall");
             _memory.SetFlag(_macroProcess.IsRunning, "macro");
-            /*
-            if(!_gainedFocus) {
-                try {
-                    var window = GetForegroundWindow();
-                    if(window == _gameProcess.MainWindowHandle) {
-                        _gainedFocus = true;
-                        _time = DateTime.Now.Ticks;
-                    }
-                } catch(Exception) { }
+
+            if(_memory.GetFlag("resunlocked")) {
+                unlockResButton.Enabled = true;
+                unlockResButton.Text = "Update Minimum Resolution";
+            }else if(_memory.GetFlag("unlockscheduled")) {
+                unlockResButton.Enabled = false;
+                unlockResButton.Text = "Unlock in Progress";
+            }else {
+                unlockResButton.Enabled = true;
+                unlockResButton.Text = "Unlock Resolution Scaling";
             }
-            if(_gainedFocus && !_changedWindow) {
-                if(((DateTime.Now.Ticks - _time) / 10000) >= 5000) {
-                    _memory.TestResUnlocking();
-                    SendKeys.Send("%(~)");
-                    SendKeys.Send("%(~)");
-                    _changedWindow = true;
-                }
-            }*/
         }
 
         private void StatusTick() {
@@ -165,9 +158,9 @@ namespace DESpeedrunUtil {
         }
 
         /// <summary>
-        /// Updates all hotkey selection fields with their respective current hotkeys.
+        /// Updates all hotkey and input fields with their respective values.
         /// </summary>
-        public void UpdateHotkeyFields() {
+        public void UpdateHotkeyAndInputFields() {
             foreach(Label l in _hotkeyFields) {
                 Keys key = Keys.None;
                 switch(l.Tag) {
@@ -199,6 +192,8 @@ namespace DESpeedrunUtil {
             fpsInput1.Text = (s1 != "-1") ? s1 : "";
             fpsInput2.Text = (s2 != "-1") ? s2 : "";
             defaultFPS.Text = (d != "-1") ? d : "";
+            minResInput.Text = _minResPercent.ToString();
+            targetFPSInput.Text = _targetFPS.ToString();
         }
 
         public void PopulateVersionDropDown() {
@@ -457,7 +452,7 @@ namespace DESpeedrunUtil {
             SetGameInfoByModuleSize();
             _memory.SetFlag(File.Exists(_gameDirectory + "\\XINPUT1_3.dll"), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
-            _memory.ScheduleResUnlock(true);
+            if(unlockOnStartupCheckbox.Checked) _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
             _memory.MemoryTimer.Start();
             return true;
         }
@@ -532,6 +527,14 @@ namespace DESpeedrunUtil {
             balanceStatus.Font = _fontEternalUIRegular11_25;
             cheatsStatus.Font = _fontEternalUIRegular11_25;
             reshadeStatus.Font = _fontEternalUIRegular11_25;
+            unlockOnStartupCheckbox.Font = _fontEternalUIRegular11_25;
+            autoDynamicCheckbox.Font = _fontEternalUIRegular11_25;
+            minResLabel.Font = _fontEternalUIRegular11_25;
+            dynamicTargetLabel.Font = _fontEternalUIRegular11_25;
+            minResInput.Font = _fontEternalUIRegular11_25;
+            targetFPSInput.Font = _fontEternalUIRegular11_25;
+            percentLabel.Font = _fontEternalUIRegular11_25;
+            targetFPSLabel.Font = _fontEternalUIRegular11_25;
 
             // Eternal UI 2 Bold 11.25point
             versionChangedLabel.Font = _fontEternalUIBold11_25;
@@ -549,6 +552,7 @@ namespace DESpeedrunUtil {
             cheatsStatusLabel.Font = _fontEternalUIBold11_25;
             reshadeStatusLabel.Font = _fontEternalUIBold11_25;
             exitButton.Font = _fontEternalUIBold11_25;
+            unlockResButton.Font = _fontEternalUIBold11_25;
 
             // Eternal Logo Bold 17.25point
             hotkeysTitle.Font = _fontEternalLogoBold14;
@@ -604,7 +608,7 @@ namespace DESpeedrunUtil {
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }
-            UpdateHotkeyFields();
+            UpdateHotkeyAndInputFields();
             e.Handled = true;
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
@@ -644,7 +648,7 @@ namespace DESpeedrunUtil {
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }
-            UpdateHotkeyFields();
+            UpdateHotkeyAndInputFields();
         }
 
         private void MainWindow_MouseMove(object sender, MouseEventArgs e) {
@@ -686,7 +690,7 @@ namespace DESpeedrunUtil {
             }
         }
 
-        private void FPSInput_KeyPressNumericOnly(object sender, KeyPressEventArgs e) {
+        private void Input_KeyPressNumericOnly(object sender, KeyPressEventArgs e) {
             if(!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar)) {
                 e.Handled = true;
                 return;
@@ -729,6 +733,37 @@ namespace DESpeedrunUtil {
             }
             ToggleIndividualHotkeys();
         }
+
+        private void MinResInput_KeyUp(object sender, KeyEventArgs e) {
+            var text = ((TextBox) sender).Text;
+            int resPercent;
+            try {
+                resPercent = int.Parse(text);
+            } catch(FormatException) {
+                resPercent = 50;
+            }
+            if(resPercent <= 1) resPercent = 1;
+            if(resPercent > 100) resPercent = 100;
+            _minResPercent = resPercent;
+            ((TextBox) sender).Text = resPercent.ToString();
+
+            if(Hooked) {
+                _memory.SetMinRes(resPercent / 100f);
+            }
+        }
+        private void TargetFPS_KeyUp(object sender, KeyEventArgs e) {
+            var text = ((TextBox) sender).Text;
+            int target;
+            try {
+                target = int.Parse(text);
+            } catch(FormatException) {
+                target = 1000;
+            }
+            if(target < 60) target = 60;
+            if(target > 1000) target = 1000;
+            _targetFPS = target;
+            ((TextBox) sender).Text = target.ToString();
+        }
         private void AutoStartMacro_CheckChanged(object sender, EventArgs e) => _enableMacro = ((CheckBox) sender).Checked;
         private void EnableHotkeys_CheckChanged(object sender, EventArgs e) {
             bool val = ((CheckBox) sender).Checked;
@@ -737,6 +772,14 @@ namespace DESpeedrunUtil {
             } else {
                 _hotkeys.DisableHotkeys();
             }
+        }
+        private void AutoDynamic_CheckChanged(object sender, EventArgs e) {
+            if(((CheckBox) sender).Checked) {
+                if(Hooked && !_memory.DynamicEnabled()) _memory.EnableDynamicScaling(_targetFPS);
+            }
+        }
+        private void UnlockRes_Click(object sender, EventArgs e) {
+            if(Hooked) _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
         }
         private void RefreshVersions_Click(object sender, EventArgs e) {
             if(_steamDirectory != string.Empty) DetectAllGameVersions();
@@ -803,8 +846,12 @@ namespace DESpeedrunUtil {
             _enableMacro = Properties.Settings.Default.MacroEnabled;
             enableHotkeysCheckbox.Checked = Properties.Settings.Default.FPSHotkeysEnabled;
             _gameDirectory = Properties.Settings.Default.GameLocation;
+            unlockOnStartupCheckbox.Checked = Properties.Settings.Default.StartupUnlock;
+            autoDynamicCheckbox.Checked = Properties.Settings.Default.AutoDynamic;
+            _minResPercent = Properties.Settings.Default.MinResPercent;
+            _targetFPS = Properties.Settings.Default.TargetFPSScaling;
             ToggleIndividualHotkeys();
-            UpdateHotkeyFields();
+            UpdateHotkeyAndInputFields();
 
             var defaultLocation = new Point(
                 Screen.PrimaryScreen.WorkingArea.Left + (Screen.PrimaryScreen.WorkingArea.Width / 2 - (this.Width / 2)),
@@ -833,6 +880,10 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.MacroEnabled = autorunMacroCheckbox.Checked;
             Properties.Settings.Default.FPSHotkeysEnabled = enableHotkeysCheckbox.Checked;
             Properties.Settings.Default.GameLocation = _gameDirectory;
+            Properties.Settings.Default.StartupUnlock = unlockOnStartupCheckbox.Checked;
+            Properties.Settings.Default.AutoDynamic = autoDynamicCheckbox.Checked;
+            Properties.Settings.Default.MinResPercent = _minResPercent;
+            Properties.Settings.Default.TargetFPSScaling = _targetFPS;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 

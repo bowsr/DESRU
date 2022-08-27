@@ -178,5 +178,53 @@ namespace DESpeedrunUtil.Properties {
                 this["DefaultFPSCap"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool StartupUnlock {
+            get {
+                return ((bool)(this["StartupUnlock"]));
+            }
+            set {
+                this["StartupUnlock"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoDynamic {
+            get {
+                return ((bool)(this["AutoDynamic"]));
+            }
+            set {
+                this["AutoDynamic"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("50")]
+        public int MinResPercent {
+            get {
+                return ((int)(this["MinResPercent"]));
+            }
+            set {
+                this["MinResPercent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("1000")]
+        public int TargetFPSScaling {
+            get {
+                return ((int)(this["TargetFPSScaling"]));
+            }
+            set {
+                this["TargetFPSScaling"] = value;
+            }
+        }
     }
 }

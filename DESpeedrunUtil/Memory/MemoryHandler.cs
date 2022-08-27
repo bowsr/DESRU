@@ -10,7 +10,8 @@ namespace DESpeedrunUtil.Memory {
         private readonly string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";
         // DLSS does not show up if you don't have a capable gpu (NVIDIA RTX) BUT it still exists in memory in the exact same spot.
         private readonly string SIGSCAN_DLSS = "444C5353203A2025730000000000000056756C6B616E202573";
-        private readonly string SIGSCAN_RES_SCALES = "41646465642074696D6520666F722073797374656D20656E7669726F6E6D656E74";
+        private readonly string SIGSCAN_RES_SCALES = 
+        "0000803FA4707D3F48E17A3FEC51783F8FC2753F3333733FD7A3703F7B146E3F1F856B3FC3F5683F6666663F0AD7633FAE47613FF6285C3F3D0A573F85EB513FCDCC4C3F14AE473F5C8F423FA4703D3FEC51383F3333333F7B142E3FC3F5283F0AD7233F52B81E3F9A99193FE17A143F295C0F3F713D0A3FB81E053F0000003F";
 
         private readonly float[] ONEPERCENT_RES_SCALES = new float[32] 
             { 1.0f, 0.968f, 0.936f, 0.904f, 0.872f, 0.84f, 0.808f, 0.776f, 
@@ -33,14 +34,15 @@ namespace DESpeedrunUtil.Memory {
 
         Process _game;
         public Timer MemoryTimer { get; init; }
+        System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
         public string Version { get; init; }
 
         bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false,
-             _unlockResFlag = false;
-        bool _autoDynamic = false;
+             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
-        int _fpsLimit = 250;
+        string _cheatString = "CHEATS ENABLED";
+        int _fpsLimit = 250, _targetFPS = 1000;
         float _minRes = 0.01f;
 
         bool _windowFocused = false;
@@ -56,12 +58,15 @@ namespace DESpeedrunUtil.Memory {
             MemoryTimer.Interval = 15;
             MemoryTimer.Tick += (sender, e) => { MemoryTick(); };
 
+            _restartCheatsTimer = new System.Timers.Timer(2500);
+            _restartCheatsTimer.Elapsed += (sender, e) => { _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED"; };
+
             Initialize();
         }
 
         private void MemoryTick() {
             DerefPointers();
-
+            if(_cheatsFlag && !_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
             if(Version == "1.0 (Release)") SetFlag(_game.ReadBytes(_rampJumpPtr, 1)[0] == 0, "slopeboost");
             _row1 = "%i FPS";
             _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
@@ -69,12 +74,12 @@ namespace DESpeedrunUtil.Memory {
             if(_row2.Contains("Unknown")) _row2 = "Unknown";
             if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag)
                 _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
-            var cheatString = (_cheatsFlag) ? "CHEATS ENABLED" : "";
-            if(_cpuPtr.ToInt64() == 0) {
-                _row3 = cheatString;
+            var cheats = (_cheatsFlag) ? _cheatString : "";
+            if(_cpuPtr == IntPtr.Zero) {
+                _row3 = cheats;
                 _cpu = "";
             }else {
-                _cpu = cheatString;
+                _cpu = cheats;
                 _row3 = "";
             }
             
@@ -88,12 +93,17 @@ namespace DESpeedrunUtil.Memory {
                         _windowFocused = true;
                     }
                     if(_windowFocused) {
-                        if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 5000) {
-                            UnlockResScale();
-                            SendKeys.Send("%(~)");
-                            SendKeys.Send("%(~)");
-                            _unlockResFlag = false;
+                        if(!CheckIfGameIsFocused()) {
                             _windowFocused = false;
+                        } else {
+                            if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 4000) {
+                                UnlockResScale(_targetFPS);
+                                SendKeys.Send("%(~)");
+                                SendKeys.Send("%(~)");
+                                _unlockResFlag = false;
+                                _windowFocused = false;
+                                _resUnlocked = true;
+                            }
                         }
                     }
                 }
@@ -132,10 +142,16 @@ namespace DESpeedrunUtil.Memory {
                 return false;
             }
         }
+        // Once the main menu is pretty much loaded, rs_raiseMilliseconds gets set to 15.833332ms
+        //  or lower, depending on the user's settings.
+        // Used to make sure ALT+ENTER isn't dropped due to the game loading.
         private bool ReadyToUnlockRes() {
-            if(_raiseMSPtr == IntPtr.Zero) return false;
-            _game.ReadValue(_raiseMSPtr, out float ms);
+            var ms = ReadRaiseMillis();
             return ms > 0f && ms < 16f;
+        }
+        public bool DynamicEnabled() {
+            if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
+            return false;
         }
 
         private void SetMetrics(byte val) {
@@ -143,28 +159,32 @@ namespace DESpeedrunUtil.Memory {
             _game.WriteBytes(_metricsPtr, new byte[] { val });
         }
 
-        private void UnlockResScale() {
+        private void UnlockResScale(int targetFPS) {
             SetResScales();
             if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
             if(_autoDynamic) {
-                if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
-                if(_raiseMSPtr != IntPtr.Zero) _game.WriteBytes(_raiseMSPtr, FloatToBytes(0.95f));
-                if(_dropMSPtr != IntPtr.Zero) _game.WriteBytes(_dropMSPtr, FloatToBytes(0.99f));
+                EnableDynamicScaling(targetFPS);
                 _autoDynamic = false;
             }
         }
+        public void EnableDynamicScaling(int targetFPS) {
+            if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
+            if(_raiseMSPtr != IntPtr.Zero) _game.WriteBytes(_raiseMSPtr, FloatToBytes((1000f / targetFPS) * 0.95f));
+            if(_dropMSPtr != IntPtr.Zero) _game.WriteBytes(_dropMSPtr, FloatToBytes((1000f / targetFPS) * 0.99f));
+        }
         private static byte[] FloatToBytes(float f) {
             byte[] output = new byte[4];
-            float[] fArr = new float[1] { f };
-            Buffer.BlockCopy(fArr, 0, output, 0, 4);
+            float[] fArray = new float[1] { f };
+            Buffer.BlockCopy(fArray, 0, output, 0, 4);
             return output;
         }
 
         private void SetResScales() {
+            if(Version != "6.66 Rev 2" && _minRes >= 0.5f) return; // No need to change res scales since 50% is the default minimum in game
             float[] scales = ONEPERCENT_RES_SCALES;
             if(Version == "6.66 Rev 2") {
-                // rs_minimumResolutionScale does not exist on 6.66 Rev 2
-                // Because of this, we cannot set the min res scale, so a new set of res scale values needs to be generated
+                // rs_minimumResolutionScale does not exist on 6.66 Rev 2. It is dynamically inferred based off the 128 byte set of res scale values.
+                // Because of this, we cannot set the min res scale directly, so a new set of res scale values must be generated,
                 //   based off of the desired minimum resolution set by the user.
                 float min = _minRes;
                 scales = new float[32];
@@ -211,12 +231,19 @@ namespace DESpeedrunUtil.Memory {
                 "firewall" => _firewallFlag,
                 "reshade" => _reshadeFlag,
                 "slopeboost" => _slopeboostFlag,
+                "resunlocked" => _resUnlocked,
+                "unlockscheduled" => _unlockResFlag,
                 _ => false
             };
         }
-        public void ScheduleResUnlock(bool auto) {
+        public void ScheduleResUnlock(bool auto, int targetFPS) {
+            if(_resUnlocked && Version != "6.66 Rev 2") {
+                if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
+                return;
+            }
             _unlockResFlag = true;
             _autoDynamic = auto;
+            _targetFPS = targetFPS;
         }
 
         public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
@@ -232,6 +259,15 @@ namespace DESpeedrunUtil.Memory {
             return cap;
         }
         public void SetMinRes(float min) => _minRes = min;
+        public float GetMinRes() => _minRes;
+        public float ReadMinRes() {
+            if(_minResPtr != IntPtr.Zero) return _game.ReadValue<float>(_minResPtr);
+            return -1f;
+        }
+        public float ReadRaiseMillis() {
+            if(_raiseMSPtr != IntPtr.Zero) return _game.ReadValue<float>(_raiseMSPtr);
+            return -1f;
+        }
 
         /// <summary>
         /// Dereferences the <see cref="DeepPointer"/> addresses and offsets into an <see cref="IntPtr"/> that can be read from/written to.
@@ -367,7 +403,6 @@ namespace DESpeedrunUtil.Memory {
                 return;
             }
             res = scanner.Scan(resTarget);
-            if(res != IntPtr.Zero) res += 64;
             KnownOffsets ko = new KnownOffsets(Version, GetOffset(r1),
                 GetOffset(r2),
                 GetOffset(r3),
@@ -426,8 +461,6 @@ namespace DESpeedrunUtil.Memory {
             return false;
         }
 
-        [DllImport("user32.dll")]
-        private static extern bool SetForegroundWindow(IntPtr hWnd);
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
 
