@@ -7,17 +7,17 @@
     <UseWindowsForms>true</UseWindowsForms>
     <ImplicitUsings>enable</ImplicitUsings>
     <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
-    <ApplicationManifest>Resources\app.manifest</ApplicationManifest>
     <Platforms>AnyCPU;x64</Platforms>
+    <ApplicationManifest>Resources\app.manifest</ApplicationManifest>
+    <AssemblyName>DESRU</AssemblyName>
+    <ApplicationIcon>Resources\DESRU.ico</ApplicationIcon>
+    <StartupObject>DESpeedrunUtil.Program</StartupObject>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
+    <ApplicationHighDpiMode>DpiUnaware</ApplicationHighDpiMode>
   </PropertyGroup>
 
   <ItemGroup>
     <None Remove="Resources\DESRU.ico" />
-    <None Remove="Resources\EternalAncient.ttf" />
-    <None Remove="Resources\EternalBattleBold.ttf" />
-    <None Remove="Resources\EternalLogo.ttf" />
-    <None Remove="Resources\EternalUi2Bold.ttf" />
-    <None Remove="Resources\EternalUi2Regular.ttf" />
     <None Remove="Resources\offsets.json" />
   </ItemGroup>
 
@@ -31,15 +31,23 @@
       <Isolated>false</Isolated>
       <EmbedInteropTypes>true</EmbedInteropTypes>
     </COMReference>
+    <COMReference Include="Shell32">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>50a7e9b0-70ef-11d1-b75a-00a0c90564fe</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\DESRU.ico" />
   </ItemGroup>
 
   <ItemGroup>
     <Resource Include="Resources\DESRU.ico" />
-    <Resource Include="Resources\EternalAncient.ttf" />
-    <Resource Include="Resources\EternalBattleBold.ttf" />
-    <Resource Include="Resources\EternalLogo.ttf" />
-    <Resource Include="Resources\EternalUi2Bold.ttf" />
-    <Resource Include="Resources\EternalUi2Regular.ttf" />
     <Resource Include="Resources\offsets.json" />
   </ItemGroup>
 
@@ -64,9 +72,30 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="bundle\macro\DOOMEternalMacro.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="bundle\meath00k\XINPUT1_3.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Update="fonts\EternalAncient.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\EternalBattleBold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\EternalLogo.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\EternalUi2Bold.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="fonts\EternalUi2Regular.ttf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

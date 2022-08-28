@@ -19,7 +19,7 @@ namespace DESpeedrunUtil {
 
         private readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
-        private PrivateFontCollection fonts = new();
+        private PrivateFontCollection _fonts = new();
         Font _fontEternalUIRegular11_25, _fontEternalUIBold11_25, _eternalAncientFont, _fontEternalLogoBold14, _fontEternalBattleBold20_25;
 
         Process? _gameProcess;
@@ -56,8 +56,6 @@ namespace DESpeedrunUtil {
 
         public MainWindow() {
             InitializeComponent();
-            InitializeFonts();
-
             _hotkeyFields = new() {
                 hotkeyField0,
                 hotkeyField1,
@@ -66,13 +64,6 @@ namespace DESpeedrunUtil {
                 hotkeyField4,
                 hotkeyField5
             };
-            
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalBattleBold20_25, "DOOM ETERNAL SPEEDRUN UTILITY", windowTitle.Location, Color.FromArgb(190, 34, 34), FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "KEYBINDS", hotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "OPTIONS", optionsTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "CHANGE VERSION", versionTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "INFO PANEL", infoPanelTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(_fontEternalLogoBold14, "RESOLUTION SCALING", resTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
 
             _formTimer = new Timer();
             _formTimer.Interval = 8;
@@ -407,9 +398,13 @@ namespace DESpeedrunUtil {
             _gameVersions = new();
             if(Directories.Count > 0) {
                 foreach(var dir in Directories) {
-                    string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
-                    string v = txt.Substring(txt.IndexOf('=') + 1);
-                    if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
+                    try {
+                        string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
+                        string v = txt.Substring(txt.IndexOf('=') + 1);
+                        if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
+                    }catch(Exception) {
+                        continue;
+                    }
                 }
             }
             _gameVersions.Sort();
@@ -494,7 +489,7 @@ namespace DESpeedrunUtil {
             versionDropDownSelector.SelectedItem = GetCurrentVersion();
             versionDropDownSelector.Enabled = false;
 
-            if(_gameProcess.HasExited) return false;
+            if(_gameProcess.HasExited || _gameProcess == null) return false;
 
             _reshadeExists = CheckForReShade();
 
@@ -529,22 +524,8 @@ namespace DESpeedrunUtil {
         }
 
         private void InitializeFonts() {
-            List<byte[]> fontData = new() {
-                Properties.Resources.EternalUi2Regular,
-                Properties.Resources.EternalUi2Bold,
-                Properties.Resources.EternalBattleBold,
-                Properties.Resources.EternalAncient,
-                Properties.Resources.EternalLogo,
-            };
-            foreach(byte[] data in fontData) {
-                uint dummy = 0;
-                IntPtr fontPtr = Marshal.AllocCoTaskMem(data.Length);
-                Marshal.Copy(data, 0, fontPtr, data.Length);
-                fonts.AddMemoryFont(fontPtr, data.Length);
-                AddFontMemResourceEx(fontPtr, (uint) data.Length, IntPtr.Zero, ref dummy);
-                Marshal.FreeCoTaskMem(fontPtr);
-            }
-            foreach(FontFamily ff in fonts.Families) {
+            foreach(string file in Directory.GetFiles(@".\fonts")) _fonts.AddFontFile(file);
+            foreach(FontFamily ff in _fonts.Families) {
                 switch(ff.Name) {
                     case "Eternal UI 2":
                         _fontEternalUIRegular11_25 = new(ff, 11.25f, FontStyle.Regular, GraphicsUnit.Point);
@@ -561,6 +542,7 @@ namespace DESpeedrunUtil {
                         break;
                 }
             }
+            SetFonts();
         }
 
         private void SetFonts() {
@@ -905,7 +887,14 @@ namespace DESpeedrunUtil {
             if(!File.Exists(@".\offsets.json")) File.WriteAllText(@".\offsets.json", System.Text.Encoding.UTF8.GetString(Properties.Resources.offsets));
             MemoryHandler.OffsetList = JsonSerializer.Deserialize<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
-            SetFonts();
+            InitializeFonts();
+
+            this.Controls.Add(new DESRUShadowLabel(windowTitle.Font, "DOOM ETERNAL SPEEDRUN UTILITY", windowTitle.Location, Color.FromArgb(190, 34, 34), FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(hotkeysTitle.Font, "KEYBINDS", hotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(optionsTitle.Font, "OPTIONS", optionsTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
 
             // User Settings
             _macroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
@@ -981,15 +970,12 @@ namespace DESpeedrunUtil {
             }
             protected override void OnPaint(PaintEventArgs e) {
                 //base.OnPaint(e);
-                e.Graphics.DrawString(Text, Font, new SolidBrush(Color.Black), 3, 3);
+                e.Graphics.DrawString(Text, Font, new SolidBrush(Color.Black), 2, 2);
                 e.Graphics.DrawString(Text, Font, new SolidBrush(ForeColor), 0, 0);
             }
         }
         #endregion
 
-        [DllImport("gdi32.dll")]
-        private static extern IntPtr AddFontMemResourceEx(IntPtr pbFont, uint cbFont, IntPtr pdv,
-            [In] ref uint pcFonts);
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
     }

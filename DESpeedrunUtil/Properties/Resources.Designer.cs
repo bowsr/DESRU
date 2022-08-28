@@ -73,56 +73,6 @@ namespace DESpeedrunUtil.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] EternalAncient {
-            get {
-                object obj = ResourceManager.GetObject("EternalAncient", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] EternalBattleBold {
-            get {
-                object obj = ResourceManager.GetObject("EternalBattleBold", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] EternalLogo {
-            get {
-                object obj = ResourceManager.GetObject("EternalLogo", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] EternalUi2Bold {
-            get {
-                object obj = ResourceManager.GetObject("EternalUi2Bold", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] EternalUi2Regular {
-            get {
-                object obj = ResourceManager.GetObject("EternalUi2Regular", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
         internal static byte[] offsets {
             get {
                 object obj = ResourceManager.GetObject("offsets", resourceCulture);
