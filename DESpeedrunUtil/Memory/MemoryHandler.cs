@@ -1,29 +1,29 @@
 ﻿using DESpeedrunUtil.Hotkeys;
+using Newtonsoft.Json;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Text.Json;
 using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
-        private readonly string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";
+        private const string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";
         // DLSS does not show up if you don't have a capable gpu (NVIDIA RTX) BUT it still exists in memory in the exact same spot.
-        private readonly string SIGSCAN_DLSS = "444C5353203A2025730000000000000056756C6B616E202573";
-        private readonly string SIGSCAN_RES_SCALES = 
+        private const string SIGSCAN_DLSS = "444C5353203A2025730000000000000056756C6B616E202573";
+        private const string SIGSCAN_RES_SCALES = 
         "0000803FA4707D3F48E17A3FEC51783F8FC2753F3333733FD7A3703F7B146E3F1F856B3FC3F5683F6666663F0AD7633FAE47613FF6285C3F3D0A573F85EB513FCDCC4C3F14AE473F5C8F423FA4703D3FEC51383F3333333F7B142E3FC3F5283F0AD7233F52B81E3F9A99193FE17A143F295C0F3F713D0A3FB81E053F0000003F";
 
         private readonly float[] ONEPERCENT_RES_SCALES = new float[32] 
-            { 1.0f, 0.968f, 0.936f, 0.904f, 0.872f, 0.84f, 0.808f, 0.776f, 
+                { 1.0f, 0.968f, 0.936f, 0.904f, 0.872f, 0.84f, 0.808f, 0.776f, 
                 0.744f, 0.712f, 0.68f, 0.648f, 0.616f, 0.584f, 0.552f, 0.52f, 
                 0.488f, 0.456f, 0.424f, 0.392f, 0.36f, 0.328f, 0.296f, 0.264f, 
                 0.232f, 0.2f, 0.168f, 0.136f, 0.104f, 0.072f, 0.04f, 0.01f };
 
-    public static List<KnownOffsets> OffsetList = new();
+        public static List<KnownOffsets> OffsetList = new();
         KnownOffsets _currentOffsets;
 
-        DeepPointer _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP,
+        DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP,
                     _row1DP, _row2DP, _row3DP, _row4DP, _row5DP, _row6DP, _row7DP, _row8DP, _row9DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
                     _raiseMSDP, _dropMSDP;
@@ -51,7 +51,7 @@ namespace DESpeedrunUtil.Memory {
         long _focusedTime;
 
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
-            _game = game;
+            _game = game ?? throw new NullReferenceException("Game process is null. How?");
             _hotkeys = hotkeys;
             _moduleSize = game.MainModule.ModuleMemorySize;
             Version = TranslateModuleSize();
@@ -425,8 +425,7 @@ namespace DESpeedrunUtil.Memory {
             OffsetList.Add(ko);
             _currentOffsets = ko;
 
-            var options = new JsonSerializerOptions { WriteIndented = true };
-            string jsonString = JsonSerializer.Serialize(OffsetList, options);
+            string jsonString = JsonConvert.SerializeObject(OffsetList, Formatting.Indented);
             Debug.WriteLine(jsonString);
             File.WriteAllText(@".\offsets.json", jsonString);
         }

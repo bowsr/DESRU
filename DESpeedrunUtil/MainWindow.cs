@@ -3,10 +3,10 @@ using DESpeedrunUtil.Hotkeys;
 using DESpeedrunUtil.Macro;
 using DESpeedrunUtil.Memory;
 using Microsoft.Win32;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using System.Drawing.Text;
 using System.Runtime.InteropServices;
-using System.Text.Json;
 using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
 
@@ -20,7 +20,7 @@ namespace DESpeedrunUtil {
         private readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
         private PrivateFontCollection _fonts = new();
-        Font _fontEternalUIRegular11_25, _fontEternalUIBold11_25, _eternalAncientFont, _fontEternalLogoBold14, _fontEternalBattleBold20_25;
+        Font _fontEternalUIRegular11_25, _fontEternalUIBold11_25, _fontEternalLogoBold14, _fontEternalBattleBold20_25;
 
         Process? _gameProcess;
         public bool Hooked = false;
@@ -29,12 +29,9 @@ namespace DESpeedrunUtil {
         bool _mouseDown;
         Point _lastLocation;
 
-        bool _fwRuleExists = false;
-        bool _fwRestart = false;
-
+        bool _fwRuleExists = false, _fwRestart = false;
         bool _mhExists = false, _mhScheduleRemoval = false, _mhDoRemovalTask = false;
-
-        bool _reshadeExists = false, _slopeboostsDisabled = false;
+        bool _reshadeExists = false;
 
         FreescrollMacro? _macroProcess;
         bool _enableMacro = true;
@@ -121,19 +118,19 @@ namespace DESpeedrunUtil {
             if(_enableMacro) _macroProcess.Start();
             else _macroProcess.Stop(true);
 
-            if(_memory.CanCapFPS() && _memory.ReadMaxHz() > _fpsDefault) _memory.SetMaxHz(_fpsDefault);
             _memory.SetFlag(_fwRuleExists, "firewall");
             _memory.SetFlag(_macroProcess.IsRunning, "macro");
 
-            if(_memory.GetFlag("resunlocked")) {
+            if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
                 unlockResButton.Enabled = true;
                 unlockResButton.Text = "Update Minimum Resolution";
-            }else if(_memory.GetFlag("unlockscheduled")) {
-                unlockResButton.Enabled = false;
-                unlockResButton.Text = "Unlock in Progress";
-            }else {
+            }else if(!_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
                 unlockResButton.Enabled = true;
                 unlockResButton.Text = "Unlock Resolution Scaling";
+            }
+            if(_memory.GetFlag("unlockscheduled")) {
+                unlockResButton.Enabled = false;
+                unlockResButton.Text = "Unlock in Progress";
             }
         }
 
@@ -495,7 +492,7 @@ namespace DESpeedrunUtil {
 
             try {
                 _memory = new MemoryHandler(_gameProcess, _hotkeys);
-            } catch(Exception ex) {
+            } catch(NullReferenceException ex) {
                 Debug.WriteLine(ex.Message);
                 return false;
             }
@@ -510,6 +507,8 @@ namespace DESpeedrunUtil {
                 _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
                 _hotkeys.DisableHotkeys();
             }
+            _memory.SetMaxHz(_fpsDefault);
+            _memory.SetMinRes(_minResPercent / 100f);
             _memory.MemoryTimer.Start();
             return true;
         }
@@ -530,9 +529,6 @@ namespace DESpeedrunUtil {
                     case "Eternal UI 2":
                         _fontEternalUIRegular11_25 = new(ff, 11.25f, FontStyle.Regular, GraphicsUnit.Point);
                         _fontEternalUIBold11_25 = new(ff, 11.25f, FontStyle.Bold, GraphicsUnit.Point);
-                        break;
-                    case "Eternal Ancient":
-                        _eternalAncientFont = new(ff, 11.25f, GraphicsUnit.Point);
                         break;
                     case "Eternal Battle":
                         _fontEternalBattleBold20_25 = new(ff, 20.25f, FontStyle.Bold, GraphicsUnit.Point);
@@ -885,7 +881,7 @@ namespace DESpeedrunUtil {
         // Event method that runs upon loading of the MainWindow form.
         private void MainWindow_Load(object sender, EventArgs e) {
             if(!File.Exists(@".\offsets.json")) File.WriteAllText(@".\offsets.json", System.Text.Encoding.UTF8.GetString(Properties.Resources.offsets));
-            MemoryHandler.OffsetList = JsonSerializer.Deserialize<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
+            MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
             InitializeFonts();
 

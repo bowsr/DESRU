@@ -47,6 +47,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Resources\DESRU.ico" />
     <Resource Include="Resources\offsets.json" />
   </ItemGroup>
@@ -73,17 +77,17 @@
 
   <ItemGroup>
     <None Update="bundle\macro\DOOMEternalMacro.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="bundle\meath00k\XINPUT1_3.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
     <None Update="fonts\EternalAncient.ttf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
     <None Update="fonts\EternalBattleBold.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
