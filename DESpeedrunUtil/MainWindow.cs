@@ -619,6 +619,9 @@ namespace DESpeedrunUtil {
             resScaleStatusLabel.Font = EternalUIBold;
             hotkeyStatusLabel.Font = EternalUIBold;
             exitButton.Font = EternalUIBold;
+            downpatcherButton.Font = EternalUIBold;
+            discordButton.Font = EternalUIBold;
+            helpButton.Font = EternalUIBold;
             unlockResButton.Font = EternalUIBold;
 
             // Eternal Logo Bold 17.25point
