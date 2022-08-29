@@ -569,6 +569,7 @@ namespace DESpeedrunUtil {
             foreach(Control c in _hotkeyFields) c.Font = EternalUIRegular;
             macroUpKeyLabel.Font = EternalUIRegular;
             macroDownKeyLabel.Font = EternalUIRegular;
+            resKeyLabel.Font = EternalUIRegular;
             fpsKey0Label.Font = EternalUIRegular;
             fpsKey1Label.Font = EternalUIRegular;
             fpsKey2Label.Font = EternalUIRegular;
