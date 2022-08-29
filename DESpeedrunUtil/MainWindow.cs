@@ -4,6 +4,7 @@ using DESpeedrunUtil.Macro;
 using DESpeedrunUtil.Memory;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Serilog;
 using System.Diagnostics;
 using System.Drawing.Text;
 using System.Runtime.InteropServices;
@@ -316,13 +317,14 @@ namespace DESpeedrunUtil {
                 using RegistryKey subKey = key.OpenSubKey("Steam");
                 try {
                     steamPath = subKey.GetValue("InstallPath").ToString();
-                } catch(Exception) {
-                    Debug.WriteLine("Couldn't find Steam install path! Does it even exist?");
+                } catch(Exception e) {
+                    Log.Error(e, "Couldn't find a Steam installation!");
 
                     using GameDirectoryDialog gameSelection = new();
                     if(gameSelection.ShowDialog() == DialogResult.OK) {
                         _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
                         _steamDirectory = _gameDirectory.Remove(_gameDirectory.IndexOf("\\DOOMEternal"));
+                        Log.Information("User manually selected their game directory.");
                         DetectAllGameVersions();
                     } else {
                         this.Close();
@@ -333,6 +335,7 @@ namespace DESpeedrunUtil {
                 vdfPath = steamPath + @"\steamapps\libraryfolders.vdf";
                 vdfLocation = vdfPath;
             }
+            Log.Information("Found Steam Installation.");
             string driveRegex = @"[A-Z]:\\";
             if(File.Exists(vdfLocation)) {
                 string[] vdfLines = File.ReadAllLines(vdfLocation);
@@ -363,9 +366,11 @@ namespace DESpeedrunUtil {
                 }
             }
             if(_gameDirectory == string.Empty) {
+                Log.Error("Couldn't find the game installation!");
                 using GameDirectoryDialog gameSelection = new();
                 if(gameSelection.ShowDialog() == DialogResult.OK) {
                     _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
+                    Log.Information("User manually selected their game directory.");
                     DetectAllGameVersions();
                 } else {
                     this.Close();
@@ -393,6 +398,7 @@ namespace DESpeedrunUtil {
 
                     var ver = subDir.Substring(subDir.IndexOf(' ') + 1);
                     if(MemoryHandler.IsValidVersionString(ver)) File.WriteAllText(dir + "\\gameVersion.txt", "version=" + ver);
+                    Log.Information("Found extra game installation; Version: {Version}", ver);
                 }
             }
 
@@ -404,7 +410,8 @@ namespace DESpeedrunUtil {
                         string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
                         string v = txt.Substring(txt.IndexOf('=') + 1);
                         if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
-                    } catch(Exception) {
+                    } catch(Exception e) {
+                        Log.Error(e, "An error occured when trying to read gameVersion.txt. Directory: {Directory}", dir);
                         continue;
                     }
                 }
@@ -425,7 +432,9 @@ namespace DESpeedrunUtil {
             foreach(string s in names) {
                 if(s.Contains("ReShade")) {
                     try {
-                        return File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
+                        var rs =  File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
+                        if(rs) Log.Information("ReShade for Vulkan is installed and is running over DOOMEternal.");
+                        return rs;
                     } catch(Exception) {
                         return false;
                     }
@@ -452,15 +461,21 @@ namespace DESpeedrunUtil {
                         if(_mhExists) {
                             try {
                                 File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
+                                Log.Information("meath00k uninstalled.");
                             } catch(Exception e) {
-                                Debug.WriteLine(e.StackTrace);
+                                Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
                             }
                         }
                         meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                     });
                 } else {
                     if(_mhScheduleRemoval == true && _mhExists) {
-                        File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
+                        try {
+                            File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
+                            Log.Information("meath00k uninstalled.");
+                        } catch(Exception e) {
+                            Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
+                        }
                         _mhScheduleRemoval = false;
                     }
                 }
@@ -478,12 +493,12 @@ namespace DESpeedrunUtil {
             if(procList.Count > 1) {
                 if(!_duplicateProcesses) {
                     _duplicateProcesses = true;
+                    Log.Error("Multiple DOOM Eternal processes detected!");
                     System.Media.SystemSounds.Asterisk.Play();
                     MessageBox.Show(this, "Multiple instances of DOOM Eternal have been detected.\n" +
                     "Close them or restart your system to clear them out.", "Multiple DOOMEternalx64vk.exe Instances Detected");
                 }
                 _gameProcess = null;
-                Debug.WriteLine(_duplicateProcesses);
                 return false;
             }
             _gameProcess = procList[0];
@@ -498,7 +513,9 @@ namespace DESpeedrunUtil {
             try {
                 _memory = new MemoryHandler(_gameProcess, _hotkeys);
             } catch(NullReferenceException ex) {
-                Debug.WriteLine(ex.Message);
+                Log.Logger.Error(ex, "An error occured when attempting to hook into the game.");
+                _gameProcess = null;
+                _memory = null;
                 return false;
             }
             if(enableHotkeysCheckbox.Checked) {
@@ -846,6 +863,9 @@ namespace DESpeedrunUtil {
         private void Downpatcher_Click(object sender, EventArgs e) {
             Process.Start(new ProcessStartInfo("https://github.com/mcdalcin/DoomEternalDownpatcher/releases/latest") { UseShellExecute = true });
         }
+        private void Discord_Click(object sender, EventArgs e) {
+            Process.Start(new ProcessStartInfo("https://discord.gg/dtDa9VZ") { UseShellExecute = true });
+        }
 
         private void ChangeVersion_Click(object sender, EventArgs e) {
             if(versionDropDownSelector.Text == string.Empty) return;
@@ -854,6 +874,7 @@ namespace DESpeedrunUtil {
             if(Directory.Exists(_steamDirectory + "\\DOOMEternal " + current)) return; // Eventually add a popup saying there's a folder conflict
             Directory.Move(_gameDirectory, _gameDirectory + " " + current);
             Directory.Move(_gameDirectory + " " + desired, _gameDirectory);
+            Log.Information("Game Version changed to [{Version}]", desired);
             changeVersionButton.Enabled = false;
             Task.Run(async delegate {
                 versionChangedLabel.ForeColor = Color.LimeGreen;
@@ -882,8 +903,10 @@ namespace DESpeedrunUtil {
             // if mh isn't installed when game is launched, can freely add/remove mh, but still needs restart to take effect
             if(_mhExists) {
                 _mhScheduleRemoval = true;
+                Log.Information("meath00k scheduled for removal.");
             }else {
                 File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + "\\XINPUT1_3.dll");
+                Log.Information("meath00k installed. Cheats enabled.");
             }
         }
         private void DropDown_IndexChanged(object sender, EventArgs e) {
@@ -892,7 +915,10 @@ namespace DESpeedrunUtil {
 
         // Event method that runs upon loading of the MainWindow form.
         private void MainWindow_Load(object sender, EventArgs e) {
-            if(!File.Exists(@".\offsets.json")) File.WriteAllText(@".\offsets.json", System.Text.Encoding.UTF8.GetString(Properties.Resources.offsets));
+            if(!File.Exists(@".\offsets.json")) {
+                File.WriteAllText(@".\offsets.json", System.Text.Encoding.UTF8.GetString(Properties.Resources.offsets));
+                Log.Information("offsets.json does not exist. Using template from application resources.");
+            }
             MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
             InitializeFonts();

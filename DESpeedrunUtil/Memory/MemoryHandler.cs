@@ -1,5 +1,6 @@
 ﻿using DESpeedrunUtil.Hotkeys;
 using Newtonsoft.Json;
+using Serilog;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
@@ -388,6 +389,7 @@ namespace DESpeedrunUtil.Memory {
 
         private void SigScans() {
             // This only needs to be done on the first hook of the game. Offsets can be saved since they're not pointer chains.
+            Log.Information("Signature Scans initiated. moduleSize: {ModuleSize}", _moduleSize);
             IntPtr r1, r2, r3, r4, r5, r6, r7, r8, r9, res;
             r1 = r2 = r3 = r4 = r5 = r6 = r7 = r8 = r9 = res = IntPtr.Zero;
             SigScanTarget fpsTarget = new SigScanTarget(SIGSCAN_FPS);
@@ -396,6 +398,7 @@ namespace DESpeedrunUtil.Memory {
             SignatureScanner scanner = new SignatureScanner(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
             r1 = scanner.Scan(fpsTarget);
             if(r1.ToInt64() != 0) {
+                Log.Information("Found FPS counter.");
                 r2 = r1 + 0x8;
                 r3 = r1 + 0x58;
                 r4 = r1 + 0x70;
@@ -406,6 +409,7 @@ namespace DESpeedrunUtil.Memory {
                 r9 = IntPtr.Zero;
                 IntPtr dlss = scanner.Scan(dlssTarget);
                 if(dlss.ToInt64() != 0) {
+                    Log.Information("Found DLSS string.");
                     r6 = dlss;
                     r7 = dlss + 0x10;
                     r8 = dlss + 0x30;
@@ -430,8 +434,8 @@ namespace DESpeedrunUtil.Memory {
             _currentOffsets = ko;
 
             string jsonString = JsonConvert.SerializeObject(OffsetList, Formatting.Indented);
-            Debug.WriteLine(jsonString);
             File.WriteAllText(@".\offsets.json", jsonString);
+            Log.Information("Added Unknown Version ({ModuleSize}) to known offset list.", _moduleSize);
         }
         private int GetOffset(IntPtr pointer) => (pointer != IntPtr.Zero) ? (int) (pointer.ToInt64() - _game.MainModule.BaseAddress.ToInt64()) : 0;
         public static bool IsValidVersionString(string version) {
@@ -468,7 +472,7 @@ namespace DESpeedrunUtil.Memory {
                     return true;
                 }
             }
-            Debug.WriteLine("Offset List does not contain " + ver);
+            Log.Warning("Offset List does not contain {Version}.", ver);
             return false;
         }
 

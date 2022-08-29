@@ -1,4 +1,5 @@
 using Newtonsoft.Json;
+using Serilog;
 using System.Diagnostics;
 using System.Net;
 
@@ -13,11 +14,14 @@ namespace DESpeedrunUtil {
         /// </summary>
         [STAThread]
         static void Main() {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
+
+            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
+                .WriteTo.Console().WriteTo.File(@".\logs\desru.log", rollingInterval: RollingInterval.Day).CreateLogger();
+
             if(UpdateCheck()) {
                 UpdateDetected = true;
+                Log.Logger.Information("An update has been detected. New: {LatestVersion} | Installed: {AppVersion}", _latestVersion, APP_VERSION);
                 UpdateDialog dialog = new(_latestVersion);
                 System.Media.SystemSounds.Asterisk.Play();
                 var result = dialog.ShowDialog();
@@ -27,8 +31,15 @@ namespace DESpeedrunUtil {
                 }else if(result == DialogResult.Cancel) {
                     return;
                 }
+                Log.Logger.Warning("User chose to ignore update.");
             }
-            Application.Run(new MainWindow());
+            try {
+                Application.Run(new MainWindow());
+            }catch(Exception e) {
+                Log.Logger.Fatal(e, "A fatal error has occured.");
+            }finally {
+                Log.CloseAndFlush();
+            }
         }
 
         private static bool UpdateCheck() {
@@ -38,7 +49,8 @@ namespace DESpeedrunUtil {
                 client.Headers.Add("User-Agent", "Nothing");
                 json = client.DownloadString("https://api.github.com/repos/bowsr/DESRU/releases");
             }catch(WebException we) {
-                Debug.WriteLine(we.Message + "\n" + we.StackTrace);
+                Log.Logger.Error(we, "An error occured when attempting to retrieve app releases." +
+                    "Make sure this program has the ability to connect to the internet.");
                 return false;
             }
             dynamic info = JsonConvert.DeserializeObject(json);
@@ -47,7 +59,10 @@ namespace DESpeedrunUtil {
                 Version latest = new(_latestVersion);
                 Version current = new(APP_VERSION);
                 return latest.CompareTo(current) > 0;
-            }else return false;
+            } else {
+                Log.Logger.Warning("No releases were found when checking for updates.");
+                return false;
+            }
         }
     }
 }

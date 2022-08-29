@@ -102,6 +102,7 @@
             this.resTitle = new System.Windows.Forms.Label();
             this.helpButton = new System.Windows.Forms.Button();
             this.downpatcherButton = new System.Windows.Forms.Button();
+            this.button1 = new System.Windows.Forms.Button();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -1114,6 +1115,20 @@
             this.downpatcherButton.UseVisualStyleBackColor = false;
             this.downpatcherButton.Click += new System.EventHandler(this.Downpatcher_Click);
             // 
+            // button1
+            // 
+            this.button1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.button1.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
+            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.button1.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.button1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.button1.Location = new System.Drawing.Point(323, 563);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(304, 32);
+            this.button1.TabIndex = 37;
+            this.button1.Text = "MDSR Discord";
+            this.button1.UseVisualStyleBackColor = false;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1121,6 +1136,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.ClientSize = new System.Drawing.Size(639, 671);
             this.ControlBox = false;
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.downpatcherButton);
             this.Controls.Add(this.helpButton);
             this.Controls.Add(this.resTitle);
@@ -1255,5 +1271,6 @@
         private Label hotkeyStatusLabel;
         private Button helpButton;
         private Button downpatcherButton;
+        private Button button1;
     }
 }

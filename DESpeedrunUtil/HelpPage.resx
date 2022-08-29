@@ -336,7 +336,7 @@ In these options, you can also set the maximum framerate you want the game to ru
   </data>
   <data name="hpTextBox2.Text" xml:space="preserve">
     <value>While this utility is running, the top right of your screen will show some various information.
-If you choose to run this program while an update is available, an "!" will appear by your FPS counter.
+If you choose to run this program while an update is available, an "*" will appear by your FPS counter.
 
 Under the FPS counter, you'll find the version of your game (if known), along with some letters that represent some flags.
 M - Macro Enabled

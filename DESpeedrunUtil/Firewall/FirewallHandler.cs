@@ -1,4 +1,5 @@
 ﻿using NetFwTypeLib;
+using Serilog;
 
 namespace DESpeedrunUtil.Firewall {
     internal class FirewallHandler {
@@ -9,6 +10,7 @@ namespace DESpeedrunUtil.Firewall {
             foreach(INetFwRule rule in policy2.Rules) {
                 if(rule.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT && rule.ApplicationName == application) {
                     if(delete) policy2.Rules.Remove(rule.Name);
+                    Log.Information("Firewall rule deleted. name: {Name}", rule.Name);
                     return true;
                 }
             }
@@ -27,6 +29,7 @@ namespace DESpeedrunUtil.Firewall {
             fwRule.Profiles = policy2.CurrentProfileTypes;
 
             policy2.Rules.Add(fwRule);
+            Log.Information("Firewall rule created. name: {Name}", fwRule.Name);
         }
 
     }
