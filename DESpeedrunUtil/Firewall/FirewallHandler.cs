@@ -9,8 +9,10 @@ namespace DESpeedrunUtil.Firewall {
 
             foreach(INetFwRule rule in policy2.Rules) {
                 if(rule.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT && rule.ApplicationName == application) {
-                    if(delete) policy2.Rules.Remove(rule.Name);
-                    Log.Information("Firewall rule deleted. name: {Name}", rule.Name);
+                    if(delete) {
+                        policy2.Rules.Remove(rule.Name);
+                        Log.Information("Firewall rule deleted. name: {Name}", rule.Name);
+                    }
                     return true;
                 }
             }

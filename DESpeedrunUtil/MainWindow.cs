@@ -124,7 +124,7 @@ namespace DESpeedrunUtil {
             if(_enableMacro) _macroProcess.Start();
             else _macroProcess.Stop(true);
 
-            _memory.SetFlag(_fwRuleExists, "firewall");
+            if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
             _memory.SetFlag(_macroProcess.IsRunning, "macro");
 
             if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
@@ -523,6 +523,7 @@ namespace DESpeedrunUtil {
                 _hotkeys.ToggleIndividualHotkeys(3, false);
             }
             SetGameInfoByModuleSize();
+            _memory.SetFlag(_fwRuleExists, "firewall");
             _memory.SetFlag(File.Exists(_gameDirectory + "\\XINPUT1_3.dll"), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
@@ -629,6 +630,8 @@ namespace DESpeedrunUtil {
             hotkeysTitle.Font = EternalLogoBold;
             versionTitle.Font = EternalLogoBold;
             optionsTitle.Font = EternalLogoBold;
+            resTitle.Font = EternalLogoBold;
+            infoPanelTitle.Font = EternalLogoBold;
 
             // Eternal Battle Bold 20.25point
             windowTitle.Font = EternalBattleBold;
@@ -892,6 +895,9 @@ namespace DESpeedrunUtil {
                 firewallToggleButton.Text = "Create Firewall Rule";
                 if(_fwRestart) _fwRestart = false;
                 _fwRuleExists = false;
+                if(Hooked) {
+                    _memory.SetFlag(_fwRuleExists, "firewall");
+                }
                 firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
             } else {
                 FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe");

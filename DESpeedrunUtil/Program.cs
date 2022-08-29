@@ -6,7 +6,7 @@ using System.Net;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.2";
+        public const string APP_VERSION = "0.1.0";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
         /// <summary>
@@ -27,8 +27,10 @@ namespace DESpeedrunUtil {
                 var result = dialog.ShowDialog();
                 if(result == DialogResult.OK) {
                     Process.Start(new ProcessStartInfo("https://github.com/bowsr/DESRU/releases/latest") { UseShellExecute = true });
+                    Log.CloseAndFlush();
                     return;
                 }else if(result == DialogResult.Cancel) {
+                    Log.CloseAndFlush();
                     return;
                 }
                 Log.Logger.Warning("User chose to ignore update.");
