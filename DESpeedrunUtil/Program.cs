@@ -6,6 +6,7 @@ namespace DESpeedrunUtil {
     internal static class Program {
 
         public const string APP_VERSION = "0.2";
+        public static bool UpdateDetected = false;
         private static string _latestVersion;
         /// <summary>
         ///  The main entry point for the application.
@@ -16,6 +17,7 @@ namespace DESpeedrunUtil {
             // see https://aka.ms/applicationconfiguration.
             ApplicationConfiguration.Initialize();
             if(UpdateCheck()) {
+                UpdateDetected = true;
                 UpdateDialog dialog = new(_latestVersion);
                 System.Media.SystemSounds.Asterisk.Play();
                 var result = dialog.ShowDialog();

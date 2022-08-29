@@ -20,7 +20,7 @@ namespace DESpeedrunUtil {
         private readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
         private PrivateFontCollection _fonts = new();
-        Font _fontEternalUIRegular11_25, _fontEternalUIBold11_25, _fontEternalLogoBold14, _fontEternalBattleBold20_25;
+        public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
 
         Process? _gameProcess;
         public bool Hooked = false;
@@ -69,7 +69,7 @@ namespace DESpeedrunUtil {
             _statusTimer = new Timer();
             _statusTimer.Interval = 500;
             _statusTimer.Tick += (sender, e) => { StatusTick(); };
-            
+
             AddMouseIntercepts(this);
             RemoveTabStop(this);
         }
@@ -109,10 +109,15 @@ namespace DESpeedrunUtil {
                 if(!_memory.GetFlag("unlockscheduled")) {
                     if(GetForegroundWindow() != _gameProcess.MainWindowHandle) {
                         _hotkeys.DisableHotkeys();
-                    }else {
+                    } else {
                         _hotkeys.EnableHotkeys();
                     }
                 }
+            }
+            if(GetForegroundWindow() != _gameProcess.MainWindowHandle) {
+                _macroProcess.Stop(true);
+            } else {
+                if(autorunMacroCheckbox.Checked && !_macroProcess.IsRunning) _macroProcess.Start();
             }
 
             if(_enableMacro) _macroProcess.Start();
@@ -124,7 +129,7 @@ namespace DESpeedrunUtil {
             if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
                 unlockResButton.Enabled = true;
                 unlockResButton.Text = "Update Minimum Resolution";
-            }else if(!_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
+            } else if(!_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
                 unlockResButton.Enabled = true;
                 unlockResButton.Text = "Unlock Resolution Scaling";
             }
@@ -145,7 +150,7 @@ namespace DESpeedrunUtil {
                 gameStatus.Text = v;
                 if(v == "1.0 (Release)") {
                     slopeboostStatus.Text = (_memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
-                }else {
+                } else {
                     slopeboostStatus.Text = "N/A";
                 }
                 currentFPSCap.Text = (hz != -1) ? hz.ToString() : "N/A";
@@ -154,10 +159,10 @@ namespace DESpeedrunUtil {
                 if((ms > 0 && ms < 16) && min > 0) {
                     var rs = "Enabled (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
                     resScaleStatus.Text = (_memory.ReadDynamicRes() && min < 1.0f) ? rs : "Disabled";
-                }else {
+                } else {
                     resScaleStatus.Text = "Disabled";
                 }
-            }else {
+            } else {
                 slopeboostStatus.Text = "-";
                 currentFPSCap.Text = "-";
                 resScaleStatus.Text = "-";
@@ -169,16 +174,16 @@ namespace DESpeedrunUtil {
                 if(_mhExists) {
                     cheatsStatus.Text = "Enabled";
                     cheatsStatus.ForeColor = Color.Red;
-                }else {
+                } else {
                     cheatsStatus.Text = "Disabled";
                     cheatsStatus.ForeColor = TEXT_FORECOLOR;
                 }
                 if(_reshadeExists) {
                     reshadeStatus.Text = "Enabled";
-                }else {
+                } else {
                     reshadeStatus.Text = "Disabled";
                 }
-            }else {
+            } else {
                 cheatsStatus.Text = "-";
                 cheatsStatus.ForeColor = TEXT_FORECOLOR;
                 reshadeStatus.Text = "-";
@@ -362,7 +367,7 @@ namespace DESpeedrunUtil {
                 if(gameSelection.ShowDialog() == DialogResult.OK) {
                     _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
                     DetectAllGameVersions();
-                }else {
+                } else {
                     this.Close();
                 }
                 gameSelection.Dispose();
@@ -399,7 +404,7 @@ namespace DESpeedrunUtil {
                         string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
                         string v = txt.Substring(txt.IndexOf('=') + 1);
                         if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
-                    }catch(Exception) {
+                    } catch(Exception) {
                         continue;
                     }
                 }
@@ -421,7 +426,7 @@ namespace DESpeedrunUtil {
                 if(s.Contains("ReShade")) {
                     try {
                         return File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
-                    }catch(Exception) {
+                    } catch(Exception) {
                         return false;
                     }
                 }
@@ -453,7 +458,7 @@ namespace DESpeedrunUtil {
                         }
                         meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                     });
-                }else {
+                } else {
                     if(_mhScheduleRemoval == true && _mhExists) {
                         File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
                         _mhScheduleRemoval = false;
@@ -503,6 +508,7 @@ namespace DESpeedrunUtil {
             SetGameInfoByModuleSize();
             _memory.SetFlag(File.Exists(_gameDirectory + "\\XINPUT1_3.dll"), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
+            _memory.SetFlag(Program.UpdateDetected, "outofdate");
             if(unlockOnStartupCheckbox.Checked) {
                 _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
                 _hotkeys.DisableHotkeys();
@@ -527,14 +533,14 @@ namespace DESpeedrunUtil {
             foreach(FontFamily ff in _fonts.Families) {
                 switch(ff.Name) {
                     case "Eternal UI 2":
-                        _fontEternalUIRegular11_25 = new(ff, 11.25f, FontStyle.Regular, GraphicsUnit.Point);
-                        _fontEternalUIBold11_25 = new(ff, 11.25f, FontStyle.Bold, GraphicsUnit.Point);
+                        EternalUIRegular = new(ff, 11.25f, FontStyle.Regular, GraphicsUnit.Point);
+                        EternalUIBold = new(ff, 11.25f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                     case "Eternal Battle":
-                        _fontEternalBattleBold20_25 = new(ff, 20.25f, FontStyle.Bold, GraphicsUnit.Point);
+                        EternalBattleBold = new(ff, 20.25f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                     case "Eternal Logo":
-                        _fontEternalLogoBold14 = new(ff, 14f, FontStyle.Bold, GraphicsUnit.Point);
+                        EternalLogoBold = new(ff, 14f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                 }
             }
@@ -543,68 +549,68 @@ namespace DESpeedrunUtil {
 
         private void SetFonts() {
             // Eternal UI 2 Regular 11.25point
-            foreach(Control c in _hotkeyFields) c.Font = _fontEternalUIRegular11_25;
-            macroUpKeyLabel.Font = _fontEternalUIRegular11_25;
-            macroDownKeyLabel.Font = _fontEternalUIRegular11_25;
-            fpsKey0Label.Font = _fontEternalUIRegular11_25;
-            fpsKey1Label.Font = _fontEternalUIRegular11_25;
-            fpsKey2Label.Font = _fontEternalUIRegular11_25;
-            fpsInput0.Font = _fontEternalUIRegular11_25;
-            fpsInput1.Font = _fontEternalUIRegular11_25;
-            fpsInput2.Font = _fontEternalUIRegular11_25;
-            fpsLabel0.Font = _fontEternalUIRegular11_25;
-            fpsLabel1.Font = _fontEternalUIRegular11_25;
-            fpsLabel2.Font = _fontEternalUIRegular11_25;
-            defaultFPSLabel.Font = _fontEternalUIRegular11_25;
-            defaultFPS.Font = _fontEternalUIRegular11_25;
-            versionDropDownSelector.Font = _fontEternalUIRegular11_25;
-            autorunMacroCheckbox.Font = _fontEternalUIRegular11_25;
-            enableHotkeysCheckbox.Font = _fontEternalUIRegular11_25;
-            gameStatus.Font = _fontEternalUIRegular11_25;
-            currentFPSCap.Font = _fontEternalUIRegular11_25;
-            macroStatus.Font = _fontEternalUIRegular11_25;
-            slopeboostStatus.Font = _fontEternalUIRegular11_25;
-            balanceStatus.Font = _fontEternalUIRegular11_25;
-            cheatsStatus.Font = _fontEternalUIRegular11_25;
-            reshadeStatus.Font = _fontEternalUIRegular11_25;
-            resScaleStatus.Font = _fontEternalUIRegular11_25;
-            hotkeyStatus.Font = _fontEternalUIRegular11_25;
-            unlockOnStartupCheckbox.Font = _fontEternalUIRegular11_25;
-            autoDynamicCheckbox.Font = _fontEternalUIRegular11_25;
-            minResLabel.Font = _fontEternalUIRegular11_25;
-            dynamicTargetLabel.Font = _fontEternalUIRegular11_25;
-            minResInput.Font = _fontEternalUIRegular11_25;
-            targetFPSInput.Font = _fontEternalUIRegular11_25;
-            percentLabel.Font = _fontEternalUIRegular11_25;
-            targetFPSLabel.Font = _fontEternalUIRegular11_25;
+            foreach(Control c in _hotkeyFields) c.Font = EternalUIRegular;
+            macroUpKeyLabel.Font = EternalUIRegular;
+            macroDownKeyLabel.Font = EternalUIRegular;
+            fpsKey0Label.Font = EternalUIRegular;
+            fpsKey1Label.Font = EternalUIRegular;
+            fpsKey2Label.Font = EternalUIRegular;
+            fpsInput0.Font = EternalUIRegular;
+            fpsInput1.Font = EternalUIRegular;
+            fpsInput2.Font = EternalUIRegular;
+            fpsLabel0.Font = EternalUIRegular;
+            fpsLabel1.Font = EternalUIRegular;
+            fpsLabel2.Font = EternalUIRegular;
+            defaultFPSLabel.Font = EternalUIRegular;
+            defaultFPS.Font = EternalUIRegular;
+            versionDropDownSelector.Font = EternalUIRegular;
+            autorunMacroCheckbox.Font = EternalUIRegular;
+            enableHotkeysCheckbox.Font = EternalUIRegular;
+            gameStatus.Font = EternalUIRegular;
+            currentFPSCap.Font = EternalUIRegular;
+            macroStatus.Font = EternalUIRegular;
+            slopeboostStatus.Font = EternalUIRegular;
+            balanceStatus.Font = EternalUIRegular;
+            cheatsStatus.Font = EternalUIRegular;
+            reshadeStatus.Font = EternalUIRegular;
+            resScaleStatus.Font = EternalUIRegular;
+            hotkeyStatus.Font = EternalUIRegular;
+            unlockOnStartupCheckbox.Font = EternalUIRegular;
+            autoDynamicCheckbox.Font = EternalUIRegular;
+            minResLabel.Font = EternalUIRegular;
+            dynamicTargetLabel.Font = EternalUIRegular;
+            minResInput.Font = EternalUIRegular;
+            targetFPSInput.Font = EternalUIRegular;
+            percentLabel.Font = EternalUIRegular;
+            targetFPSLabel.Font = EternalUIRegular;
 
             // Eternal UI 2 Bold 11.25point
-            versionChangedLabel.Font = _fontEternalUIBold11_25;
-            changeVersionButton.Font = _fontEternalUIBold11_25;
-            refreshVersionsButton.Font = _fontEternalUIBold11_25;
-            firewallToggleButton.Font = _fontEternalUIBold11_25;
-            meathookToggleButton.Font = _fontEternalUIBold11_25;
-            firewallRestartLabel.Font = _fontEternalUIBold11_25;
-            meathookRestartLabel.Font = _fontEternalUIBold11_25;
-            gameStatusLabel.Font = _fontEternalUIBold11_25;
-            fpsCapLabel.Font = _fontEternalUIBold11_25;
-            macroStatusLabel.Font = _fontEternalUIBold11_25;
-            slopeboostStatusLabel.Font = _fontEternalUIBold11_25;
-            balanceStatusLabel.Font = _fontEternalUIBold11_25;
-            cheatsStatusLabel.Font = _fontEternalUIBold11_25;
-            reshadeStatusLabel.Font = _fontEternalUIBold11_25;
-            resScaleStatusLabel.Font = _fontEternalUIBold11_25;
-            hotkeyStatusLabel.Font = _fontEternalUIBold11_25;
-            exitButton.Font = _fontEternalUIBold11_25;
-            unlockResButton.Font = _fontEternalUIBold11_25;
+            versionChangedLabel.Font = EternalUIBold;
+            changeVersionButton.Font = EternalUIBold;
+            refreshVersionsButton.Font = EternalUIBold;
+            firewallToggleButton.Font = EternalUIBold;
+            meathookToggleButton.Font = EternalUIBold;
+            firewallRestartLabel.Font = EternalUIBold;
+            meathookRestartLabel.Font = EternalUIBold;
+            gameStatusLabel.Font = EternalUIBold;
+            fpsCapLabel.Font = EternalUIBold;
+            macroStatusLabel.Font = EternalUIBold;
+            slopeboostStatusLabel.Font = EternalUIBold;
+            balanceStatusLabel.Font = EternalUIBold;
+            cheatsStatusLabel.Font = EternalUIBold;
+            reshadeStatusLabel.Font = EternalUIBold;
+            resScaleStatusLabel.Font = EternalUIBold;
+            hotkeyStatusLabel.Font = EternalUIBold;
+            exitButton.Font = EternalUIBold;
+            unlockResButton.Font = EternalUIBold;
 
             // Eternal Logo Bold 17.25point
-            hotkeysTitle.Font = _fontEternalLogoBold14;
-            versionTitle.Font = _fontEternalLogoBold14;
-            optionsTitle.Font = _fontEternalLogoBold14;
+            hotkeysTitle.Font = EternalLogoBold;
+            versionTitle.Font = EternalLogoBold;
+            optionsTitle.Font = EternalLogoBold;
 
             // Eternal Battle Bold 20.25point
-            windowTitle.Font = _fontEternalBattleBold20_25;
+            windowTitle.Font = EternalBattleBold;
         }
 
         public bool IsFormOnScreen() {
@@ -748,6 +754,9 @@ namespace DESpeedrunUtil {
         }
 
         private void ExitButton_Click(object sender, EventArgs e) => this.Close();
+        private void HelpButton_Click(object sender, EventArgs e) {
+            new HelpPage().Show();
+        }
 
         private void FPSInput_KeyUp(object sender, KeyEventArgs e) {
             var text = ((TextBox) sender).Text;
@@ -833,6 +842,9 @@ namespace DESpeedrunUtil {
         }
         private void RefreshVersions_Click(object sender, EventArgs e) {
             if(_steamDirectory != string.Empty) DetectAllGameVersions();
+        }
+        private void Downpatcher_Click(object sender, EventArgs e) {
+            Process.Start(new ProcessStartInfo("https://github.com/mcdalcin/DoomEternalDownpatcher/releases/latest") { UseShellExecute = true });
         }
 
         private void ChangeVersion_Click(object sender, EventArgs e) {

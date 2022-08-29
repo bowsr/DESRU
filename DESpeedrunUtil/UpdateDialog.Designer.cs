@@ -109,6 +109,7 @@
             this.Name = "UpdateDialog";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Update Required";
+            this.Load += new System.EventHandler(this.UpdateDialog_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

@@ -41,7 +41,7 @@ namespace DESpeedrunUtil.Memory {
         public string Version { get; init; }
 
         bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false,
-             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false;
+             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _outOfDateFlag = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         string _cheatString = "CHEATS ENABLED";
         int _fpsLimit = 250, _targetFPS = 1000;
@@ -71,7 +71,7 @@ namespace DESpeedrunUtil.Memory {
             DerefPointers();
             if(_cheatsFlag && !_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
             if(Version == "1.0 (Release)") SetFlag(_game.ReadBytes(_rampJumpPtr, 1)[0] == 0, "slopeboost");
-            _row1 = "%i FPS";
+            _row1 = "%i FPS" + ((_outOfDateFlag) ? "*" : "");
             _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
             if(_row2 == "1.0 (Release)") _row2 = "Release";
             if(_row2.Contains("Unknown")) _row2 = "Unknown";
@@ -226,6 +226,9 @@ namespace DESpeedrunUtil.Memory {
                 case "slopeboost":
                     _slopeboostFlag = flag;
                     break;
+                case "outofdate":
+                    _outOfDateFlag = flag;
+                    break;
             }
         }
         public bool GetFlag(string flagName) {
@@ -237,6 +240,7 @@ namespace DESpeedrunUtil.Memory {
                 "slopeboost" => _slopeboostFlag,
                 "resunlocked" => _resUnlocked,
                 "unlockscheduled" => _unlockResFlag,
+                "outofdate" => _outOfDateFlag,
                 _ => false
             };
         }
