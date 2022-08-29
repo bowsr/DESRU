@@ -1,5 +1,7 @@
 # DESRU - DOOM Eternal Speedrun Utility
 DESRU is an all-in-on utility program designed to make your DOOM Eternal speedrunning experience a lot smoother. Includes many useful features like the Freescroll Emulation Macro, FPS Limit toggles, Resolution Scale Unlocking, and many more.
+
+Currently, this is **not allowed** for use during speedruns. However, this is the goal, so stay tuned to the [MDSR Discord](https://discord.gg/dtDa9VZ) for updates.
 ## Installation
 .NET 6.0 is ***required*** for the use of this program. Download the ***Desktop*** version found [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime).
 
