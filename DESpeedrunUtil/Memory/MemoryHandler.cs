@@ -406,6 +406,7 @@ namespace DESpeedrunUtil.Memory {
             SigScanTarget dlssTarget = new SigScanTarget(SIGSCAN_DLSS);
             SigScanTarget resTarget = new SigScanTarget(SIGSCAN_RES_SCALES);
             SignatureScanner scanner = new SignatureScanner(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
+            Log.Information("Scanning for FPS counter.");
             r1 = scanner.Scan(fpsTarget);
             if(r1.ToInt64() != 0) {
                 Log.Information("Found FPS counter.");
@@ -417,6 +418,7 @@ namespace DESpeedrunUtil.Memory {
                 r7 = r1 + 0xA8;
                 r8 = IntPtr.Zero;
                 r9 = IntPtr.Zero;
+                Log.Information("Scanning for DLSS string.");
                 IntPtr dlss = scanner.Scan(dlssTarget);
                 if(dlss.ToInt64() != 0) {
                     Log.Information("Found DLSS string.");
@@ -428,7 +430,9 @@ namespace DESpeedrunUtil.Memory {
             } else {
                 return;
             }
+            Log.Information("Scanning for resolution scale values.");
             res = scanner.Scan(resTarget);
+            if(res != IntPtr.Zero) Log.Information("Found resolution scale values.");
             KnownOffsets ko = new KnownOffsets(Version, GetOffset(r1),
                 GetOffset(r2),
                 GetOffset(r3),

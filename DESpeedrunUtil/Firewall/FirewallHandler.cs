@@ -13,6 +13,10 @@ namespace DESpeedrunUtil.Firewall {
                         policy2.Rules.Remove(rule.Name);
                         Log.Information("Firewall rule deleted. name: {Name}", rule.Name);
                     }
+                    if(!rule.Enabled && !delete) {
+                        Log.Information("Firewall rule detected but not enabled. Enabling...");
+                        rule.Enabled = true;
+                    }
                     return true;
                 }
             }
