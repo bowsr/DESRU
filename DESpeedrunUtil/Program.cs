@@ -6,7 +6,7 @@ using System.Net;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.2.4";
+        public const string APP_VERSION = "0.3.0";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
         /// <summary>
