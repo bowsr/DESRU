@@ -91,7 +91,8 @@ namespace DESpeedrunUtil {
             if(!_fwRestart) firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
             _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
-            _mhExists = CheckForMeathook();
+
+            CheckForMeathook();
             MeathookRemoval();
 
             if(!meathookToggleButton.Enabled) {
@@ -103,6 +104,7 @@ namespace DESpeedrunUtil {
                 versionDropDownSelector.Enabled = true;
                 _macroProcess.Stop(true);
                 _fwRestart = false;
+                meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                 return;
             }
 
@@ -172,7 +174,7 @@ namespace DESpeedrunUtil {
 
             balanceStatus.Text = (_fwRuleExists) ? ((_fwRestart) ? "Allowed*" : "Blocked") : "Allowed";
             if(Hooked) {
-                if(_mhExists) {
+                if(_memory.GetFlag("cheats")) {
                     cheatsStatus.Text = "Enabled";
                     cheatsStatus.ForeColor = Color.Red;
                 } else {
@@ -245,8 +247,13 @@ namespace DESpeedrunUtil {
 
         public string GetCurrentVersion() {
             if(_gameDirectory != string.Empty) {
-                string s = File.ReadAllText(_gameDirectory + "\\gameVersion.txt").Trim();
-                return s.Substring(s.IndexOf('=') + 1);
+                try {
+                    string s = File.ReadAllText(_gameDirectory + "\\gameVersion.txt").Trim();
+                    return s.Substring(s.IndexOf('=') + 1);
+                }catch(Exception e) {
+                    Log.Error(e, "An error occured when trying to read gameVersion.txt. Directory: {Directory}", _gameDirectory);
+
+                }
             }
             return "Unknown";
         }
@@ -423,6 +430,7 @@ namespace DESpeedrunUtil {
         private bool CheckForMeathook() {
             bool mh = File.Exists(_gameDirectory + "\\XINPUT1_3.dll");
             meathookToggleButton.Text = mh ? "Disable Cheats" : "Enable Cheats";
+            _mhExists = mh;
             return mh;
         }
 
@@ -477,6 +485,7 @@ namespace DESpeedrunUtil {
                             Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
                         }
                         _mhScheduleRemoval = false;
+                        meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                     }
                 }
             }
@@ -503,8 +512,6 @@ namespace DESpeedrunUtil {
             }
             _gameProcess = procList[0];
             changeVersionButton.Enabled = false;
-            versionDropDownSelector.SelectedItem = GetCurrentVersion();
-            versionDropDownSelector.Enabled = false;
 
             if(_gameProcess.HasExited || _gameProcess == null) return false;
 
@@ -523,8 +530,10 @@ namespace DESpeedrunUtil {
                 _hotkeys.ToggleIndividualHotkeys(3, false);
             }
             SetGameInfoByModuleSize();
+            versionDropDownSelector.SelectedItem = GetCurrentVersion();
+            versionDropDownSelector.Enabled = false;
             _memory.SetFlag(_fwRuleExists, "firewall");
-            _memory.SetFlag(File.Exists(_gameDirectory + "\\XINPUT1_3.dll"), "cheats");
+            _memory.SetFlag(CheckForMeathook(), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             if(unlockOnStartupCheckbox.Checked) {
@@ -916,7 +925,8 @@ namespace DESpeedrunUtil {
                 Log.Information("meath00k scheduled for removal.");
             }else {
                 File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + "\\XINPUT1_3.dll");
-                Log.Information("meath00k installed. Cheats enabled.");
+                if(Hooked) meathookRestartLabel.ForeColor = TEXT_FORECOLOR;
+                Log.Information("meath00k installed.");
             }
         }
         private void DropDown_IndexChanged(object sender, EventArgs e) {
