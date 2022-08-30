@@ -3,11 +3,11 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Macro {
     internal class FreescrollMacro {
-        private readonly string BINDINGS_FILE = @".\macro\bindings.txt";
+        private const string BINDINGS_FILE = @".\macro\bindings.txt";
 
-        private readonly string DOWN_ONLY_FORMAT = "0x{0:X2}";
-        private readonly string UP_ONLY_FORMAT = "0x{0:X2} Up";
-        private readonly string DOWN_UP_FORMAT = "0x{0:X2} 0x{1:X2}";
+        private const string DOWN_ONLY_FORMAT = "0x{0:X2}";
+        private const string UP_ONLY_FORMAT = "0x{0:X2} Up";
+        private const string DOWN_UP_FORMAT = "0x{0:X2} 0x{1:X2}";
 
         private readonly ProcessStartInfo MACRO_START_INFO;
         private Process _macroProcess = null;

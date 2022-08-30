@@ -123,11 +123,15 @@ namespace DESpeedrunUtil {
             if(GetForegroundWindow() != _gameProcess.MainWindowHandle) {
                 _macroProcess.Stop(true);
             } else {
-                if(autorunMacroCheckbox.Checked && !_macroProcess.IsRunning) _macroProcess.Start();
+                if(_enableMacro) {
+                    if(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
+                        _macroProcess.Restart();
+                    }
+                    if(!_macroProcess.IsRunning) _macroProcess.Start();
+                }
             }
 
-            if(_enableMacro) _macroProcess.Start();
-            else _macroProcess.Stop(true);
+            if(!_enableMacro) _macroProcess.Stop(true);
 
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
             _memory.SetFlag(_macroProcess.IsRunning, "macro");
