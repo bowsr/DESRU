@@ -344,7 +344,8 @@ F - Balance Updates blocked by Firewall
 R - ReShade Detected
 S - Slopeboosts Disabled (1.0 only)
 
-If the meath00k DLL is found in your game folder while the game is running, you'll see "CHEATS ENABLED" periodically flashing with "RESTART GAME." Your game must be unmodified in order for any runs to be verified on the leaderboards.</value>
+If the meath00k DLL is found in your game folder while the game is running, you'll see "CHEATS ENABLED" show up under the version and flags. Your game must be unmodified in order for any runs to be verified on the leaderboards.
+If you happen to start this utility after the game is already running, you'll see "RESTART GAME" show up. This will periodically flash with "CHEATS ENABLED" if both happen at the same time. This utility must be running before you launch Eternal so it can detect the proper state of the game.</value>
   </data>
   <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

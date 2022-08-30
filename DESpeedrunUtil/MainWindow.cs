@@ -25,7 +25,7 @@ namespace DESpeedrunUtil {
 
         Process? _gameProcess;
         public bool Hooked = false;
-        bool _duplicateProcesses = false;
+        bool _duplicateProcesses = false, _firstRun = true;
 
         bool _mouseDown;
         Point _lastLocation;
@@ -99,7 +99,10 @@ namespace DESpeedrunUtil {
                 meathookToggleButton.Enabled = !_mhScheduleRemoval && !_mhExists;
             }
 
-            if(!Hooked) Hooked = Hook();
+            if(!Hooked) {
+                Hooked = Hook();
+                _firstRun = false;
+            }
             if(!Hooked) {
                 versionDropDownSelector.Enabled = true;
                 _macroProcess.Stop(true);
@@ -536,6 +539,7 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(CheckForMeathook(), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
+            _memory.SetFlag(_firstRun, "restart");
             if(unlockOnStartupCheckbox.Checked) {
                 _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
                 _hotkeys.DisableHotkeys();

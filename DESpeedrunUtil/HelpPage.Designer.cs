@@ -119,7 +119,7 @@
             this.hpTextBox3.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.hpTextBox3.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.hpTextBox3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.hpTextBox3.Location = new System.Drawing.Point(625, 391);
+            this.hpTextBox3.Location = new System.Drawing.Point(625, 450);
             this.hpTextBox3.Multiline = true;
             this.hpTextBox3.Name = "hpTextBox3";
             this.hpTextBox3.ReadOnly = true;
@@ -131,7 +131,7 @@
             // pictureBox3
             // 
             this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(1103, 380);
+            this.pictureBox3.Location = new System.Drawing.Point(1103, 439);
             this.pictureBox3.Name = "pictureBox3";
             this.pictureBox3.Size = new System.Drawing.Size(173, 152);
             this.pictureBox3.TabIndex = 7;
@@ -144,7 +144,7 @@
             this.closeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.closeButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.closeButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.closeButton.Location = new System.Drawing.Point(1154, 538);
+            this.closeButton.Location = new System.Drawing.Point(1154, 597);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(122, 25);
             this.closeButton.TabIndex = 8;
@@ -157,7 +157,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(1281, 567);
+            this.ClientSize = new System.Drawing.Size(1281, 627);
             this.Controls.Add(this.closeButton);
             this.Controls.Add(this.pictureBox3);
             this.Controls.Add(this.hpTextBox3);

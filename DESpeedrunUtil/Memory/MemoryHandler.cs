@@ -42,7 +42,7 @@ namespace DESpeedrunUtil.Memory {
         public string Version { get; init; }
 
         bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false,
-             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _outOfDateFlag = false;
+             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _outOfDateFlag = false, _restartGame = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         string _cheatString = "CHEATS ENABLED";
         int _fpsLimit = 250, _targetFPS = 1000;
@@ -70,7 +70,14 @@ namespace DESpeedrunUtil.Memory {
 
         private void MemoryTick() {
             DerefPointers();
-            if(_cheatsFlag && !_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
+            Debug.WriteLine(_restartGame);
+            if(_restartGame) {
+                if(_cheatsFlag && !_restartCheatsTimer.Enabled) {
+                    _restartCheatsTimer.Start();
+                }else if(!_cheatsFlag) {
+                    _cheatString = "RESTART GAME";
+                }
+            }
             if(Version == "1.0 (Release)") SetFlag(_game.ReadBytes(_rampJumpPtr, 1)[0] == 0, "slopeboost");
             _row1 = "%i FPS" + ((_outOfDateFlag) ? "*" : "");
             _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
@@ -78,7 +85,7 @@ namespace DESpeedrunUtil.Memory {
             if(_row2.Contains("Unknown")) _row2 = "Unknown";
             if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag)
                 _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
-            var cheats = (_cheatsFlag) ? _cheatString : "";
+            var cheats = (_cheatsFlag || _restartGame) ? _cheatString : "";
             if(_cpuPtr == IntPtr.Zero) {
                 _row3 = cheats;
                 _cpu = "";
@@ -230,6 +237,9 @@ namespace DESpeedrunUtil.Memory {
                 case "outofdate":
                     _outOfDateFlag = flag;
                     break;
+                case "restart":
+                    _restartGame = flag;
+                    break;
             }
         }
         public bool GetFlag(string flagName) {
@@ -242,6 +252,7 @@ namespace DESpeedrunUtil.Memory {
                 "resunlocked" => _resUnlocked,
                 "unlockscheduled" => _unlockResFlag,
                 "outofdate" => _outOfDateFlag,
+                "restart" => _restartGame,
                 _ => false
             };
         }
