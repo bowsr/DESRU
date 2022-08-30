@@ -34,7 +34,7 @@ namespace DESpeedrunUtil.Memory {
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
                _raiseMSPtr, _dropMSPtr;
 
-        Process _game;
+        Process _game, _trainer;
         HotkeyHandler _hotkeys;
         public Timer MemoryTimer { get; init; }
         System.Timers.Timer _restartCheatsTimer;
@@ -54,6 +54,7 @@ namespace DESpeedrunUtil.Memory {
 
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
             _game = game ?? throw new NullReferenceException("Game process is null. How?");
+            _trainer = null;
             _hotkeys = hotkeys;
             _moduleSize = game.MainModule.ModuleMemorySize;
             Version = TranslateModuleSize();
@@ -71,31 +72,50 @@ namespace DESpeedrunUtil.Memory {
 
         private void MemoryTick() {
             DerefPointers();
-            if(_restartGame) {
-                if(_cheatsFlag && !_restartCheatsTimer.Enabled) {
-                    _restartCheatsTimer.Start();
-                }else if(!_cheatsFlag) {
-                    _cheatString = "RESTART GAME";
+            if(_trainer == null) {
+                List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
+                if(procList.Count > 0) {
+                    _trainer = procList[0];
+                    SetFlag(true, "restart");
+                    _trainerFlag = true;
+                }else {
+                    _trainer = null;
+                    _trainerFlag = false;
+                }
+            }else {
+                if(_trainer.HasExited) {
+                    _trainer = null;
+                    _trainerFlag = false;
                 }
             }
-            if(Version == "1.0 (Release)") SetFlag(_game.ReadBytes(_rampJumpPtr, 1)[0] == 0, "slopeboost");
-            _row1 = "%i FPS" + ((_outOfDateFlag) ? "*" : "");
-            _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
-            if(_row2 == "1.0 (Release)") _row2 = "Release";
-            if(_row2.Contains("Unknown")) _row2 = "Unknown";
-            if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag)
-                _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
-            var cheats = (_cheatsFlag || _restartGame) ? _cheatString : "";
-            if(_cpuPtr == IntPtr.Zero) {
-                _row3 = cheats;
-                _cpu = "";
-            }else {
-                _cpu = cheats;
-                _row3 = "";
+
+            if(!_trainerFlag) {
+                if(_restartGame) {
+                    if(_cheatsFlag && !_restartCheatsTimer.Enabled) {
+                        _restartCheatsTimer.Start();
+                    } else if(!_cheatsFlag) {
+                        _cheatString = "RESTART GAME";
+                    }
+                }
+                if(Version == "1.0 (Release)") SetFlag(_game.ReadBytes(_rampJumpPtr, 1)[0] == 0, "slopeboost");
+                _row1 = "%i FPS" + ((_outOfDateFlag) ? "*" : "");
+                _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
+                if(_row2 == "1.0 (Release)") _row2 = "Release";
+                if(_row2.Contains("Unknown")) _row2 = "Unknown";
+                if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag)
+                    _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
+                var cheats = (_cheatsFlag || _restartGame) ? _cheatString : "";
+                if(_cpuPtr == IntPtr.Zero) {
+                    _row3 = cheats;
+                    _cpu = "";
+                } else {
+                    _cpu = cheats;
+                    _row3 = "";
+                }
+                SetMetrics(2);
+                ModifyMetricRows();
             }
-            
-            SetMetrics(2);
-            ModifyMetricRows();
+
             if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
             if(_unlockResFlag) {
@@ -125,7 +145,7 @@ namespace DESpeedrunUtil.Memory {
                 if(!_dynTimer) {
                     _dynTime = DateTime.Now.Ticks;
                     _dynTimer = true;
-                    }
+                }
                 if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 5000) {
                     EnableDynamicScaling(_targetFPS);
                     _scheduleDynamic = false;
