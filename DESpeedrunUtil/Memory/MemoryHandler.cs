@@ -42,14 +42,15 @@ namespace DESpeedrunUtil.Memory {
         public string Version { get; init; }
 
         bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false,
-             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _outOfDateFlag = false, _restartGame = false;
+             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _outOfDateFlag = false, _restartGame = false,
+             _trainerFlag = false, _scheduleDynamic = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         string _cheatString = "CHEATS ENABLED";
         int _fpsLimit = 250, _targetFPS = 1000;
         float _minRes = 0.01f;
 
-        bool _windowFocused = false;
-        long _focusedTime;
+        bool _windowFocused = false, _dynTimer = false;
+        long _focusedTime, _dynTime;
 
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
             _game = game ?? throw new NullReferenceException("Game process is null. How?");
@@ -95,6 +96,7 @@ namespace DESpeedrunUtil.Memory {
             
             SetMetrics(2);
             ModifyMetricRows();
+            if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
             if(_unlockResFlag) {
                 if(ReadyToUnlockRes()) {
@@ -117,6 +119,17 @@ namespace DESpeedrunUtil.Memory {
                             }
                         }
                     }
+                }
+            }
+            if(_scheduleDynamic && ReadyToUnlockRes()) {
+                if(!_dynTimer) {
+                    _dynTime = DateTime.Now.Ticks;
+                    _dynTimer = true;
+                    }
+                if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 5000) {
+                    EnableDynamicScaling(_targetFPS);
+                    _scheduleDynamic = false;
+                    _dynTimer = false;
                 }
             }
         }
@@ -177,6 +190,10 @@ namespace DESpeedrunUtil.Memory {
                 EnableDynamicScaling(targetFPS);
                 _autoDynamic = false;
             }
+        }
+        public void ScheduleDynamicScaling(int targetFPS) {
+            _targetFPS = targetFPS;
+            _scheduleDynamic = true;
         }
         public void EnableDynamicScaling(int targetFPS) {
             if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });

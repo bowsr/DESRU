@@ -554,12 +554,14 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun, "restart");
             if(_firstRun) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
+            _memory.SetMinRes(_minResPercent / 100f);
             if(unlockOnStartupCheckbox.Checked) {
                 _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
                 _hotkeys.DisableHotkeys();
+            }else {
+                if(autoDynamicCheckbox.Checked) _memory.ScheduleDynamicScaling(_targetFPS);
             }
             _memory.SetMaxHz(_fpsDefault);
-            _memory.SetMinRes(_minResPercent / 100f);
             _memory.MemoryTimer.Start();
             return true;
         }
