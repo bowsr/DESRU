@@ -514,6 +514,7 @@ namespace DESpeedrunUtil {
                 return false;
             }
             _gameProcess = procList[0];
+            Log.Information("Found a DOOMEternalx64vk.exe process.");
             changeVersionButton.Enabled = false;
 
             if(_gameProcess.HasExited || _gameProcess == null) return false;
@@ -533,13 +534,18 @@ namespace DESpeedrunUtil {
                 _hotkeys.ToggleIndividualHotkeys(3, false);
             }
             SetGameInfoByModuleSize();
-            versionDropDownSelector.SelectedItem = GetCurrentVersion();
+            try {
+                versionDropDownSelector.SelectedItem = GetCurrentVersion();
+            }catch(Exception e) {
+                Log.Error(e, "An error occured when attempting to change the version selector's index.");
+            }
             versionDropDownSelector.Enabled = false;
             _memory.SetFlag(_fwRuleExists, "firewall");
             _memory.SetFlag(CheckForMeathook(), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun, "restart");
+            if(_firstRun) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
             if(unlockOnStartupCheckbox.Checked) {
                 _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
                 _hotkeys.DisableHotkeys();

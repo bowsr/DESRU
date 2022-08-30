@@ -70,7 +70,6 @@ namespace DESpeedrunUtil.Memory {
 
         private void MemoryTick() {
             DerefPointers();
-            Debug.WriteLine(_restartGame);
             if(_restartGame) {
                 if(_cheatsFlag && !_restartCheatsTimer.Enabled) {
                     _restartCheatsTimer.Start();
