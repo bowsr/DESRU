@@ -38,8 +38,14 @@ namespace DESpeedrunUtil.Macro {
         /// <summary>
         /// Checks if the macro can start.
         /// </summary>
-        /// <returns>Returns <see langword="true"/> if the macro process doesn't exist and at least one bind is enabled.</returns>
-        public bool CanStart() => _macroProcess == null && (_downScrollKey != Keys.None || _upScrollKey != Keys.None);
+        /// <returns><see langword="true"/> if the macro process doesn't exist and at least one bind is enabled.</returns>
+        public bool CanStart() => _macroProcess == null && HasKeyBound();
+
+        /// <summary>
+        /// Checks if any macro hotkeys are bound.
+        /// </summary>
+        /// <returns><see langword="true"/> if at least one bind is enabled.</returns>
+        public bool HasKeyBound() => _downScrollKey != Keys.None || _upScrollKey != Keys.None;
 
         /// <summary>
         /// Starts the macro process.

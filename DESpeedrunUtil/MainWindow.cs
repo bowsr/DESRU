@@ -134,7 +134,11 @@ namespace DESpeedrunUtil {
             if(!_enableMacro) _macroProcess.Stop(true);
 
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
-            _memory.SetFlag(_macroProcess.IsRunning, "macro");
+            if(_enableMacro) {
+                _memory.SetFlag(_macroProcess.HasKeyBound(), "macro");
+            }else {
+                _memory.SetFlag(false, "macro");
+            }
 
             if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
                 unlockResButton.Enabled = true;
