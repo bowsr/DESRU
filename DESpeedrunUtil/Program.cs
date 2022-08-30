@@ -35,6 +35,12 @@ namespace DESpeedrunUtil {
                 }
                 Log.Logger.Warning("User chose to ignore update.");
             }
+            if(!FileCheck()) {
+                MessageBox.Show("Your DESRU installation is broken.\n" +
+                    "Please reinstall DESRU, and make sure every file is extracted from the ZIP archive.");
+                Log.CloseAndFlush();
+                return;
+            }
             try {
                 Application.Run(new MainWindow());
             }catch(Exception e) {
@@ -65,6 +71,23 @@ namespace DESpeedrunUtil {
                 Log.Logger.Warning("No releases were found when checking for updates.");
                 return false;
             }
+        }
+
+        private static bool FileCheck() {
+            if(!File.Exists(@".\macro\DOOMEternalMacro.exe")) {
+                Log.Error("Macro does not exist. Aborting program.");
+                return false;
+            }
+            if(!File.Exists(@".\meath00k\XINPUT1_3.dll")) {
+                Log.Error("meath00k does not exist. Aborting program.");
+                return false;
+            }
+            if(!File.Exists(@".\fonts\EternalBattleBold.ttf") || !File.Exists(@".\fonts\EternalLogo.ttf") || 
+                !File.Exists(@".\fonts\EternalUi2Bold.ttf") || !File.Exists(@".\fonts\EternalUi2Regular.ttf")) {
+                Log.Error("One or more fonts are missing. Aborting program.");
+                return false;
+            }
+            return true;
         }
     }
 }
