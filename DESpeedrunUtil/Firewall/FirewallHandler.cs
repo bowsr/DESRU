@@ -12,8 +12,15 @@ namespace DESpeedrunUtil.Firewall {
         /// <returns><see langword="true"/> if a matching rule is detected</returns>
         public static bool CheckForFirewallRule(string application, bool delete) {
             INetFwPolicy2 policy2 = (INetFwPolicy2) Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
-
+            if(policy2 == null) {
+                Log.Error("Firewall Policy was null. Aborting.");
+                return false;
+            }
             foreach(INetFwRule rule in policy2.Rules) {
+                if(rule == null) {
+                    Log.Error("Firewall rule was null. Aborting.");
+                    return false;
+                }
                 if(rule.Direction == NET_FW_RULE_DIRECTION_.NET_FW_RULE_DIR_OUT && rule.ApplicationName == application) {
                     if(delete) {
                         policy2.Rules.Remove(rule.Name);

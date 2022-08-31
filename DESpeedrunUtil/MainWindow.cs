@@ -92,7 +92,11 @@ namespace DESpeedrunUtil {
                 unlockResButton.Text = "Unlock Resolution Scaling";
             }
             if(!_fwRestart) firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
-            _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
+            try {
+                _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
+            }catch(Exception e) {
+                Log.Error(e, "Failed to check if firewall rule exists.");
+            }
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
 
             CheckForMeathook();
@@ -103,7 +107,12 @@ namespace DESpeedrunUtil {
             }
 
             if(!Hooked) {
-                Hooked = Hook();
+                try {
+                    Hooked = Hook();
+                }catch(Exception e) {
+                    Log.Error(e, "An error occured when attempting to hook into the game.");
+                    return;
+                }
                 _firstRun = false;
             }
             if(!Hooked) {
@@ -116,14 +125,14 @@ namespace DESpeedrunUtil {
 
             if(enableHotkeysCheckbox.Checked) {
                 if(!_memory.GetFlag("unlockscheduled")) {
-                    if(GetForegroundWindow() != _gameProcess.MainWindowHandle) {
+                    if(!CheckIfGameIsInFocus()) {
                         _hotkeys.DisableHotkeys();
                     } else {
                         _hotkeys.EnableHotkeys();
                     }
                 }
             }
-            if(GetForegroundWindow() != _gameProcess.MainWindowHandle) {
+            if(!CheckIfGameIsInFocus()) {
                 _macroProcess.Stop(true);
             } else {
                 if(_enableMacro) {
@@ -206,6 +215,17 @@ namespace DESpeedrunUtil {
                 cheatsStatus.ForeColor = TEXT_FORECOLOR;
                 reshadeStatus.Text = "-";
             }
+        }
+
+        private bool CheckIfGameIsInFocus() {
+            bool focus = false;
+            try {
+                focus = _gameProcess.MainWindowHandle == GetForegroundWindow();
+            }catch(Exception e) {
+                Log.Error(e, "An error occured when checking if the game is in focus.");
+                focus = false;
+            }
+            return focus;
         }
 
         /// <summary>
@@ -360,6 +380,8 @@ namespace DESpeedrunUtil {
 
                 vdfPath = steamPath + @"\steamapps\libraryfolders.vdf";
                 vdfLocation = vdfPath;
+            }else {
+                Log.Information("Game directory loaded from user settings. Directory: {GameDirectory}", _gameDirectory);
             }
             Log.Information("Found Steam Installation.");
             string driveRegex = @"[A-Z]:\\";
@@ -463,7 +485,8 @@ namespace DESpeedrunUtil {
                         var rs =  File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
                         if(rs) Log.Information("ReShade for Vulkan is installed and is running over DOOMEternal.");
                         return rs;
-                    } catch(Exception) {
+                    } catch(Exception e) {
+                        Log.Error(e, "An error occured when checking for ReShade.");
                         return false;
                     }
                 }
@@ -544,6 +567,12 @@ namespace DESpeedrunUtil {
                 _memory = new MemoryHandler(_gameProcess, _hotkeys);
             } catch(NullReferenceException ex) {
                 Log.Logger.Error(ex, "An error occured when attempting to hook into the game.");
+                _gameProcess = null;
+                _memory = null;
+                return false;
+            }
+            if(_memory == null) {
+                Log.Error("MemoryHandler was somehow null. Retrying hook.");
                 _gameProcess = null;
                 _memory = null;
                 return false;

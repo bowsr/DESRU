@@ -53,7 +53,7 @@ namespace DESpeedrunUtil.Memory {
         long _focusedTime, _dynTime;
 
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
-            _game = game ?? throw new NullReferenceException("Game process is null. How?");
+            _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
             _trainer = null;
             _hotkeys = hotkeys;
             _moduleSize = game.MainModule.ModuleMemorySize;
@@ -185,7 +185,8 @@ namespace DESpeedrunUtil.Memory {
         private bool CheckIfGameIsFocused() {
             try {
                 return _game.MainWindowHandle == GetForegroundWindow();
-            }catch(Exception) {
+            }catch(Exception e) {
+                Log.Error(e, "An error occured when checking if the game was in focus.");
                 return false;
             }
         }
