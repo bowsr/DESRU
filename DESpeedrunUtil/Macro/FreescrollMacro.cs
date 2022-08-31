@@ -29,6 +29,7 @@ namespace DESpeedrunUtil.Macro {
             _timer = new Timer();
             _timer.Interval = 5000;
             _timer.Tick += new EventHandler(MacroCheck);
+            _timer.Start();
 
             _downScrollKey = downScroll;
             _upScrollKey = upScroll;
