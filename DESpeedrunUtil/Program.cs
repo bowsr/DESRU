@@ -6,7 +6,7 @@ using System.Net;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.4.2";
+        public const string APP_VERSION = "0.4.3";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
         /// <summary>
@@ -15,9 +15,8 @@ namespace DESpeedrunUtil {
         [STAThread]
         static void Main(string[] args) {
             ApplicationConfiguration.Initialize();
-
+            
             var logCfg = new LoggerConfiguration().WriteTo.Console().WriteTo.File(@".\logs\desru.log", rollingInterval: RollingInterval.Day);
-
             bool verbose = false;
             if(args.Length > 0) {
                 foreach(string s in args) {
@@ -31,6 +30,14 @@ namespace DESpeedrunUtil {
                 Log.Logger = logCfg.MinimumLevel.Verbose().CreateLogger();
             }else {
                 Log.Logger = logCfg.MinimumLevel.Debug().CreateLogger();
+            }
+
+            if(CheckForDuplicateProcesses()) {
+                Log.Fatal("Found duplicate instances of DESRU! Please close all instances first or restart your system.");
+                MessageBox.Show("Multiple instances of DESRU have been found.\n" +
+                    "Please close every instance before re-opening DESRU or reboot your system.", "Duplicate DESRU Instances Detected");
+                Log.CloseAndFlush();
+                return;
             }
 
             if(UpdateCheck()) {
@@ -51,7 +58,7 @@ namespace DESpeedrunUtil {
             }
             if(!FileCheck()) {
                 MessageBox.Show("Your DESRU installation is broken.\n" +
-                    "Please reinstall DESRU, and make sure every file is extracted from the ZIP archive.");
+                    "Please reinstall DESRU, and make sure every file is extracted from the ZIP archive.", "Broken DESRU Installation");
                 Log.CloseAndFlush();
                 return;
             }
@@ -102,6 +109,12 @@ namespace DESpeedrunUtil {
                 return false;
             }
             return true;
+        }
+
+        private static bool CheckForDuplicateProcesses() {
+            List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DESRU"));
+            if(procList.Count > 1) return true;
+            return false;
         }
     }
 }
