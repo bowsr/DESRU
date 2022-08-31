@@ -1,18 +1,19 @@
 ﻿using DESpeedrunUtil.Macro;
+using Serilog;
 using System.Runtime.InteropServices;
 
 namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
 
         private globalKeyboardHook _hook;
-        private MainWindow _parent;
+        private readonly MainWindow _parent;
 
         public bool Enabled { get; private set; }
         private bool _key0Enabled = false, _key1Enabled = false, _key2Enabled = false, _key3Enabled = false;
-        private Keys _fpsHotkey0 { get; set; }
-        private Keys _fpsHotkey1 { get; set; }
-        private Keys _fpsHotkey2 { get; set; }
-        private Keys _resScaleHotkey { get; set; }
+        private Keys _fpsHotkey0 = Keys.None;
+        private Keys _fpsHotkey1 = Keys.None;
+        private Keys _fpsHotkey2 = Keys.None;
+        private Keys _resScaleHotkey = Keys.None;
 
         public HotkeyHandler(Keys fps0, Keys fps1, Keys fps2, Keys res, MainWindow parent) {
             _hook = new globalKeyboardHook();
@@ -27,18 +28,13 @@ namespace DESpeedrunUtil.Hotkeys {
         }
 
         public Keys GetHotkeyByNumber(int num) {
-            switch(num) {
-                case 0:
-                    return _fpsHotkey0;
-                case 1:
-                    return _fpsHotkey1;
-                case 2:
-                    return _fpsHotkey2;
-                case 3:
-                    return _resScaleHotkey;
-                default:
-                    return Keys.None;
-            }
+            return num switch {
+                0 => _fpsHotkey0,
+                1 => _fpsHotkey1,
+                2 => _fpsHotkey2,
+                3 => _resScaleHotkey,
+                _ => Keys.None,
+            };
         }
         public void ChangeHotkey(Keys key, int fps) {
             switch(fps) {
@@ -61,14 +57,17 @@ namespace DESpeedrunUtil.Hotkeys {
             if(Enabled) return;
             AddHotkeys();
             Enabled = true;
+            Log.Verbose("Hotkeys enabled.");
         }
         public void DisableHotkeys() {
             if(!Enabled) return;
             _hook.HookedKeys.Clear();
             Enabled = false;
+            Log.Verbose("Hotkeys disabled.");
         }
         public void RefreshKeys() {
             if(!Enabled) return;
+            Log.Verbose("Refreshing hotkeys.");
             AddHotkeys();
         }
         public void ToggleIndividualHotkeys(int hotkey, bool enabled) {
@@ -149,12 +148,14 @@ namespace DESpeedrunUtil.Hotkeys {
                     if(i == type) continue;
                     if(i <= 3) {
                         if(key == hotkeys.GetHotkeyByNumber(i)) {
+                            Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
                             hotkeys.ChangeHotkey(oldKey, i);
                             break;
                         }
                     } else {
                         var down = (i == 4);
                         if(key == macro.GetHotkey(down)) {
+                            Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
                             macro.ChangeHotkey(oldKey, down);
                             break;
                         }
@@ -164,8 +165,10 @@ namespace DESpeedrunUtil.Hotkeys {
 
             if(type <= 3) {
                 hotkeys.ChangeHotkey(key, type);
+                Log.Information("Hotkey {HK} changed to {Key}", type, key);
             } else {
                 macro.ChangeHotkey(key, type == 4);
+                Log.Information("Macro key <{Type}> changed to {Key}", type == 4, key);
             }
         }
         public static Keys ModKeySelector(int modifier) {

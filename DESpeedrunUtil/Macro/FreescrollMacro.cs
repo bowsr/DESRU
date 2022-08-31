@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Serilog;
+using System.Diagnostics;
 using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Macro {
@@ -56,6 +57,7 @@ namespace DESpeedrunUtil.Macro {
             TerminateUnmanagedMacros(); // One final check before running our own macro instance
             _macroProcess = Process.Start(MACRO_START_INFO);
             IsRunning = true;
+            Log.Verbose("Freescroll macro started.");
             if(_timer.Enabled) _timer.Stop();
         }
 
@@ -68,6 +70,7 @@ namespace DESpeedrunUtil.Macro {
             _macroProcess.Kill();
             _macroProcess = null;
             IsRunning = false;
+            Log.Verbose("Freescroll macro stopped.");
             if(startTimer) _timer.Start();
         }
 
@@ -75,6 +78,7 @@ namespace DESpeedrunUtil.Macro {
         /// Restarts the macro process.
         /// </summary>
         public void Restart() {
+            Log.Verbose("Restarting Freescroll macro.");
             Stop(false);
             Start();
         }
@@ -120,7 +124,13 @@ namespace DESpeedrunUtil.Macro {
         public static void TerminateUnmanagedMacros() {
             List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro"));
             if(procList.Count == 0) return;
-            foreach(Process proc in procList) proc.Kill();
+            Log.Information("Found extra macro processes. Terminating...");
+            var c = 0;
+            foreach(Process proc in procList) {
+                proc.Kill();
+                c++;
+            }
+            Log.Verbose("Terminated {Count} macro processes.", c);
         }
     }
 }

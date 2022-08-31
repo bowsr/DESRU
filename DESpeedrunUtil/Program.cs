@@ -6,18 +6,32 @@ using System.Net;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.3.3";
+        public const string APP_VERSION = "0.4.0";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main() {
+        static void Main(string[] args) {
             ApplicationConfiguration.Initialize();
 
-            Log.Logger = new LoggerConfiguration().MinimumLevel.Debug()
-                .WriteTo.Console().WriteTo.File(@".\logs\desru.log", rollingInterval: RollingInterval.Day).CreateLogger();
+            var logCfg = new LoggerConfiguration().WriteTo.Console().WriteTo.File(@".\logs\desru.log", rollingInterval: RollingInterval.Day);
+
+            bool verbose = false;
+            if(args.Length > 0) {
+                foreach(string s in args) {
+                    if(s.Equals("-v")) {
+                        verbose = true;
+                        break;
+                    }
+                }
+            }
+            if(verbose) {
+                Log.Logger = logCfg.MinimumLevel.Verbose().CreateLogger();
+            }else {
+                Log.Logger = logCfg.MinimumLevel.Debug().CreateLogger();
+            }
 
             if(UpdateCheck()) {
                 UpdateDetected = true;
