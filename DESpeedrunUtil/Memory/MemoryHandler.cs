@@ -37,6 +37,7 @@ namespace DESpeedrunUtil.Memory {
         Process _game, _trainer;
         HotkeyHandler _hotkeys;
         public Timer MemoryTimer { get; init; }
+        public bool Reset { get; init; }
         System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
         public string Version { get; init; }
@@ -56,7 +57,13 @@ namespace DESpeedrunUtil.Memory {
             _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
             _trainer = null;
             _hotkeys = hotkeys;
-            _moduleSize = game.MainModule.ModuleMemorySize;
+            try {
+                _moduleSize = _game.MainModule.ModuleMemorySize;
+            }catch(Win32Exception w32) {
+                Log.Error(w32, "An error occured when retrieving the game's moduleSize");
+                Reset = true;
+                return;
+            }
             Version = TranslateModuleSize();
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
 
@@ -67,6 +74,7 @@ namespace DESpeedrunUtil.Memory {
             _restartCheatsTimer = new System.Timers.Timer(2500);
             _restartCheatsTimer.Elapsed += (sender, e) => { _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED"; };
 
+            Reset = false;
             Initialize();
         }
 

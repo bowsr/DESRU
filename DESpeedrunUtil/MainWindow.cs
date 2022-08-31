@@ -565,14 +565,20 @@ namespace DESpeedrunUtil {
 
             try {
                 _memory = new MemoryHandler(_gameProcess, _hotkeys);
-            } catch(NullReferenceException ex) {
-                Log.Logger.Error(ex, "An error occured when attempting to hook into the game.");
+            } catch(ArgumentNullException ex) {
+                Log.Error(ex, "An error occured when attempting to hook into the game.");
                 _gameProcess = null;
                 _memory = null;
                 return false;
             }
             if(_memory == null) {
                 Log.Error("MemoryHandler was somehow null. Retrying hook.");
+                _gameProcess = null;
+                _memory = null;
+                return false;
+            }
+            if(_memory.Reset) {
+                Log.Error("Something went wrong when setting up the MemoryHandler. Retrying hook.");
                 _gameProcess = null;
                 _memory = null;
                 return false;
