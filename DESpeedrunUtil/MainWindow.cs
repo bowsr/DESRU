@@ -73,6 +73,8 @@ namespace DESpeedrunUtil {
             _statusTimer.Interval = 500;
             _statusTimer.Tick += (sender, e) => { StatusTick(); };
 
+            desruVersionLabel.Text = Program.APP_VERSION;
+
             RemoveTabStop(this);
         }
 

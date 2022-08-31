@@ -103,6 +103,7 @@
             this.helpButton = new System.Windows.Forms.Button();
             this.downpatcherButton = new System.Windows.Forms.Button();
             this.discordButton = new System.Windows.Forms.Button();
+            this.desruVersionLabel = new System.Windows.Forms.Label();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -1130,6 +1131,17 @@
             this.discordButton.Text = "MDSR Discord";
             this.discordButton.UseVisualStyleBackColor = false;
             // 
+            // desruVersionLabel
+            // 
+            this.desruVersionLabel.AutoSize = true;
+            this.desruVersionLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.desruVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.desruVersionLabel.Location = new System.Drawing.Point(596, 611);
+            this.desruVersionLabel.Name = "desruVersionLabel";
+            this.desruVersionLabel.Size = new System.Drawing.Size(31, 13);
+            this.desruVersionLabel.TabIndex = 38;
+            this.desruVersionLabel.Text = "0.0.0";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -1137,6 +1149,7 @@
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.ClientSize = new System.Drawing.Size(639, 671);
             this.ControlBox = false;
+            this.Controls.Add(this.desruVersionLabel);
             this.Controls.Add(this.discordButton);
             this.Controls.Add(this.downpatcherButton);
             this.Controls.Add(this.helpButton);
@@ -1273,5 +1286,6 @@
         private Button helpButton;
         private Button downpatcherButton;
         private Button discordButton;
+        private Label desruVersionLabel;
     }
 }
