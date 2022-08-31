@@ -66,7 +66,7 @@ namespace DESpeedrunUtil {
             };
 
             _formTimer = new Timer();
-            _formTimer.Interval = 8;
+            _formTimer.Interval = 16;
             _formTimer.Tick += (sender, e) => { UpdateTick(); };
 
             _statusTimer = new Timer();
@@ -556,10 +556,10 @@ namespace DESpeedrunUtil {
                 return false;
             }
             _gameProcess = procList[0];
-            Log.Information("Found a DOOMEternalx64vk.exe process.");
             changeVersionButton.Enabled = false;
 
             if(_gameProcess.HasExited || _gameProcess == null) return false;
+            Log.Information("Found a DOOMEternalx64vk.exe process.");
 
             _reshadeExists = CheckForReShade();
 

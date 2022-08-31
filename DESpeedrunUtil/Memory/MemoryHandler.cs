@@ -59,8 +59,8 @@ namespace DESpeedrunUtil.Memory {
             _hotkeys = hotkeys;
             try {
                 _moduleSize = _game.MainModule.ModuleMemorySize;
-            }catch(Win32Exception w32) {
-                Log.Error(w32, "An error occured when retrieving the game's moduleSize");
+            }catch(Exception e) {
+                Log.Error(e, "An error occured when retrieving the game's moduleSize");
                 Reset = true;
                 return;
             }
@@ -68,7 +68,7 @@ namespace DESpeedrunUtil.Memory {
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
 
             MemoryTimer = new Timer();
-            MemoryTimer.Interval = 15;
+            MemoryTimer.Interval = 16;
             MemoryTimer.Tick += (sender, e) => { MemoryTick(); };
 
             _restartCheatsTimer = new System.Timers.Timer(2500);
