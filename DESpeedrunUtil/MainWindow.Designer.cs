@@ -441,6 +441,7 @@
             this.windowTitle.Name = "windowTitle";
             this.windowTitle.Size = new System.Drawing.Size(614, 33);
             this.windowTitle.TabIndex = 21;
+            this.windowTitle.Tag = "titlebar";
             this.windowTitle.Text = "DOOM ETERNAL SPEEDRUN UTILITY";
             this.windowTitle.Visible = false;
             // 
@@ -1162,8 +1163,8 @@
             this.Load += new System.EventHandler(this.MainWindow_Load);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HotkeyAssignment_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HotkeyAssignment_MouseDown);
-            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MainWindow_MouseMove);
-            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.MainWindow_MouseUp);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseMove);
+            this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseUp);
             this.PreviewKeyDown += new System.Windows.Forms.PreviewKeyDownEventHandler(this.MainWindow_KeyPreviewKeyDown);
             this.hotkeyPanel.ResumeLayout(false);
             this.hotkeyPanel.PerformLayout();

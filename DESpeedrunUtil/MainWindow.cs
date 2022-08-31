@@ -20,6 +20,8 @@ namespace DESpeedrunUtil {
 
         private readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
+        private const string WINDOW_TITLE = "DOOM ETERNAL SPEEDRUN UTILITY";
+
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
 
@@ -71,7 +73,6 @@ namespace DESpeedrunUtil {
             _statusTimer.Interval = 500;
             _statusTimer.Tick += (sender, e) => { StatusTick(); };
 
-            AddMouseIntercepts(this);
             RemoveTabStop(this);
         }
 
@@ -153,6 +154,7 @@ namespace DESpeedrunUtil {
             }
         }
 
+        // Timer method used to update the info panel on the main form
         private void StatusTick() {
             macroStatus.Text = (_macroProcess.IsRunning) ? "Running" : "Stopped";
             macroStatus.ForeColor = (_macroProcess.IsRunning) ? Color.Lime : TEXT_FORECOLOR;
@@ -256,6 +258,10 @@ namespace DESpeedrunUtil {
             changeVersionButton.Enabled = false;
         }
 
+        /// <summary>
+        /// Retrieves the currently installed version by reading gameVersion.txt
+        /// </summary>
+        /// <returns>A <see langword="string"/> representing a game version</returns>
         public string GetCurrentVersion() {
             if(_gameDirectory != string.Empty) {
                 try {
@@ -401,7 +407,7 @@ namespace DESpeedrunUtil {
 
         // Detects any extra game dirs in the same library and adds a gameVersion.txt for version swapping purposes
         // Folders MUST be in the format "DOOMEternal <versionString>"
-        // List of valid version strings can be found in MemoryHandler.IsValidVersionString(); will have an info button with this list in the program window
+        // List of valid version strings can be found in MemoryHandler.IsValidVersionString(); can also be found in validVersions.txt
         private void DetectAllGameVersions() {
             List<string> Directories = new();
             if(_steamDirectory != string.Empty) {
@@ -445,6 +451,7 @@ namespace DESpeedrunUtil {
             return mh;
         }
 
+        // Checks if ReShade is both installed for Vulkan and set to run over DOOMEternalx64vk
         private bool CheckForReShade() {
             using RegistryKey vkKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
             var names = vkKey.GetValueNames();
@@ -472,6 +479,8 @@ namespace DESpeedrunUtil {
                         return;
                     }
                 }
+                // Can't remove the DLL while the game is running, so it's scheduled, then deleted after a delay 
+                // once the game is detected as closed.
                 if(_mhDoRemovalTask) {
                     _mhScheduleRemoval = false;
                     Task.Run(async delegate {
@@ -719,7 +728,7 @@ namespace DESpeedrunUtil {
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
             if(!_hkAssignmentMode) {
-                if(sender is MainWindow) {
+                if((sender is MainWindow || sender is DESRUShadowLabel) && !_mouseDown) {
                     _mouseDown = true;
                     _lastLocation = e.Location;
                 }
@@ -760,7 +769,7 @@ namespace DESpeedrunUtil {
             UpdateHotkeyAndInputFields();
         }
 
-        private void MainWindow_MouseMove(object sender, MouseEventArgs e) {
+        private void DragWindow_MouseMove(object sender, MouseEventArgs e) {
             if(_mouseDown) {
                 this.Location = new Point(
                     (this.Location.X - _lastLocation.X) + e.X,
@@ -769,7 +778,7 @@ namespace DESpeedrunUtil {
             }
         }
 
-        private void MainWindow_MouseUp(object sender, MouseEventArgs e) => _mouseDown = false;
+        private void DragWindow_MouseUp(object sender, MouseEventArgs e) => _mouseDown = false;
 
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
             if(_mouse1Pressed) {
@@ -962,8 +971,10 @@ namespace DESpeedrunUtil {
             MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
             InitializeFonts();
-
-            this.Controls.Add(new DESRUShadowLabel(windowTitle.Font, "DOOM ETERNAL SPEEDRUN UTILITY", windowTitle.Location, Color.FromArgb(190, 34, 34), FORM_BACKCOLOR));
+            var titleBar = new DESRUShadowLabel(windowTitle.Font, WINDOW_TITLE, windowTitle.Location, Color.FromArgb(190, 34, 34), FORM_BACKCOLOR);
+            titleBar.MouseMove += new MouseEventHandler(DragWindow_MouseMove);
+            titleBar.MouseUp += new MouseEventHandler(DragWindow_MouseUp);
+            this.Controls.Add(titleBar);
             this.Controls.Add(new DESRUShadowLabel(hotkeysTitle.Font, "KEYBINDS", hotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(optionsTitle.Font, "OPTIONS", optionsTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
@@ -995,6 +1006,8 @@ namespace DESpeedrunUtil {
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
             if(!IsFormOnScreen() || loc == Point.Empty) Location = defaultLocation;
+
+            AddMouseIntercepts(this);
 
             SearchForSteamGameDir();
             _formTimer.Start();

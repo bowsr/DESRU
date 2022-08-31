@@ -4,6 +4,12 @@ using Serilog;
 namespace DESpeedrunUtil.Firewall {
     internal class FirewallHandler {
 
+        /// <summary>
+        /// Checks if an outbound firewall rule blocking DOOMEternalx64vk exists.
+        /// </summary>
+        /// <param name="application">Full path of DOOMEternalx64vk.exe</param>
+        /// <param name="delete"><see langword="true"/> to delete the detected rule</param>
+        /// <returns><see langword="true"/> if a matching rule is detected</returns>
         public static bool CheckForFirewallRule(string application, bool delete) {
             INetFwPolicy2 policy2 = (INetFwPolicy2) Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
 
@@ -23,6 +29,10 @@ namespace DESpeedrunUtil.Firewall {
             return false;
         }
 
+        /// <summary>
+        /// Creates a new outbound firewall rule blocking DOOMEternalx64vk
+        /// </summary>
+        /// <param name="application">Full path of DOOMEternalx64vk.exe</param>
         public static void CreateFirewallRule(string application) {
             INetFwPolicy2 policy2 = (INetFwPolicy2) Activator.CreateInstance(Type.GetTypeFromProgID("HNetCfg.FwPolicy2"));
 

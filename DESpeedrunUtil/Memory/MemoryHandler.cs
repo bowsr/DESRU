@@ -72,6 +72,9 @@ namespace DESpeedrunUtil.Memory {
 
         private void MemoryTick() {
             DerefPointers();
+            // Checks if the trainer is running
+            // If the trainer is detected, metric rows are no longer modified, and the restart game flag is set to true
+            // This will eventually be removed once the trainer is integrated directly into DESRU
             if(_trainer == null) {
                 List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
                 if(procList.Count > 0) {
@@ -278,6 +281,12 @@ namespace DESpeedrunUtil.Memory {
                     break;
             }
         }
+
+        /// <summary>
+        /// Retrieves the state of a specified flag
+        /// </summary>
+        /// <param name="flagName"><see langword="string"/> representing which flag to retrieve</param>
+        /// <returns>State of the specified <see langword="bool"/> flag</returns>
         public bool GetFlag(string flagName) {
             return flagName switch {
                 "cheats" => _cheatsFlag,
@@ -470,7 +479,8 @@ namespace DESpeedrunUtil.Memory {
             Log.Information("Scanning for resolution scale values.");
             res = scanner.Scan(resTarget);
             if(res != IntPtr.Zero) Log.Information("Found resolution scale values.");
-            KnownOffsets ko = new KnownOffsets(Version, GetOffset(r1),
+            KnownOffsets ko = new(Version,
+                GetOffset(r1),
                 GetOffset(r2),
                 GetOffset(r3),
                 GetOffset(r4),
