@@ -6,7 +6,7 @@ using System.Net;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.4.3";
+        public const string APP_VERSION = "0.4.4";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
         /// <summary>
@@ -14,6 +14,9 @@ namespace DESpeedrunUtil {
         /// </summary>
         [STAThread]
         static void Main(string[] args) {
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(CrashHandler);
+
             ApplicationConfiguration.Initialize();
             
             var logCfg = new LoggerConfiguration().WriteTo.Console().WriteTo.File(@".\logs\desru.log", rollingInterval: RollingInterval.Day);
@@ -69,6 +72,11 @@ namespace DESpeedrunUtil {
             }finally {
                 Log.CloseAndFlush();
             }
+        }
+
+        static void CrashHandler(object sender, UnhandledExceptionEventArgs args) {
+            Log.Fatal((Exception) args.ExceptionObject, "Unhandled exception encountered! runtime: {Terminating}", args.IsTerminating);
+            Log.CloseAndFlush();
         }
 
         private static bool UpdateCheck() {

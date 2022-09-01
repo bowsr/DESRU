@@ -100,7 +100,7 @@ namespace DESpeedrunUtil.Memory {
                 }
             }
 
-            if(!_trainerFlag) {
+            if(!_trainerFlag && ReadyToUnlockRes()) {
                 if(_restartGame) {
                     if(_cheatsFlag && !_restartCheatsTimer.Enabled) {
                         _restartCheatsTimer.Start();
@@ -127,7 +127,7 @@ namespace DESpeedrunUtil.Memory {
                 ModifyMetricRows();
             }
 
-            if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
+            if(_minResPtr != IntPtr.Zero && ReadyToUnlockRes()) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
             if(_unlockResFlag) {
                 if(ReadyToUnlockRes()) {
