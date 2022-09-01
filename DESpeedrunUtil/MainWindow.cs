@@ -481,16 +481,19 @@ namespace DESpeedrunUtil {
             var names = vkKey.GetValueNames();
             foreach(string s in names) {
                 if(s.Contains("ReShade")) {
+                    Log.Information("ReShade Vulkan Layer found in registry.");
                     try {
                         var rs =  File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
-                        if(rs) Log.Information("ReShade for Vulkan is installed and is running over DOOMEternal.");
+                        if(rs) Log.Information("ReShade is installed and is running over DOOMEternal.");
+                        else Log.Information("ReShade is not running over DOOMEternal.");
                         return rs;
                     } catch(Exception e) {
-                        Log.Error(e, "An error occured when checking for ReShade.");
+                        Log.Error(e, "An error occured when checking ReShade files.");
                         return false;
                     }
                 }
             }
+            Log.Information("ReShade Vulkan Layer not found in registry.");
             return false;
         }
 
