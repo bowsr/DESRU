@@ -19,6 +19,8 @@ namespace DESpeedrunUtil.Macro {
         private Keys _downScrollKey { get; set; }
         private Keys _upScrollKey { get; set; }
 
+        private bool _incorrectMacroVersion = false;
+
         public FreescrollMacro(Keys downScroll, Keys upScroll) {
             MACRO_START_INFO = new ProcessStartInfo(@".\DOOMEternalMacro.exe");
             MACRO_START_INFO.WorkingDirectory = @".\macro";
@@ -41,7 +43,7 @@ namespace DESpeedrunUtil.Macro {
         /// Checks if the macro can start.
         /// </summary>
         /// <returns><see langword="true"/> if the macro process doesn't exist and at least one bind is enabled.</returns>
-        public bool CanStart() => _macroProcess == null && HasKeyBound();
+        public bool CanStart() => _macroProcess == null && HasKeyBound() && !_incorrectMacroVersion;
 
         /// <summary>
         /// Checks if any macro hotkeys are bound.
@@ -59,6 +61,18 @@ namespace DESpeedrunUtil.Macro {
             IsRunning = true;
             Log.Verbose("Freescroll macro started.");
             if(_timer.Enabled) _timer.Stop();
+            try {
+                if(!CheckModuleSize()) {
+                    Stop(true);
+                    _incorrectMacroVersion = true;
+                    Log.Warning("Macro version mismatch. Please redownload DESRU.");
+                    System.Media.SystemSounds.Asterisk.Play();
+                    MessageBox.Show("The version of the macro currently installed does not match what is expected.\n" +
+                        "Please redownload and reinstall DESRU to make sure your files are up to date.", "Macro Executable Mismatch");
+                }
+            }catch(ArgumentNullException n) {
+                Log.Error(n, "An error occured when checking the macro's module size.");
+            }
         }
 
         /// <summary>
@@ -101,6 +115,15 @@ namespace DESpeedrunUtil.Macro {
 
             CreateBindingsFile();
             if(IsRunning) Restart(); // Macro is restarted for binding changes to take place
+        }
+        /// <summary>
+        /// Checks if the installed version of the macro matches what is expected.
+        /// </summary>
+        /// <returns><see langword="true"/> if the main module size matches</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public bool CheckModuleSize() {
+            if(_macroProcess == null) throw new ArgumentNullException("Macro Process is currently null.");
+            return _macroProcess.MainModule.ModuleMemorySize == 49152;
         }
 
         // Overwrites the bindings.txt file for the DOOMEternalMacro
