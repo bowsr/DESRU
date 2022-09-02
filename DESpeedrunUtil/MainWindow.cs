@@ -123,24 +123,28 @@ namespace DESpeedrunUtil {
                 return;
             }
 
-            if(enableHotkeysCheckbox.Checked) {
-                if(!_memory.GetFlag("unlockscheduled")) {
-                    if(!CheckIfGameIsInFocus()) {
-                        _hotkeys.DisableHotkeys();
-                    } else {
-                        _hotkeys.EnableHotkeys();
+            try {
+                if(enableHotkeysCheckbox.Checked) {
+                    if(!_memory.GetFlag("unlockscheduled")) {
+                        if(!CheckIfGameIsInFocus()) {
+                            _hotkeys.DisableHotkeys();
+                        } else {
+                            _hotkeys.EnableHotkeys();
+                        }
                     }
                 }
-            }
-            if(!CheckIfGameIsInFocus()) {
-                _macroProcess.Stop(true);
-            } else {
-                if(_enableMacro) {
-                    if(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
-                        _macroProcess.Restart();
+                if(!CheckIfGameIsInFocus()) {
+                    _macroProcess.Stop(true);
+                } else {
+                    if(_enableMacro) {
+                        if(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
+                            _macroProcess.Restart();
+                        }
+                        if(!_macroProcess.IsRunning) _macroProcess.Start();
                     }
-                    if(!_macroProcess.IsRunning) _macroProcess.Start();
                 }
+            }catch(Exception e) {
+                Log.Error(e, "Failed to check if DOOM Eternal was in focus.");
             }
 
             if(!_enableMacro) _macroProcess.Stop(true);
@@ -218,12 +222,12 @@ namespace DESpeedrunUtil {
         }
 
         private bool CheckIfGameIsInFocus() {
-            bool focus = false;
+            bool focus;
             try {
                 focus = _gameProcess.MainWindowHandle == GetForegroundWindow();
             }catch(Exception e) {
                 Log.Error(e, "An error occured when checking if the game is in focus.");
-                focus = false;
+                throw new Exception("Could not check if game window was in focus.");
             }
             return focus;
         }

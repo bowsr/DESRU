@@ -70,8 +70,16 @@ namespace DESpeedrunUtil.Macro {
                     MessageBox.Show("The version of the macro currently installed does not match what is expected.\n" +
                         "Please redownload and reinstall DESRU to make sure your files are up to date.", "Macro Executable Mismatch");
                 }
+            }catch(NullReferenceException e) {
+                Log.Error(e, "Macro process was somehow null when checking module size.");
             }catch(ArgumentNullException n) {
-                Log.Error(n, "An error occured when checking the macro's module size.");
+                Log.Error(n, "Macro process is null. Aborting module size check.");
+            }finally {
+                if(_macroProcess == null) {
+                    Restart();
+                }else {
+                    if(_macroProcess.HasExited) Restart();
+                }
             }
         }
 
@@ -122,7 +130,11 @@ namespace DESpeedrunUtil.Macro {
         /// <returns><see langword="true"/> if the main module size matches</returns>
         /// <exception cref="ArgumentNullException"></exception>
         public bool CheckModuleSize() {
-            if(_macroProcess == null) throw new ArgumentNullException("Macro Process is currently null.");
+            if(_macroProcess == null) {
+                throw new ArgumentNullException("Macro Process is currently null.");
+            }else {
+                if(_macroProcess.HasExited) throw new ArgumentNullException("Macro Process may have crashed.");
+            }
             return _macroProcess.MainModule.ModuleMemorySize == 49152;
         }
 
