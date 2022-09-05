@@ -64,6 +64,7 @@
             this.fpsInput2 = new System.Windows.Forms.TextBox();
             this.fpsPanel0 = new System.Windows.Forms.Panel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.panel3 = new System.Windows.Forms.Panel();
             this.defaultFPS = new System.Windows.Forms.TextBox();
@@ -104,7 +105,6 @@
             this.downpatcherButton = new System.Windows.Forms.Button();
             this.discordButton = new System.Windows.Forms.Button();
             this.desruVersionLabel = new System.Windows.Forms.Label();
-            this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -637,6 +637,18 @@
             this.panel1.Size = new System.Drawing.Size(304, 122);
             this.panel1.TabIndex = 30;
             // 
+            // replaceProfileCheckbox
+            // 
+            this.replaceProfileCheckbox.AutoSize = true;
+            this.replaceProfileCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.replaceProfileCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.replaceProfileCheckbox.Location = new System.Drawing.Point(6, 51);
+            this.replaceProfileCheckbox.Name = "replaceProfileCheckbox";
+            this.replaceProfileCheckbox.Size = new System.Drawing.Size(203, 22);
+            this.replaceProfileCheckbox.TabIndex = 30;
+            this.replaceProfileCheckbox.Text = "Replace profile.bin (3.1 only)";
+            this.replaceProfileCheckbox.UseVisualStyleBackColor = true;
+            // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
@@ -1144,24 +1156,12 @@
             this.desruVersionLabel.TabIndex = 38;
             this.desruVersionLabel.Text = "0.0.0";
             // 
-            // replaceProfileCheckbox
-            // 
-            this.replaceProfileCheckbox.AutoSize = true;
-            this.replaceProfileCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.replaceProfileCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.replaceProfileCheckbox.Location = new System.Drawing.Point(6, 51);
-            this.replaceProfileCheckbox.Name = "replaceProfileCheckbox";
-            this.replaceProfileCheckbox.Size = new System.Drawing.Size(203, 22);
-            this.replaceProfileCheckbox.TabIndex = 30;
-            this.replaceProfileCheckbox.Text = "Replace profile.bin (3.1 only)";
-            this.replaceProfileCheckbox.UseVisualStyleBackColor = true;
-            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(639, 744);
+            this.ClientSize = new System.Drawing.Size(639, 702);
             this.ControlBox = false;
             this.Controls.Add(this.desruVersionLabel);
             this.Controls.Add(this.discordButton);
