@@ -238,5 +238,41 @@ namespace DESpeedrunUtil.Properties {
                 this["ResScaleKey"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SteamInstallation {
+            get {
+                return ((string)(this["SteamInstallation"]));
+            }
+            set {
+                this["SteamInstallation"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string SteamID3 {
+            get {
+                return ((string)(this["SteamID3"]));
+            }
+            set {
+                this["SteamID3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool ReplaceProfile {
+            get {
+                return ((bool)(this["ReplaceProfile"]));
+            }
+            set {
+                this["ReplaceProfile"] = value;
+            }
+        }
     }
 }

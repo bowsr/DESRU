@@ -21,6 +21,8 @@ namespace DESpeedrunUtil {
         private readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
         private const string WINDOW_TITLE = "DOOM ETERNAL SPEEDRUN UTILITY";
+        private const string PROFILE_DIR = @"\782330\remote\PROFILE";
+        private const string PROFILE_FILE = @"\profile.bin";
 
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
@@ -51,7 +53,7 @@ namespace DESpeedrunUtil {
 
         List<Label> _hotkeyFields;
 
-        string _gameDirectory = "", _steamDirectory = "";
+        string _gameDirectory = "", _steamDirectory = "", _steamInstallation = "", _steamID3 = "";
         List<string>? _gameVersions;
 
         public MainWindow() {
@@ -357,16 +359,17 @@ namespace DESpeedrunUtil {
 
         // Auto-detects game directory. Asks for manual selection if it cannot be found.
         private void SearchForSteamGameDir() {
-            List<string> SteamLibraryDrives = new();
+            List<string> steamLibraryDrives = new();
             var vdfLocation = "";
             if(_gameDirectory == string.Empty) {
-                string steamPath, vdfPath;
+                string steamPath;
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\");
 
                 // Finding every Steam Library
                 using RegistryKey subKey = key.OpenSubKey("Steam");
                 try {
                     steamPath = subKey.GetValue("InstallPath").ToString();
+                    _steamInstallation = steamPath;
                 } catch(Exception e) {
                     Log.Error(e, "Couldn't find a Steam installation!");
 
@@ -382,8 +385,7 @@ namespace DESpeedrunUtil {
                     return;
                 }
 
-                vdfPath = steamPath + @"\steamapps\libraryfolders.vdf";
-                vdfLocation = vdfPath;
+                vdfLocation = steamPath + @"\steamapps\libraryfolders.vdf";
             }else {
                 Log.Information("Game directory loaded from user settings. Directory: {GameDirectory}", _gameDirectory);
             }
@@ -399,13 +401,13 @@ namespace DESpeedrunUtil {
                         string item = s.Substring(s.IndexOf(matched));
                         item = item.Replace("\\\\", "\\");
                         item = item.Replace("\"", "\\steamapps\\common\\");
-                        SteamLibraryDrives.Add(item);
+                        steamLibraryDrives.Add(item);
                     }
                 }
             }
 
             // Finding which library contains the game
-            foreach(string dir in SteamLibraryDrives) {
+            foreach(string dir in steamLibraryDrives) {
                 if(dir != string.Empty) {
                     if(Directory.Exists(dir + "DOOMEternal")) {
                         var exe = dir + "DOOMEternal\\DOOMEternalx64vk.exe";
@@ -425,6 +427,7 @@ namespace DESpeedrunUtil {
                     Log.Information("User manually selected their game directory.");
                     DetectAllGameVersions();
                 } else {
+                    Log.CloseAndFlush();
                     this.Close();
                 }
                 gameSelection.Dispose();
@@ -437,13 +440,16 @@ namespace DESpeedrunUtil {
         // Folders MUST be in the format "DOOMEternal <versionString>"
         // List of valid version strings can be found in MemoryHandler.IsValidVersionString(); can also be found in validVersions.txt
         private void DetectAllGameVersions() {
-            List<string> Directories = new();
+            List<string> directories = new();
             if(_steamDirectory != string.Empty) {
-                if(!_steamDirectory.ToLower().Contains("steam")) return;
+                if(!_steamDirectory.ToLower().Contains("steam")) {
+                    _steamInstallation = "n/a";
+                    return;
+                }
                 string[] gameDirs = Directory.GetDirectories(_steamDirectory);
                 foreach(var dir in gameDirs) {
                     if(!dir.Contains("DOOMEternal")) continue;
-                    Directories.Add(dir);
+                    directories.Add(dir);
 
                     var subDir = dir.Substring(dir.IndexOf("DOOMEternal"));
                     if(!subDir.StartsWith("DOOMEternal ")) continue;
@@ -456,8 +462,8 @@ namespace DESpeedrunUtil {
 
             // Once all the gameVersion.txt files are in place, this populates the dropdown selector for version swapping
             _gameVersions = new();
-            if(Directories.Count > 0) {
-                foreach(var dir in Directories) {
+            if(directories.Count > 0) {
+                foreach(var dir in directories) {
                     try {
                         string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
                         string v = txt.Substring(txt.IndexOf('=') + 1);
@@ -470,6 +476,51 @@ namespace DESpeedrunUtil {
             }
             _gameVersions.Sort();
             PopulateVersionDropDown();
+        }
+
+        private void SearchForGameSaves() {
+            if(_steamInstallation == string.Empty) {
+                using RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\Steam");
+                try {
+                    _steamInstallation = key.GetValue("InstallPath").ToString();
+                } catch(Exception e) {
+                    Log.Error(e, "Encountered an error when attempting to detect Steam's installation location.");
+                    return;
+                }
+            }
+            List<string> userProfiles = new(), id3s = new();
+            if(_steamID3 == string.Empty) {
+                try {
+                    foreach(string profile in Directory.GetDirectories(_steamInstallation + "\\userdata")) {
+                        var id3 = int.Parse(profile[(profile.LastIndexOf('\\') + 1)..]);
+                        Log.Information("Found Steam userdata. steamID3: {ID3}", id3);
+                        userProfiles.Add(id3.ToString());
+                        id3s.Add(id3.ToString());
+                    }
+                }catch(FormatException) { }
+                Log.Information("Found {Num} Steam userdata directories.", userProfiles.Count);
+                if(userProfiles.Count == 0) return;
+                foreach(string profile in userProfiles) {
+                    if(!File.Exists(_steamInstallation + "\\userdata\\" + profile + PROFILE_DIR + PROFILE_FILE)) id3s.Remove(profile);
+                }
+            }
+            if(id3s.Count == 1) {
+                _steamID3 = id3s[0];
+                Log.Information("DE saves folder detected. steamID3: {ID3}", _steamID3);
+                return;
+            }else if(id3s.Count > 1) {
+                Log.Warning("Multiple Steam userdata folders with DOOMEternal data detected. Prompting user to select the correct profile.");
+                id3s.Sort();
+                UserdataDialog dialog = new(id3s);
+                var result = dialog.ShowDialog();
+                if(result == DialogResult.OK) {
+                    _steamID3 = dialog.ID3;
+                    Log.Information("User selected steamID3: {ID3}", _steamID3);
+                }else {
+                    Log.CloseAndFlush();
+                    this.Close();
+                }
+            }
         }
 
         private bool CheckForMeathook() {
@@ -493,7 +544,7 @@ namespace DESpeedrunUtil {
                         return rs;
                     } catch(Exception e) {
                         Log.Error(e, "An error occured when checking ReShade files.");
-                        return false;
+                        return true;
                     }
                 }
             }
@@ -959,11 +1010,35 @@ namespace DESpeedrunUtil {
         private void ChangeVersion_Click(object sender, EventArgs e) {
             if(versionDropDownSelector.Text == string.Empty) return;
             string current = GetCurrentVersion(), desired = versionDropDownSelector.Text;
+            if(current == "Unknown") {
+                MessageBox.Show("Please launch DOOM Eternal at least once before attempting to change versions.", "Unknown Current Game Version");
+                return;
+            }
             if(current == desired) return;
             if(Directory.Exists(_steamDirectory + "\\DOOMEternal " + current)) return; // Eventually add a popup saying there's a folder conflict
             Directory.Move(_gameDirectory, _gameDirectory + " " + current);
             Directory.Move(_gameDirectory + " " + desired, _gameDirectory);
             Log.Information("Game Version changed to [{Version}]", desired);
+            if(_steamID3 != string.Empty && replaceProfileCheckbox.Checked) {
+                var dir = _steamInstallation + "\\userdata\\" + _steamID3 + PROFILE_DIR;
+                try {
+                    if(desired == "3.1") {
+                        File.Move(dir + PROFILE_FILE, dir + "\\main.bin");
+                        if(File.Exists(dir + "\\3.1.bin")) File.Move(dir + "\\3.1.bin", dir + PROFILE_FILE);
+                    } else {
+                        if(current == "3.1") {
+                            if(File.Exists(dir + "\\main.bin")) {
+                                if(File.Exists(dir + PROFILE_FILE)) File.Move(dir + PROFILE_FILE, dir + "\\3.1.bin");
+                                File.Move(dir + "\\main.bin", dir + PROFILE_FILE);
+                            }else {
+                                File.Copy(dir + PROFILE_FILE, dir + "\\3.1.bin");
+                            }
+                        }
+                    }
+                }catch(Exception ex) {
+                    Log.Error(ex, "An error occured when attempting to change profile.bin files.");
+                }
+            }
             changeVersionButton.Enabled = false;
             Task.Run(async delegate {
                 versionChangedLabel.ForeColor = Color.LimeGreen;
@@ -1041,6 +1116,9 @@ namespace DESpeedrunUtil {
             autoDynamicCheckbox.Checked = Properties.Settings.Default.AutoDynamic;
             _minResPercent = Properties.Settings.Default.MinResPercent;
             _targetFPS = Properties.Settings.Default.TargetFPSScaling;
+            _steamInstallation = Properties.Settings.Default.SteamInstallation;
+            _steamID3 = Properties.Settings.Default.SteamID3;
+            replaceProfileCheckbox.Checked = Properties.Settings.Default.ReplaceProfile;
             ToggleIndividualHotkeys();
             UpdateHotkeyAndInputFields();
 
@@ -1054,6 +1132,7 @@ namespace DESpeedrunUtil {
             AddMouseIntercepts(this);
 
             SearchForSteamGameDir();
+            if(_steamInstallation != "n/a") SearchForGameSaves();
             _formTimer.Start();
             _statusTimer.Start();
         }
@@ -1078,6 +1157,9 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.AutoDynamic = autoDynamicCheckbox.Checked;
             Properties.Settings.Default.MinResPercent = _minResPercent;
             Properties.Settings.Default.TargetFPSScaling = _targetFPS;
+            Properties.Settings.Default.SteamInstallation = _steamInstallation;
+            Properties.Settings.Default.SteamID3 = _steamID3;
+            Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 

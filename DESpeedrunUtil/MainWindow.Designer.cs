@@ -104,6 +104,7 @@
             this.downpatcherButton = new System.Windows.Forms.Button();
             this.discordButton = new System.Windows.Forms.Button();
             this.desruVersionLabel = new System.Windows.Forms.Label();
+            this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -382,7 +383,7 @@
             this.refreshVersionsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.refreshVersionsButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.refreshVersionsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.refreshVersionsButton.Location = new System.Drawing.Point(154, 57);
+            this.refreshVersionsButton.Location = new System.Drawing.Point(154, 85);
             this.refreshVersionsButton.Name = "refreshVersionsButton";
             this.refreshVersionsButton.Size = new System.Drawing.Size(145, 32);
             this.refreshVersionsButton.TabIndex = 11;
@@ -398,7 +399,7 @@
             this.changeVersionButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.changeVersionButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.changeVersionButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.changeVersionButton.Location = new System.Drawing.Point(3, 57);
+            this.changeVersionButton.Location = new System.Drawing.Point(3, 85);
             this.changeVersionButton.Name = "changeVersionButton";
             this.changeVersionButton.Size = new System.Drawing.Size(145, 32);
             this.changeVersionButton.TabIndex = 10;
@@ -451,7 +452,7 @@
             this.versionTitle.AutoSize = true;
             this.versionTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.versionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.versionTitle.Location = new System.Drawing.Point(323, 360);
+            this.versionTitle.Location = new System.Drawing.Point(323, 362);
             this.versionTitle.Name = "versionTitle";
             this.versionTitle.Size = new System.Drawing.Size(248, 21);
             this.versionTitle.TabIndex = 22;
@@ -463,7 +464,7 @@
             this.optionsTitle.AutoSize = true;
             this.optionsTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.optionsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.optionsTitle.Location = new System.Drawing.Point(12, 496);
+            this.optionsTitle.Location = new System.Drawing.Point(12, 526);
             this.optionsTitle.Name = "optionsTitle";
             this.optionsTitle.Size = new System.Drawing.Size(129, 21);
             this.optionsTitle.TabIndex = 23;
@@ -626,13 +627,14 @@
             // 
             this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.replaceProfileCheckbox);
             this.panel1.Controls.Add(this.versionDropDownSelector);
             this.panel1.Controls.Add(this.versionChangedLabel);
             this.panel1.Controls.Add(this.changeVersionButton);
             this.panel1.Controls.Add(this.refreshVersionsButton);
-            this.panel1.Location = new System.Drawing.Point(323, 389);
+            this.panel1.Location = new System.Drawing.Point(323, 391);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(304, 94);
+            this.panel1.Size = new System.Drawing.Size(304, 122);
             this.panel1.TabIndex = 30;
             // 
             // panel2
@@ -647,7 +649,7 @@
             this.panel2.Controls.Add(this.firewallRestartLabel);
             this.panel2.Controls.Add(this.meathookToggleButton);
             this.panel2.Controls.Add(this.defaultFPSLabel);
-            this.panel2.Location = new System.Drawing.Point(12, 525);
+            this.panel2.Location = new System.Drawing.Point(12, 555);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(304, 134);
             this.panel2.TabIndex = 31;
@@ -695,7 +697,7 @@
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.exitButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.exitButton.Location = new System.Drawing.Point(478, 627);
+            this.exitButton.Location = new System.Drawing.Point(478, 657);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(149, 32);
             this.exitButton.TabIndex = 32;
@@ -931,7 +933,7 @@
             this.panel4.Controls.Add(this.percentLabel);
             this.panel4.Controls.Add(this.minResLabel);
             this.panel4.Controls.Add(this.minResPanel);
-            this.panel4.Location = new System.Drawing.Point(12, 321);
+            this.panel4.Location = new System.Drawing.Point(12, 351);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(304, 162);
             this.panel4.TabIndex = 31;
@@ -1080,7 +1082,7 @@
             this.resTitle.AutoSize = true;
             this.resTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.resTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.resTitle.Location = new System.Drawing.Point(12, 292);
+            this.resTitle.Location = new System.Drawing.Point(12, 322);
             this.resTitle.Name = "resTitle";
             this.resTitle.Size = new System.Drawing.Size(302, 21);
             this.resTitle.TabIndex = 34;
@@ -1094,7 +1096,7 @@
             this.helpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.helpButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.helpButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpButton.Location = new System.Drawing.Point(323, 627);
+            this.helpButton.Location = new System.Drawing.Point(323, 657);
             this.helpButton.Name = "helpButton";
             this.helpButton.Size = new System.Drawing.Size(149, 32);
             this.helpButton.TabIndex = 35;
@@ -1109,7 +1111,7 @@
             this.downpatcherButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.downpatcherButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.downpatcherButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.downpatcherButton.Location = new System.Drawing.Point(323, 525);
+            this.downpatcherButton.Location = new System.Drawing.Point(323, 555);
             this.downpatcherButton.Name = "downpatcherButton";
             this.downpatcherButton.Size = new System.Drawing.Size(304, 32);
             this.downpatcherButton.TabIndex = 36;
@@ -1124,7 +1126,7 @@
             this.discordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.discordButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.discordButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.discordButton.Location = new System.Drawing.Point(323, 563);
+            this.discordButton.Location = new System.Drawing.Point(323, 593);
             this.discordButton.Name = "discordButton";
             this.discordButton.Size = new System.Drawing.Size(304, 32);
             this.discordButton.TabIndex = 37;
@@ -1136,18 +1138,30 @@
             this.desruVersionLabel.AutoSize = true;
             this.desruVersionLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.desruVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.desruVersionLabel.Location = new System.Drawing.Point(596, 611);
+            this.desruVersionLabel.Location = new System.Drawing.Point(596, 639);
             this.desruVersionLabel.Name = "desruVersionLabel";
             this.desruVersionLabel.Size = new System.Drawing.Size(31, 13);
             this.desruVersionLabel.TabIndex = 38;
             this.desruVersionLabel.Text = "0.0.0";
+            // 
+            // replaceProfileCheckbox
+            // 
+            this.replaceProfileCheckbox.AutoSize = true;
+            this.replaceProfileCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.replaceProfileCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.replaceProfileCheckbox.Location = new System.Drawing.Point(6, 51);
+            this.replaceProfileCheckbox.Name = "replaceProfileCheckbox";
+            this.replaceProfileCheckbox.Size = new System.Drawing.Size(203, 22);
+            this.replaceProfileCheckbox.TabIndex = 30;
+            this.replaceProfileCheckbox.Text = "Replace profile.bin (3.1 only)";
+            this.replaceProfileCheckbox.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(639, 671);
+            this.ClientSize = new System.Drawing.Size(639, 744);
             this.ControlBox = false;
             this.Controls.Add(this.desruVersionLabel);
             this.Controls.Add(this.discordButton);
@@ -1287,5 +1301,6 @@
         private Button downpatcherButton;
         private Button discordButton;
         private Label desruVersionLabel;
+        private CheckBox replaceProfileCheckbox;
     }
 }

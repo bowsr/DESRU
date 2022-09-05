@@ -6,7 +6,7 @@ using System.Net;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.4.7";
+        public const string APP_VERSION = "0.5.0";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
         /// <summary>
@@ -19,7 +19,7 @@ namespace DESpeedrunUtil {
 
             ApplicationConfiguration.Initialize();
             
-            var logCfg = new LoggerConfiguration().WriteTo.Console().WriteTo.File(@".\logs\desru.log", rollingInterval: RollingInterval.Day);
+            var logCfg = new LoggerConfiguration().WriteTo.Console().WriteTo.File(@".\logs\desru_.log", rollingInterval: RollingInterval.Day);
             bool verbose = false;
             if(args.Length > 0) {
                 foreach(string s in args) {
@@ -34,6 +34,7 @@ namespace DESpeedrunUtil {
             }else {
                 Log.Logger = logCfg.MinimumLevel.Debug().CreateLogger();
             }
+            Log.Information("----- DESRU Session Started -----");
 
             if(CheckForDuplicateProcesses()) {
                 Log.Fatal("Found duplicate instances of DESRU! Please close all instances first or restart your system.");
