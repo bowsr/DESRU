@@ -98,7 +98,7 @@ namespace DESpeedrunUtil.Hotkeys {
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
             int hk = -1;
-            if(e.KeyCode == Keys.None) {
+            if(e.KeyCode == Keys.None || (e.Alt && e.KeyCode == Keys.F4)) {
                 e.Handled = false;
                 return;
             }
