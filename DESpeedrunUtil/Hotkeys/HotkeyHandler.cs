@@ -262,6 +262,22 @@ namespace DESpeedrunUtil.Hotkeys {
                     return Keys.None;
                 }
             }
+            public Keys GetKeyFromID(int id) {
+                try {
+                    return _keys[id].Key;
+                }catch(KeyNotFoundException e) {
+                    Log.Error(e, "There is no FPSKey associated with ID: {ID}", id);
+                    return Keys.None;
+                }
+            }
+            public int GetLimitFromID(int id) {
+                try {
+                    return _keys[id].Limit;
+                }catch(KeyNotFoundException e) {
+                    Log.Error(e, "There is no FPSKey associated with ID: {ID}", id);
+                    return -1;
+                }
+            }
 
             public int GetLimitFromKey(Keys key) {
                 foreach(FPSKey k in _keys.Values) {
@@ -286,6 +302,15 @@ namespace DESpeedrunUtil.Hotkeys {
                     }
                 }
                 return id;
+            }
+
+            public void ChangeLimit(int id, int limit) {
+                var key = GetKeyFromID(id);
+                _keys[id] = new FPSKey(key, limit);
+            }
+            public void ChangeKey(int id, Keys key) {
+                var limit = GetLimitFromID(id);
+                _keys[id] = new FPSKey(key, limit);
             }
 
             public string SerializeIntoJSON() => JsonConvert.SerializeObject(_keys, Formatting.Indented);
