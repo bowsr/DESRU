@@ -1,5 +1,7 @@
 ﻿using DESpeedrunUtil.Macro;
+using Newtonsoft.Json;
 using Serilog;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace DESpeedrunUtil.Hotkeys {
@@ -234,5 +236,69 @@ namespace DESpeedrunUtil.Hotkeys {
 
         [DllImport("user32.dll")]
         public static extern ushort GetAsyncKeyState(Keys vKey);
+
+        private class FPSHotkeyMap {
+
+            private Dictionary<int, FPSKey> _keys;
+
+            public FPSHotkeyMap() {
+                Initialize(File.ReadAllText(@".\fpskeys.json"));
+            }
+            public FPSHotkeyMap(string json) {
+                Initialize(json);
+            }
+            private void Initialize(string json) {
+                _keys = JsonConvert.DeserializeObject<Dictionary<int, FPSKey>>(json);
+            }
+
+            public Keys GetKeyAndLimitFromID(int id, out int fps) {
+                try {
+                    var fpskey = _keys[id];
+                    fps = fpskey.Limit;
+                    return fpskey.Key;
+                }catch(KeyNotFoundException e) {
+                    Log.Error(e, "There is no FPSKey associated with ID: {ID}", id);
+                    fps = -1;
+                    return Keys.None;
+                }
+            }
+
+            public int GetLimitFromKey(Keys key) {
+                foreach(FPSKey k in _keys.Values) {
+                    if(k.Key == key) return k.Limit;
+                }
+                return -1;
+            }
+
+            public bool ContainsKey(Keys key) {
+                foreach(FPSKey k in _keys.Values) {
+                    if(k.Key == key) return true;
+                }
+                return false;
+            }
+
+            public int GetIDFromKey(Keys key) {
+                var id = -1;
+                foreach(int i in _keys.Keys) {
+                    if(_keys[i].Key == key) {
+                        id = i;
+                        break;
+                    }
+                }
+                return id;
+            }
+
+            public string SerializeIntoJSON() => JsonConvert.SerializeObject(_keys, Formatting.Indented);
+
+            struct FPSKey {
+                public Keys Key { get; init; }
+                public int Limit { get; init; }
+
+                public FPSKey(Keys k, int fps) {
+                    Key = k;
+                    Limit = fps;
+                }
+            }
+        }
     }
 }
