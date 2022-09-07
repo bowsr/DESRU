@@ -52,20 +52,16 @@ namespace DESpeedrunUtil {
         Label _selectedHKField = null;
 
         List<Label> _hotkeyFields;
+        List<TextBox> _fpsLimitFields;
 
         string _gameDirectory = "", _steamDirectory = "", _steamInstallation = "", _steamID3 = "";
         List<string>? _gameVersions;
 
         public MainWindow() {
             InitializeComponent();
-            _hotkeyFields = new() {
-                hotkeyField0,
-                hotkeyField1,
-                hotkeyField2,
-                hotkeyField3,
-                hotkeyField4,
-                hotkeyField5
-            };
+            _hotkeyFields = new();
+            _fpsLimitFields = new();
+            CollectHotkeyAndLimitFields(this);
 
             _formTimer = new Timer();
             _formTimer.Interval = 16;
@@ -239,39 +235,22 @@ namespace DESpeedrunUtil {
         /// </summary>
         public void UpdateHotkeyAndInputFields() {
             foreach(Label l in _hotkeyFields) {
-                Keys key = Keys.None;
-                switch(l.Tag) {
-                    case "macroDown":
-                        key = _macroProcess.GetHotkey(true);
-                        break;
-                    case "macroUp":
-                        key = _macroProcess.GetHotkey(false);
-                        break;
-                    case "fps0":
-                        key = _hotkeys.GetHotkeyByNumber(0);
-                        break;
-                    case "fps1":
-                        key = _hotkeys.GetHotkeyByNumber(1);
-                        break;
-                    case "fps2":
-                        key = _hotkeys.GetHotkeyByNumber(2);
-                        break;
-                    case "resToggle":
-                        key = _hotkeys.GetHotkeyByNumber(3);
-                        break;
-                }
+                string tag = (string) l.Tag;
+                Keys key = tag switch {
+                    "macroDown" => _macroProcess.GetHotkey(true),
+                    "macroUp" => _macroProcess.GetHotkey(false),
+                    "resToggle" => _hotkeys.ResScaleHotkey,
+                    _ => _hotkeys.FPSHotkeys.GetKeyFromID((int) char.GetNumericValue(tag[^1])),
+                };
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
                 l.ForeColor = TEXT_FORECOLOR;
                 l.BackColor = TEXT_BACKCOLOR;
             }
-            var s0 = _fps0.ToString();
-            var s1 = _fps1.ToString();
-            var s2 = _fps2.ToString();
-            var d = _fpsDefault.ToString();
-            fpsInput0.Text = (s0 != "-1") ? s0 : "";
-            fpsInput1.Text = (s1 != "-1") ? s1 : "";
-            fpsInput2.Text = (s2 != "-1") ? s2 : "";
-            defaultFPS.Text = (d != "-1") ? d : "";
+            foreach(TextBox t in _fpsLimitFields) {
+                string tag = (string) t.Tag;
+                int limit = _hotkeys.FPSHotkeys.GetLimitFromID((int) char.GetNumericValue(tag[^1]));
+                t.Text = (limit != -1) ? limit.ToString() : "";
+            }
             minResInput.Text = _minResPercent.ToString();
             targetFPSInput.Text = _targetFPS.ToString();
         }
@@ -306,33 +285,16 @@ namespace DESpeedrunUtil {
         /// <summary>
         /// Sets <c>com_adaptiveTickMaxHz</c> to the desired cap value. Sets to <c>250</c> if already at the desired cap.
         /// </summary>
-        /// <param name="fpsHotkey">Which hotkey to trigger</param>
-        private void ToggleFPSCap(int fpsHotkey) {
-            int newFPS = _fpsDefault;
-            switch(fpsHotkey) {
-                case 0:
-                    if(_fps0 != -1) if(_memory.ReadMaxHz() != _fps0) newFPS = _fps0;
-                    break;
-                case 1:
-                    if(_fps1 != -1) if(_memory.ReadMaxHz() != _fps1) newFPS = _fps1;
-                    break;
-                case 2:
-                    if(_fps2 != -1) if(_memory.ReadMaxHz() != _fps2) newFPS = _fps2;
-                    break;
-            }
-            _memory.SetMaxHz(newFPS);
+        /// <param name="fps">FPS Limit</param>
+        public void ToggleFPSCap(int fps) {
+            int current = _memory.ReadMaxHz();
+            _memory.SetMaxHz((current != fps) ? fps : _fpsDefault);
         }
 
-        public void HotkeyPressed(int hotkey) {
-            if(hotkey < 3) {
-                ToggleFPSCap(hotkey);
-                return;
-            }
-            if(hotkey == 3) {
-                if(Hooked) {
-                    _memory.SetMinRes(((int) (_memory.ReadMinRes() * 100)) == _minResPercent ? 1f : _minResPercent / 100f);
-                    _memory.ScheduleResUnlock(false, _targetFPS);
-                }
+        public void ToggleResScaling() {
+            if(Hooked) {
+                _memory.SetMinRes(((int) (_memory.ReadMinRes() * 100)) == _minResPercent ? 1f : _minResPercent / 100f);
+                _memory.ScheduleResUnlock(false, _targetFPS);
             }
         }
 
@@ -698,6 +660,14 @@ namespace DESpeedrunUtil {
             SetFonts();
         }
 
+        private void CollectHotkeyAndLimitFields(Control control) {
+            foreach(Control c in control.Controls) {
+                if(c.Tag.ToString().StartsWith("hk")) _hotkeyFields.Add((Label) c);
+                if(c.Tag.ToString().StartsWith("fpscap")) _fpsLimitFields.Add((TextBox) c);
+                if(c.Controls.Count > 0) CollectHotkeyAndLimitFields(c);
+            }
+        }
+
         private void SetFonts() {
             // Eternal UI 2 Regular 11.25point
             foreach(Control c in _hotkeyFields) c.Font = EternalUIRegular;
@@ -796,25 +766,15 @@ namespace DESpeedrunUtil {
             _selectedHKField = null;
             if(isValid) {
                 int type = -1;
-                switch(tag) {
-                    case "fps0":
-                        type = 0;
-                        break;
-                    case "fps1":
-                        type = 1;
-                        break;
-                    case "fps2":
-                        type = 2;
-                        break;
-                    case "resToggle":
-                        type = 3;
-                        break;
-                    case "macroDown":
-                        type = 4;
-                        break;
-                    case "macroUp":
-                        type = 5;
-                        break;
+                try {
+                    type = tag switch {
+                        "macroDown" => 0,
+                        "macroUp" => 1,
+                        "resToggle" => 2,
+                        _ => (int) char.GetNumericValue(tag[^1]),
+                    };
+                }catch(FormatException f) {
+                    Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }
@@ -838,27 +798,13 @@ namespace DESpeedrunUtil {
             if(pressedKey == Keys.LButton && sender.Equals(_selectedHKField)) _mouse1Pressed = true;
             _selectedHKField = null;
             if(isValid) {
-                int type = -1;
-                switch(tag) {
-                    case "fps0":
-                        type = 0;
-                        break;
-                    case "fps1":
-                        type = 1;
-                        break;
-                    case "fps2":
-                        type = 2;
-                        break;
-                    case "resToggle":
-                        type = 3;
-                        break;
-                    case "macroDown":
-                        type = 4;
-                        break;
-                    case "macroUp":
-                        type = 5;
-                        break;
-                }
+                int type = tag switch {
+                    "macroDown" => 0,
+                    "macroUp" => 1,
+                    // "resToggle" => 2,                         | FPS & Res Scale hotkey fields cannot be set to mouse buttons for the time being
+                    // _ => (int) char.GetNumericValue(tag[^1]), | due to globalKeyboardHook only having KeyHooks
+                    _ => -1,
+                };
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }
             UpdateHotkeyAndInputFields();

@@ -129,7 +129,7 @@
             this.hotkeyField0.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField0.Size = new System.Drawing.Size(135, 26);
             this.hotkeyField0.TabIndex = 2;
-            this.hotkeyField0.Tag = "macroDown";
+            this.hotkeyField0.Tag = "hkMacroDown";
             this.hotkeyField0.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // hotkeyField1
@@ -143,7 +143,7 @@
             this.hotkeyField1.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField1.Size = new System.Drawing.Size(135, 26);
             this.hotkeyField1.TabIndex = 3;
-            this.hotkeyField1.Tag = "macroUp";
+            this.hotkeyField1.Tag = "hkMacroUp";
             this.hotkeyField1.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // autorunMacroCheckbox
@@ -299,7 +299,7 @@
             this.hotkeyField4.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField4.Size = new System.Drawing.Size(95, 26);
             this.hotkeyField4.TabIndex = 12;
-            this.hotkeyField4.Tag = "fps2";
+            this.hotkeyField4.Tag = "hkFps2";
             this.hotkeyField4.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // fpsKey1Label
@@ -324,7 +324,7 @@
             this.hotkeyField2.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField2.Size = new System.Drawing.Size(95, 26);
             this.hotkeyField2.TabIndex = 8;
-            this.hotkeyField2.Tag = "fps0";
+            this.hotkeyField2.Tag = "hkFps0";
             this.hotkeyField2.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // fpsKey0Label
@@ -349,7 +349,7 @@
             this.hotkeyField3.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField3.Size = new System.Drawing.Size(95, 26);
             this.hotkeyField3.TabIndex = 9;
-            this.hotkeyField3.Tag = "fps1";
+            this.hotkeyField3.Tag = "hkFps1";
             this.hotkeyField3.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // versionDropDownSelector
@@ -557,7 +557,7 @@
             this.hotkeyField5.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField5.Size = new System.Drawing.Size(135, 26);
             this.hotkeyField5.TabIndex = 30;
-            this.hotkeyField5.Tag = "resToggle";
+            this.hotkeyField5.Tag = "hkResToggle";
             this.hotkeyField5.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // fpsPanel1
@@ -688,7 +688,7 @@
             this.defaultFPS.Name = "defaultFPS";
             this.defaultFPS.Size = new System.Drawing.Size(34, 20);
             this.defaultFPS.TabIndex = 14;
-            this.defaultFPS.Tag = "fpscapDefault";
+            this.defaultFPS.Tag = "maxfps";
             this.defaultFPS.Text = "250";
             this.defaultFPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.defaultFPS.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
@@ -994,7 +994,7 @@
             this.targetFPSInput.Name = "targetFPSInput";
             this.targetFPSInput.Size = new System.Drawing.Size(43, 20);
             this.targetFPSInput.TabIndex = 14;
-            this.targetFPSInput.Tag = "minres";
+            this.targetFPSInput.Tag = "targetfps";
             this.targetFPSInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.targetFPSInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
             this.targetFPSInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TargetFPS_KeyUp);
