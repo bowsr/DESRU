@@ -15,7 +15,9 @@ namespace DESpeedrunUtil.Hotkeys {
         private Keys _fpsHotkey0 = Keys.None;
         private Keys _fpsHotkey1 = Keys.None;
         private Keys _fpsHotkey2 = Keys.None;
-        private Keys _resScaleHotkey = Keys.None;
+        public Keys ResScaleHotkey { get; private set; } = Keys.None;
+
+        public FPSHotkeyMap FPSHotkeys { get; init; }
 
         public HotkeyHandler(Keys fps0, Keys fps1, Keys fps2, Keys res, MainWindow parent) {
             _hook = new globalKeyboardHook();
@@ -23,7 +25,16 @@ namespace DESpeedrunUtil.Hotkeys {
             _fpsHotkey0 = fps0;
             _fpsHotkey1 = fps1;
             _fpsHotkey2 = fps2;
-            _resScaleHotkey = res;
+            ResScaleHotkey = res;
+
+            _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
+            _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
+        }
+        public HotkeyHandler(Keys res, MainWindow parent) {
+            _hook = new globalKeyboardHook();
+            _parent = parent;
+            ResScaleHotkey = res;
+            FPSHotkeys = new();
 
             _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
             _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
@@ -34,11 +45,11 @@ namespace DESpeedrunUtil.Hotkeys {
                 0 => _fpsHotkey0,
                 1 => _fpsHotkey1,
                 2 => _fpsHotkey2,
-                3 => _resScaleHotkey,
+                3 => ResScaleHotkey,
                 _ => Keys.None,
             };
         }
-        public void ChangeHotkey(Keys key, int fps) {
+        private void ChangeHotkey(Keys key, int fps) {
             switch(fps) {
                 case 0:
                     _fpsHotkey0 = key;
@@ -50,11 +61,12 @@ namespace DESpeedrunUtil.Hotkeys {
                     _fpsHotkey2 = key;
                     break;
                 case 3:
-                    _resScaleHotkey = key;
+                    ResScaleHotkey = key;
                     break;
             }
             RefreshKeys();
         }
+        private void ChangeResScaleHotkey(Keys key) => ResScaleHotkey = key;
         public void EnableHotkeys() {
             if(Enabled) return;
             AddHotkeys();
@@ -95,7 +107,7 @@ namespace DESpeedrunUtil.Hotkeys {
             if(_fpsHotkey0 != Keys.None && _key0Enabled) _hook.HookedKeys.Add(_fpsHotkey0);
             if(_fpsHotkey1 != Keys.None && _key1Enabled) _hook.HookedKeys.Add(_fpsHotkey1);
             if(_fpsHotkey2 != Keys.None && _key2Enabled) _hook.HookedKeys.Add(_fpsHotkey2);
-            if(_resScaleHotkey != Keys.None && _key3Enabled) _hook.HookedKeys.Add(_resScaleHotkey);
+            if(ResScaleHotkey != Keys.None && _key3Enabled) _hook.HookedKeys.Add(ResScaleHotkey);
         }
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
@@ -110,7 +122,7 @@ namespace DESpeedrunUtil.Hotkeys {
                 hk = 1;
             }else if(e.KeyCode == _fpsHotkey2) {
                 hk = 2;
-            }else if(e.KeyCode == _resScaleHotkey) {
+            }else if(e.KeyCode == ResScaleHotkey) {
                 hk = 3;
             }
             _parent.HotkeyPressed(hk);
@@ -135,42 +147,53 @@ namespace DESpeedrunUtil.Hotkeys {
         public static void ChangeHotkeys(Keys key, int type, FreescrollMacro macro, HotkeyHandler hotkeys) {
             // Duplicate check
             // If a dupe is found, sets dupe to the old key of the currently changing field
-            //   type: 0-2 -> HotkeyHandler FPSHotkeyX
-            //         3   -> Res Scaling Hotkey
-            //         4-5 -> FreescrollMacro (type == 4) DownScrollKey if true, UpScrollKey if false
+            //   type:  0-1 -> FreescrollMacro (type == 0) DownScrollKey if true, UpScrollKey if false
+            //            2 -> Res Scaling Hotkey
+            //         3-17 -> FPSKey (id == type - 3)
+            var fpstype = type - 3;
             if(key != Keys.None) {
-                if(type < 0 || type > 5) return;
+                if(type < 0 || type > 17) return;
                 Keys oldKey;
-                if(type <= 3) {
-                    oldKey = hotkeys.GetHotkeyByNumber(type);
+                if(type < 2) {
+                    oldKey = macro.GetHotkey(type == 0);
+                }else if(type == 2) {
+                    oldKey = hotkeys.ResScaleHotkey;
                 }else {
-                    oldKey = macro.GetHotkey(type == 4);
+                    oldKey = hotkeys.FPSHotkeys.GetKeyFromID(fpstype);
                 }
-                for(int i = 0; i <= 5; i++) {
+                for(int i = 0; i <= 17; i++) {
                     if(i == type) continue;
-                    if(i <= 3) {
-                        if(key == hotkeys.GetHotkeyByNumber(i)) {
-                            Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
-                            hotkeys.ChangeHotkey(oldKey, i);
-                            break;
-                        }
-                    } else {
-                        var down = (i == 4);
+                    if(i < 2) {
+                        var down = (i == 0);
                         if(key == macro.GetHotkey(down)) {
                             Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
                             macro.ChangeHotkey(oldKey, down);
                             break;
                         }
+                    }else if(i == 2) {
+                        if(key == hotkeys.GetHotkeyByNumber(i)) {
+                            Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
+                            hotkeys.ChangeHotkey(oldKey, i);
+                            break;
+                        }
+                    }else {
+                        if(key == hotkeys.FPSHotkeys.GetKeyFromID(fpstype)) {
+                            Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
+                            hotkeys.FPSHotkeys.ChangeKey(fpstype, oldKey);
+                        }
                     }
                 }
             }
 
-            if(type <= 3) {
-                hotkeys.ChangeHotkey(key, type);
-                Log.Information("Hotkey {HK} changed to {Key}", type, key);
-            } else {
-                macro.ChangeHotkey(key, type == 4);
+            if(type < 2) {
+                macro.ChangeHotkey(key, type == 0);
                 Log.Information("Macro key <{Type}> changed to {Key}", type == 4, key);
+            }else if(type == 2) {
+                hotkeys.ChangeResScaleHotkey(key);
+                Log.Information("ResScale Hotkey changed to {Key}", type, key);
+            }else {
+                hotkeys.FPSHotkeys.ChangeKey(fpstype, key);
+                Log.Information("FPSHotkey {FPSKey} changed to {Key}", fpstype, key);
             }
         }
         public static Keys ModKeySelector(int modifier) {
@@ -237,7 +260,7 @@ namespace DESpeedrunUtil.Hotkeys {
         [DllImport("user32.dll")]
         public static extern ushort GetAsyncKeyState(Keys vKey);
 
-        private class FPSHotkeyMap {
+        internal class FPSHotkeyMap {
 
             private Dictionary<int, FPSKey> _keys;
 
