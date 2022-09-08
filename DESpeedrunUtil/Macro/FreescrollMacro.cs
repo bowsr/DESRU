@@ -133,7 +133,7 @@ namespace DESpeedrunUtil.Macro {
             if(_macroProcess == null) {
                 throw new ArgumentNullException("Macro Process is currently null.");
             }else {
-                if(_macroProcess.HasExited) throw new ArgumentNullException("Macro Process may have crashed.");
+                if(_macroProcess.HasExited || _macroProcess.MainModule == null) throw new ArgumentNullException("Macro Process may have crashed or exited.");
             }
             return _macroProcess.MainModule.ModuleMemorySize == 49152;
         }
