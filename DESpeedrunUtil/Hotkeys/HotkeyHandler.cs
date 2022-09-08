@@ -109,19 +109,19 @@ namespace DESpeedrunUtil.Hotkeys {
                     if(i < 2) {
                         var down = (i == 0);
                         if(key == macro.GetHotkey(down)) {
-                            Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
+                            Log.Information("Duplicate of Macro " + ((down) ? "Down" : "Up") + "scroll Key. Swapping {Key0} with {Key1}", oldKey, key);
                             macro.ChangeHotkey(oldKey, down);
                             break;
                         }
                     }else if(i == 2) {
                         if(key == hotkeys.ResScaleHotkey) {
-                            Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
+                            Log.Information("Duplicate of ResScaleHotkey. Swapping {Key0} with {Key1}", oldKey, key);
                             hotkeys.ChangeResScaleHotkey(oldKey);
                             break;
                         }
                     }else {
                         if(key == hotkeys.FPSHotkeys.GetKeyFromID(i - 3)) {
-                            Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
+                            Log.Information("Duplicate of FPSHotkey " + (i - 3) +  ". Swapping {Key0} with {Key1}", oldKey, key);
                             hotkeys.FPSHotkeys.ChangeKey(i - 3, oldKey);
                             break;
                         }
@@ -131,7 +131,7 @@ namespace DESpeedrunUtil.Hotkeys {
 
             if(type < 2) {
                 macro.ChangeHotkey(key, type == 0);
-                Log.Information("Macro key <{Type}> changed to {Key}", type == 4, key);
+                Log.Information("Macro " + ((type == 0) ? "Down" : "Up") + "scroll Key changed to {Key}", key);
             }else if(type == 2) {
                 hotkeys.ChangeResScaleHotkey(key);
                 Log.Information("ResScale Hotkey changed to {Key}", type, key);

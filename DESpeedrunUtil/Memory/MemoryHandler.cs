@@ -463,7 +463,7 @@ namespace DESpeedrunUtil.Memory {
             SignatureScanner scanner = new SignatureScanner(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
             Log.Information("Scanning for FPS counter.");
             r1 = scanner.Scan(fpsTarget);
-            if(r1.ToInt64() != 0) {
+            if(r1 != IntPtr.Zero) {
                 Log.Information("Found FPS counter.");
                 r2 = r1 + 0x8;
                 r3 = r1 + 0x58;

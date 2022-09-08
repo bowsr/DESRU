@@ -498,7 +498,7 @@ namespace DESpeedrunUtil {
                         else Log.Information("ReShade is not running over DOOMEternal.");
                         return rs;
                     } catch(Exception e) {
-                        Log.Error(e, "An error occured when checking ReShade files.");
+                        Log.Error(e, "An error occured when checking ReShade files. Assuming ReShade is running over DOOMEternal.");
                         return true;
                     }
                 }
