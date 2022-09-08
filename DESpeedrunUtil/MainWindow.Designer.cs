@@ -56,6 +56,7 @@
             this.meathookRestartLabel = new System.Windows.Forms.Label();
             this.firewallRestartLabel = new System.Windows.Forms.Label();
             this.hotkeyPanel = new System.Windows.Forms.Panel();
+            this.showMoreKeysButton = new System.Windows.Forms.Button();
             this.resKeyLabel = new System.Windows.Forms.Label();
             this.hotkeyField5 = new System.Windows.Forms.Label();
             this.fpsPanel1 = new System.Windows.Forms.Panel();
@@ -105,6 +106,68 @@
             this.downpatcherButton = new System.Windows.Forms.Button();
             this.discordButton = new System.Windows.Forms.Button();
             this.desruVersionLabel = new System.Windows.Forms.Label();
+            this.extraFPSHotkeysPanel = new System.Windows.Forms.Panel();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.hotkeyField15 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.hotkeyField17 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.panel12 = new System.Windows.Forms.Panel();
+            this.fpsInput13 = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.hotkeyField16 = new System.Windows.Forms.Label();
+            this.panel13 = new System.Windows.Forms.Panel();
+            this.fpsInput14 = new System.Windows.Forms.TextBox();
+            this.panel14 = new System.Windows.Forms.Panel();
+            this.fpsInput12 = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.hotkeyField12 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.hotkeyField14 = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.panel15 = new System.Windows.Forms.Panel();
+            this.fpsInput10 = new System.Windows.Forms.TextBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.hotkeyField13 = new System.Windows.Forms.Label();
+            this.panel16 = new System.Windows.Forms.Panel();
+            this.fpsInput11 = new System.Windows.Forms.TextBox();
+            this.panel17 = new System.Windows.Forms.Panel();
+            this.fpsInput9 = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.hotkeyField9 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.hotkeyField11 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.panel9 = new System.Windows.Forms.Panel();
+            this.fpsInput7 = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.hotkeyField10 = new System.Windows.Forms.Label();
+            this.panel10 = new System.Windows.Forms.Panel();
+            this.fpsInput8 = new System.Windows.Forms.TextBox();
+            this.panel11 = new System.Windows.Forms.Panel();
+            this.fpsInput6 = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.hotkeyField6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.hotkeyField8 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.panel6 = new System.Windows.Forms.Panel();
+            this.fpsInput4 = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.hotkeyField7 = new System.Windows.Forms.Label();
+            this.panel7 = new System.Windows.Forms.Panel();
+            this.fpsInput5 = new System.Windows.Forms.TextBox();
+            this.panel8 = new System.Windows.Forms.Panel();
+            this.fpsInput3 = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.moreHotkeysTitle = new System.Windows.Forms.Label();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -116,6 +179,19 @@
             this.panel4.SuspendLayout();
             this.targetFPSPanel.SuspendLayout();
             this.minResPanel.SuspendLayout();
+            this.extraFPSHotkeysPanel.SuspendLayout();
+            this.panel12.SuspendLayout();
+            this.panel13.SuspendLayout();
+            this.panel14.SuspendLayout();
+            this.panel15.SuspendLayout();
+            this.panel16.SuspendLayout();
+            this.panel17.SuspendLayout();
+            this.panel9.SuspendLayout();
+            this.panel10.SuspendLayout();
+            this.panel11.SuspendLayout();
+            this.panel6.SuspendLayout();
+            this.panel7.SuspendLayout();
+            this.panel8.SuspendLayout();
             this.SuspendLayout();
             // 
             // hotkeyField0
@@ -129,7 +205,7 @@
             this.hotkeyField0.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField0.Size = new System.Drawing.Size(135, 26);
             this.hotkeyField0.TabIndex = 2;
-            this.hotkeyField0.Tag = "macroDown";
+            this.hotkeyField0.Tag = "hkMacroDown";
             this.hotkeyField0.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // hotkeyField1
@@ -143,7 +219,7 @@
             this.hotkeyField1.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField1.Size = new System.Drawing.Size(135, 26);
             this.hotkeyField1.TabIndex = 3;
-            this.hotkeyField1.Tag = "macroUp";
+            this.hotkeyField1.Tag = "hkMacroUp";
             this.hotkeyField1.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // autorunMacroCheckbox
@@ -274,8 +350,6 @@
             this.fpsInput0.TabIndex = 14;
             this.fpsInput0.Tag = "fpscap0";
             this.fpsInput0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.fpsInput0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
-            this.fpsInput0.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsKey2Label
             // 
@@ -299,7 +373,7 @@
             this.hotkeyField4.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField4.Size = new System.Drawing.Size(95, 26);
             this.hotkeyField4.TabIndex = 12;
-            this.hotkeyField4.Tag = "fps2";
+            this.hotkeyField4.Tag = "hkFps2";
             this.hotkeyField4.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // fpsKey1Label
@@ -324,7 +398,7 @@
             this.hotkeyField2.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField2.Size = new System.Drawing.Size(95, 26);
             this.hotkeyField2.TabIndex = 8;
-            this.hotkeyField2.Tag = "fps0";
+            this.hotkeyField2.Tag = "hkFps0";
             this.hotkeyField2.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // fpsKey0Label
@@ -349,7 +423,7 @@
             this.hotkeyField3.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField3.Size = new System.Drawing.Size(95, 26);
             this.hotkeyField3.TabIndex = 9;
-            this.hotkeyField3.Tag = "fps1";
+            this.hotkeyField3.Tag = "hkFps1";
             this.hotkeyField3.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // versionDropDownSelector
@@ -512,6 +586,7 @@
             // 
             this.hotkeyPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.hotkeyPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyPanel.Controls.Add(this.showMoreKeysButton);
             this.hotkeyPanel.Controls.Add(this.resKeyLabel);
             this.hotkeyPanel.Controls.Add(this.fpsKey2Label);
             this.hotkeyPanel.Controls.Add(this.hotkeyField0);
@@ -532,8 +607,23 @@
             this.hotkeyPanel.Controls.Add(this.fpsLabel2);
             this.hotkeyPanel.Location = new System.Drawing.Point(12, 93);
             this.hotkeyPanel.Name = "hotkeyPanel";
-            this.hotkeyPanel.Size = new System.Drawing.Size(304, 187);
+            this.hotkeyPanel.Size = new System.Drawing.Size(304, 216);
             this.hotkeyPanel.TabIndex = 27;
+            // 
+            // showMoreKeysButton
+            // 
+            this.showMoreKeysButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.showMoreKeysButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
+            this.showMoreKeysButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.showMoreKeysButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.showMoreKeysButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.showMoreKeysButton.Location = new System.Drawing.Point(3, 183);
+            this.showMoreKeysButton.Name = "showMoreKeysButton";
+            this.showMoreKeysButton.Size = new System.Drawing.Size(296, 28);
+            this.showMoreKeysButton.TabIndex = 34;
+            this.showMoreKeysButton.Text = "Show More FPS Hotkeys";
+            this.showMoreKeysButton.UseVisualStyleBackColor = false;
+            this.showMoreKeysButton.Click += new System.EventHandler(this.MoreKeysButton_Click);
             // 
             // resKeyLabel
             // 
@@ -557,7 +647,7 @@
             this.hotkeyField5.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
             this.hotkeyField5.Size = new System.Drawing.Size(135, 26);
             this.hotkeyField5.TabIndex = 30;
-            this.hotkeyField5.Tag = "resToggle";
+            this.hotkeyField5.Tag = "hkResToggle";
             this.hotkeyField5.Click += new System.EventHandler(this.HotkeyAssignment_FieldSelected);
             // 
             // fpsPanel1
@@ -584,7 +674,6 @@
             this.fpsInput1.TabIndex = 14;
             this.fpsInput1.Tag = "fpscap1";
             this.fpsInput1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.fpsInput1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsPanel2
             // 
@@ -610,7 +699,6 @@
             this.fpsInput2.TabIndex = 14;
             this.fpsInput2.Tag = "fpscap2";
             this.fpsInput2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.fpsInput2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsPanel0
             // 
@@ -688,7 +776,7 @@
             this.defaultFPS.Name = "defaultFPS";
             this.defaultFPS.Size = new System.Drawing.Size(34, 20);
             this.defaultFPS.TabIndex = 14;
-            this.defaultFPS.Tag = "fpscapDefault";
+            this.defaultFPS.Tag = "maxfps";
             this.defaultFPS.Text = "250";
             this.defaultFPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.defaultFPS.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
@@ -994,7 +1082,7 @@
             this.targetFPSInput.Name = "targetFPSInput";
             this.targetFPSInput.Size = new System.Drawing.Size(43, 20);
             this.targetFPSInput.TabIndex = 14;
-            this.targetFPSInput.Tag = "minres";
+            this.targetFPSInput.Tag = "targetfps";
             this.targetFPSInput.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.targetFPSInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
             this.targetFPSInput.KeyUp += new System.Windows.Forms.KeyEventHandler(this.TargetFPS_KeyUp);
@@ -1156,13 +1244,805 @@
             this.desruVersionLabel.TabIndex = 38;
             this.desruVersionLabel.Text = "0.0.0";
             // 
+            // extraFPSHotkeysPanel
+            // 
+            this.extraFPSHotkeysPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.extraFPSHotkeysPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.extraFPSHotkeysPanel.Controls.Add(this.label4);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label6);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField15);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label12);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField17);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label17);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel12);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label19);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField16);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel13);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel14);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label21);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label22);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label23);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField12);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label25);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField14);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label27);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel15);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label28);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField13);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel16);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel17);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label30);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label1);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label3);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField9);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label9);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField11);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label14);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel9);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label16);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField10);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel10);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel11);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label18);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label2);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label5);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField6);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label7);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField8);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label10);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel6);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label11);
+            this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField7);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel7);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel8);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label15);
+            this.extraFPSHotkeysPanel.Location = new System.Drawing.Point(12, 725);
+            this.extraFPSHotkeysPanel.Name = "extraFPSHotkeysPanel";
+            this.extraFPSHotkeysPanel.Size = new System.Drawing.Size(615, 183);
+            this.extraFPSHotkeysPanel.TabIndex = 35;
+            this.extraFPSHotkeysPanel.Visible = false;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label4.Location = new System.Drawing.Point(323, 154);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(111, 18);
+            this.label4.TabIndex = 59;
+            this.label4.Text = "FPS Toggle #15";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label6.Location = new System.Drawing.Point(323, 125);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(111, 18);
+            this.label6.TabIndex = 57;
+            this.label6.Text = "FPS Toggle #14";
+            // 
+            // hotkeyField15
+            // 
+            this.hotkeyField15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField15.Location = new System.Drawing.Point(437, 92);
+            this.hotkeyField15.Name = "hotkeyField15";
+            this.hotkeyField15.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField15.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField15.TabIndex = 54;
+            this.hotkeyField15.Tag = "hkFps12";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label12.Location = new System.Drawing.Point(323, 96);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(111, 18);
+            this.label12.TabIndex = 56;
+            this.label12.Text = "FPS Toggle #13";
+            // 
+            // hotkeyField17
+            // 
+            this.hotkeyField17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField17.Location = new System.Drawing.Point(437, 150);
+            this.hotkeyField17.Name = "hotkeyField17";
+            this.hotkeyField17.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField17.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField17.TabIndex = 58;
+            this.hotkeyField17.Tag = "hkFps14";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label17.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label17.Location = new System.Drawing.Point(575, 96);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(33, 18);
+            this.label17.TabIndex = 60;
+            this.label17.Text = "FPS";
+            // 
+            // panel12
+            // 
+            this.panel12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel12.Controls.Add(this.fpsInput13);
+            this.panel12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel12.Location = new System.Drawing.Point(538, 121);
+            this.panel12.Name = "panel12";
+            this.panel12.Size = new System.Drawing.Size(34, 26);
+            this.panel12.TabIndex = 64;
+            // 
+            // fpsInput13
+            // 
+            this.fpsInput13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput13.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput13.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput13.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput13.MaxLength = 3;
+            this.fpsInput13.Name = "fpsInput13";
+            this.fpsInput13.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput13.TabIndex = 14;
+            this.fpsInput13.Tag = "fpscap13";
+            this.fpsInput13.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label19.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label19.Location = new System.Drawing.Point(575, 125);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(33, 18);
+            this.label19.TabIndex = 61;
+            this.label19.Text = "FPS";
+            // 
+            // hotkeyField16
+            // 
+            this.hotkeyField16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField16.Location = new System.Drawing.Point(437, 121);
+            this.hotkeyField16.Name = "hotkeyField16";
+            this.hotkeyField16.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField16.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField16.TabIndex = 55;
+            this.hotkeyField16.Tag = "hkFps13";
+            // 
+            // panel13
+            // 
+            this.panel13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel13.Controls.Add(this.fpsInput14);
+            this.panel13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel13.Location = new System.Drawing.Point(538, 150);
+            this.panel13.Name = "panel13";
+            this.panel13.Size = new System.Drawing.Size(34, 26);
+            this.panel13.TabIndex = 65;
+            // 
+            // fpsInput14
+            // 
+            this.fpsInput14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput14.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput14.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput14.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput14.MaxLength = 3;
+            this.fpsInput14.Name = "fpsInput14";
+            this.fpsInput14.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput14.TabIndex = 14;
+            this.fpsInput14.Tag = "fpscap14";
+            this.fpsInput14.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // panel14
+            // 
+            this.panel14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel14.Controls.Add(this.fpsInput12);
+            this.panel14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel14.Location = new System.Drawing.Point(538, 92);
+            this.panel14.Name = "panel14";
+            this.panel14.Size = new System.Drawing.Size(34, 26);
+            this.panel14.TabIndex = 63;
+            // 
+            // fpsInput12
+            // 
+            this.fpsInput12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput12.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput12.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput12.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput12.MaxLength = 3;
+            this.fpsInput12.Name = "fpsInput12";
+            this.fpsInput12.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput12.TabIndex = 14;
+            this.fpsInput12.Tag = "fpscap12";
+            this.fpsInput12.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label21.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label21.Location = new System.Drawing.Point(575, 154);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(33, 18);
+            this.label21.TabIndex = 62;
+            this.label21.Text = "FPS";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label22.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label22.Location = new System.Drawing.Point(323, 67);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(111, 18);
+            this.label22.TabIndex = 47;
+            this.label22.Text = "FPS Toggle #12";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label23.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label23.Location = new System.Drawing.Point(323, 38);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(111, 18);
+            this.label23.TabIndex = 45;
+            this.label23.Text = "FPS Toggle #11";
+            // 
+            // hotkeyField12
+            // 
+            this.hotkeyField12.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField12.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField12.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField12.Location = new System.Drawing.Point(437, 5);
+            this.hotkeyField12.Name = "hotkeyField12";
+            this.hotkeyField12.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField12.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField12.TabIndex = 42;
+            this.hotkeyField12.Tag = "hkFps9";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label25.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label25.Location = new System.Drawing.Point(323, 9);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(111, 18);
+            this.label25.TabIndex = 44;
+            this.label25.Text = "FPS Toggle #10";
+            // 
+            // hotkeyField14
+            // 
+            this.hotkeyField14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField14.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField14.Location = new System.Drawing.Point(437, 63);
+            this.hotkeyField14.Name = "hotkeyField14";
+            this.hotkeyField14.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField14.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField14.TabIndex = 46;
+            this.hotkeyField14.Tag = "hkFps11";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label27.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label27.Location = new System.Drawing.Point(575, 9);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(33, 18);
+            this.label27.TabIndex = 48;
+            this.label27.Text = "FPS";
+            // 
+            // panel15
+            // 
+            this.panel15.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel15.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel15.Controls.Add(this.fpsInput10);
+            this.panel15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel15.Location = new System.Drawing.Point(538, 34);
+            this.panel15.Name = "panel15";
+            this.panel15.Size = new System.Drawing.Size(34, 26);
+            this.panel15.TabIndex = 52;
+            // 
+            // fpsInput10
+            // 
+            this.fpsInput10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput10.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput10.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput10.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput10.MaxLength = 3;
+            this.fpsInput10.Name = "fpsInput10";
+            this.fpsInput10.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput10.TabIndex = 14;
+            this.fpsInput10.Tag = "fpscap10";
+            this.fpsInput10.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label28.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label28.Location = new System.Drawing.Point(575, 38);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(33, 18);
+            this.label28.TabIndex = 49;
+            this.label28.Text = "FPS";
+            // 
+            // hotkeyField13
+            // 
+            this.hotkeyField13.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField13.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField13.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField13.Location = new System.Drawing.Point(437, 34);
+            this.hotkeyField13.Name = "hotkeyField13";
+            this.hotkeyField13.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField13.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField13.TabIndex = 43;
+            this.hotkeyField13.Tag = "hkFps10";
+            // 
+            // panel16
+            // 
+            this.panel16.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel16.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel16.Controls.Add(this.fpsInput11);
+            this.panel16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel16.Location = new System.Drawing.Point(538, 63);
+            this.panel16.Name = "panel16";
+            this.panel16.Size = new System.Drawing.Size(34, 26);
+            this.panel16.TabIndex = 53;
+            // 
+            // fpsInput11
+            // 
+            this.fpsInput11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput11.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput11.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput11.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput11.MaxLength = 3;
+            this.fpsInput11.Name = "fpsInput11";
+            this.fpsInput11.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput11.TabIndex = 14;
+            this.fpsInput11.Tag = "fpscap11";
+            this.fpsInput11.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // panel17
+            // 
+            this.panel17.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel17.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel17.Controls.Add(this.fpsInput9);
+            this.panel17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel17.Location = new System.Drawing.Point(538, 5);
+            this.panel17.Name = "panel17";
+            this.panel17.Size = new System.Drawing.Size(34, 26);
+            this.panel17.TabIndex = 51;
+            // 
+            // fpsInput9
+            // 
+            this.fpsInput9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput9.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput9.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput9.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput9.MaxLength = 3;
+            this.fpsInput9.Name = "fpsInput9";
+            this.fpsInput9.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput9.TabIndex = 14;
+            this.fpsInput9.Tag = "fpscap9";
+            this.fpsInput9.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label30.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label30.Location = new System.Drawing.Point(575, 67);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(33, 18);
+            this.label30.TabIndex = 50;
+            this.label30.Text = "FPS";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label1.Location = new System.Drawing.Point(21, 154);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(102, 18);
+            this.label1.TabIndex = 35;
+            this.label1.Text = "FPS Toggle #9";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label3.Location = new System.Drawing.Point(21, 125);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(102, 18);
+            this.label3.TabIndex = 33;
+            this.label3.Text = "FPS Toggle #8";
+            // 
+            // hotkeyField9
+            // 
+            this.hotkeyField9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField9.Location = new System.Drawing.Point(126, 92);
+            this.hotkeyField9.Name = "hotkeyField9";
+            this.hotkeyField9.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField9.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField9.TabIndex = 30;
+            this.hotkeyField9.Tag = "hkFps6";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label9.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label9.Location = new System.Drawing.Point(21, 96);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(102, 18);
+            this.label9.TabIndex = 32;
+            this.label9.Text = "FPS Toggle #7";
+            // 
+            // hotkeyField11
+            // 
+            this.hotkeyField11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField11.Location = new System.Drawing.Point(126, 150);
+            this.hotkeyField11.Name = "hotkeyField11";
+            this.hotkeyField11.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField11.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField11.TabIndex = 34;
+            this.hotkeyField11.Tag = "hkFps8";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label14.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label14.Location = new System.Drawing.Point(264, 96);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(33, 18);
+            this.label14.TabIndex = 36;
+            this.label14.Text = "FPS";
+            // 
+            // panel9
+            // 
+            this.panel9.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel9.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel9.Controls.Add(this.fpsInput7);
+            this.panel9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel9.Location = new System.Drawing.Point(227, 121);
+            this.panel9.Name = "panel9";
+            this.panel9.Size = new System.Drawing.Size(34, 26);
+            this.panel9.TabIndex = 40;
+            // 
+            // fpsInput7
+            // 
+            this.fpsInput7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput7.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput7.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput7.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput7.MaxLength = 3;
+            this.fpsInput7.Name = "fpsInput7";
+            this.fpsInput7.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput7.TabIndex = 14;
+            this.fpsInput7.Tag = "fpscap7";
+            this.fpsInput7.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label16.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label16.Location = new System.Drawing.Point(264, 125);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(33, 18);
+            this.label16.TabIndex = 37;
+            this.label16.Text = "FPS";
+            // 
+            // hotkeyField10
+            // 
+            this.hotkeyField10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField10.Location = new System.Drawing.Point(126, 121);
+            this.hotkeyField10.Name = "hotkeyField10";
+            this.hotkeyField10.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField10.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField10.TabIndex = 31;
+            this.hotkeyField10.Tag = "hkFps7";
+            // 
+            // panel10
+            // 
+            this.panel10.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel10.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel10.Controls.Add(this.fpsInput8);
+            this.panel10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel10.Location = new System.Drawing.Point(227, 150);
+            this.panel10.Name = "panel10";
+            this.panel10.Size = new System.Drawing.Size(34, 26);
+            this.panel10.TabIndex = 41;
+            // 
+            // fpsInput8
+            // 
+            this.fpsInput8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput8.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput8.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput8.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput8.MaxLength = 3;
+            this.fpsInput8.Name = "fpsInput8";
+            this.fpsInput8.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput8.TabIndex = 14;
+            this.fpsInput8.Tag = "fpscap8";
+            this.fpsInput8.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // panel11
+            // 
+            this.panel11.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel11.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel11.Controls.Add(this.fpsInput6);
+            this.panel11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel11.Location = new System.Drawing.Point(227, 92);
+            this.panel11.Name = "panel11";
+            this.panel11.Size = new System.Drawing.Size(34, 26);
+            this.panel11.TabIndex = 39;
+            // 
+            // fpsInput6
+            // 
+            this.fpsInput6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput6.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput6.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput6.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput6.MaxLength = 3;
+            this.fpsInput6.Name = "fpsInput6";
+            this.fpsInput6.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput6.TabIndex = 14;
+            this.fpsInput6.Tag = "fpscap6";
+            this.fpsInput6.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label18.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label18.Location = new System.Drawing.Point(264, 154);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(33, 18);
+            this.label18.TabIndex = 38;
+            this.label18.Text = "FPS";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label2.Location = new System.Drawing.Point(21, 67);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(102, 18);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "FPS Toggle #6";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label5.Location = new System.Drawing.Point(21, 38);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(102, 18);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "FPS Toggle #5";
+            // 
+            // hotkeyField6
+            // 
+            this.hotkeyField6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField6.Location = new System.Drawing.Point(126, 5);
+            this.hotkeyField6.Name = "hotkeyField6";
+            this.hotkeyField6.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField6.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField6.TabIndex = 8;
+            this.hotkeyField6.Tag = "hkFps3";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label7.Location = new System.Drawing.Point(21, 9);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(102, 18);
+            this.label7.TabIndex = 10;
+            this.label7.Text = "FPS Toggle #4";
+            // 
+            // hotkeyField8
+            // 
+            this.hotkeyField8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField8.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField8.Location = new System.Drawing.Point(126, 63);
+            this.hotkeyField8.Name = "hotkeyField8";
+            this.hotkeyField8.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField8.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField8.TabIndex = 12;
+            this.hotkeyField8.Tag = "hkFps5";
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label10.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label10.Location = new System.Drawing.Point(264, 9);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(33, 18);
+            this.label10.TabIndex = 17;
+            this.label10.Text = "FPS";
+            // 
+            // panel6
+            // 
+            this.panel6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel6.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel6.Controls.Add(this.fpsInput4);
+            this.panel6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel6.Location = new System.Drawing.Point(227, 34);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(34, 26);
+            this.panel6.TabIndex = 29;
+            // 
+            // fpsInput4
+            // 
+            this.fpsInput4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput4.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput4.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput4.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput4.MaxLength = 3;
+            this.fpsInput4.Name = "fpsInput4";
+            this.fpsInput4.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput4.TabIndex = 14;
+            this.fpsInput4.Tag = "fpscap4";
+            this.fpsInput4.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label11.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label11.Location = new System.Drawing.Point(264, 38);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(33, 18);
+            this.label11.TabIndex = 18;
+            this.label11.Text = "FPS";
+            // 
+            // hotkeyField7
+            // 
+            this.hotkeyField7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.hotkeyField7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.hotkeyField7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.hotkeyField7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.hotkeyField7.Location = new System.Drawing.Point(126, 34);
+            this.hotkeyField7.Name = "hotkeyField7";
+            this.hotkeyField7.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.hotkeyField7.Size = new System.Drawing.Size(95, 26);
+            this.hotkeyField7.TabIndex = 9;
+            this.hotkeyField7.Tag = "hkFps4";
+            // 
+            // panel7
+            // 
+            this.panel7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel7.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel7.Controls.Add(this.fpsInput5);
+            this.panel7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel7.Location = new System.Drawing.Point(227, 63);
+            this.panel7.Name = "panel7";
+            this.panel7.Size = new System.Drawing.Size(34, 26);
+            this.panel7.TabIndex = 29;
+            // 
+            // fpsInput5
+            // 
+            this.fpsInput5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput5.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput5.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput5.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput5.MaxLength = 3;
+            this.fpsInput5.Name = "fpsInput5";
+            this.fpsInput5.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput5.TabIndex = 14;
+            this.fpsInput5.Tag = "fpscap5";
+            this.fpsInput5.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // panel8
+            // 
+            this.panel8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel8.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel8.Controls.Add(this.fpsInput3);
+            this.panel8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel8.Location = new System.Drawing.Point(227, 5);
+            this.panel8.Name = "panel8";
+            this.panel8.Size = new System.Drawing.Size(34, 26);
+            this.panel8.TabIndex = 28;
+            // 
+            // fpsInput3
+            // 
+            this.fpsInput3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.fpsInput3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.fpsInput3.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.fpsInput3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.fpsInput3.Location = new System.Drawing.Point(-4, 3);
+            this.fpsInput3.MaxLength = 3;
+            this.fpsInput3.Name = "fpsInput3";
+            this.fpsInput3.Size = new System.Drawing.Size(34, 20);
+            this.fpsInput3.TabIndex = 14;
+            this.fpsInput3.Tag = "fpscap3";
+            this.fpsInput3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label15.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label15.Location = new System.Drawing.Point(264, 67);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(33, 18);
+            this.label15.TabIndex = 19;
+            this.label15.Text = "FPS";
+            // 
+            // moreHotkeysTitle
+            // 
+            this.moreHotkeysTitle.AutoSize = true;
+            this.moreHotkeysTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.moreHotkeysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.moreHotkeysTitle.Location = new System.Drawing.Point(179, 701);
+            this.moreHotkeysTitle.Name = "moreHotkeysTitle";
+            this.moreHotkeysTitle.Size = new System.Drawing.Size(286, 21);
+            this.moreHotkeysTitle.TabIndex = 39;
+            this.moreHotkeysTitle.Text = "MORE FPS HOTKEYS";
+            this.moreHotkeysTitle.Visible = false;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(639, 702);
+            this.ClientSize = new System.Drawing.Size(639, 972);
             this.ControlBox = false;
+            this.Controls.Add(this.moreHotkeysTitle);
+            this.Controls.Add(this.extraFPSHotkeysPanel);
             this.Controls.Add(this.desruVersionLabel);
             this.Controls.Add(this.discordButton);
             this.Controls.Add(this.downpatcherButton);
@@ -1215,6 +2095,32 @@
             this.targetFPSPanel.PerformLayout();
             this.minResPanel.ResumeLayout(false);
             this.minResPanel.PerformLayout();
+            this.extraFPSHotkeysPanel.ResumeLayout(false);
+            this.extraFPSHotkeysPanel.PerformLayout();
+            this.panel12.ResumeLayout(false);
+            this.panel12.PerformLayout();
+            this.panel13.ResumeLayout(false);
+            this.panel13.PerformLayout();
+            this.panel14.ResumeLayout(false);
+            this.panel14.PerformLayout();
+            this.panel15.ResumeLayout(false);
+            this.panel15.PerformLayout();
+            this.panel16.ResumeLayout(false);
+            this.panel16.PerformLayout();
+            this.panel17.ResumeLayout(false);
+            this.panel17.PerformLayout();
+            this.panel9.ResumeLayout(false);
+            this.panel9.PerformLayout();
+            this.panel10.ResumeLayout(false);
+            this.panel10.PerformLayout();
+            this.panel11.ResumeLayout(false);
+            this.panel11.PerformLayout();
+            this.panel6.ResumeLayout(false);
+            this.panel6.PerformLayout();
+            this.panel7.ResumeLayout(false);
+            this.panel7.PerformLayout();
+            this.panel8.ResumeLayout(false);
+            this.panel8.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1302,5 +2208,68 @@
         private Button discordButton;
         private Label desruVersionLabel;
         private CheckBox replaceProfileCheckbox;
+        private Button showMoreKeysButton;
+        private Panel extraFPSHotkeysPanel;
+        private Label label4;
+        private Label label6;
+        private Label hotkeyField15;
+        private Label label12;
+        private Label hotkeyField17;
+        private Label label17;
+        private Panel panel12;
+        private TextBox fpsInput13;
+        private Label label19;
+        private Label hotkeyField16;
+        private Panel panel13;
+        private TextBox fpsInput14;
+        private Panel panel14;
+        private TextBox fpsInput12;
+        private Label label21;
+        private Label label22;
+        private Label label23;
+        private Label hotkeyField12;
+        private Label label25;
+        private Label hotkeyField14;
+        private Label label27;
+        private Panel panel15;
+        private TextBox fpsInput10;
+        private Label label28;
+        private Label hotkeyField13;
+        private Panel panel16;
+        private TextBox fpsInput11;
+        private Panel panel17;
+        private TextBox fpsInput9;
+        private Label label30;
+        private Label label1;
+        private Label label3;
+        private Label hotkeyField9;
+        private Label label9;
+        private Label hotkeyField11;
+        private Label label14;
+        private Panel panel9;
+        private TextBox fpsInput7;
+        private Label label16;
+        private Label hotkeyField10;
+        private Panel panel10;
+        private TextBox fpsInput8;
+        private Panel panel11;
+        private TextBox fpsInput6;
+        private Label label18;
+        private Label label2;
+        private Label label5;
+        private Label hotkeyField6;
+        private Label label7;
+        private Label hotkeyField8;
+        private Label label10;
+        private Panel panel6;
+        private TextBox fpsInput4;
+        private Label label11;
+        private Label hotkeyField7;
+        private Panel panel7;
+        private TextBox fpsInput5;
+        private Panel panel8;
+        private TextBox fpsInput3;
+        private Label label15;
+        private Label moreHotkeysTitle;
     }
 }

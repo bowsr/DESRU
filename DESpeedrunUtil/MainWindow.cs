@@ -23,6 +23,7 @@ namespace DESpeedrunUtil {
         private const string WINDOW_TITLE = "DOOM ETERNAL SPEEDRUN UTILITY";
         private const string PROFILE_DIR = @"\782330\remote\PROFILE";
         private const string PROFILE_FILE = @"\profile.bin";
+        private const string FPSKEYS_JSON = @".\fpskeys.json";
 
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
@@ -52,20 +53,16 @@ namespace DESpeedrunUtil {
         Label _selectedHKField = null;
 
         List<Label> _hotkeyFields;
+        List<TextBox> _fpsLimitFields;
 
         string _gameDirectory = "", _steamDirectory = "", _steamInstallation = "", _steamID3 = "";
         List<string>? _gameVersions;
 
         public MainWindow() {
             InitializeComponent();
-            _hotkeyFields = new() {
-                hotkeyField0,
-                hotkeyField1,
-                hotkeyField2,
-                hotkeyField3,
-                hotkeyField4,
-                hotkeyField5
-            };
+            _hotkeyFields = new();
+            _fpsLimitFields = new();
+            CollectHotkeyAndLimitFields(this);
 
             _formTimer = new Timer();
             _formTimer.Interval = 16;
@@ -239,39 +236,22 @@ namespace DESpeedrunUtil {
         /// </summary>
         public void UpdateHotkeyAndInputFields() {
             foreach(Label l in _hotkeyFields) {
-                Keys key = Keys.None;
-                switch(l.Tag) {
-                    case "macroDown":
-                        key = _macroProcess.GetHotkey(true);
-                        break;
-                    case "macroUp":
-                        key = _macroProcess.GetHotkey(false);
-                        break;
-                    case "fps0":
-                        key = _hotkeys.GetHotkeyByNumber(0);
-                        break;
-                    case "fps1":
-                        key = _hotkeys.GetHotkeyByNumber(1);
-                        break;
-                    case "fps2":
-                        key = _hotkeys.GetHotkeyByNumber(2);
-                        break;
-                    case "resToggle":
-                        key = _hotkeys.GetHotkeyByNumber(3);
-                        break;
-                }
+                string tag = (string) l.Tag;
+                Keys key = tag switch {
+                    "hkMacroDown" => _macroProcess.GetHotkey(true),
+                    "hkMacroUp" => _macroProcess.GetHotkey(false),
+                    "hkResToggle" => _hotkeys.ResScaleHotkey,
+                    _ => _hotkeys.FPSHotkeys.GetKeyFromID(int.TryParse(tag.Replace("hkFps", ""), out int id) ? id : -1),
+                };
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
                 l.ForeColor = TEXT_FORECOLOR;
                 l.BackColor = TEXT_BACKCOLOR;
             }
-            var s0 = _fps0.ToString();
-            var s1 = _fps1.ToString();
-            var s2 = _fps2.ToString();
-            var d = _fpsDefault.ToString();
-            fpsInput0.Text = (s0 != "-1") ? s0 : "";
-            fpsInput1.Text = (s1 != "-1") ? s1 : "";
-            fpsInput2.Text = (s2 != "-1") ? s2 : "";
-            defaultFPS.Text = (d != "-1") ? d : "";
+            foreach(TextBox t in _fpsLimitFields) {
+                string tag = (string) t.Tag;
+                int limit = _hotkeys.FPSHotkeys.GetLimitFromID(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1);
+                t.Text = (limit != -1) ? limit.ToString() : "";
+            }
             minResInput.Text = _minResPercent.ToString();
             targetFPSInput.Text = _targetFPS.ToString();
         }
@@ -306,40 +286,17 @@ namespace DESpeedrunUtil {
         /// <summary>
         /// Sets <c>com_adaptiveTickMaxHz</c> to the desired cap value. Sets to <c>250</c> if already at the desired cap.
         /// </summary>
-        /// <param name="fpsHotkey">Which hotkey to trigger</param>
-        private void ToggleFPSCap(int fpsHotkey) {
-            int newFPS = _fpsDefault;
-            switch(fpsHotkey) {
-                case 0:
-                    if(_fps0 != -1) if(_memory.ReadMaxHz() != _fps0) newFPS = _fps0;
-                    break;
-                case 1:
-                    if(_fps1 != -1) if(_memory.ReadMaxHz() != _fps1) newFPS = _fps1;
-                    break;
-                case 2:
-                    if(_fps2 != -1) if(_memory.ReadMaxHz() != _fps2) newFPS = _fps2;
-                    break;
-            }
-            _memory.SetMaxHz(newFPS);
+        /// <param name="fps">FPS Limit</param>
+        public void ToggleFPSCap(int fps) {
+            int current = _memory.ReadMaxHz();
+            _memory.SetMaxHz((current != fps) ? fps : _fpsDefault);
         }
 
-        public void HotkeyPressed(int hotkey) {
-            if(hotkey < 3) {
-                ToggleFPSCap(hotkey);
-                return;
+        public void ToggleResScaling() {
+            if(Hooked) {
+                _memory.SetMinRes(((int) (_memory.ReadMinRes() * 100)) == _minResPercent ? 1f : _minResPercent / 100f);
+                _memory.ScheduleResUnlock(false, _targetFPS);
             }
-            if(hotkey == 3) {
-                if(Hooked) {
-                    _memory.SetMinRes(((int) (_memory.ReadMinRes() * 100)) == _minResPercent ? 1f : _minResPercent / 100f);
-                    _memory.ScheduleResUnlock(false, _targetFPS);
-                }
-            }
-        }
-
-        private void ToggleIndividualHotkeys() {
-            _hotkeys.ToggleIndividualHotkeys(0, !(_fps0 == -1));
-            _hotkeys.ToggleIndividualHotkeys(1, !(_fps1 == -1));
-            _hotkeys.ToggleIndividualHotkeys(2, !(_fps2 == -1));
         }
 
         // Adds a MouseDown event to every control in the form, recursively.
@@ -643,7 +600,7 @@ namespace DESpeedrunUtil {
             }
             if(enableHotkeysCheckbox.Checked) {
                 _hotkeys.EnableHotkeys();
-                _hotkeys.ToggleIndividualHotkeys(3, false);
+                _hotkeys.ToggleResScaleKey(false);
             }
             SetGameInfoByModuleSize();
             try {
@@ -696,6 +653,23 @@ namespace DESpeedrunUtil {
                 }
             }
             SetFonts();
+        }
+
+        private void CollectHotkeyAndLimitFields(Control control) {
+            foreach(Control c in control.Controls) {
+                if(c.Tag != null) {
+                    var tag = c.Tag.ToString();
+                    if(tag.StartsWith("hk")) {
+                        c.Click += new EventHandler(HotkeyAssignment_FieldSelected);
+                        _hotkeyFields.Add((Label) c);
+                    }else if(tag.StartsWith("fpscap")) {
+                        c.KeyPress += new KeyPressEventHandler(Input_KeyPressNumericOnly);
+                        c.KeyUp += new KeyEventHandler(FPSInput_KeyUp);
+                        _fpsLimitFields.Add((TextBox) c);
+                    }
+                }
+                if(c.Controls.Count > 0) CollectHotkeyAndLimitFields(c);
+            }
         }
 
         private void SetFonts() {
@@ -796,25 +770,15 @@ namespace DESpeedrunUtil {
             _selectedHKField = null;
             if(isValid) {
                 int type = -1;
-                switch(tag) {
-                    case "fps0":
-                        type = 0;
-                        break;
-                    case "fps1":
-                        type = 1;
-                        break;
-                    case "fps2":
-                        type = 2;
-                        break;
-                    case "resToggle":
-                        type = 3;
-                        break;
-                    case "macroDown":
-                        type = 4;
-                        break;
-                    case "macroUp":
-                        type = 5;
-                        break;
+                try {
+                    type = tag switch {
+                        "hkMacroDown" => 0,
+                        "hkMacroUp" => 1,
+                        "hkResToggle" => 2,
+                        _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 3 : -1,
+                    };
+                }catch(FormatException f) {
+                    Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }
@@ -823,7 +787,7 @@ namespace DESpeedrunUtil {
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
             if(!_hkAssignmentMode) {
-                if((sender is MainWindow || sender is DESRUShadowLabel) && !_mouseDown) {
+                if((sender is MainWindow || (sender is DESRUShadowLabel && ((Label) sender).Text == WINDOW_TITLE)) && !_mouseDown) {
                     _mouseDown = true;
                     _lastLocation = e.Location;
                 }
@@ -838,27 +802,13 @@ namespace DESpeedrunUtil {
             if(pressedKey == Keys.LButton && sender.Equals(_selectedHKField)) _mouse1Pressed = true;
             _selectedHKField = null;
             if(isValid) {
-                int type = -1;
-                switch(tag) {
-                    case "fps0":
-                        type = 0;
-                        break;
-                    case "fps1":
-                        type = 1;
-                        break;
-                    case "fps2":
-                        type = 2;
-                        break;
-                    case "resToggle":
-                        type = 3;
-                        break;
-                    case "macroDown":
-                        type = 4;
-                        break;
-                    case "macroUp":
-                        type = 5;
-                        break;
-                }
+                int type = tag switch {
+                    "hkMacroDown" => 0,
+                    "hkMacroUp" => 1,
+                    // "resToggle" => 2,                         | FPS & Res Scale hotkey fields cannot be set to mouse buttons for the time being
+                    // _ => (int) char.GetNumericValue(tag[^1]), | due to globalKeyboardHook only having KeyHooks
+                    _ => -1,
+                };
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }
             UpdateHotkeyAndInputFields();
@@ -917,15 +867,12 @@ namespace DESpeedrunUtil {
 
         private void FPSInput_KeyUp(object sender, KeyEventArgs e) {
             var text = ((TextBox) sender).Text;
-            var tag = ((Control) sender).Tag;
-            int p;
-            try {
-                p = int.Parse(text);
-            } catch(FormatException) {
-                p = -1;
-            }
+            string tag = (string) ((Control) sender).Tag;
+
+            if(!int.TryParse(text, out int p)) p = -1;
+
             if(p > 250) p = 250;
-            if(tag.ToString() == "fpscapDefault" && p <= 0) p = 250;
+            if(tag == "maxfps" && p <= 0) p = 250;
             if(p != -1) {
                 if(p == 0) p = 1;
                 ((TextBox) sender).Text = p.ToString();
@@ -934,30 +881,20 @@ namespace DESpeedrunUtil {
             }
 
             switch(tag) {
-                case "fpscap0":
-                    _fps0 = p;
-                    break;
-                case "fpscap1":
-                    _fps1 = p;
-                    break;
-                case "fpscap2":
-                    _fps2 = p;
-                    break;
-                case "fpscapDefault":
+                case "maxfps":
                     _fpsDefault = p;
                     break;
+                default:
+                    _hotkeys.FPSHotkeys.ChangeLimit(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1, p);
+                    break;
             }
-            ToggleIndividualHotkeys();
         }
 
         private void MinResInput_KeyUp(object sender, KeyEventArgs e) {
             var text = ((TextBox) sender).Text;
-            int resPercent;
-            try {
-                resPercent = int.Parse(text);
-            } catch(FormatException) {
-                resPercent = 50;
-            }
+
+            if(!int.TryParse(text, out int resPercent)) resPercent = 50;
+
             if(resPercent <= 1) resPercent = 1;
             if(resPercent > 100) resPercent = 100;
             _minResPercent = resPercent;
@@ -969,12 +906,9 @@ namespace DESpeedrunUtil {
         }
         private void TargetFPS_KeyUp(object sender, KeyEventArgs e) {
             var text = ((TextBox) sender).Text;
-            int target;
-            try {
-                target = int.Parse(text);
-            } catch(FormatException) {
-                target = 1000;
-            }
+
+            if(!int.TryParse(text, out int target)) target = 1000;
+
             if(target < 60) target = 60;
             if(target > 1000) target = 1000;
             _targetFPS = target;
@@ -1077,6 +1011,17 @@ namespace DESpeedrunUtil {
                 Log.Information("meath00k installed.");
             }
         }
+        private void MoreKeysButton_Click(object sender, EventArgs e) {
+            if(this.Height == 704) {
+                this.Height = 921;
+                extraFPSHotkeysPanel.Visible = true;
+                showMoreKeysButton.Text = "Hide Extra FPS Hotkeys";
+            } else {
+                this.Height = 704;
+                extraFPSHotkeysPanel.Visible = false;
+                showMoreKeysButton.Text = "Show More FPS Hotkeys";
+            }
+        }
         private void DropDown_IndexChanged(object sender, EventArgs e) {
             if(!Hooked) changeVersionButton.Enabled = ((ComboBox) sender).Text != GetCurrentVersion();
         }
@@ -1099,18 +1044,17 @@ namespace DESpeedrunUtil {
             this.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
 
             // User Settings
+            var fpsJson = "";
+            if(File.Exists(FPSKEYS_JSON)) fpsJson = File.ReadAllText(FPSKEYS_JSON);
             _macroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
-            _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.FPS0Key, (Keys) Properties.Settings.Default.FPS1Key,
-                (Keys) Properties.Settings.Default.FPS2Key, (Keys) Properties.Settings.Default.ResScaleKey, this);
-            _fps0 = Properties.Settings.Default.FPSCap0;
-            _fps1 = Properties.Settings.Default.FPSCap1;
-            _fps2 = Properties.Settings.Default.FPSCap2;
+            _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, fpsJson, this);
             _fpsDefault = Properties.Settings.Default.DefaultFPSCap;
             autorunMacroCheckbox.Checked = Properties.Settings.Default.MacroEnabled;
             _enableMacro = Properties.Settings.Default.MacroEnabled;
-            enableHotkeysCheckbox.Checked = Properties.Settings.Default.FPSHotkeysEnabled;
+            enableHotkeysCheckbox.Checked = Properties.Settings.Default.HotkeysEnabled;
             _gameDirectory = Properties.Settings.Default.GameLocation;
             unlockOnStartupCheckbox.Checked = Properties.Settings.Default.StartupUnlock;
             autoDynamicCheckbox.Checked = Properties.Settings.Default.AutoDynamic;
@@ -1119,7 +1063,6 @@ namespace DESpeedrunUtil {
             _steamInstallation = Properties.Settings.Default.SteamInstallation;
             _steamID3 = Properties.Settings.Default.SteamID3;
             replaceProfileCheckbox.Checked = Properties.Settings.Default.ReplaceProfile;
-            ToggleIndividualHotkeys();
             UpdateHotkeyAndInputFields();
 
             var defaultLocation = new Point(
@@ -1127,6 +1070,7 @@ namespace DESpeedrunUtil {
                 Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
+            this.Height = 704;
             if(!IsFormOnScreen() || loc == Point.Empty) Location = defaultLocation;
 
             AddMouseIntercepts(this);
@@ -1142,16 +1086,9 @@ namespace DESpeedrunUtil {
             // User Settings
             Properties.Settings.Default.DownScrollKey = (int) _macroProcess.GetHotkey(true);
             Properties.Settings.Default.UpScrollKey = (int) _macroProcess.GetHotkey(false);
-            Properties.Settings.Default.FPS0Key = (int) _hotkeys.GetHotkeyByNumber(0);
-            Properties.Settings.Default.FPS1Key = (int) _hotkeys.GetHotkeyByNumber(1);
-            Properties.Settings.Default.FPS2Key = (int) _hotkeys.GetHotkeyByNumber(2);
-            Properties.Settings.Default.ResScaleKey = (int) _hotkeys.GetHotkeyByNumber(3);
-            Properties.Settings.Default.FPSCap0 = _fps0;
-            Properties.Settings.Default.FPSCap1 = _fps1;
-            Properties.Settings.Default.FPSCap2 = _fps2;
             Properties.Settings.Default.DefaultFPSCap = _fpsDefault;
             Properties.Settings.Default.MacroEnabled = autorunMacroCheckbox.Checked;
-            Properties.Settings.Default.FPSHotkeysEnabled = enableHotkeysCheckbox.Checked;
+            Properties.Settings.Default.HotkeysEnabled = enableHotkeysCheckbox.Checked;
             Properties.Settings.Default.GameLocation = _gameDirectory;
             Properties.Settings.Default.StartupUnlock = unlockOnStartupCheckbox.Checked;
             Properties.Settings.Default.AutoDynamic = autoDynamicCheckbox.Checked;
@@ -1162,6 +1099,8 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
+
+            File.WriteAllText(FPSKEYS_JSON, _hotkeys.FPSHotkeys.SerializeIntoJSON());
 
             Properties.Settings.Default.Save();
 

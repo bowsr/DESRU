@@ -146,7 +146,7 @@ namespace DESpeedrunUtil.Memory {
                                 _unlockResFlag = false;
                                 _windowFocused = false;
                                 _resUnlocked = true;
-                                _hotkeys.ToggleIndividualHotkeys(3, true);
+                                _hotkeys.ToggleResScaleKey(true);
                             }
                         }
                     }
