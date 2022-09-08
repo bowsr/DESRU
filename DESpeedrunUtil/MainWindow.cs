@@ -242,7 +242,7 @@ namespace DESpeedrunUtil {
                     "hkMacroDown" => _macroProcess.GetHotkey(true),
                     "hkMacroUp" => _macroProcess.GetHotkey(false),
                     "hkResToggle" => _hotkeys.ResScaleHotkey,
-                    _ => _hotkeys.FPSHotkeys.GetKeyFromID((int) char.GetNumericValue(tag[^1])),
+                    _ => _hotkeys.FPSHotkeys.GetKeyFromID(int.TryParse(tag.Replace("hkFps", ""), out int id) ? id : -1),
                 };
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
                 l.ForeColor = TEXT_FORECOLOR;
@@ -250,7 +250,7 @@ namespace DESpeedrunUtil {
             }
             foreach(TextBox t in _fpsLimitFields) {
                 string tag = (string) t.Tag;
-                int limit = _hotkeys.FPSHotkeys.GetLimitFromID((int) char.GetNumericValue(tag[^1]));
+                int limit = _hotkeys.FPSHotkeys.GetLimitFromID(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1);
                 t.Text = (limit != -1) ? limit.ToString() : "";
             }
             minResInput.Text = _minResPercent.ToString();
@@ -776,7 +776,7 @@ namespace DESpeedrunUtil {
                         "hkMacroDown" => 0,
                         "hkMacroUp" => 1,
                         "hkResToggle" => 2,
-                        _ => (int) char.GetNumericValue(tag[^1]) + 3,
+                        _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 3 : -1,
                     };
                 }catch(FormatException f) {
                     Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
@@ -886,7 +886,7 @@ namespace DESpeedrunUtil {
                     _fpsDefault = p;
                     break;
                 default:
-                    _hotkeys.FPSHotkeys.ChangeLimit((int) char.GetNumericValue(tag[^1]), p);
+                    _hotkeys.FPSHotkeys.ChangeLimit(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1, p);
                     break;
             }
         }
