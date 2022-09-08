@@ -447,14 +447,12 @@ namespace DESpeedrunUtil {
             }
             List<string> userProfiles = new(), id3s = new();
             if(_steamID3 == string.Empty) {
-                try {
-                    foreach(string profile in Directory.GetDirectories(_steamInstallation + "\\userdata")) {
-                        var id3 = int.Parse(profile[(profile.LastIndexOf('\\') + 1)..]);
-                        Log.Information("Found Steam userdata. steamID3: {ID3}", id3);
-                        userProfiles.Add(id3.ToString());
-                        id3s.Add(id3.ToString());
-                    }
-                }catch(FormatException) { }
+                foreach(string profile in Directory.GetDirectories(_steamInstallation + "\\userdata")) {
+                    if(!long.TryParse(profile[(profile.LastIndexOf('\\') + 1)..], out long id3)) continue;
+                    Log.Information("Found Steam userdata. steamID3: {ID3}", id3);
+                    userProfiles.Add(id3.ToString());
+                    id3s.Add(id3.ToString());
+                }
                 Log.Information("Found {Num} Steam userdata directories.", userProfiles.Count);
                 if(userProfiles.Count == 0) return;
                 foreach(string profile in userProfiles) {
