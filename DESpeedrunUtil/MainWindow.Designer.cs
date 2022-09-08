@@ -274,8 +274,6 @@
             this.fpsInput0.TabIndex = 14;
             this.fpsInput0.Tag = "fpscap0";
             this.fpsInput0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.fpsInput0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
-            this.fpsInput0.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsKey2Label
             // 
@@ -584,7 +582,6 @@
             this.fpsInput1.TabIndex = 14;
             this.fpsInput1.Tag = "fpscap1";
             this.fpsInput1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.fpsInput1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsPanel2
             // 
@@ -610,7 +607,6 @@
             this.fpsInput2.TabIndex = 14;
             this.fpsInput2.Tag = "fpscap2";
             this.fpsInput2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.fpsInput2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.FPSInput_KeyUp);
             // 
             // fpsPanel0
             // 

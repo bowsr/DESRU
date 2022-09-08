@@ -7,66 +7,25 @@ using System.Runtime.InteropServices;
 namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
 
-        private globalKeyboardHook _hook;
         private readonly MainWindow _parent;
+        private globalKeyboardHook _hook;
+        private bool _resScaleKeyEnabled = false;
 
         public bool Enabled { get; private set; }
-        private bool _key0Enabled = false, _key1Enabled = false, _key2Enabled = false, _key3Enabled = false;
-        private Keys _fpsHotkey0 = Keys.None;
-        private Keys _fpsHotkey1 = Keys.None;
-        private Keys _fpsHotkey2 = Keys.None;
         public Keys ResScaleHotkey { get; private set; } = Keys.None;
 
         public FPSHotkeyMap FPSHotkeys { get; init; }
 
-        public HotkeyHandler(Keys fps0, Keys fps1, Keys fps2, Keys res, MainWindow parent) {
-            _hook = new globalKeyboardHook();
-            _parent = parent;
-            _fpsHotkey0 = fps0;
-            _fpsHotkey1 = fps1;
-            _fpsHotkey2 = fps2;
-            ResScaleHotkey = res;
-
-            _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
-            _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
-        }
-        public HotkeyHandler(Keys res, MainWindow parent) {
+        public HotkeyHandler(Keys res, string fpsJson, MainWindow parent) {
             _hook = new globalKeyboardHook();
             _parent = parent;
             ResScaleHotkey = res;
-            FPSHotkeys = new();
+            FPSHotkeys = new(fpsJson);
 
             _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
             _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
         }
 
-        public Keys GetHotkeyByNumber(int num) {
-            return num switch {
-                0 => _fpsHotkey0,
-                1 => _fpsHotkey1,
-                2 => _fpsHotkey2,
-                3 => ResScaleHotkey,
-                _ => Keys.None,
-            };
-        }
-        private void ChangeHotkey(Keys key, int fps) {
-            switch(fps) {
-                case 0:
-                    _fpsHotkey0 = key;
-                    break;
-                case 1:
-                    _fpsHotkey1 = key;
-                    break;
-                case 2:
-                    _fpsHotkey2 = key;
-                    break;
-                case 3:
-                    ResScaleHotkey = key;
-                    break;
-            }
-            RefreshKeys();
-        }
-        private void ChangeResScaleHotkey(Keys key) => ResScaleHotkey = key;
         public void EnableHotkeys() {
             if(Enabled) return;
             AddHotkeys();
@@ -84,30 +43,18 @@ namespace DESpeedrunUtil.Hotkeys {
             Log.Verbose("Refreshing hotkeys.");
             AddHotkeys();
         }
-        public void ToggleIndividualHotkeys(int hotkey, bool enabled) {
-            switch(hotkey) {
-                case 0:
-                    _key0Enabled = enabled;
-                    break;
-                case 1:
-                    _key1Enabled = enabled;
-                    break;
-                case 2:
-                    _key2Enabled = enabled;
-                    break;
-                case 3:
-                    _key3Enabled = enabled;
-                    break;
-            }
+        public void ToggleResScaleKey(bool enabled) {
+            _resScaleKeyEnabled = enabled;
             RefreshKeys();
         }
 
+        private void ChangeResScaleHotkey(Keys key) => ResScaleHotkey = key;
         private void AddHotkeys() {
             _hook.HookedKeys.Clear();
-            if(_fpsHotkey0 != Keys.None && _key0Enabled) _hook.HookedKeys.Add(_fpsHotkey0);
-            if(_fpsHotkey1 != Keys.None && _key1Enabled) _hook.HookedKeys.Add(_fpsHotkey1);
-            if(_fpsHotkey2 != Keys.None && _key2Enabled) _hook.HookedKeys.Add(_fpsHotkey2);
-            if(ResScaleHotkey != Keys.None && _key3Enabled) _hook.HookedKeys.Add(ResScaleHotkey);
+            if(ResScaleHotkey != Keys.None && _resScaleKeyEnabled) _hook.HookedKeys.Add(ResScaleHotkey);
+            foreach(FPSHotkeyMap.FPSKey fKey in FPSHotkeys.GetAllFPSKeys()) {
+                if(fKey.Key != Keys.None && fKey.Limit != -1) _hook.HookedKeys.Add(fKey.Key);
+            }
         }
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
@@ -146,7 +93,7 @@ namespace DESpeedrunUtil.Hotkeys {
             //            2  -> Res Scaling Hotkey
             //            3+ -> FPSKey (id == type - 3)
             var fpstype = type - 3;
-            var maxkeys = FPSHotkeyMap.MAX_KEYS + 2;
+            var maxkeys = hotkeys.FPSHotkeys.Count() + 2;
             if(key != Keys.None) {
                 if(type < 0 || type > maxkeys) return;
                 Keys oldKey;
@@ -167,15 +114,16 @@ namespace DESpeedrunUtil.Hotkeys {
                             break;
                         }
                     }else if(i == 2) {
-                        if(key == hotkeys.GetHotkeyByNumber(i)) {
+                        if(key == hotkeys.ResScaleHotkey) {
                             Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
-                            hotkeys.ChangeHotkey(oldKey, i);
+                            hotkeys.ChangeResScaleHotkey(oldKey);
                             break;
                         }
                     }else {
-                        if(key == hotkeys.FPSHotkeys.GetKeyFromID(fpstype)) {
+                        if(key == hotkeys.FPSHotkeys.GetKeyFromID(i - 3)) {
                             Log.Verbose("Duplicate hotkey found. Swapping {Key0} with {Key1}", oldKey, key);
-                            hotkeys.FPSHotkeys.ChangeKey(fpstype, oldKey);
+                            hotkeys.FPSHotkeys.ChangeKey(i - 3, oldKey);
+                            break;
                         }
                     }
                 }
@@ -258,7 +206,7 @@ namespace DESpeedrunUtil.Hotkeys {
 
         internal class FPSHotkeyMap {
 
-            public const int MAX_KEYS = 15;
+            public const int DEFAULT_KEYS = 15;
 
             private Dictionary<int, FPSKey> _keys;
 
@@ -273,11 +221,14 @@ namespace DESpeedrunUtil.Hotkeys {
                     _keys = JsonConvert.DeserializeObject<Dictionary<int, FPSKey>>(json);
                 }else {
                     _keys = new();
-                    for(int i = 0; i < MAX_KEYS; i++) {
+                    for(int i = 0; i < DEFAULT_KEYS; i++) {
                         _keys.Add(i, new FPSKey());
                     }
                 }
             }
+
+            public Dictionary<int, FPSKey>.ValueCollection GetAllFPSKeys() => _keys.Values;
+            public int Count() => _keys.Keys.Count;
 
             public Keys GetKeyAndLimitFromID(int id, out int fps) {
                 try {
@@ -285,7 +236,8 @@ namespace DESpeedrunUtil.Hotkeys {
                     fps = fpskey.Limit;
                     return fpskey.Key;
                 }catch(KeyNotFoundException e) {
-                    Log.Error(e, "There is no FPSKey associated with ID: {ID}", id);
+                    Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
+                    _keys.Add(id, new FPSKey());
                     fps = -1;
                     return Keys.None;
                 }
@@ -294,7 +246,8 @@ namespace DESpeedrunUtil.Hotkeys {
                 try {
                     return _keys[id].Key;
                 }catch(KeyNotFoundException e) {
-                    Log.Error(e, "There is no FPSKey associated with ID: {ID}", id);
+                    Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
+                    _keys.Add(id, new FPSKey());
                     return Keys.None;
                 }
             }
@@ -302,7 +255,8 @@ namespace DESpeedrunUtil.Hotkeys {
                 try {
                     return _keys[id].Limit;
                 }catch(KeyNotFoundException e) {
-                    Log.Error(e, "There is no FPSKey associated with ID: {ID}", id);
+                    Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
+                    _keys.Add(id, new FPSKey());
                     return -1;
                 }
             }
@@ -333,24 +287,27 @@ namespace DESpeedrunUtil.Hotkeys {
             }
 
             public void ChangeLimit(int id, int limit) {
+                if(id == -1) return;
                 var key = GetKeyFromID(id);
                 _keys[id] = new FPSKey(key, limit);
             }
             public void ChangeKey(int id, Keys key) {
+                if(id == -1) return;
                 var limit = GetLimitFromID(id);
                 _keys[id] = new FPSKey(key, limit);
             }
 
             public string SerializeIntoJSON() => JsonConvert.SerializeObject(_keys, Formatting.Indented);
 
-            readonly struct FPSKey {
-                public Keys Key { get; init; } = Keys.None;
-                public int Limit { get; init; } = -1;
+            internal readonly struct FPSKey {
+                public Keys Key { get; init; }
+                public int Limit { get; init; }
 
                 public FPSKey(Keys k, int fps) {
                     Key = k;
                     Limit = fps;
                 }
+                public FPSKey() : this(Keys.None, -1) { }
             }
         }
     }
