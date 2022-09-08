@@ -237,7 +237,7 @@ namespace DESpeedrunUtil.Hotkeys {
                     return fpskey.Key;
                 }catch(KeyNotFoundException e) {
                     Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
-                    _keys.Add(id, new FPSKey());
+                    if(id >= 0) _keys.Add(id, new FPSKey());
                     fps = -1;
                     return Keys.None;
                 }
@@ -247,7 +247,7 @@ namespace DESpeedrunUtil.Hotkeys {
                     return _keys[id].Key;
                 }catch(KeyNotFoundException e) {
                     Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
-                    _keys.Add(id, new FPSKey());
+                    if(id >= 0) _keys.Add(id, new FPSKey());
                     return Keys.None;
                 }
             }
@@ -256,7 +256,7 @@ namespace DESpeedrunUtil.Hotkeys {
                     return _keys[id].Limit;
                 }catch(KeyNotFoundException e) {
                     Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
-                    _keys.Add(id, new FPSKey());
+                    if(id >= 0) _keys.Add(id, new FPSKey());
                     return -1;
                 }
             }

@@ -237,7 +237,6 @@ namespace DESpeedrunUtil {
         public void UpdateHotkeyAndInputFields() {
             foreach(Label l in _hotkeyFields) {
                 string tag = (string) l.Tag;
-                Debug.WriteLine((int) char.GetNumericValue(tag[^1]));
                 Keys key = tag switch {
                     "hkMacroDown" => _macroProcess.GetHotkey(true),
                     "hkMacroUp" => _macroProcess.GetHotkey(false),
@@ -788,7 +787,7 @@ namespace DESpeedrunUtil {
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
             if(!_hkAssignmentMode) {
-                if((sender is MainWindow || sender is DESRUShadowLabel) && !_mouseDown) {
+                if((sender is MainWindow || (sender is DESRUShadowLabel && ((Label) sender).Text == WINDOW_TITLE)) && !_mouseDown) {
                     _mouseDown = true;
                     _lastLocation = e.Location;
                 }
@@ -868,7 +867,7 @@ namespace DESpeedrunUtil {
 
         private void FPSInput_KeyUp(object sender, KeyEventArgs e) {
             var text = ((TextBox) sender).Text;
-            var tag = ((Control) sender).Tag.ToString();
+            string tag = (string) ((Control) sender).Tag;
 
             if(!int.TryParse(text, out int p)) p = -1;
 
@@ -1012,6 +1011,17 @@ namespace DESpeedrunUtil {
                 Log.Information("meath00k installed.");
             }
         }
+        private void MoreKeysButton_Click(object sender, EventArgs e) {
+            if(this.Height == 704) {
+                this.Height = 921;
+                extraFPSHotkeysPanel.Visible = true;
+                showMoreKeysButton.Text = "Hide Extra FPS Hotkeys";
+            } else {
+                this.Height = 704;
+                extraFPSHotkeysPanel.Visible = false;
+                showMoreKeysButton.Text = "Show More FPS Hotkeys";
+            }
+        }
         private void DropDown_IndexChanged(object sender, EventArgs e) {
             if(!Hooked) changeVersionButton.Enabled = ((ComboBox) sender).Text != GetCurrentVersion();
         }
@@ -1034,6 +1044,7 @@ namespace DESpeedrunUtil {
             this.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
 
             // User Settings
             var fpsJson = "";
@@ -1059,6 +1070,7 @@ namespace DESpeedrunUtil {
                 Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
+            this.Height = 704;
             if(!IsFormOnScreen() || loc == Point.Empty) Location = defaultLocation;
 
             AddMouseIntercepts(this);
