@@ -219,6 +219,16 @@ namespace DESpeedrunUtil.Hotkeys {
             private void Initialize(string json) {
                 if(json != string.Empty) {
                     _keys = JsonConvert.DeserializeObject<Dictionary<int, FPSKey>>(json);
+                    for(int i = 0; i < _keys.Keys.Count; i++) {
+                        var key = GetKeyAndLimitFromID(i, out int lim);
+                        if(lim > 250) {
+                            lim = 250;
+                            _keys[i] = new FPSKey(key, lim);
+                        }else if(lim <= 0) {
+                            lim = -1;
+                            _keys[i] = new FPSKey(key, lim);
+                        }else continue;
+                    }
                 }else {
                     _keys = new();
                     for(int i = 0; i < DEFAULT_KEYS; i++) {
