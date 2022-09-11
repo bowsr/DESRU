@@ -61,7 +61,6 @@ namespace DESpeedrunUtil.Hotkeys {
         }
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
-            int hk = -1;
             if(e.KeyCode == Keys.None || (e.Alt && e.KeyCode == Keys.F4)) {
                 e.Handled = false;
                 return;
@@ -92,9 +91,7 @@ namespace DESpeedrunUtil.Hotkeys {
         private void Hook_MouseUp(object sender, MouseEventArgs e) {
             if(ConvertMouseButton(e.Button) == Keys.None) return;
         }
-        private void Hook_MouseScroll(object sender, EventArgs e) {
-            _parent.IncrementScrollCount(((GlobalInputHook.MouseWheelEventArgs) e).Direction);
-        }
+        private void Hook_MouseScroll(object sender, EventArgs e) => _parent.TrackMouseWheel(((GlobalInputHook.MouseWheelEventArgs) e).Direction);
 
         #region STATIC METHODS
         /// <summary>

@@ -46,7 +46,7 @@ namespace DESpeedrunUtil.Memory {
              _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _outOfDateFlag = false, _restartGame = false,
              _trainerFlag = false, _scheduleDynamic = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
-        string _cheatString = "CHEATS ENABLED";
+        string _cheatString = "CHEATS ENABLED", _scrollString = "";
         int _fpsLimit = 250, _targetFPS = 1000;
         float _minRes = 0.01f;
 
@@ -80,10 +80,6 @@ namespace DESpeedrunUtil.Memory {
             Initialize();
         }
 
-        public void IncrementScrollCount(bool dir) {
-            if(dir) _downScrollCount++;
-            else _upScrollCount++;
-        }
 
         public void MemoryTick() {
             DerefPointers();
@@ -105,13 +101,12 @@ namespace DESpeedrunUtil.Memory {
                     _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
                 var cheats = (_cheatsFlag || _restartGame) ? _cheatString : "";
                 if(_cpuPtr == IntPtr.Zero) {
-                    _row3 = cheats;
+                    _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
                     _cpu = "";
                 } else {
-                    _cpu = cheats;
+                    _cpu = (_scrollString != string.Empty) ? _scrollString : cheats;
                     _row3 = "";
                 }
-                _row4 = _downScrollCount + " " + _upScrollCount;
                 SetMetrics(2);
                 ModifyMetricRows();
             }
@@ -223,6 +218,8 @@ namespace DESpeedrunUtil.Memory {
             if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
             return false;
         }
+
+        public void SetScrollPatternString(string scrollString) => _scrollString = scrollString;
 
         private void SetMetrics(byte val) {
             if(val > 6) return;

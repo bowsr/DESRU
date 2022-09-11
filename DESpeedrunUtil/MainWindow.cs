@@ -25,6 +25,8 @@ namespace DESpeedrunUtil {
         private const string PROFILE_FILE = @"\profile.bin";
         private const string FPSKEYS_JSON = @".\fpskeys.json";
 
+        private const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
+
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
 
@@ -43,7 +45,7 @@ namespace DESpeedrunUtil {
         bool _enableMacro = true;
 
         HotkeyHandler? _hotkeys;
-        int _fps0, _fps1, _fps2, _fpsDefault, _minResPercent, _targetFPS;
+        int _fpsDefault, _minResPercent, _targetFPS;
 
         MemoryHandler? _memory;
 
@@ -57,6 +59,21 @@ namespace DESpeedrunUtil {
 
         string _gameDirectory = "", _steamDirectory = "", _steamInstallation = "", _steamID3 = "";
         List<string>? _gameVersions;
+
+        bool _trackScroll = false, _displayPattern = false, _direction = false, _directionChanged = false;
+        string _storedDisplay = "";
+        long _scrollTime, _scrollDisplayTime;
+        ScrollPattern _scrollPattern = new();
+        struct ScrollPattern {
+            public int ScrollCount { get; set; }
+            public long DeltaTotal { get; set; }
+
+            public long Average() => (ScrollCount > 1) ? DeltaTotal / (ScrollCount - 1) : DeltaTotal;
+            public void Reset() {
+                ScrollCount = 0;
+                DeltaTotal = 0;
+            }
+        }
 
         public MainWindow() {
             InitializeComponent();
@@ -75,10 +92,6 @@ namespace DESpeedrunUtil {
             desruVersionLabel.Text = Program.APP_VERSION;
 
             RemoveTabStop(this);
-        }
-
-        public void IncrementScrollCount(bool dir) {
-            if(Hooked) _memory.IncrementScrollCount(dir);
         }
 
         // Main timer method that runs this utility's logic.
@@ -164,6 +177,28 @@ namespace DESpeedrunUtil {
                 unlockResButton.Enabled = false;
                 unlockResButton.Text = "Unlock in Progress";
             }
+
+            if(_trackScroll) {
+                var delta = DateTime.Now.Ticks - _scrollTime;
+                if((delta / 10000) >= MAX_SCROLL_DELTA || _directionChanged) {
+                    string display = "";
+                    if(!_directionChanged) {
+                        _trackScroll = false;
+                        var avg = _scrollPattern.Average() / 10000f;
+                        display = _scrollPattern.ScrollCount + " (" + ((avg > 0f) ? avg.ToString("0.0") + "ms" : "-") + ")";
+                    }else {
+                        display = _storedDisplay;
+                        _directionChanged = false;
+                    }
+                    _displayPattern = true;
+                    _scrollDisplayTime = DateTime.Now.Ticks;
+                    _memory.SetScrollPatternString(display);
+                }
+            }
+            if(_displayPattern && ((DateTime.Now.Ticks - _scrollDisplayTime) / 10000) >= 3000) {
+                _displayPattern = false;
+                _memory.SetScrollPatternString(string.Empty);
+            }
         }
 
         // Timer method used to update the info panel on the main form
@@ -235,6 +270,35 @@ namespace DESpeedrunUtil {
                 throw new Exception("Could not check if game window was in focus.");
             }
             return focus;
+        }
+
+        /// <summary>
+        /// Counts every scroll input and the delta time between each input.
+        /// </summary>
+        /// <param name="dir">Scroll direction. <see langword="true"/> = down</param>
+        public void TrackMouseWheel(bool dir) {
+            if(!_trackScroll) {
+                _trackScroll = true;
+                _direction = dir;
+                _displayPattern = false;
+                _scrollPattern.Reset();
+                _scrollTime = DateTime.Now.Ticks;
+            }
+            if(_trackScroll) {
+                var now = DateTime.Now.Ticks;
+                var delta = now - _scrollTime;
+                if(dir != _direction) {
+                    _directionChanged = true;
+                    _scrollTime = now;
+                    _direction = dir;
+                    var avg = _scrollPattern.Average() / 10000f;
+                    _storedDisplay = _scrollPattern.ScrollCount + " (" + ((avg > 0f) ? avg.ToString("0.0") + "ms" : "-") + ")";
+                    _scrollPattern.Reset();
+                }
+                if(_scrollPattern.ScrollCount > 0) _scrollPattern.DeltaTotal += delta;
+                _scrollPattern.ScrollCount++;
+                _scrollTime = now;
+            }
         }
 
         /// <summary>
