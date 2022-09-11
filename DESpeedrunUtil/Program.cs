@@ -9,6 +9,8 @@ namespace DESpeedrunUtil {
         public const string APP_VERSION = "0.6.2";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
+
+        public const int TIMER_INTERVAL = 16;
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
@@ -71,6 +73,7 @@ namespace DESpeedrunUtil {
             }catch(Exception e) {
                 Log.Logger.Fatal(e, "A fatal error has occured.");
             }finally {
+                Log.Information("-----  DESRU Session Ended  -----");
                 Log.CloseAndFlush();
             }
         }

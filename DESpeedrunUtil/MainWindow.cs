@@ -65,7 +65,7 @@ namespace DESpeedrunUtil {
             CollectHotkeyAndLimitFields(this);
 
             _formTimer = new Timer();
-            _formTimer.Interval = 16;
+            _formTimer.Interval = Program.TIMER_INTERVAL;
             _formTimer.Tick += (sender, e) => { UpdateTick(); };
 
             _statusTimer = new Timer();
@@ -77,6 +77,9 @@ namespace DESpeedrunUtil {
             RemoveTabStop(this);
         }
 
+        public void IncrementScrollCount(bool dir) {
+            if(Hooked) _memory.IncrementScrollCount(dir);
+        }
 
         // Main timer method that runs this utility's logic.
         private void UpdateTick() {
@@ -291,6 +294,7 @@ namespace DESpeedrunUtil {
         /// </summary>
         /// <param name="fps">FPS Limit</param>
         public void ToggleFPSCap(int fps) {
+            if(!Hooked) return;
             int current = _memory.ReadMaxHz();
             _memory.SetMaxHz((current != fps) ? fps : _fpsDefault);
         }
@@ -806,9 +810,8 @@ namespace DESpeedrunUtil {
                 int type = tag switch {
                     "hkMacroDown" => 0,
                     "hkMacroUp" => 1,
-                    // "resToggle" => 2,                         | FPS & Res Scale hotkey fields cannot be set to mouse buttons for the time being
-                    // _ => (int) char.GetNumericValue(tag[^1]), | due to globalKeyboardHook only having KeyHooks
-                    _ => -1,
+                    "hkResToggle" => 2,
+                    _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 3 : -1,
                 };
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
             }

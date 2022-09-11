@@ -8,7 +8,7 @@ namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
 
         private readonly MainWindow _parent;
-        private globalKeyboardHook _hook;
+        private GlobalInputHook _hook;
         private bool _resScaleKeyEnabled = false;
 
         public bool Enabled { get; private set; }
@@ -17,13 +17,16 @@ namespace DESpeedrunUtil.Hotkeys {
         public FPSHotkeyMap FPSHotkeys { get; init; }
 
         public HotkeyHandler(Keys res, string fpsJson, MainWindow parent) {
-            _hook = new globalKeyboardHook();
+            _hook = new GlobalInputHook();
             _parent = parent;
             ResScaleHotkey = res;
             FPSHotkeys = new(fpsJson);
 
             _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
             _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
+            _hook.MouseDown += new MouseEventHandler(Hook_MouseDown);
+            _hook.MouseUp += new MouseEventHandler(Hook_MouseUp);
+            _hook.MouseScroll += new EventHandler(Hook_MouseScroll);
         }
 
         public void EnableHotkeys() {
@@ -76,6 +79,21 @@ namespace DESpeedrunUtil.Hotkeys {
                 return;
             }
             e.Handled = true;
+        }
+        private void Hook_MouseDown(object sender, MouseEventArgs e) {
+            var key = ConvertMouseButton(e.Button);
+            if(key == Keys.None) return;
+            if(key == ResScaleHotkey) {
+                _parent.ToggleResScaling();
+            }else if(FPSHotkeys.ContainsKey(key)) {
+                _parent.ToggleFPSCap(FPSHotkeys.GetLimitFromKey(key));
+            }
+        }
+        private void Hook_MouseUp(object sender, MouseEventArgs e) {
+            if(ConvertMouseButton(e.Button) == Keys.None) return;
+        }
+        private void Hook_MouseScroll(object sender, EventArgs e) {
+            _parent.IncrementScrollCount(((GlobalInputHook.MouseWheelEventArgs) e).Direction);
         }
 
         #region STATIC METHODS

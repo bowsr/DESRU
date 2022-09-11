@@ -53,6 +53,8 @@ namespace DESpeedrunUtil.Memory {
         bool _windowFocused = false, _dynTimer = false;
         long _focusedTime, _dynTime;
 
+        int _downScrollCount = 0, _upScrollCount = 0;
+
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
             _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
             _trainer = null;
@@ -68,7 +70,7 @@ namespace DESpeedrunUtil.Memory {
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
 
             MemoryTimer = new Timer();
-            MemoryTimer.Interval = 16;
+            MemoryTimer.Interval = Program.TIMER_INTERVAL;
             MemoryTimer.Tick += (sender, e) => { MemoryTick(); };
 
             _restartCheatsTimer = new System.Timers.Timer(2500);
@@ -78,7 +80,12 @@ namespace DESpeedrunUtil.Memory {
             Initialize();
         }
 
-        private void MemoryTick() {
+        public void IncrementScrollCount(bool dir) {
+            if(dir) _downScrollCount++;
+            else _upScrollCount++;
+        }
+
+        public void MemoryTick() {
             DerefPointers();
 
             if(!_trainerFlag && ReadyToUnlockRes()) {
@@ -104,6 +111,7 @@ namespace DESpeedrunUtil.Memory {
                     _cpu = cheats;
                     _row3 = "";
                 }
+                _row4 = _downScrollCount + " " + _upScrollCount;
                 SetMetrics(2);
                 ModifyMetricRows();
             }
@@ -164,8 +172,8 @@ namespace DESpeedrunUtil.Memory {
                 if(_trainer.HasExited) {
                     _trainer = null;
                     _trainerFlag = false;
+                }
             }
-        }
             if(_restartGame) {
                 _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED";
             }
@@ -328,7 +336,10 @@ namespace DESpeedrunUtil.Memory {
 
         public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
 
-        public void SetMaxHz(int fps) => _fpsLimit = fps;
+        public void SetMaxHz(int fps) {
+            _fpsLimit = fps;
+            if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
+        }
         /// <summary>
         /// Reads the current value of com_adaptiveTickMaxHz from memory.
         /// </summary>
