@@ -91,11 +91,6 @@ namespace DESpeedrunUtil {
                 unlockResButton.Text = "Unlock Resolution Scaling";
             }
             if(!_fwRestart) firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
-            try {
-                _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
-            }catch(Exception e) {
-                Log.Error(e, "Failed to check if firewall rule exists.");
-            }
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
 
             CheckForMeathook();
@@ -170,6 +165,14 @@ namespace DESpeedrunUtil {
 
         // Timer method used to update the info panel on the main form
         private void StatusTick() {
+            // Checking for the Firewall rule can take upwards of 8ms
+            // so it was moved out of the main timer and into this one since the interval is longer
+            try {
+                _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
+            } catch(Exception e) {
+                Log.Error(e, "Failed to check if firewall rule exists.");
+            }
+
             macroStatus.Text = (_macroProcess.IsRunning) ? "Running" : "Stopped";
             macroStatus.ForeColor = (_macroProcess.IsRunning) ? Color.Lime : TEXT_FORECOLOR;
             hotkeyStatus.Text = (_hotkeys.Enabled) ? "Enabled" : "Disabled";

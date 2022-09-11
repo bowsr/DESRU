@@ -72,7 +72,7 @@ namespace DESpeedrunUtil.Memory {
             MemoryTimer.Tick += (sender, e) => { MemoryTick(); };
 
             _restartCheatsTimer = new System.Timers.Timer(2500);
-            _restartCheatsTimer.Elapsed += (sender, e) => { _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED"; };
+            _restartCheatsTimer.Elapsed += (sender, e) => { RestartTick(); };
 
             Reset = false;
             Initialize();
@@ -80,25 +80,6 @@ namespace DESpeedrunUtil.Memory {
 
         private void MemoryTick() {
             DerefPointers();
-            // Checks if the trainer is running
-            // If the trainer is detected, metric rows are no longer modified, and the restart game flag is set to true
-            // This will eventually be removed once the trainer is integrated directly into DESRU
-            if(_trainer == null) {
-                List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
-                if(procList.Count > 0) {
-                    _trainer = procList[0];
-                    SetFlag(true, "restart");
-                    _trainerFlag = true;
-                }else {
-                    _trainer = null;
-                    _trainerFlag = false;
-                }
-            }else {
-                if(_trainer.HasExited) {
-                    _trainer = null;
-                    _trainerFlag = false;
-                }
-            }
 
             if(!_trainerFlag && ReadyToUnlockRes()) {
                 if(_restartGame) {
@@ -162,6 +143,31 @@ namespace DESpeedrunUtil.Memory {
                     _scheduleDynamic = false;
                     _dynTimer = false;
                 }
+            }
+        }
+        private void RestartTick() {
+            // Checks if the trainer is running
+            // If the trainer is detected, metric rows are no longer modified, and the restart game flag is set to true
+            // This is done here since this process takes upwards of 3ms and this timer has a longer interval.
+            // This will eventually be removed once the trainer is integrated directly into DESRU
+            if(_trainer == null) {
+                List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
+                if(procList.Count > 0) {
+                    _trainer = procList[0];
+                    SetFlag(true, "restart");
+                    _trainerFlag = true;
+                }else {
+                    _trainer = null;
+                    _trainerFlag = false;
+                }
+            }else {
+                if(_trainer.HasExited) {
+                    _trainer = null;
+                    _trainerFlag = false;
+            }
+        }
+            if(_restartGame) {
+                _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED";
             }
         }
 
