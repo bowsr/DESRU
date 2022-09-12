@@ -2,7 +2,7 @@
 
 namespace DESpeedrunUtil.Hotkeys {
     /// <summary>
-    /// A class that manages a global low level keyboard hook
+    /// A class that manages a global low level input hook
     /// </summary>
     class GlobalInputHook {
         #region Constant, Structure and Delegate Definitions
@@ -55,9 +55,9 @@ namespace DESpeedrunUtil.Hotkeys {
 
         #region Instance Variables
         /// <summary>
-        /// The collections of keys to watch for
+        /// The collections of keys to watch for. Includes MouseButtons translated to Keys
         /// </summary>
-        public List<Keys> HookedKeys = new List<Keys>();
+        public List<Keys> HookedKeys = new();
         /// <summary>
         /// Handle to the hook, need this to unhook and call the next hook
         /// </summary>
@@ -74,8 +74,17 @@ namespace DESpeedrunUtil.Hotkeys {
         /// Occurs when one of the hooked keys is released
         /// </summary>
         public event KeyEventHandler KeyUp;
+        /// <summary>
+        /// Occurs when one of the hooked mouse buttons is pressed
+        /// </summary>
         public event MouseEventHandler MouseDown;
+        /// <summary>
+        /// Occurs when one of the hooked mouse buttons is released
+        /// </summary>
         public event MouseEventHandler MouseUp;
+        /// <summary>
+        /// Occurs when the mouse wheel is scrolled in either direction
+        /// </summary>
         public event EventHandler MouseScroll;
         #endregion
 
@@ -138,6 +147,14 @@ namespace DESpeedrunUtil.Hotkeys {
             }
             return CallNextHookEx(_kHook, code, wParam, ref lParam);
         }
+
+        /// <summary>
+        /// The callback for the mouse hook
+        /// </summary>
+        /// <param name="code">The hook code, if it isn't >= 0, the function shouldn't do anyting</param>
+        /// <param name="wParam">The event type</param>
+        /// <param name="lParam">The mousehook event information</param>
+        /// <returns></returns>
         public int MouseProc(int code, int wParam, ref MouseHookStruct lParam) {
             if(code >= 0) {
                 ushort subCode;
@@ -221,6 +238,9 @@ namespace DESpeedrunUtil.Hotkeys {
         static extern IntPtr LoadLibrary(string lpFileName);
         #endregion
 
+        /// <summary>
+        /// Extension of EventArgs to send MouseWheel scroll direction
+        /// </summary>
         internal class MouseWheelEventArgs: EventArgs {
             public bool Direction { get; init; }
 

@@ -1,7 +1,6 @@
 ﻿using DESpeedrunUtil.Macro;
 using Newtonsoft.Json;
 using Serilog;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace DESpeedrunUtil.Hotkeys {
@@ -14,6 +13,9 @@ namespace DESpeedrunUtil.Hotkeys {
         public bool Enabled { get; private set; }
         public Keys ResScaleHotkey { get; private set; } = Keys.None;
 
+        /// <summary>
+        /// Data structure for storing FPS hotkeys
+        /// </summary>
         public FPSHotkeyMap FPSHotkeys { get; init; }
 
         public HotkeyHandler(Keys res, string fpsJson, MainWindow parent) {
@@ -29,23 +31,37 @@ namespace DESpeedrunUtil.Hotkeys {
             _hook.MouseScroll += new EventHandler(Hook_MouseScroll);
         }
 
+        /// <summary>
+        /// Enables global hotkeys
+        /// </summary>
         public void EnableHotkeys() {
             if(Enabled) return;
             AddHotkeys();
             Enabled = true;
             Log.Verbose("Hotkeys enabled.");
         }
+        /// <summary>
+        /// Disables global hotkeys
+        /// </summary>
         public void DisableHotkeys() {
             if(!Enabled) return;
             _hook.HookedKeys.Clear();
             Enabled = false;
             Log.Verbose("Hotkeys disabled.");
         }
+        /// <summary>
+        /// Refreshes the currently hooked <see cref="Keys"/> if hotkeys are enabled
+        /// </summary>
         public void RefreshKeys() {
             if(!Enabled) return;
             Log.Verbose("Refreshing hotkeys.");
             AddHotkeys();
         }
+
+        /// <summary>
+        /// Toggles the Resolution Scaling hotkey
+        /// </summary>
+        /// <param name="enabled"><see langword="true"/> if enabled</param>
         public void ToggleResScaleKey(bool enabled) {
             _resScaleKeyEnabled = enabled;
             RefreshKeys();
@@ -155,6 +171,12 @@ namespace DESpeedrunUtil.Hotkeys {
                 Log.Information("FPSHotkey {FPSKey} changed to {Key}", fpstype, key);
             }
         }
+
+        /// <summary>
+        /// Gets a key representing which modifier key was pressed
+        /// </summary>
+        /// <param name="modifier">Which modifier to check</param>
+        /// <returns>Specific <see cref="Keys"/> value of the mod key pressed</returns>
         public static Keys ModKeySelector(int modifier) {
             return modifier switch {
                 0 => (GetAsyncKeyState(Keys.RControlKey) & 0x01) == 1 ? Keys.RControlKey : Keys.LControlKey,
@@ -164,6 +186,11 @@ namespace DESpeedrunUtil.Hotkeys {
             };
         }
 
+        /// <summary>
+        /// Converts <see cref="MouseButtons"/> into their respective <see cref="Keys"/>
+        /// </summary>
+        /// <param name="button">The button to convert</param>
+        /// <returns><see cref="Keys"/> representation of the button</returns>
         public static Keys ConvertMouseButton(MouseButtons button) {
             return button switch {
                 MouseButtons.Left => Keys.LButton,
@@ -175,6 +202,11 @@ namespace DESpeedrunUtil.Hotkeys {
             };
         }
 
+        /// <summary>
+        /// Translates <see cref="Keys"/> names into more widely known representations
+        /// </summary>
+        /// <param name="key">Key to translate</param>
+        /// <returns>Name of key</returns>
         public static string TranslateKeyNames(Keys key) {
             return key switch {
                 Keys.LButton => "MOUSE1",
@@ -219,15 +251,28 @@ namespace DESpeedrunUtil.Hotkeys {
         [DllImport("user32.dll")]
         public static extern ushort GetAsyncKeyState(Keys vKey);
 
+        /// <summary>
+        /// Dictionary wrapper for storing FPS Hotkeys and their respective limits
+        /// </summary>
         internal class FPSHotkeyMap {
 
+            /// <summary>
+            /// Default number of hotkeys to generate if there are none stored in JSON
+            /// </summary>
             public const int DEFAULT_KEYS = 15;
 
             private Dictionary<int, FPSKey> _keys;
 
+            /// <summary>
+            /// Initializes data structure with default values
+            /// </summary>
             public FPSHotkeyMap() {
                 Initialize("");
             }
+            /// <summary>
+            /// Initializes data structure with stored values in JSON
+            /// </summary>
+            /// <param name="json">JSON string</param>
             public FPSHotkeyMap(string json) {
                 Initialize(json);
             }
@@ -252,9 +297,23 @@ namespace DESpeedrunUtil.Hotkeys {
                 }
             }
 
+            /// <summary>
+            /// Fetches a collection of all <see cref="FPSKey"/> values
+            /// </summary>
+            /// <returns>Collection of <see cref="FPSKey"/></returns>
             public Dictionary<int, FPSKey>.ValueCollection GetAllFPSKeys() => _keys.Values;
+            /// <summary>
+            /// Fetches the number of hotkey entries
+            /// </summary>
+            /// <returns>Count of IDs</returns>
             public int Count() => _keys.Keys.Count;
 
+            /// <summary>
+            /// Fetches both the <see cref="Keys"/> and Limit of the specified hotkey ID
+            /// </summary>
+            /// <param name="id">ID of hotkey</param>
+            /// <param name="fps"><see langword="int"/> reference of limit</param>
+            /// <returns>The key of the hotkey</returns>
             public Keys GetKeyAndLimitFromID(int id, out int fps) {
                 try {
                     var fpskey = _keys[id];
@@ -267,6 +326,11 @@ namespace DESpeedrunUtil.Hotkeys {
                     return Keys.None;
                 }
             }
+            /// <summary>
+            /// Fetches the <see cref="Keys"/> of the specified hotkey ID
+            /// </summary>
+            /// <param name="id">ID of hotkey</param>
+            /// <returns>The key of the hotkey</returns>
             public Keys GetKeyFromID(int id) {
                 try {
                     return _keys[id].Key;
@@ -276,6 +340,11 @@ namespace DESpeedrunUtil.Hotkeys {
                     return Keys.None;
                 }
             }
+            /// <summary>
+            /// Fetches the limit of the specified hotkey ID
+            /// </summary>
+            /// <param name="id">ID of hotkey</param>
+            /// <returns>The hotkey's FPS limit</returns>
             public int GetLimitFromID(int id) {
                 try {
                     return _keys[id].Limit;
@@ -286,6 +355,11 @@ namespace DESpeedrunUtil.Hotkeys {
                 }
             }
 
+            /// <summary>
+            /// Fetches the limit of the specified key
+            /// </summary>
+            /// <param name="key">Key of the hotkey</param>
+            /// <returns>The hotkey's FPS Limit</returns>
             public int GetLimitFromKey(Keys key) {
                 foreach(FPSKey k in _keys.Values) {
                     if(k.Key == key) return k.Limit;
@@ -293,6 +367,11 @@ namespace DESpeedrunUtil.Hotkeys {
                 return -1;
             }
 
+            /// <summary>
+            /// Checks if the data structure contains a hotkey with the specified <see cref="Keys"/>
+            /// </summary>
+            /// <param name="key">Key to check</param>
+            /// <returns><see langword="true"/> if key is found</returns>
             public bool ContainsKey(Keys key) {
                 foreach(FPSKey k in _keys.Values) {
                     if(k.Key == key) return true;
@@ -300,30 +379,36 @@ namespace DESpeedrunUtil.Hotkeys {
                 return false;
             }
 
-            public int GetIDFromKey(Keys key) {
-                var id = -1;
-                foreach(int i in _keys.Keys) {
-                    if(_keys[i].Key == key) {
-                        id = i;
-                        break;
-                    }
-                }
-                return id;
-            }
-
+            /// <summary>
+            /// Changes the FPS limit of the specified hotkey ID
+            /// </summary>
+            /// <param name="id">ID of the hotkey</param>
+            /// <param name="limit">New FPS Limit</param>
             public void ChangeLimit(int id, int limit) {
                 if(id == -1) return;
                 var key = GetKeyFromID(id);
                 _keys[id] = new FPSKey(key, limit);
             }
+            /// <summary>
+            /// Changes the <see cref="Keys"/> of the specified hotkey ID
+            /// </summary>
+            /// <param name="id">ID of the hotkey</param>
+            /// <param name="key">New Key</param>
             public void ChangeKey(int id, Keys key) {
                 if(id == -1) return;
                 var limit = GetLimitFromID(id);
                 _keys[id] = new FPSKey(key, limit);
             }
 
+            /// <summary>
+            /// Serializes the wrapped Dictionary into a JSON object string
+            /// </summary>
+            /// <returns>The JSON string representation</returns>
             public string SerializeIntoJSON() => JsonConvert.SerializeObject(_keys, Formatting.Indented);
 
+            /// <summary>
+            /// Struct that stores both the <see cref="Keys"/> and Limit together
+            /// </summary>
             internal readonly struct FPSKey {
                 public Keys Key { get; init; }
                 public int Limit { get; init; }

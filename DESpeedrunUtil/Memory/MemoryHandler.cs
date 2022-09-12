@@ -333,6 +333,10 @@ namespace DESpeedrunUtil.Memory {
 
         public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
 
+        /// <summary>
+        /// Sets the stored fps limit and also modifies the value in DOOMEternal's memory for an instant response
+        /// </summary>
+        /// <param name="fps">FPS Limit</param>
         public void SetMaxHz(int fps) {
             _fpsLimit = fps;
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
@@ -468,6 +472,7 @@ namespace DESpeedrunUtil.Memory {
 
         private void SigScans() {
             // This only needs to be done on the first hook of the game. Offsets can be saved since they're not pointer chains.
+            // Despite knowing the offsets, they will still need to be placed in a DeepPointer to prevent a massive memory usage and possible leak
             Log.Information("Signature Scans initiated. moduleSize: {ModuleSize}", _moduleSize);
             IntPtr r1, r2, r3, r4, r5, r6, r7, r8, r9, res;
             r1 = r2 = r3 = r4 = r5 = r6 = r7 = r8 = r9 = res = IntPtr.Zero;
@@ -563,7 +568,7 @@ namespace DESpeedrunUtil.Memory {
         [DllImport("user32.dll")]
         private static extern IntPtr GetForegroundWindow();
 
-        public struct KnownOffsets {
+        internal struct KnownOffsets {
             public string Version { get; init; }
 
             public int Row1 { get; init; }
