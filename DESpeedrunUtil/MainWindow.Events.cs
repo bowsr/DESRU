@@ -335,6 +335,7 @@ namespace DESpeedrunUtil {
             if(loc != Point.Empty) Location = loc;
             this.Height = 704;
             if(!IsFormOnScreen() || loc == Point.Empty) Location = defaultLocation;
+            Log.Information("Loaded user settings");
 
             AddMouseIntercepts(this);
 
@@ -342,6 +343,7 @@ namespace DESpeedrunUtil {
             if(_steamInstallation != "n/a") SearchForGameSaves();
             _formTimer.Start();
             _statusTimer.Start();
+            Log.Information("Loaded MainWindow");
         }
 
         // Event method that runs upon closing of the <c>MainWindow</c> form.
@@ -366,6 +368,7 @@ namespace DESpeedrunUtil {
             File.WriteAllText(FPSKEYS_JSON, _hotkeys.FPSHotkeys.SerializeIntoJSON());
 
             Properties.Settings.Default.Save();
+            Log.Information("User settings saved");
 
             _hotkeys.DisableHotkeys();
             _macroProcess.Stop(false);

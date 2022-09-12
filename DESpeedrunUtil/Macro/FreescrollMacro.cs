@@ -37,6 +37,7 @@ namespace DESpeedrunUtil.Macro {
             _downScrollKey = downScroll;
             _upScrollKey = upScroll;
             CreateBindingsFile();
+            Log.Information("Initialized FreescrollMacro");
         }
 
         /// <summary>

@@ -67,7 +67,7 @@ namespace DESpeedrunUtil {
             public int ScrollCount { get; set; }
             public long DeltaTotal { get; set; }
 
-            public long Average() => (ScrollCount > 1) ? DeltaTotal / (ScrollCount - 1) : DeltaTotal;
+            public long Average() => (ScrollCount > 1) ? DeltaTotal / (ScrollCount - 1) : 0;
             public void Reset() {
                 ScrollCount = 0;
                 DeltaTotal = 0;
@@ -138,14 +138,14 @@ namespace DESpeedrunUtil {
                     if(!_memory.GetFlag("unlockscheduled")) {
                         if(!CheckIfGameIsInFocus()) {
                             _hotkeys.DisableHotkeys();
-                        } else {
+                        }else {
                             _hotkeys.EnableHotkeys();
                         }
                     }
                 }
                 if(!CheckIfGameIsInFocus()) {
                     _macroProcess.Stop(true);
-                } else {
+                }else {
                     if(_enableMacro) {
                         if(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
                             _macroProcess.Restart();
@@ -170,7 +170,7 @@ namespace DESpeedrunUtil {
             if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
                 unlockResButton.Enabled = true;
                 unlockResButton.Text = "Update Minimum Resolution";
-            } else if(!_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
+            }else if(!_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
                 unlockResButton.Enabled = true;
                 unlockResButton.Text = "Unlock Resolution Scaling";
             }
@@ -325,6 +325,9 @@ namespace DESpeedrunUtil {
             targetFPSInput.Text = _targetFPS.ToString();
         }
 
+        /// <summary>
+        /// Populates the Version selector with all currently detected game versions
+        /// </summary>
         public void PopulateVersionDropDown() {
             versionDropDownSelector.Items.Clear();
             for(int i = 0; i < _gameVersions.Count; i++) {

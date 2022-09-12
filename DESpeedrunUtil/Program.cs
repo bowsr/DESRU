@@ -6,11 +6,15 @@ using System.Net;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.6.2";
+        public const string APP_VERSION = "0.7.0";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
 
+        /// <summary>
+        /// MainWindow & MemoryHandler timer intervals, in milliseconds
+        /// </summary>
         public const int TIMER_INTERVAL = 16;
+
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>

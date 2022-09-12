@@ -78,6 +78,7 @@ namespace DESpeedrunUtil.Memory {
 
             Reset = false;
             Initialize();
+            Log.Information("Initialized MemoryHandler");
         }
 
 

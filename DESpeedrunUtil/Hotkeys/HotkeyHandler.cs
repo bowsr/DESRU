@@ -29,6 +29,7 @@ namespace DESpeedrunUtil.Hotkeys {
             _hook.MouseDown += new MouseEventHandler(Hook_MouseDown);
             _hook.MouseUp += new MouseEventHandler(Hook_MouseUp);
             _hook.MouseScroll += new EventHandler(Hook_MouseScroll);
+            Log.Information("Initialized HotkeyHandler");
         }
 
         /// <summary>
@@ -290,6 +291,7 @@ namespace DESpeedrunUtil.Hotkeys {
                         }else continue;
                     }
                 }else {
+                    Log.Information("FPS Hotkey settings did not exist. Generating default list.");
                     _keys = new();
                     for(int i = 0; i < DEFAULT_KEYS; i++) {
                         _keys.Add(i, new FPSKey());
