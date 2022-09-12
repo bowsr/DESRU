@@ -53,8 +53,6 @@ namespace DESpeedrunUtil.Memory {
         bool _windowFocused = false, _dynTimer = false;
         long _focusedTime, _dynTime;
 
-        int _downScrollCount = 0, _upScrollCount = 0;
-
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
             _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
             _trainer = null;
