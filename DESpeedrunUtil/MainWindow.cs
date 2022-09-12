@@ -195,7 +195,7 @@ namespace DESpeedrunUtil {
                     _memory.SetScrollPatternString(display);
                 }
             }
-            if(_displayPattern && ((DateTime.Now.Ticks - _scrollDisplayTime) / 10000) >= 3000) {
+            if(_displayPattern && ((DateTime.Now.Ticks - _scrollDisplayTime) / 10000) >= 2000) {
                 _displayPattern = false;
                 _memory.SetScrollPatternString(string.Empty);
             }
@@ -280,7 +280,6 @@ namespace DESpeedrunUtil {
             if(!_trackScroll) {
                 _trackScroll = true;
                 _direction = dir;
-                _displayPattern = false;
                 _scrollPattern.Reset();
                 _scrollTime = DateTime.Now.Ticks;
             }
