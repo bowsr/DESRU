@@ -277,14 +277,14 @@ namespace DESpeedrunUtil {
         /// </summary>
         /// <param name="dir">Scroll direction. <see langword="true"/> = down</param>
         public void TrackMouseWheel(bool dir) {
+            var now = DateTime.Now.Ticks;
             if(!_trackScroll) {
                 _trackScroll = true;
                 _direction = dir;
                 _scrollPattern.Reset();
-                _scrollTime = DateTime.Now.Ticks;
+                _scrollTime = now;
             }
             if(_trackScroll) {
-                var now = DateTime.Now.Ticks;
                 var delta = now - _scrollTime;
                 if(dir != _direction) {
                     _directionChanged = true;
