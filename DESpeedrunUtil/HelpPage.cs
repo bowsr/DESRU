@@ -1,4 +1,6 @@
-﻿namespace DESpeedrunUtil {
+﻿using Serilog;
+
+namespace DESpeedrunUtil {
     public partial class HelpPage: Form {
 
         List<Panel> _infoPanels;
@@ -50,19 +52,19 @@
             string tag = (string) button.Tag;
             blankPanel.Visible = false;
             button.Enabled = false;
-            foreach(Button b in _buttons) {
-                if((string) b.Tag != tag) {
+
+            foreach(Button b in _buttons)
+                if((string) b.Tag != tag)
                     b.Enabled = true;
-                }
-            }
-            foreach(Panel p in _infoPanels) {
+
+            foreach(Panel p in _infoPanels)
                 p.Visible = (string) p.Tag == tag;
-            }
         }
 
         private void HelpPage_Load(object sender, EventArgs e) {
             var loc = blankPanel.Location;
-            foreach(Button b in _buttons) b.Enabled = true;
+            foreach(Button b in _buttons) 
+                b.Enabled = true;
             foreach(Panel p in _infoPanels) {
                 p.Location = loc;
                 p.Visible = false;
@@ -73,6 +75,7 @@
             this.Location = new Point(
                 Screen.PrimaryScreen.WorkingArea.Left + (Screen.PrimaryScreen.WorkingArea.Width / 2 - (this.Width / 2)),
                 Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
+            Log.Information("Loaded Help Page");
         }
     }
 }
