@@ -50,6 +50,7 @@
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.helpText6 = new System.Windows.Forms.TextBox();
             this.blankPanel = new System.Windows.Forms.Panel();
+            this.titleText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.macroPanel.SuspendLayout();
             this.keybindPanel.SuspendLayout();
@@ -411,12 +412,29 @@
             this.blankPanel.TabIndex = 11;
             this.blankPanel.Tag = "blank";
             // 
+            // titleText
+            // 
+            this.titleText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
+            this.titleText.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.titleText.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.titleText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.titleText.Location = new System.Drawing.Point(226, 12);
+            this.titleText.Multiline = true;
+            this.titleText.Name = "titleText";
+            this.titleText.ReadOnly = true;
+            this.titleText.Size = new System.Drawing.Size(546, 110);
+            this.titleText.TabIndex = 1;
+            this.titleText.TabStop = false;
+            this.titleText.Text = resources.GetString("titleText.Text");
+            this.titleText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // HelpPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.ClientSize = new System.Drawing.Size(2514, 1178);
+            this.Controls.Add(this.titleText);
             this.Controls.Add(this.blankPanel);
             this.Controls.Add(this.osdPanel);
             this.Controls.Add(this.infoPanel);
@@ -459,6 +477,7 @@
             this.osdPanel.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -489,5 +508,6 @@
         private PictureBox pictureBox3;
         private TextBox helpText6;
         private Panel blankPanel;
+        private TextBox titleText;
     }
 }

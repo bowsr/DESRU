@@ -371,7 +371,7 @@ The Res. Scale Hotkey in the Keybinds section will toggle the minimum resolution
         3t6ZTSEgTCB0ISB0dSEh/+aL78xY7MhPt5s9TCAgdLv+ISF0/v7/7MlK/+WJ/OGBmXSZ/+WI6MNG/v68
         3plN/96Z3v/e/+SG6MJGmd68/968vN7e68dJ/+SF58JG6sdJ/+SD58FG5sFF2rdD/rx0vHUhmd3dTJnd
         /t6Z3f7/3ZlM3ZlN3f68/rx1u/68vJmZ3bx0dLzemUwhvN6ZTCEg3rx0IUyZmXQgdCBMmd3+IXS8TZnd
-        3t68vN68dm4AUgAAAAlwSFlzAAAOvwAADr8BOAVTJAAABZxJREFUeF7tnPl320QUhQW0pSXsWygUKsuO
+        3t68vN68dm4AUgAAAAlwSFlzAAAOvQAADr0BR/uQrQAABZxJREFUeF7tnPl320QUhQW0pSXsWygUKsuO
         cexALGQCaiHQkEADDiGlZXFYG5o2LA0NFEzL3rIW+Ju5781IUWyFcI7nifjw7g/Km9HM6NNoPGduxrKn
         UqmK1XXX37Bn7759N+7ff+CmEZu3i7Xn5ltuve32O+686+577h21ebtYe1Pa+w4OAe79Ke0Dh4YA98GU
         9qHDBtcvBUFQpqjSE/ilMUp51Ydr/jiy6pzKl9+YsJFTPZLSPjppcRs1gDVHvfCxmhe1yiNp4Dcer1GB
@@ -449,7 +449,7 @@ ReShade displays whether ReShade is detected to be running over Vulkan.</value>
   <data name="pictureBox3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMkAAABwCAIAAAA7YcPvAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        vwAADr8BOAVTJAAAXgRJREFUeF6t3QW4X9W1Nnru83z3nJ5iDVAcIgQSCEkgEEIguAR3d9fiVop70RYr
+        vQAADr0BR/uQrQAAXgRJREFUeF6t3QW4X9W1Nnru83z3nJ5iDVAcIgQSCEkgEEIguAR3d9fiVop70RYr
         7kWLS3ApFpLg7hbcHYo09/ff787oOv+dQM+53/e83zhjjTnmmGOO+a4559rZ7E4y9XQztDDDjN2mm36q
         aaenkzDl1L/9zTTTdpt66t9ONx1MNc00k04++RS/+c1Ms8zSq3fvWXv0mHnWWWfp3r33HHPM0bfvnP36
         Qb/+/Weepcd00880zW+nn3a6GaeZfkbRBEnAxARGcrLfTBU9Dr+dYabpZpqFLGd2PlNMNQ1QJp2yG/zX
@@ -870,6 +870,13 @@ Finally, under the version, "CHEATS ENABLED" will show if meath00k is detected. 
 
 On the same line, you'll also see some numbers pop up sometimes. This is your scroll pattern.
 The numbers show how many times you scrolled your mouse wheel in a single scroll, and the average time between each input.</value>
+  </data>
+  <data name="titleText.Text" xml:space="preserve">
+    <value>DOOM Eternal Speedrun Utility
+
+DESRU is a utility program that includes many features that are required and/or helpful during DOOM Eternal speedruns.
+
+Click a button on the left side of this page to learn more about its features.</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

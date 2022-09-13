@@ -38,6 +38,7 @@
             helpText4.Font = MainWindow.EternalUIRegular;
             helpText5.Font = MainWindow.EternalUIRegular;
             helpText6.Font = MainWindow.EternalUIRegular;
+            titleText.Font = MainWindow.EternalUIRegular;
         }
 
         private void CloseButton_Click(object sender, EventArgs e) {
