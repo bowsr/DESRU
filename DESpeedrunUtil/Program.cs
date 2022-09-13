@@ -6,7 +6,7 @@ using System.Net;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.7.1";
+        public const string APP_VERSION = "0.7.2";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
 
@@ -46,7 +46,7 @@ namespace DESpeedrunUtil {
                 Log.Fatal("Found duplicate instances of DESRU! Please close all instances first or restart your system.");
                 MessageBox.Show("Multiple instances of DESRU have been found.\n" +
                     "Please close every instance before re-opening DESRU or reboot your system.", "Duplicate DESRU Instances Detected");
-                Log.CloseAndFlush();
+                CloseLogger();
                 return;
             }
 
@@ -58,10 +58,11 @@ namespace DESpeedrunUtil {
                 var result = dialog.ShowDialog();
                 if(result == DialogResult.OK) {
                     Process.Start(new ProcessStartInfo("https://github.com/bowsr/DESRU/releases/latest") { UseShellExecute = true });
-                    Log.CloseAndFlush();
+                    Log.Information("Opened new update's release page.");
+                    CloseLogger();
                     return;
                 }else if(result == DialogResult.Cancel) {
-                    Log.CloseAndFlush();
+                    CloseLogger();
                     return;
                 }
                 Log.Logger.Warning("User chose to ignore update.");
@@ -69,7 +70,7 @@ namespace DESpeedrunUtil {
             if(!FileCheck()) {
                 MessageBox.Show("Your DESRU installation is broken.\n" +
                     "Please reinstall DESRU, and make sure every file is extracted from the ZIP archive.", "Broken DESRU Installation");
-                Log.CloseAndFlush();
+                CloseLogger();
                 return;
             }
             try {
@@ -77,9 +78,13 @@ namespace DESpeedrunUtil {
             }catch(Exception e) {
                 Log.Logger.Fatal(e, "A fatal error has occured.");
             }finally {
-                Log.Information("-----  DESRU Session Ended  -----");
-                Log.CloseAndFlush();
+                CloseLogger();
             }
+        }
+
+        static void CloseLogger() {
+            Log.Information("-----  DESRU Session Ended  -----");
+            Log.CloseAndFlush();
         }
 
         static void CrashHandler(object sender, UnhandledExceptionEventArgs args) {
@@ -104,7 +109,7 @@ namespace DESpeedrunUtil {
                 Version latest = new(_latestVersion);
                 Version current = new(APP_VERSION);
                 return latest.CompareTo(current) > 0;
-            } else {
+            }else {
                 Log.Logger.Warning("No releases were found when checking for updates.");
                 return false;
             }
