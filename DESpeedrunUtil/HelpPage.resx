@@ -67,7 +67,7 @@
         uZJRPo+6SaNZmJ6S2iqrDZcEY8TRSFNikRweMakFyex3X++Xb5KieAz52izjiCNDVrw9opakqynVEt2U
         mWNZ5f4zT9fq7wu6N8ah9t73nzshvAkfG77/vu/7HwdQfQenhYq/KDkNvYq+UdE6diG6CsdnFS29BSdr
         0HJr647+JVXLqrIseDqCSAqaLqF+LsiqvM/hDSRX5IkuYHsHuuT/6PwnCIJoDuZMr6YAAAAJcEhZcwAA
-        Cw4AAAsOAUC+4UEAADnRSURBVHhe7Z0HmBRF2sf/b80iQcWIigEJi/k877wz3Pl5ip6nZ9ZTTkXMKElB
+        CwwAAAsMAT9AIsgAADnRSURBVHhe7Z0HmBRF2sf/b80iQcWIigEJi/k877wz3Pl5ip6nZ9ZTTkXMKElB
         RVEJKhlUFEEyKkhOEuRABJGcJInknOPC7hI30N/79lQvw2zP7Oxuz+7MbP2e5//Mbnd1pa56u6qrugoG
         g8FgMBgMBoPBYDAYDAaDwWAwGAwGg8FgMBgMBoPBYDAYDAaDwWAwGAyGouU+oHQXpbruIJ81GGpgLaCi
         PmUwGBKdNsDL24kOWESWqJdS3e8BTtenDQZDIvOtUp2ywZUfYAMA6yApazRUXX3aYDAkMDQMqv8JbQBO
@@ -371,7 +371,7 @@ The Res. Scale Hotkey in the Keybinds section will toggle the minimum resolution
         3t6ZTSEgTCB0ISB0dSEh/+aL78xY7MhPt5s9TCAgdLv+ISF0/v7/7MlK/+WJ/OGBmXSZ/+WI6MNG/v68
         3plN/96Z3v/e/+SG6MJGmd68/968vN7e68dJ/+SF58JG6sdJ/+SD58FG5sFF2rdD/rx0vHUhmd3dTJnd
         /t6Z3f7/3ZlM3ZlN3f68/rx1u/68vJmZ3bx0dLzemUwhvN6ZTCEg3rx0IUyZmXQgdCBMmd3+IXS8TZnd
-        3t68vN68dm4AUgAAAAlwSFlzAAAOwgAADsIBFShKgAAABZxJREFUeF7tnPl320QUhQW0pSXsWygUKsuO
+        3t68vN68dm4AUgAAAAlwSFlzAAAOvwAADr8BOAVTJAAABZxJREFUeF7tnPl320QUhQW0pSXsWygUKsuO
         cexALGQCaiHQkEADDiGlZXFYG5o2LA0NFEzL3rIW+Ju5781IUWyFcI7nifjw7g/Km9HM6NNoPGduxrKn
         UqmK1XXX37Bn7759N+7ff+CmEZu3i7Xn5ltuve32O+686+577h21ebtYe1Pa+w4OAe79Ke0Dh4YA98GU
         9qHDBtcvBUFQpqjSE/ilMUp51Ydr/jiy6pzKl9+YsJFTPZLSPjppcRs1gDVHvfCxmhe1yiNp4Dcer1GB
@@ -449,7 +449,7 @@ ReShade displays whether ReShade is detected to be running over Vulkan.</value>
   <data name="pictureBox3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMkAAABwCAIAAAA7YcPvAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
-        wgAADsIBFShKgAAAXgRJREFUeF6t3QW4X9W1Nnru83z3nJ5iDVAcIgQSCEkgEEIguAR3d9fiVop70RYr
+        vwAADr8BOAVTJAAAXgRJREFUeF6t3QW4X9W1Nnru83z3nJ5iDVAcIgQSCEkgEEIguAR3d9fiVop70RYr
         7kWLS3ApFpLg7hbcHYo09/ff787oOv+dQM+53/e83zhjjTnmmGOO+a4559rZ7E4y9XQztDDDjN2mm36q
         aaenkzDl1L/9zTTTdpt66t9ONx1MNc00k04++RS/+c1Ms8zSq3fvWXv0mHnWWWfp3r33HHPM0bfvnP36
         Qb/+/Weepcd00880zW+nn3a6GaeZfkbRBEnAxARGcrLfTBU9Dr+dYabpZpqFLGd2PlNMNQ1QJp2yG/zX
