@@ -26,7 +26,8 @@ namespace DESpeedrunUtil {
             ApplicationConfiguration.Initialize();
             
             var logCfg = new LoggerConfiguration().WriteTo.Console().WriteTo.File(@".\logs\desru_.log", rollingInterval: RollingInterval.Day);
-            bool verbose = false;
+            bool verbose = false, timer = false;
+            uint interval = 0;
             if(args.Length > 0) {
                 bool t = false;
                 for(int i = 0; i < args.Length; i++) {
@@ -35,26 +36,14 @@ namespace DESpeedrunUtil {
                         verbose = true;
                         continue;
                     }
-                    if(s.Equals("-t")) {
+                    if(s.Equals("-t") && !timer) {
                         t = true;
+                        timer = true;
                         continue;
                     }
                     if(t) {
-                        if(!int.TryParse(s, out int interval)) {
-                            interval = 16;
-                            Log.Warning("-t Parameter value must be a valid Integer");
-                        }
-                        if(interval < 16) {
-                            interval = 16;
-                            Log.Warning("-t Parameter value must not be lower than 16");
-                        }
-                        if(interval > 1000) {
-                            interval = 1000;
-                            Log.Warning("-t Parameter value must not exceed 1000");
-                        }
-                        TimerInterval = interval;
+                        if(!uint.TryParse(s, out interval)) interval = 0;
                         t = false;
-                        if(interval != 16) Log.Information("User specified a TimerInterval of {Interval}ms", interval);
                     }
                 }
             }
@@ -65,6 +54,22 @@ namespace DESpeedrunUtil {
                 Log.Logger = logCfg.MinimumLevel.Debug().CreateLogger();
             }
             Log.Information("----- DESRU Session Started -----");
+            if(verbose) Log.Verbose("Verbose Logging Enabled");
+            if(timer) {
+                if(interval == 0) {
+                    Log.Warning("-t Parameter value must be a valid positive integer");
+                }else {
+                    if(interval < 16) {
+                        interval = 16;
+                        Log.Warning("-t Parameter value must not be lower than 16");
+                    }else if(interval > 1000) {
+                        interval = 1000;
+                        Log.Warning("-t Parameter value must not exceed 1000");
+                    }
+                    TimerInterval = (int) interval;
+                    Log.Information("User specified a TimerInterval of {Interval}ms", interval);
+                }
+            }
 
             if(CheckForDuplicateProcesses()) {
                 Log.Fatal("Found duplicate instances of DESRU! Please close all instances first or restart your system.");
