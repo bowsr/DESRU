@@ -3,6 +3,7 @@ using DESpeedrunUtil.Hotkeys;
 using DESpeedrunUtil.Macro;
 using DESpeedrunUtil.Memory;
 using Linearstar.Windows.RawInput;
+using Linearstar.Windows.RawInput.Native;
 using Microsoft.Win32;
 using Serilog;
 using System.Diagnostics;
@@ -83,7 +84,10 @@ namespace DESpeedrunUtil {
         internal event EventHandler<MouseWheelEventArgs> RIMouseScroll;
 
         public MainWindow() {
-            RawInputDevice.RegisterDevice(HidUsageAndPage.Mouse, RawInputDeviceFlags.InputSink, this.Handle);
+            if(Program.UseRawInput) {
+                RawInputDevice.RegisterDevice(HidUsageAndPage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
+                RawInputDevice.RegisterDevice(HidUsageAndPage.Mouse, RawInputDeviceFlags.InputSink, this.Handle);
+            }
 
             InitializeComponent();
             _hotkeyFields = new();
@@ -103,12 +107,82 @@ namespace DESpeedrunUtil {
             RemoveTabStop(this);
         }
 
+        /// <summary>
+        /// Windows Message handler for RawInput handling
+        /// </summary>
+        /// <param name="m"></param>
         protected override void WndProc(ref Message m) {
-            //if(!_gameInFocus) base.WndProc(ref m);
-            if(m.Msg == 0x00FF) {
+            const RawKeyboardFlags DOWN = RawKeyboardFlags.None;
+            const RawKeyboardFlags RDOWN = RawKeyboardFlags.KeyE0;
+            const RawKeyboardFlags UP = RawKeyboardFlags.Up;
+            const RawKeyboardFlags RUP = RawKeyboardFlags.Up | RawKeyboardFlags.KeyE0;
+
+            if(m.Msg == 0x00FF && _gameInFocus) {
                 var data = RawInputData.FromHandle(m.LParam);
-                if(data is RawInputMouseData) {
-                    Debug.WriteLine(data);
+                if(data is RawInputMouseData mouse) {
+                    if(mouse.Mouse.Buttons == RawMouseButtonFlags.MouseWheel) {
+                        var mData = mouse.Mouse.ButtonData;
+                        if(mData == 120 || mData == -120) {
+                            RIMouseScroll?.Invoke(this, new MouseWheelEventArgs(mData == -120));
+                        }
+                    }else {
+                        var rawButton = mouse.Mouse.Buttons;
+                        var button = MouseButtons.None;
+                        bool down;
+                        switch(rawButton) {
+                            case RawMouseButtonFlags.MiddleButtonDown:
+                            case RawMouseButtonFlags.MiddleButtonUp:
+                                button = MouseButtons.Middle;
+                                down = rawButton == RawMouseButtonFlags.MiddleButtonDown;
+                                break;
+                            case RawMouseButtonFlags.Button4Down:
+                            case RawMouseButtonFlags.Button4Up:
+                                button = MouseButtons.XButton1;
+                                down = rawButton == RawMouseButtonFlags.Button4Down;
+                                break;
+                            case RawMouseButtonFlags.Button5Down:
+                            case RawMouseButtonFlags.Button5Up:
+                                button = MouseButtons.XButton2;
+                                down = rawButton == RawMouseButtonFlags.Button5Down;
+                                break;
+                            default:
+                                base.WndProc(ref m);
+                                return;
+                        }
+                        if(button != MouseButtons.None) {
+                            if(_hotkeys.HookedHotkeys.Contains(HotkeyHandler.ConvertMouseButton(button))) {
+                                var mea = new MouseEventArgs(button, 1, 0, 0, 0);
+                                if(down) {
+                                    RIMouseDown?.Invoke(this, mea);
+                                } else {
+                                    RIMouseUp?.Invoke(this, mea);
+                                }
+                            }
+                        }
+                    }
+                }else if(data is RawInputKeyboardData keyboard) {
+                    var key = (Keys) keyboard.Keyboard.VirutalKey;
+                    var flags = keyboard.Keyboard.Flags;
+                    bool up = flags == UP || flags == RUP;
+                    switch(key) {
+                        case Keys.Menu:
+                            key = (flags == RDOWN || flags == RUP) ? Keys.RMenu : Keys.LMenu;
+                            break;
+                        case Keys.ControlKey:
+                            key = (flags == RDOWN || flags == RUP) ? Keys.RControlKey : Keys.LControlKey;
+                            break;
+                        case Keys.ShiftKey:
+                            key = HotkeyHandler.ModKeySelector(1);
+                            break;
+                    }
+                    if(_hotkeys.HookedHotkeys.Contains(key)) {
+                        var kea = new KeyEventArgs(key);
+                        if(!up) {
+                            RIKeyDown?.Invoke(this, kea);
+                        }else {
+                            RIKeyUp?.Invoke(this, kea);
+                        }
+                    }
                 }
             }
             base.WndProc(ref m);
@@ -383,7 +457,7 @@ namespace DESpeedrunUtil {
         /// </summary>
         /// <param name="fps">FPS Limit</param>
         public void ToggleFPSCap(int fps) {
-            if(!Hooked) return;
+            if(!Hooked || fps == -1) return;
             int current = _memory.ReadMaxHz();
             _memory.SetMaxHz((current != fps) ? fps : _fpsDefault);
         }

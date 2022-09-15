@@ -183,7 +183,9 @@ namespace DESpeedrunUtil {
             }
         }
         private void MouseHook_CheckChanged(object sender, EventArgs e) {
-            if(((CheckBox) sender).Checked) {
+            var cb = (CheckBox) sender;
+            if(!cb.Enabled) return;
+            if(cb.Checked) {
                 _hotkeys.HookMouse();
             }else {
                 _hotkeys.UnhookMouse();
@@ -315,6 +317,8 @@ namespace DESpeedrunUtil {
             this.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+
+            if(Program.UseRawInput) enableMouseHookCheckbox.Enabled = false;
 
             // User Settings
             var fpsJson = "";

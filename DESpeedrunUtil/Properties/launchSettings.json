@@ -2,7 +2,7 @@
   "profiles": {
     "DESpeedrunUtil": {
       "commandName": "Project",
-      "commandLineArgs": "-v"
+      "commandLineArgs": "-v -raw"
     }
   }
 }

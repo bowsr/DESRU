@@ -80,6 +80,9 @@ namespace DESpeedrunUtil {
                     Log.Information("User specified a TimerInterval of {Interval}ms", interval);
                 }
             }
+            if(UseRawInput) {
+                Log.Information("User opted to use RawInput for input handling");
+            }
 
             if(CheckForDuplicateProcesses()) {
                 Log.Fatal("Found duplicate instances of DESRU! Please close all instances first or restart your system.");
@@ -91,7 +94,7 @@ namespace DESpeedrunUtil {
 
             if(UpdateCheck()) {
                 UpdateDetected = true;
-                Log.Logger.Information("An update has been detected. New: {LatestVersion} | Installed: {AppVersion}", _latestVersion, APP_VERSION);
+                Log.Information("An update has been detected. New: {LatestVersion} | Installed: {AppVersion}", _latestVersion, APP_VERSION);
                 UpdateDialog dialog = new(_latestVersion);
                 System.Media.SystemSounds.Asterisk.Play();
                 var result = dialog.ShowDialog();
@@ -104,7 +107,7 @@ namespace DESpeedrunUtil {
                     CloseLogger();
                     return;
                 }
-                Log.Logger.Warning("User chose to ignore update.");
+                Log.Warning("User chose to ignore update.");
             }
             if(!FileCheck()) {
                 MessageBox.Show("Your DESRU installation is broken.\n" +
@@ -115,8 +118,9 @@ namespace DESpeedrunUtil {
             try {
                 Application.Run(new MainWindow());
             }catch(Exception e) {
-                Log.Logger.Fatal(e, "A fatal error has occured.");
+                Log.Fatal(e, "A fatal error has occured.");
             }finally {
+                RawInputDevice.UnregisterDevice(HidUsageAndPage.Keyboard);
                 RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);
                 CloseLogger();
             }
@@ -130,6 +134,8 @@ namespace DESpeedrunUtil {
         static void CrashHandler(object sender, UnhandledExceptionEventArgs args) {
             Log.Fatal((Exception) args.ExceptionObject, "Unhandled exception encountered! runtime: {Terminating}", args.IsTerminating);
             Log.CloseAndFlush();
+            RawInputDevice.UnregisterDevice(HidUsageAndPage.Keyboard);
+            RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);
         }
 
         private static bool UpdateCheck() {
@@ -139,7 +145,7 @@ namespace DESpeedrunUtil {
                 client.Headers.Add("User-Agent", "Nothing");
                 json = client.DownloadString("https://api.github.com/repos/bowsr/DESRU/releases");
             }catch(WebException we) {
-                Log.Logger.Error(we, "An error occured when attempting to retrieve app releases." +
+                Log.Error(we, "An error occured when attempting to retrieve app releases." +
                     "Make sure this program has the ability to connect to the internet.");
                 return false;
             }
@@ -150,7 +156,7 @@ namespace DESpeedrunUtil {
                 Version current = new(APP_VERSION);
                 return latest.CompareTo(current) > 0;
             }else {
-                Log.Logger.Warning("No releases were found when checking for updates.");
+                Log.Warning("No releases were found when checking for updates.");
                 return false;
             }
         }

@@ -33,7 +33,7 @@ namespace DESpeedrunUtil.Hotkeys {
                 _hook.MouseDown += new MouseEventHandler(Hook_MouseDown);
                 _hook.MouseUp += new MouseEventHandler(Hook_MouseUp);
                 _hook.MouseScroll += new EventHandler(Hook_MouseScroll);
-            }else {
+            } else {
                 _parent.RIKeyDown += new KeyEventHandler(Hook_KeyDown);
                 _parent.RIKeyUp += new KeyEventHandler(Hook_KeyUp);
                 _parent.RIMouseDown += new MouseEventHandler(Hook_MouseDown);
@@ -42,8 +42,10 @@ namespace DESpeedrunUtil.Hotkeys {
             }
 
             HookedHotkeys = new();
-            HookedHotkeys.Add(ResScaleHotkey);
-            foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) HookedHotkeys.Add(fkey.Key);
+            if(ResScaleHotkey != Keys.None) HookedHotkeys.Add(ResScaleHotkey);
+            foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
+                if(fkey.Key != Keys.None) HookedHotkeys.Add(fkey.Key);
+            }
             Log.Information("Initialized HotkeyHandler");
         }
 
@@ -89,8 +91,10 @@ namespace DESpeedrunUtil.Hotkeys {
         private void ChangeResScaleHotkey(Keys key) => ResScaleHotkey = key;
         private void AddHotkeys() {
             HookedHotkeys.Clear();
-            HookedHotkeys.Add(ResScaleHotkey);
-            foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) HookedHotkeys.Add(fkey.Key);
+            if(ResScaleHotkey != Keys.None) HookedHotkeys.Add(ResScaleHotkey);
+            foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
+                if(fkey.Key != Keys.None) HookedHotkeys.Add(fkey.Key);
+            }
 
             if(Program.UseRawInput) return;
 
@@ -210,20 +214,6 @@ namespace DESpeedrunUtil.Hotkeys {
                 1 => (GetAsyncKeyState(Keys.RShiftKey) & 0x01) == 1 ? Keys.RShiftKey : Keys.LShiftKey,
                 2 => (GetAsyncKeyState(Keys.RMenu) & 0x01) == 1 ? Keys.RMenu : Keys.LMenu,
                 _ => Keys.None,
-            };
-        }
-
-        /// <summary>
-        /// Gets a key representing which modifier key was pressed
-        /// </summary>
-        /// <param name="key">Which modifier key to check</param>
-        /// <returns>Specific <see cref="Keys"/> value of the mod key pressed</returns>
-        public static Keys ModKeySelector(Keys key) {
-            return key switch {
-                Keys.ControlKey => (GetAsyncKeyState(Keys.RControlKey) & 0x01) == 1 ? Keys.RControlKey : Keys.LControlKey,
-                Keys.ShiftKey => (GetAsyncKeyState(Keys.RShiftKey) & 0x01) == 1 ? Keys.RShiftKey : Keys.LShiftKey,
-                Keys.Menu => (GetAsyncKeyState(Keys.RMenu) & 0x01) == 1 ? Keys.RMenu : Keys.LMenu,
-                _ => key,
             };
         }
 
