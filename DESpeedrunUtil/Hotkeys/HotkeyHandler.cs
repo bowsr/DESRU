@@ -1,6 +1,7 @@
 ﻿using DESpeedrunUtil.Macro;
 using Newtonsoft.Json;
 using Serilog;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace DESpeedrunUtil.Hotkeys {
@@ -13,22 +14,36 @@ namespace DESpeedrunUtil.Hotkeys {
         public bool Enabled { get; private set; }
         public Keys ResScaleHotkey { get; private set; } = Keys.None;
 
+        public List<Keys> HookedHotkeys { get; private set; }
+
         /// <summary>
         /// Data structure for storing FPS hotkeys
         /// </summary>
         public FPSHotkeyMap FPSHotkeys { get; init; }
 
         public HotkeyHandler(Keys res, string fpsJson, MainWindow parent) {
-            _hook = new GlobalInputHook();
-            _parent = parent;
             ResScaleHotkey = res;
             FPSHotkeys = new(fpsJson);
+            _parent = parent;
 
-            _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
-            _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
-            _hook.MouseDown += new MouseEventHandler(Hook_MouseDown);
-            _hook.MouseUp += new MouseEventHandler(Hook_MouseUp);
-            _hook.MouseScroll += new EventHandler(Hook_MouseScroll);
+            if(!Program.UseRawInput) {
+                _hook = new GlobalInputHook();
+                _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
+                _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
+                _hook.MouseDown += new MouseEventHandler(Hook_MouseDown);
+                _hook.MouseUp += new MouseEventHandler(Hook_MouseUp);
+                _hook.MouseScroll += new EventHandler(Hook_MouseScroll);
+            }else {
+                _parent.RIKeyDown += new KeyEventHandler(Hook_KeyDown);
+                _parent.RIKeyUp += new KeyEventHandler(Hook_KeyUp);
+                _parent.RIMouseDown += new MouseEventHandler(Hook_MouseDown);
+                _parent.RIMouseUp += new MouseEventHandler(Hook_MouseUp);
+                _parent.RIMouseScroll += new EventHandler<MouseWheelEventArgs>(Hook_MouseScroll);
+            }
+
+            HookedHotkeys = new();
+            HookedHotkeys.Add(ResScaleHotkey);
+            foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) HookedHotkeys.Add(fkey.Key);
             Log.Information("Initialized HotkeyHandler");
         }
 
@@ -42,23 +57,23 @@ namespace DESpeedrunUtil.Hotkeys {
             if(Enabled) return;
             AddHotkeys();
             Enabled = true;
-            Log.Verbose("Hotkeys enabled.");
+            Log.Verbose("Hotkeys enabled");
         }
         /// <summary>
         /// Disables global hotkeys
         /// </summary>
         public void DisableHotkeys() {
             if(!Enabled) return;
-            _hook.HookedKeys.Clear();
+            if(!Program.UseRawInput) _hook.HookedKeys.Clear();
             Enabled = false;
-            Log.Verbose("Hotkeys disabled.");
+            Log.Verbose("Hotkeys disabled");
         }
         /// <summary>
         /// Refreshes the currently hooked <see cref="Keys"/> if hotkeys are enabled
         /// </summary>
         public void RefreshKeys() {
             if(!Enabled) return;
-            Log.Verbose("Refreshing hotkeys.");
+            Log.Verbose("Refreshing hotkeys");
             AddHotkeys();
         }
 
@@ -73,6 +88,12 @@ namespace DESpeedrunUtil.Hotkeys {
 
         private void ChangeResScaleHotkey(Keys key) => ResScaleHotkey = key;
         private void AddHotkeys() {
+            HookedHotkeys.Clear();
+            HookedHotkeys.Add(ResScaleHotkey);
+            foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) HookedHotkeys.Add(fkey.Key);
+
+            if(Program.UseRawInput) return;
+
             _hook.HookedKeys.Clear();
             if(ResScaleHotkey != Keys.None && _resScaleKeyEnabled) _hook.HookedKeys.Add(ResScaleHotkey);
             foreach(FPSHotkeyMap.FPSKey fKey in FPSHotkeys.GetAllFPSKeys()) {
@@ -81,11 +102,11 @@ namespace DESpeedrunUtil.Hotkeys {
         }
 
         private void Hook_KeyDown(object sender, KeyEventArgs e) {
-            if(e.KeyCode == Keys.None || (e.Alt && e.KeyCode == Keys.F4)) {
+            if(e.KeyCode == Keys.None || (e.Alt && e.KeyCode == Keys.F4) || !Enabled) {
                 e.Handled = false;
                 return;
             }
-            if(e.KeyCode == ResScaleHotkey) {
+            if(e.KeyCode == ResScaleHotkey && _resScaleKeyEnabled) {
                 _parent.ToggleResScaling();
             }else if(FPSHotkeys.ContainsKey(e.KeyCode)) {
                 _parent.ToggleFPSCap(FPSHotkeys.GetLimitFromKey(e.KeyCode));
@@ -93,7 +114,7 @@ namespace DESpeedrunUtil.Hotkeys {
             e.Handled = true;
         }
         private void Hook_KeyUp(object sender, KeyEventArgs e) {
-            if(e.KeyCode == Keys.None) {
+            if(e.KeyCode == Keys.None || !Enabled) {
                 e.Handled = false;
                 return;
             }
@@ -101,15 +122,15 @@ namespace DESpeedrunUtil.Hotkeys {
         }
         private void Hook_MouseDown(object sender, MouseEventArgs e) {
             var key = ConvertMouseButton(e.Button);
-            if(key == Keys.None) return;
-            if(key == ResScaleHotkey) {
+            if(key == Keys.None || !Enabled) return;
+            if(key == ResScaleHotkey && _resScaleKeyEnabled) {
                 _parent.ToggleResScaling();
             }else if(FPSHotkeys.ContainsKey(key)) {
                 _parent.ToggleFPSCap(FPSHotkeys.GetLimitFromKey(key));
             }
         }
         private void Hook_MouseUp(object sender, MouseEventArgs e) {
-            if(ConvertMouseButton(e.Button) == Keys.None) return;
+            if(ConvertMouseButton(e.Button) == Keys.None || !Enabled) return;
         }
         private void Hook_MouseScroll(object sender, EventArgs e) => _parent.TrackMouseWheel(((MouseWheelEventArgs) e).Direction);
 
@@ -174,6 +195,8 @@ namespace DESpeedrunUtil.Hotkeys {
                 hotkeys.FPSHotkeys.ChangeKey(fpstype, key);
                 Log.Information("FPSHotkey {FPSKey} changed to {Key}", fpstype, key);
             }
+
+            hotkeys.RefreshKeys();
         }
 
         /// <summary>
@@ -187,6 +210,20 @@ namespace DESpeedrunUtil.Hotkeys {
                 1 => (GetAsyncKeyState(Keys.RShiftKey) & 0x01) == 1 ? Keys.RShiftKey : Keys.LShiftKey,
                 2 => (GetAsyncKeyState(Keys.RMenu) & 0x01) == 1 ? Keys.RMenu : Keys.LMenu,
                 _ => Keys.None,
+            };
+        }
+
+        /// <summary>
+        /// Gets a key representing which modifier key was pressed
+        /// </summary>
+        /// <param name="key">Which modifier key to check</param>
+        /// <returns>Specific <see cref="Keys"/> value of the mod key pressed</returns>
+        public static Keys ModKeySelector(Keys key) {
+            return key switch {
+                Keys.ControlKey => (GetAsyncKeyState(Keys.RControlKey) & 0x01) == 1 ? Keys.RControlKey : Keys.LControlKey,
+                Keys.ShiftKey => (GetAsyncKeyState(Keys.RShiftKey) & 0x01) == 1 ? Keys.RShiftKey : Keys.LShiftKey,
+                Keys.Menu => (GetAsyncKeyState(Keys.RMenu) & 0x01) == 1 ? Keys.RMenu : Keys.LMenu,
+                _ => key,
             };
         }
 
