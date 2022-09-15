@@ -32,6 +32,9 @@ namespace DESpeedrunUtil.Hotkeys {
             Log.Information("Initialized HotkeyHandler");
         }
 
+        public void HookMouse() => _hook.HookMouse();
+        public void UnhookMouse() => _hook.UnhookMouse();
+
         /// <summary>
         /// Enables global hotkeys
         /// </summary>

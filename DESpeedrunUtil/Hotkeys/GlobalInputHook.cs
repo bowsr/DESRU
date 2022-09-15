@@ -88,6 +88,8 @@ namespace DESpeedrunUtil.Hotkeys {
         public event EventHandler MouseScroll;
         #endregion
 
+        public bool MouseHooked { get; private set; } = true;
+
         #region Constructors and Destructors
         /// <summary>
         /// Initializes a new instance of the <see cref="GlobalInputHook"/> class and installs the keyboard hook.
@@ -115,6 +117,7 @@ namespace DESpeedrunUtil.Hotkeys {
             IntPtr hInstance = LoadLibrary("User32");
             _kHook = SetWindowsHookEx(WH_KEYBOARD_LL, _keyHookDelegate, hInstance, 0);
             _mHook = SetWindowsHookEx(WH_MOUSE_LL, _mouseHookDelegate, hInstance, 0);
+            MouseHooked = true;
         }
 
         /// <summary>
@@ -123,6 +126,19 @@ namespace DESpeedrunUtil.Hotkeys {
         public void Unhook() {
             UnhookWindowsHookEx(_kHook);
             UnhookWindowsHookEx(_mHook);
+            MouseHooked = false;
+        }
+
+        public void HookMouse() {
+            if(MouseHooked) return;
+            IntPtr hInstance = LoadLibrary("User32");
+            _mHook = SetWindowsHookEx(WH_MOUSE_LL, _mouseHookDelegate, hInstance, 0);
+            MouseHooked = true;
+        }
+        public void UnhookMouse() {
+            if(!MouseHooked) return;
+            UnhookWindowsHookEx(_mHook);
+            MouseHooked = false;
         }
 
         /// <summary>
@@ -136,7 +152,7 @@ namespace DESpeedrunUtil.Hotkeys {
             if (code >= 0) {
                 Keys key = (Keys)lParam.VKCode;
                 if (HookedKeys.Contains(key)) {
-                    KeyEventArgs kea = new KeyEventArgs(key);
+                    KeyEventArgs kea = new(key);
                     if((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && KeyDown != null) {
                         KeyDown(this, kea);
                     }else if((wParam == WM_KEYUP || wParam == WM_SYSKEYUP) && KeyUp != null) {
@@ -178,11 +194,11 @@ namespace DESpeedrunUtil.Hotkeys {
                             break;
                     }
                     if(button != MouseButtons.None && HookedKeys.Contains(HotkeyHandler.ConvertMouseButton(button))) {
-                        var mbea = new MouseEventArgs(button, 1, 0, 0, 0);
+                        var mea = new MouseEventArgs(button, 1, 0, 0, 0);
                         if((wParam == WM_MBUTTONDOWN || wParam == WM_XBUTTONDOWN) && MouseDown != null) {
-                            MouseDown(this, mbea);
+                            MouseDown(this, mea);
                         }else if((wParam == WM_MBUTTONUP || wParam == WM_XBUTTONUP) && MouseUp != null) {
-                            MouseUp(this, mbea);
+                            MouseUp(this, mea);
                         }
                     }
                 }

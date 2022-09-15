@@ -396,6 +396,12 @@ namespace DESpeedrunUtil.Memory {
             if(Version == "1.0 (Release)") _slopeboostFlag = _game.ReadBytes(_rampJumpPtr, 1)[0] == 0;
         }
 
+        /// <summary>
+        /// Converts a <see langword="string"/> of text into a byte array of a specified length
+        /// </summary>
+        /// <param name="text">Text to convert</param>
+        /// <param name="length">Length of byte array</param>
+        /// <returns>A byte array representing a string</returns>
         public static byte[] ToByteArray(string text, int length) {
             byte[] output = new byte[length];
             byte[] textArray = Encoding.ASCII.GetBytes(text);
@@ -440,7 +446,7 @@ namespace DESpeedrunUtil.Memory {
 
         private void Initialize() {
             _row1DP = _row2DP = _row3DP = _row4DP = _row5DP = _row6DP = _row7DP = _row8DP = _row9DP = null;
-            _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = null;
+            _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = _rampJumpDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = null;
             if(!SetCurrentKnownOffsets(Version)) {
                 SigScans();
             }
@@ -471,14 +477,14 @@ namespace DESpeedrunUtil.Memory {
 
         private void SigScans() {
             // This only needs to be done on the first hook of the game. Offsets can be saved since they're not pointer chains.
-            // Despite knowing the offsets, they will still need to be placed in a DeepPointer to prevent a massive memory usage and possible leak
+            // Despite knowing the offsets, they will still need to be placed in a DeepPointer to prevent massive memory usage and a possible leak
             Log.Information("Signature Scans initiated. moduleSize: {ModuleSize}", _moduleSize);
             IntPtr r1, r2, r3, r4, r5, r6, r7, r8, r9, res;
             r1 = r2 = r3 = r4 = r5 = r6 = r7 = r8 = r9 = res = IntPtr.Zero;
-            SigScanTarget fpsTarget = new SigScanTarget(SIGSCAN_FPS);
-            SigScanTarget dlssTarget = new SigScanTarget(SIGSCAN_DLSS);
-            SigScanTarget resTarget = new SigScanTarget(SIGSCAN_RES_SCALES);
-            SignatureScanner scanner = new SignatureScanner(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
+            SigScanTarget fpsTarget = new(SIGSCAN_FPS);
+            SigScanTarget dlssTarget = new(SIGSCAN_DLSS);
+            SigScanTarget resTarget = new(SIGSCAN_RES_SCALES);
+            SignatureScanner scanner = new(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
             Log.Information("Scanning for FPS counter.");
             r1 = scanner.Scan(fpsTarget);
             if(r1 != IntPtr.Zero) {
@@ -500,7 +506,7 @@ namespace DESpeedrunUtil.Memory {
                     r8 = dlss + 0x30;
                     r9 = dlss + 0x40;
                 }
-            } else {
+            }else {
                 return;
             }
             Log.Information("Scanning for resolution scale values.");

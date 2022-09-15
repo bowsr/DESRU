@@ -67,6 +67,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.enableMouseHookCheckbox = new System.Windows.Forms.CheckBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.defaultFPS = new System.Windows.Forms.TextBox();
             this.titleSeparator = new System.Windows.Forms.Panel();
@@ -488,7 +489,7 @@
             this.firewallToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.firewallToggleButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.firewallToggleButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.firewallToggleButton.Location = new System.Drawing.Point(3, 62);
+            this.firewallToggleButton.Location = new System.Drawing.Point(3, 83);
             this.firewallToggleButton.Name = "firewallToggleButton";
             this.firewallToggleButton.Size = new System.Drawing.Size(186, 32);
             this.firewallToggleButton.TabIndex = 0;
@@ -552,7 +553,7 @@
             this.meathookToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.meathookToggleButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.meathookToggleButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.meathookToggleButton.Location = new System.Drawing.Point(3, 100);
+            this.meathookToggleButton.Location = new System.Drawing.Point(3, 121);
             this.meathookToggleButton.Name = "meathookToggleButton";
             this.meathookToggleButton.Size = new System.Drawing.Size(186, 29);
             this.meathookToggleButton.TabIndex = 24;
@@ -565,7 +566,7 @@
             this.meathookRestartLabel.AutoSize = true;
             this.meathookRestartLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.meathookRestartLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.meathookRestartLabel.Location = new System.Drawing.Point(189, 105);
+            this.meathookRestartLabel.Location = new System.Drawing.Point(189, 126);
             this.meathookRestartLabel.Name = "meathookRestartLabel";
             this.meathookRestartLabel.Size = new System.Drawing.Size(114, 18);
             this.meathookRestartLabel.TabIndex = 25;
@@ -576,7 +577,7 @@
             this.firewallRestartLabel.AutoSize = true;
             this.firewallRestartLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.firewallRestartLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.firewallRestartLabel.Location = new System.Drawing.Point(189, 69);
+            this.firewallRestartLabel.Location = new System.Drawing.Point(189, 90);
             this.firewallRestartLabel.Name = "firewallRestartLabel";
             this.firewallRestartLabel.Size = new System.Drawing.Size(114, 18);
             this.firewallRestartLabel.TabIndex = 26;
@@ -741,6 +742,7 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.enableMouseHookCheckbox);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.enableHotkeysCheckbox);
             this.panel2.Controls.Add(this.autorunMacroCheckbox);
@@ -751,8 +753,23 @@
             this.panel2.Controls.Add(this.defaultFPSLabel);
             this.panel2.Location = new System.Drawing.Point(12, 555);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(304, 134);
+            this.panel2.Size = new System.Drawing.Size(304, 156);
             this.panel2.TabIndex = 31;
+            // 
+            // enableMouseHookCheckbox
+            // 
+            this.enableMouseHookCheckbox.AutoSize = true;
+            this.enableMouseHookCheckbox.Checked = true;
+            this.enableMouseHookCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.enableMouseHookCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.enableMouseHookCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.enableMouseHookCheckbox.Location = new System.Drawing.Point(6, 57);
+            this.enableMouseHookCheckbox.Name = "enableMouseHookCheckbox";
+            this.enableMouseHookCheckbox.Size = new System.Drawing.Size(169, 22);
+            this.enableMouseHookCheckbox.TabIndex = 30;
+            this.enableMouseHookCheckbox.Text = "Enable Mouse Hotkeys";
+            this.enableMouseHookCheckbox.UseVisualStyleBackColor = true;
+            this.enableMouseHookCheckbox.CheckedChanged += new System.EventHandler(this.MouseHook_CheckChanged);
             // 
             // panel3
             // 
@@ -797,7 +814,7 @@
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.exitButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.exitButton.Location = new System.Drawing.Point(478, 657);
+            this.exitButton.Location = new System.Drawing.Point(478, 679);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(149, 32);
             this.exitButton.TabIndex = 32;
@@ -1196,7 +1213,7 @@
             this.helpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.helpButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.helpButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpButton.Location = new System.Drawing.Point(323, 657);
+            this.helpButton.Location = new System.Drawing.Point(323, 679);
             this.helpButton.Name = "helpButton";
             this.helpButton.Size = new System.Drawing.Size(149, 32);
             this.helpButton.TabIndex = 35;
@@ -1238,7 +1255,7 @@
             this.desruVersionLabel.AutoSize = true;
             this.desruVersionLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.desruVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.desruVersionLabel.Location = new System.Drawing.Point(596, 639);
+            this.desruVersionLabel.Location = new System.Drawing.Point(596, 661);
             this.desruVersionLabel.Name = "desruVersionLabel";
             this.desruVersionLabel.Size = new System.Drawing.Size(31, 13);
             this.desruVersionLabel.TabIndex = 38;
@@ -1296,7 +1313,7 @@
             this.extraFPSHotkeysPanel.Controls.Add(this.panel7);
             this.extraFPSHotkeysPanel.Controls.Add(this.panel8);
             this.extraFPSHotkeysPanel.Controls.Add(this.label15);
-            this.extraFPSHotkeysPanel.Location = new System.Drawing.Point(12, 725);
+            this.extraFPSHotkeysPanel.Location = new System.Drawing.Point(12, 747);
             this.extraFPSHotkeysPanel.Name = "extraFPSHotkeysPanel";
             this.extraFPSHotkeysPanel.Size = new System.Drawing.Size(615, 183);
             this.extraFPSHotkeysPanel.TabIndex = 35;
@@ -2027,7 +2044,7 @@
             this.moreHotkeysTitle.AutoSize = true;
             this.moreHotkeysTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.moreHotkeysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.moreHotkeysTitle.Location = new System.Drawing.Point(179, 701);
+            this.moreHotkeysTitle.Location = new System.Drawing.Point(187, 723);
             this.moreHotkeysTitle.Name = "moreHotkeysTitle";
             this.moreHotkeysTitle.Size = new System.Drawing.Size(286, 21);
             this.moreHotkeysTitle.TabIndex = 39;
@@ -2271,5 +2288,6 @@
         private TextBox fpsInput3;
         private Label label15;
         private Label moreHotkeysTitle;
+        private CheckBox enableMouseHookCheckbox;
     }
 }

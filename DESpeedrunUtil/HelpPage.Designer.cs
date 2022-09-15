@@ -335,7 +335,7 @@
             this.helpText4.Multiline = true;
             this.helpText4.Name = "helpText4";
             this.helpText4.ReadOnly = true;
-            this.helpText4.Size = new System.Drawing.Size(542, 461);
+            this.helpText4.Size = new System.Drawing.Size(542, 482);
             this.helpText4.TabIndex = 0;
             this.helpText4.TabStop = false;
             this.helpText4.Text = resources.GetString("helpText4.Text");

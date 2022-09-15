@@ -653,7 +653,7 @@ namespace DESpeedrunUtil {
 
             try {
                 _memory = new MemoryHandler(_gameProcess, _hotkeys);
-            } catch(ArgumentNullException ex) {
+            }catch(ArgumentNullException ex) {
                 Log.Error(ex, "An error occured when attempting to hook into the game.");
                 _gameProcess = null;
                 _memory = null;
@@ -731,7 +731,7 @@ namespace DESpeedrunUtil {
         private void CollectHotkeyAndLimitFields(Control control) {
             foreach(Control c in control.Controls) {
                 if(c.Tag != null) {
-                    var tag = c.Tag.ToString();
+                    string tag = (string) c.Tag;
                     if(tag.StartsWith("hk")) {
                         c.Click += new EventHandler(HotkeyAssignment_FieldSelected);
                         _hotkeyFields.Add((Label) c);
@@ -776,6 +776,7 @@ namespace DESpeedrunUtil {
             hotkeyStatus.Font = EternalUIRegular;
             unlockOnStartupCheckbox.Font = EternalUIRegular;
             autoDynamicCheckbox.Font = EternalUIRegular;
+            enableMouseHookCheckbox.Font = EternalUIRegular;
             minResLabel.Font = EternalUIRegular;
             dynamicTargetLabel.Font = EternalUIRegular;
             minResInput.Font = EternalUIRegular;
@@ -806,7 +807,7 @@ namespace DESpeedrunUtil {
             helpButton.Font = EternalUIBold;
             unlockResButton.Font = EternalUIBold;
 
-            // Eternal Logo Bold 17.25point
+            // Eternal Logo Bold 14point
             hotkeysTitle.Font = EternalLogoBold;
             versionTitle.Font = EternalLogoBold;
             optionsTitle.Font = EternalLogoBold;
@@ -820,7 +821,7 @@ namespace DESpeedrunUtil {
         public bool IsFormOnScreen() {
             Screen[] screens = Screen.AllScreens;
             foreach(var display in screens) {
-                Rectangle rect = new Rectangle(this.Left, this.Top, this.Width, this.Height);
+                Rectangle rect = new(this.Left, this.Top, this.Width, this.Height);
                 if(display.WorkingArea.Contains(rect)) return true;
             }
             return false;
