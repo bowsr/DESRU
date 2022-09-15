@@ -2,6 +2,7 @@ using DESpeedrunUtil.Firewall;
 using DESpeedrunUtil.Hotkeys;
 using DESpeedrunUtil.Macro;
 using DESpeedrunUtil.Memory;
+using Linearstar.Windows.RawInput;
 using Microsoft.Win32;
 using Serilog;
 using System.Diagnostics;
@@ -32,6 +33,7 @@ namespace DESpeedrunUtil {
         Process? _gameProcess;
         public bool Hooked = false;
         bool _duplicateProcesses = false, _firstRun = true;
+        bool _gameInFocus = false;
 
         bool _mouseDown;
         Point _lastLocation;
@@ -74,7 +76,15 @@ namespace DESpeedrunUtil {
             }
         }
 
+        internal event KeyEventHandler RIKeyDown;
+        internal event KeyEventHandler RIKeyUp;
+        internal event MouseEventHandler RIMouseDown;
+        internal event MouseEventHandler RIMouseUp;
+        internal event EventHandler<MouseWheelEventArgs> RIMouseScroll;
+
         public MainWindow() {
+            RawInputDevice.RegisterDevice(HidUsageAndPage.Mouse, RawInputDeviceFlags.InputSink, this.Handle);
+
             InitializeComponent();
             _hotkeyFields = new();
             _fpsLimitFields = new();
@@ -93,6 +103,17 @@ namespace DESpeedrunUtil {
             RemoveTabStop(this);
         }
 
+        protected override void WndProc(ref Message m) {
+            //if(!_gameInFocus) base.WndProc(ref m);
+            if(m.Msg == 0x00FF) {
+                var data = RawInputData.FromHandle(m.LParam);
+                if(data is RawInputMouseData) {
+                    Debug.WriteLine(data);
+                }
+            }
+            base.WndProc(ref m);
+        }
+
         // Main timer method that runs this utility's logic.
         private void UpdateTick() {
             if(_gameProcess == null || _gameProcess.HasExited) {
@@ -101,6 +122,7 @@ namespace DESpeedrunUtil {
                 _gameProcess = null;
                 if(_memory != null) _memory.MemoryTimer.Stop();
                 _memory = null;
+                _gameInFocus = false;
 
                 unlockResButton.Enabled = false;
                 unlockResButton.Text = "Unlock Resolution Scaling";
@@ -134,17 +156,17 @@ namespace DESpeedrunUtil {
 
             /** Toggling Hotkeys/Macro when game changes focus **/
             try {
-                bool focus = CheckIfGameIsInFocus();
+                _gameInFocus = CheckIfGameIsInFocus();
                 if(enableHotkeysCheckbox.Checked) {
                     if(!_memory.GetFlag("unlockscheduled")) {
-                        if(!focus) {
+                        if(!_gameInFocus) {
                             _hotkeys.DisableHotkeys();
                         }else {
                             _hotkeys.EnableHotkeys();
                         }
                     }
                 }
-                if(!focus) {
+                if(!_gameInFocus) {
                     _macroProcess.Stop(true);
                 }else {
                     if(_enableMacro) {

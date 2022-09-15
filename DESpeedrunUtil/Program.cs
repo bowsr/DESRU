@@ -1,3 +1,4 @@
+using Linearstar.Windows.RawInput;
 using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
@@ -11,12 +12,17 @@ namespace DESpeedrunUtil {
         private static string _latestVersion;
 
         /// <summary>
-        /// MainWindow & MemoryHandler timer intervals, in milliseconds
+        /// Form/Memory Timer intervals, in milliseconds
         /// </summary>
         public static int TimerInterval { get; private set; } = 16;
 
         /// <summary>
-        ///  The main entry point for the application.
+        /// Use RawInput over global low-level hooks
+        /// </summary>
+        public static bool UseRawInput { get; private set; } = false;
+
+        /// <summary>
+        /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args) {
@@ -34,6 +40,10 @@ namespace DESpeedrunUtil {
                     var s = args[i];
                     if(s.Equals("-v")) {
                         verbose = true;
+                        continue;
+                    }
+                    if(s.Equals("-raw")) {
+                        UseRawInput = true;
                         continue;
                     }
                     if(s.Equals("-t") && !timer) {
@@ -107,6 +117,7 @@ namespace DESpeedrunUtil {
             }catch(Exception e) {
                 Log.Logger.Fatal(e, "A fatal error has occured.");
             }finally {
+                RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);
                 CloseLogger();
             }
         }
