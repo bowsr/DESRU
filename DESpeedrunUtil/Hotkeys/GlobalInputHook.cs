@@ -258,16 +258,5 @@ namespace DESpeedrunUtil.Hotkeys {
         [DllImport("kernel32.dll")]
         static extern IntPtr LoadLibrary(string lpFileName);
         #endregion
-
-        /// <summary>
-        /// Extension of EventArgs to send MouseWheel scroll direction
-        /// </summary>
-        internal class MouseWheelEventArgs: EventArgs {
-            public bool Direction { get; init; }
-
-            public MouseWheelEventArgs(bool dir): base() {
-                Direction = dir;
-            }
-        }
     }
 }

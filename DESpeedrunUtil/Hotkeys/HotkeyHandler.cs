@@ -111,7 +111,7 @@ namespace DESpeedrunUtil.Hotkeys {
         private void Hook_MouseUp(object sender, MouseEventArgs e) {
             if(ConvertMouseButton(e.Button) == Keys.None) return;
         }
-        private void Hook_MouseScroll(object sender, EventArgs e) => _parent.TrackMouseWheel(((GlobalInputHook.MouseWheelEventArgs) e).Direction);
+        private void Hook_MouseScroll(object sender, EventArgs e) => _parent.TrackMouseWheel(((MouseWheelEventArgs) e).Direction);
 
         #region STATIC METHODS
         /// <summary>
