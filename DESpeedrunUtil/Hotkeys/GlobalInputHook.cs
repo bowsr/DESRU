@@ -149,18 +149,19 @@ namespace DESpeedrunUtil.Hotkeys {
         /// <param name="lParam">The keyhook event information</param>
         /// <returns></returns>
         public int KeyProc(int code, int wParam, ref KeyboardHookStruct lParam) {
-            if (code >= 0) {
-                Keys key = (Keys)lParam.VKCode;
-                if (HookedKeys.Contains(key)) {
-                    KeyEventArgs kea = new(key);
-                    if((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && KeyDown != null) {
-                        KeyDown(this, kea);
-                    }else if((wParam == WM_KEYUP || wParam == WM_SYSKEYUP) && KeyUp != null) {
-                        KeyUp(this, kea);
-                    }
-                    if(kea.Handled) return 1;
+            if(code < 0) return CallNextHookEx(_kHook, code, wParam, ref lParam);
+
+            Keys key = (Keys)lParam.VKCode;
+            if(HookedKeys.Contains(key)) {
+                KeyEventArgs kea = new(key);
+                if((wParam == WM_KEYDOWN || wParam == WM_SYSKEYDOWN) && KeyDown != null) {
+                    KeyDown(this, kea);
+                }else if((wParam == WM_KEYUP || wParam == WM_SYSKEYUP) && KeyUp != null) {
+                    KeyUp(this, kea);
                 }
+                if(kea.Handled) return 1;
             }
+
             return CallNextHookEx(_kHook, code, wParam, ref lParam);
         }
 
@@ -172,37 +173,41 @@ namespace DESpeedrunUtil.Hotkeys {
         /// <param name="lParam">The mousehook event information</param>
         /// <returns></returns>
         public int MouseProc(int code, int wParam, ref MouseHookStruct lParam) {
-            if(code >= 0) {
-                ushort subCode;
-                if(wParam == WM_MOUSEWHEEL) {
-                    subCode = HighWord(lParam.MouseData);
-                    if((subCode == 120 || subCode == 65416) && MouseScroll != null) {
-                        MouseScroll(this, new MouseWheelEventArgs(subCode == 65416));
-                    }
-                }else {
-                    var button = MouseButtons.None;
-                    switch(wParam) {
-                        case WM_MBUTTONDOWN:
-                        case WM_MBUTTONUP:
-                            button = MouseButtons.Middle;
-                            break;
-                        case WM_XBUTTONDOWN:
-                        case WM_XBUTTONUP:
-                            subCode = HighWord(lParam.MouseData);
-                            if(subCode == XBUTTON1) button = MouseButtons.XButton1;
-                            if(subCode == XBUTTON2) button = MouseButtons.XButton2;
-                            break;
-                    }
-                    if(button != MouseButtons.None && HookedKeys.Contains(HotkeyHandler.ConvertMouseButton(button))) {
-                        var mea = new MouseEventArgs(button, 1, 0, 0, 0);
-                        if((wParam == WM_MBUTTONDOWN || wParam == WM_XBUTTONDOWN) && MouseDown != null) {
-                            MouseDown(this, mea);
-                        }else if((wParam == WM_MBUTTONUP || wParam == WM_XBUTTONUP) && MouseUp != null) {
-                            MouseUp(this, mea);
-                        }
+            if(code < 0) return CallNextHookEx(_mHook, code, wParam, ref lParam);
+
+            if(wParam == WM_MOUSEMOVE || wParam == WM_LBUTTONDOWN || wParam == WM_LBUTTONUP || wParam == WM_RBUTTONDOWN || wParam == WM_RBUTTONUP || wParam == WM_MOUSEHWHEEL)
+                return CallNextHookEx(_mHook, code, wParam, ref lParam);
+            
+            ushort subCode;
+            if(wParam == WM_MOUSEWHEEL) {
+                subCode = HighWord(lParam.MouseData);
+                if((subCode == 120 || subCode == 65416) && MouseScroll != null) {
+                    MouseScroll(this, new MouseWheelEventArgs(subCode == 65416));
+                }
+            }else {
+                var button = MouseButtons.None;
+                switch(wParam) {
+                    case WM_MBUTTONDOWN:
+                    case WM_MBUTTONUP:
+                        button = MouseButtons.Middle;
+                        break;
+                    case WM_XBUTTONDOWN:
+                    case WM_XBUTTONUP:
+                        subCode = HighWord(lParam.MouseData);
+                        if(subCode == XBUTTON1) button = MouseButtons.XButton1;
+                        else if(subCode == XBUTTON2) button = MouseButtons.XButton2;
+                        break;
+                }
+                if(button != MouseButtons.None && HookedKeys.Contains(HotkeyHandler.ConvertMouseButton(button))) {
+                    var mea = new MouseEventArgs(button, 1, 0, 0, 0);
+                    if((wParam == WM_MBUTTONDOWN || wParam == WM_XBUTTONDOWN) && MouseDown != null) {
+                        MouseDown(this, mea);
+                    }else if((wParam == WM_MBUTTONUP || wParam == WM_XBUTTONUP) && MouseUp != null) {
+                        MouseUp(this, mea);
                     }
                 }
             }
+
             return CallNextHookEx(_mHook, code, wParam, ref lParam);
         }
         #endregion

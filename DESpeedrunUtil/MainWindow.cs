@@ -134,16 +134,17 @@ namespace DESpeedrunUtil {
 
             /** Toggling Hotkeys/Macro when game changes focus **/
             try {
+                bool focus = CheckIfGameIsInFocus();
                 if(enableHotkeysCheckbox.Checked) {
                     if(!_memory.GetFlag("unlockscheduled")) {
-                        if(!CheckIfGameIsInFocus()) {
+                        if(!focus) {
                             _hotkeys.DisableHotkeys();
                         }else {
                             _hotkeys.EnableHotkeys();
                         }
                     }
                 }
-                if(!CheckIfGameIsInFocus()) {
+                if(!focus) {
                     _macroProcess.Stop(true);
                 }else {
                     if(_enableMacro) {
@@ -209,7 +210,7 @@ namespace DESpeedrunUtil {
             // so it was moved out of the main timer and into this one since the interval is longer, for better performance
             try {
                 _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
-            } catch(Exception e) {
+            }catch(Exception e) {
                 Log.Error(e, "Failed to check if firewall rule exists.");
             }
 
@@ -223,7 +224,7 @@ namespace DESpeedrunUtil {
                 gameStatus.Text = v;
                 if(v == "1.0 (Release)") {
                     slopeboostStatus.Text = (_memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
-                } else {
+                }else {
                     slopeboostStatus.Text = "N/A";
                 }
                 currentFPSCap.Text = (hz != -1) ? hz.ToString() : "N/A";
@@ -232,10 +233,10 @@ namespace DESpeedrunUtil {
                 if((ms > 0 && ms < 16) && min > 0) {
                     var rs = "Enabled (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
                     resScaleStatus.Text = (_memory.ReadDynamicRes() && min < 1.0f) ? rs : "Disabled";
-                } else {
+                }else {
                     resScaleStatus.Text = "Disabled";
                 }
-            } else {
+            }else {
                 slopeboostStatus.Text = "-";
                 currentFPSCap.Text = "-";
                 resScaleStatus.Text = "-";
@@ -247,16 +248,16 @@ namespace DESpeedrunUtil {
                 if(_memory.GetFlag("cheats")) {
                     cheatsStatus.Text = "Enabled";
                     cheatsStatus.ForeColor = Color.Red;
-                } else {
+                }else {
                     cheatsStatus.Text = "Disabled";
                     cheatsStatus.ForeColor = TEXT_FORECOLOR;
                 }
                 if(_reshadeExists) {
                     reshadeStatus.Text = "Enabled";
-                } else {
+                }else {
                     reshadeStatus.Text = "Disabled";
                 }
-            } else {
+            }else {
                 cheatsStatus.Text = "-";
                 cheatsStatus.ForeColor = TEXT_FORECOLOR;
                 reshadeStatus.Text = "-";
