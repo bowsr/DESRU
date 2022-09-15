@@ -13,7 +13,7 @@ namespace DESpeedrunUtil {
         /// <summary>
         /// MainWindow & MemoryHandler timer intervals, in milliseconds
         /// </summary>
-        public const int TIMER_INTERVAL = 16;
+        public static int TimerInterval { get; private set; } = 16;
 
         /// <summary>
         ///  The main entry point for the application.
@@ -28,13 +28,37 @@ namespace DESpeedrunUtil {
             var logCfg = new LoggerConfiguration().WriteTo.Console().WriteTo.File(@".\logs\desru_.log", rollingInterval: RollingInterval.Day);
             bool verbose = false;
             if(args.Length > 0) {
-                foreach(string s in args) {
+                bool t = false;
+                for(int i = 0; i < args.Length; i++) {
+                    var s = args[i];
                     if(s.Equals("-v")) {
                         verbose = true;
-                        break;
+                        continue;
+                    }
+                    if(s.Equals("-t")) {
+                        t = true;
+                        continue;
+                    }
+                    if(t) {
+                        if(!int.TryParse(s, out int interval)) {
+                            interval = 16;
+                            Log.Warning("-t Parameter value must be a valid Integer");
+                        }
+                        if(interval < 16) {
+                            interval = 16;
+                            Log.Warning("-t Parameter value must not be lower than 16");
+                        }
+                        if(interval > 1000) {
+                            interval = 1000;
+                            Log.Warning("-t Parameter value must not exceed 1000");
+                        }
+                        TimerInterval = interval;
+                        t = false;
+                        if(interval != 16) Log.Information("User specified a TimerInterval of {Interval}ms", interval);
                     }
                 }
             }
+            
             if(verbose) {
                 Log.Logger = logCfg.MinimumLevel.Verbose().CreateLogger();
             }else {

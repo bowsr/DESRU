@@ -68,7 +68,7 @@ namespace DESpeedrunUtil.Memory {
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
 
             MemoryTimer = new Timer();
-            MemoryTimer.Interval = Program.TIMER_INTERVAL;
+            MemoryTimer.Interval = Program.TimerInterval;
             MemoryTimer.Tick += (sender, e) => { MemoryTick(); };
 
             _restartCheatsTimer = new System.Timers.Timer(2500);
@@ -76,7 +76,7 @@ namespace DESpeedrunUtil.Memory {
 
             Reset = false;
             Initialize();
-            Log.Information("Initialized MemoryHandler");
+            Log.Information("Initialized MemoryHandler. Version: {Version}", Version);
         }
 
 

@@ -81,11 +81,11 @@ namespace DESpeedrunUtil {
             CollectHotkeyAndLimitFields(this);
 
             _formTimer = new Timer();
-            _formTimer.Interval = Program.TIMER_INTERVAL;
+            _formTimer.Interval = Program.TimerInterval;
             _formTimer.Tick += (sender, e) => { UpdateTick(); };
 
             _statusTimer = new Timer();
-            _statusTimer.Interval = 500;
+            _statusTimer.Interval = 1000;
             _statusTimer.Tick += (sender, e) => { StatusTick(); };
 
             desruVersionLabel.Text = Program.APP_VERSION;
