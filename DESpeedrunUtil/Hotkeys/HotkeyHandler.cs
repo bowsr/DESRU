@@ -1,7 +1,6 @@
 ﻿using DESpeedrunUtil.Macro;
 using Newtonsoft.Json;
 using Serilog;
-using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace DESpeedrunUtil.Hotkeys {
