@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "DESpeedrunUtil": {
-      "commandName": "Project",
-      "commandLineArgs": "-v -raw"
-    }
-  }
-}
