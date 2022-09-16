@@ -353,7 +353,7 @@ namespace DESpeedrunUtil {
 
             SearchForSteamGameDir();
             if(_steamInstallation != "n/a") SearchForGameSaves();
-            if(!enableMouseHookCheckbox.Checked) _hotkeys.UnhookMouse();
+            if(!enableMouseHookCheckbox.Checked && !Program.UseRawInput) _hotkeys.UnhookMouse();
             _formTimer.Start();
             _statusTimer.Start();
             Log.Information("Loaded MainWindow");
