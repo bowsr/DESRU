@@ -19,7 +19,7 @@ namespace DESpeedrunUtil {
         /// <summary>
         /// Use RawInput over global low-level hooks
         /// </summary>
-        public static bool UseRawInput { get; private set; } = false;
+        public static bool UseRawInput { get; private set; } = true;
 
         /// <summary>
         /// The main entry point for the application.
@@ -42,8 +42,8 @@ namespace DESpeedrunUtil {
                         verbose = true;
                         continue;
                     }
-                    if(s.Equals("-raw")) {
-                        UseRawInput = true;
+                    if(s.Equals("-hook")) {
+                        UseRawInput = false;
                         continue;
                     }
                     if(s.Equals("-t") && !timer) {
@@ -80,8 +80,8 @@ namespace DESpeedrunUtil {
                     Log.Information("User specified a TimerInterval of {Interval}ms", interval);
                 }
             }
-            if(UseRawInput) {
-                Log.Information("User opted to use RawInput for input handling");
+            if(!UseRawInput) {
+                Log.Information("User opted to use Low-Level hooks for input handling instead of RawInput");
             }
 
             if(CheckForDuplicateProcesses()) {

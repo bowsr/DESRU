@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /DESpeedrunUtil/bundle
 /DESpeedrunUtil/notes.txt
+/DESpeedrunUtil/Properties/launchSettings.json
