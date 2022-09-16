@@ -7,7 +7,7 @@ namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
 
         private readonly MainWindow _parent;
-        private GlobalInputHook _hook;
+        private GlobalInputHook _hook = null;
         private bool _resScaleKeyEnabled = false;
 
         public bool Enabled { get; private set; }
@@ -32,7 +32,7 @@ namespace DESpeedrunUtil.Hotkeys {
                 _hook.MouseDown += new MouseEventHandler(Hook_MouseDown);
                 _hook.MouseUp += new MouseEventHandler(Hook_MouseUp);
                 _hook.MouseScroll += new EventHandler(Hook_MouseScroll);
-            } else {
+            }else {
                 _parent.RIKeyDown += new KeyEventHandler(Hook_KeyDown);
                 _parent.RIKeyUp += new KeyEventHandler(Hook_KeyUp);
                 _parent.RIMouseDown += new MouseEventHandler(Hook_MouseDown);
@@ -48,8 +48,18 @@ namespace DESpeedrunUtil.Hotkeys {
             Log.Information("Initialized HotkeyHandler");
         }
 
-        public void HookMouse() => _hook.HookMouse();
-        public void UnhookMouse() => _hook.UnhookMouse();
+        /// <summary>
+        /// Enable the mouse hook
+        /// </summary>
+        public void HookMouse() {
+            if(_hook != null) _hook.HookMouse();
+        }
+        /// <summary>
+        /// Disable the mouse hook
+        /// </summary>
+        public void UnhookMouse() {
+            if(_hook != null) _hook.UnhookMouse();
+        }
 
         /// <summary>
         /// Enables global hotkeys
