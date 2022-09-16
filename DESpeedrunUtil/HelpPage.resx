@@ -347,7 +347,6 @@ Every hotkey can also be used to toggle back to your set max FPS by pressing it 
 If you need more FPS Hotkeys than the three shown, you can click the button at the bottom of this section labeled "Show More FPS Hotkeys." This will expand the window at the bottom, revealing 12 more bindable FPS limit toggles.
 
 
-Aside from the macro keys, all hotkeys are global. This means that when pressed, any key with an action bound will be intercepted and will not be sent to other programs, like DOOM Eternal. This is to prevent binding multiple actions to a single key, as there is no in-game way to do this without console commands, which are not allowed.
 Like the macro, hotkeys will be disabled when DOOM Eternal is not in focus.</value>
   </data>
   <data name="helpText2.Text" xml:space="preserve">
