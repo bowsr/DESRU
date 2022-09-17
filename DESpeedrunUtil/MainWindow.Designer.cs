@@ -23,6 +23,7 @@
         ///  the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
             this.hotkeyField0 = new System.Windows.Forms.Label();
             this.hotkeyField1 = new System.Windows.Forms.Label();
@@ -169,6 +170,7 @@
             this.fpsInput3 = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.moreHotkeysTitle = new System.Windows.Forms.Label();
+            this.toolTip7500 = new System.Windows.Forms.ToolTip(this.components);
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -2051,6 +2053,12 @@
             this.moreHotkeysTitle.Text = "MORE FPS HOTKEYS";
             this.moreHotkeysTitle.Visible = false;
             // 
+            // toolTip7500
+            // 
+            this.toolTip7500.AutoPopDelay = 7500;
+            this.toolTip7500.InitialDelay = 500;
+            this.toolTip7500.ReshowDelay = 100;
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -2289,5 +2297,6 @@
         private Label label15;
         private Label moreHotkeysTitle;
         private CheckBox enableMouseHookCheckbox;
+        private ToolTip toolTip7500;
     }
 }

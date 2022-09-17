@@ -104,6 +104,7 @@ namespace DESpeedrunUtil {
 
             desruVersionLabel.Text = Program.APP_VERSION;
 
+            SetToolTips();
             RemoveTabStop(this);
         }
 
@@ -840,6 +841,37 @@ namespace DESpeedrunUtil {
                 }
                 if(c.Controls.Count > 0) CollectHotkeyAndLimitFields(c);
             }
+        }
+
+        private void SetToolTips() {
+            /** Options **/
+            toolTip7500.SetToolTip(enableMouseHookCheckbox, "Toggle mouse hotkeys and the scroll pattern tracker\n" +
+                "Disable this if you experience mouse lag when playing DE with DESRU running");
+            toolTip7500.SetToolTip(enableHotkeysCheckbox, "Toggle global hotkeys for res. scaling and fps limits");
+            toolTip7500.SetToolTip(autorunMacroCheckbox, "Toggle the Freescroll Emulation Macro");
+            toolTip7500.SetToolTip(defaultFPS, "Set the max FPS you want DOOM Eternal to run at\n" +
+                "Value must be in the range 1-250");
+            toolTip7500.SetToolTip(firewallToggleButton, "Create/Delete a firewall rule blocking DOOM Eternal's connection\n" +
+                "This prevents server side balance updates from being downloaded\n" +
+                "Required to be enabled for Leaderboard Runs");
+            toolTip7500.SetToolTip(meathookToggleButton, "Add/Remove meath00k from your current DOOM Eternal installation\n" +
+                "Required to be disabled for Leaderboard Runs");
+
+            /** Change Version **/
+            toolTip7500.SetToolTip(versionDropDownSelector, "Select which verison of DOOM Eternal to switch to");
+            toolTip7500.SetToolTip(replaceProfileCheckbox, "Replace your profile.bin when switching to/from 3.1\n" +
+                "There's a known crash on version 3.1 with some profile.bin files. Read the help page for more info");
+            toolTip7500.SetToolTip(refreshVersionsButton, "Refresh the list of installed versions");
+
+            /** Resolution Scaling **/
+            toolTip7500.SetToolTip(unlockOnStartupCheckbox, "Unlock Resolution Scaling when the game is launched");
+            toolTip7500.SetToolTip(autoDynamicCheckbox, "Automatically enable Dynamic Res. Scaling");
+            toolTip7500.SetToolTip(minResInput, "Minimum resolution scale allowed when dynamic scaling is enabled\n" +
+                "Value must be in the range 1-100");
+            toolTip7500.SetToolTip(targetFPSInput, "Target FPS for Dynamic Resolution Scaling\n" +
+                "Value must be in the range 60-1000");
+            toolTip7500.SetToolTip(unlockResButton, "Schedule Res. Scale Unlocking\n" +
+                "Res. Scaling will be unlocked after a few seconds when the game is in focus again");
         }
 
         private void SetFonts() {
