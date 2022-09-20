@@ -3,11 +3,12 @@ using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
 using System.Net;
+using System.Runtime.ExceptionServices;
 
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "0.8.1";
+        public const string APP_VERSION = "0.8.2";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
 
@@ -15,11 +16,6 @@ namespace DESpeedrunUtil {
         /// Form/Memory Timer intervals, in milliseconds
         /// </summary>
         public static int TimerInterval { get; private set; } = 16;
-
-        /// <summary>
-        /// Use RawInput over global low-level hooks
-        /// </summary>
-        public static bool UseRawInput { get; private set; } = true;
 
         /// <summary>
         /// The main entry point for the application.
@@ -40,10 +36,6 @@ namespace DESpeedrunUtil {
                     var s = args[i];
                     if(s.Equals("-v")) {
                         verbose = true;
-                        continue;
-                    }
-                    if(s.Equals("-hook")) {
-                        UseRawInput = false;
                         continue;
                     }
                     if(s.Equals("-t") && !timer) {
@@ -72,16 +64,13 @@ namespace DESpeedrunUtil {
                     if(interval < 16) {
                         interval = 16;
                         Log.Warning("-t Parameter value must not be lower than 16");
-                    }else if(interval > 1000) {
-                        interval = 1000;
-                        Log.Warning("-t Parameter value must not exceed 1000");
+                    }else if(interval > 500) {
+                        interval = 500;
+                        Log.Warning("-t Parameter value must not exceed 500");
                     }
                     TimerInterval = (int) interval;
                     Log.Information("User specified a TimerInterval of {Interval}ms", interval);
                 }
-            }
-            if(!UseRawInput) {
-                Log.Information("User opted to use Low-Level hooks for input handling instead of RawInput");
             }
 
             if(CheckForDuplicateProcesses()) {

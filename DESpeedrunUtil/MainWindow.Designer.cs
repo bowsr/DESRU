@@ -68,7 +68,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.enableMouseHookCheckbox = new System.Windows.Forms.CheckBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.defaultFPS = new System.Windows.Forms.TextBox();
             this.titleSeparator = new System.Windows.Forms.Panel();
@@ -744,7 +743,6 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.enableMouseHookCheckbox);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.enableHotkeysCheckbox);
             this.panel2.Controls.Add(this.autorunMacroCheckbox);
@@ -757,21 +755,6 @@
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(304, 156);
             this.panel2.TabIndex = 31;
-            // 
-            // enableMouseHookCheckbox
-            // 
-            this.enableMouseHookCheckbox.AutoSize = true;
-            this.enableMouseHookCheckbox.Checked = true;
-            this.enableMouseHookCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.enableMouseHookCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.enableMouseHookCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.enableMouseHookCheckbox.Location = new System.Drawing.Point(6, 57);
-            this.enableMouseHookCheckbox.Name = "enableMouseHookCheckbox";
-            this.enableMouseHookCheckbox.Size = new System.Drawing.Size(169, 22);
-            this.enableMouseHookCheckbox.TabIndex = 30;
-            this.enableMouseHookCheckbox.Text = "Enable Mouse Hotkeys";
-            this.enableMouseHookCheckbox.UseVisualStyleBackColor = true;
-            this.enableMouseHookCheckbox.CheckedChanged += new System.EventHandler(this.MouseHook_CheckChanged);
             // 
             // panel3
             // 
@@ -2296,7 +2279,6 @@
         private TextBox fpsInput3;
         private Label label15;
         private Label moreHotkeysTitle;
-        private CheckBox enableMouseHookCheckbox;
         private ToolTip toolTip7500;
     }
 }

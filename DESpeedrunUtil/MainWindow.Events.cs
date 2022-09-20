@@ -173,22 +173,13 @@ namespace DESpeedrunUtil {
             bool val = ((CheckBox) sender).Checked;
             if(val) {
                 if(Hooked) _hotkeys.EnableHotkeys();
-            } else {
+            }else {
                 _hotkeys.DisableHotkeys();
             }
         }
         private void AutoDynamic_CheckChanged(object sender, EventArgs e) {
             if(((CheckBox) sender).Checked) {
                 if(Hooked && !_memory.DynamicEnabled()) _memory.EnableDynamicScaling(_targetFPS);
-            }
-        }
-        private void MouseHook_CheckChanged(object sender, EventArgs e) {
-            var cb = (CheckBox) sender;
-            if(!cb.Enabled) return;
-            if(cb.Checked) {
-                _hotkeys.HookMouse();
-            }else {
-                _hotkeys.UnhookMouse();
             }
         }
         #endregion
@@ -318,8 +309,6 @@ namespace DESpeedrunUtil {
             this.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
             this.Controls.Add(new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
 
-            if(Program.UseRawInput) enableMouseHookCheckbox.Enabled = false;
-
             // User Settings
             var fpsJson = "";
             if(File.Exists(FPSKEYS_JSON)) fpsJson = File.ReadAllText(FPSKEYS_JSON);
@@ -337,7 +326,6 @@ namespace DESpeedrunUtil {
             _steamInstallation = Properties.Settings.Default.SteamInstallation;
             _steamID3 = Properties.Settings.Default.SteamID3;
             replaceProfileCheckbox.Checked = Properties.Settings.Default.ReplaceProfile;
-            enableMouseHookCheckbox.Checked = Properties.Settings.Default.EnableMouseHook;
             UpdateHotkeyAndInputFields();
 
             var defaultLocation = new Point(
@@ -353,7 +341,6 @@ namespace DESpeedrunUtil {
 
             SearchForSteamGameDir();
             if(_steamInstallation != "n/a") SearchForGameSaves();
-            if(!enableMouseHookCheckbox.Checked && !Program.UseRawInput) _hotkeys.UnhookMouse();
             _formTimer.Start();
             _statusTimer.Start();
             Log.Information("Loaded MainWindow");
@@ -375,7 +362,6 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.SteamInstallation = _steamInstallation;
             Properties.Settings.Default.SteamID3 = _steamID3;
             Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
-            Properties.Settings.Default.EnableMouseHook = enableMouseHookCheckbox.Checked;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 

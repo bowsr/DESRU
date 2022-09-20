@@ -7,7 +7,6 @@ namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
 
         private readonly MainWindow _parent;
-        private GlobalInputHook _hook = null;
         private bool _resScaleKeyEnabled = false;
 
         public bool Enabled { get; private set; }
@@ -25,20 +24,11 @@ namespace DESpeedrunUtil.Hotkeys {
             FPSHotkeys = new(fpsJson);
             _parent = parent;
 
-            if(!Program.UseRawInput) {
-                _hook = new GlobalInputHook();
-                _hook.KeyDown += new KeyEventHandler(Hook_KeyDown);
-                _hook.KeyUp += new KeyEventHandler(Hook_KeyUp);
-                _hook.MouseDown += new MouseEventHandler(Hook_MouseDown);
-                _hook.MouseUp += new MouseEventHandler(Hook_MouseUp);
-                _hook.MouseScroll += new EventHandler(Hook_MouseScroll);
-            }else {
-                _parent.RIKeyDown += new KeyEventHandler(Hook_KeyDown);
-                _parent.RIKeyUp += new KeyEventHandler(Hook_KeyUp);
-                _parent.RIMouseDown += new MouseEventHandler(Hook_MouseDown);
-                _parent.RIMouseUp += new MouseEventHandler(Hook_MouseUp);
-                _parent.RIMouseScroll += new EventHandler<MouseWheelEventArgs>(Hook_MouseScroll);
-            }
+            _parent.RIKeyDown += new KeyEventHandler(Hook_KeyDown);
+            _parent.RIKeyUp += new KeyEventHandler(Hook_KeyUp);
+            _parent.RIMouseDown += new MouseEventHandler(Hook_MouseDown);
+            _parent.RIMouseUp += new MouseEventHandler(Hook_MouseUp);
+            _parent.RIMouseScroll += new EventHandler<MouseWheelEventArgs>(Hook_MouseScroll);
 
             HookedHotkeys = new();
             if(ResScaleHotkey != Keys.None) HookedHotkeys.Add(ResScaleHotkey);
@@ -46,19 +36,6 @@ namespace DESpeedrunUtil.Hotkeys {
                 if(fkey.Key != Keys.None) HookedHotkeys.Add(fkey.Key);
             }
             Log.Information("Initialized HotkeyHandler");
-        }
-
-        /// <summary>
-        /// Enable the mouse hook
-        /// </summary>
-        public void HookMouse() {
-            if(_hook != null) _hook.HookMouse();
-        }
-        /// <summary>
-        /// Disable the mouse hook
-        /// </summary>
-        public void UnhookMouse() {
-            if(_hook != null) _hook.UnhookMouse();
         }
 
         /// <summary>
@@ -75,7 +52,6 @@ namespace DESpeedrunUtil.Hotkeys {
         /// </summary>
         public void DisableHotkeys() {
             if(!Enabled) return;
-            if(!Program.UseRawInput) _hook.HookedKeys.Clear();
             Enabled = false;
             Log.Verbose("Hotkeys disabled");
         }
@@ -94,6 +70,7 @@ namespace DESpeedrunUtil.Hotkeys {
         /// <param name="enabled"><see langword="true"/> if enabled</param>
         public void ToggleResScaleKey(bool enabled) {
             _resScaleKeyEnabled = enabled;
+            Log.Verbose("Resolution Scaling Key Toggled. state: {Enabled}", enabled);
             RefreshKeys();
         }
 
@@ -103,14 +80,6 @@ namespace DESpeedrunUtil.Hotkeys {
             if(ResScaleHotkey != Keys.None) HookedHotkeys.Add(ResScaleHotkey);
             foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
                 if(fkey.Key != Keys.None) HookedHotkeys.Add(fkey.Key);
-            }
-
-            if(Program.UseRawInput) return;
-
-            _hook.HookedKeys.Clear();
-            if(ResScaleHotkey != Keys.None && _resScaleKeyEnabled) _hook.HookedKeys.Add(ResScaleHotkey);
-            foreach(FPSHotkeyMap.FPSKey fKey in FPSHotkeys.GetAllFPSKeys()) {
-                if(fKey.Key != Keys.None && fKey.Limit != -1) _hook.HookedKeys.Add(fKey.Key);
             }
         }
 
@@ -145,7 +114,7 @@ namespace DESpeedrunUtil.Hotkeys {
         private void Hook_MouseUp(object sender, MouseEventArgs e) {
             if(ConvertMouseButton(e.Button) == Keys.None || !Enabled) return;
         }
-        private void Hook_MouseScroll(object sender, EventArgs e) => _parent.TrackMouseWheel(((MouseWheelEventArgs) e).Direction);
+        private void Hook_MouseScroll(object sender, MouseWheelEventArgs e) => _parent.TrackMouseWheel(e.Direction);
 
         #region STATIC METHODS
         /// <summary>

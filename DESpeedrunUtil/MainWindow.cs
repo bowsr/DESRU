@@ -43,10 +43,10 @@ namespace DESpeedrunUtil {
         bool _mhExists = false, _mhScheduleRemoval = false, _mhDoRemovalTask = false;
         bool _reshadeExists = false;
 
-        FreescrollMacro? _macroProcess;
+        FreescrollMacro _macroProcess;
         bool _enableMacro = true;
 
-        HotkeyHandler? _hotkeys;
+        HotkeyHandler _hotkeys;
         int _fpsDefault, _minResPercent, _targetFPS;
 
         MemoryHandler? _memory;
@@ -77,6 +77,7 @@ namespace DESpeedrunUtil {
             }
         }
 
+        /** RawInput Events **/
         internal event KeyEventHandler RIKeyDown;
         internal event KeyEventHandler RIKeyUp;
         internal event MouseEventHandler RIMouseDown;
@@ -84,10 +85,8 @@ namespace DESpeedrunUtil {
         internal event EventHandler<MouseWheelEventArgs> RIMouseScroll;
 
         public MainWindow() {
-            if(Program.UseRawInput) {
-                RawInputDevice.RegisterDevice(HidUsageAndPage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
-                RawInputDevice.RegisterDevice(HidUsageAndPage.Mouse, RawInputDeviceFlags.InputSink, this.Handle);
-            }
+            RawInputDevice.RegisterDevice(HidUsageAndPage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
+            RawInputDevice.RegisterDevice(HidUsageAndPage.Mouse, RawInputDeviceFlags.InputSink, this.Handle);
 
             InitializeComponent();
             _hotkeyFields = new();
@@ -113,7 +112,6 @@ namespace DESpeedrunUtil {
         /// </summary>
         /// <param name="m"></param>
         protected override void WndProc(ref Message m) {
-            const RawKeyboardFlags DOWN = RawKeyboardFlags.None;
             const RawKeyboardFlags RDOWN = RawKeyboardFlags.KeyE0;
             const RawKeyboardFlags UP = RawKeyboardFlags.Up;
             const RawKeyboardFlags RUP = RawKeyboardFlags.Up | RawKeyboardFlags.KeyE0;
@@ -128,7 +126,7 @@ namespace DESpeedrunUtil {
                         }
                     }else {
                         var rawButton = mouse.Mouse.Buttons;
-                        var button = MouseButtons.None;
+                        MouseButtons button;
                         bool down;
                         switch(rawButton) {
                             case RawMouseButtonFlags.MiddleButtonDown:
@@ -155,7 +153,7 @@ namespace DESpeedrunUtil {
                                 var mea = new MouseEventArgs(button, 1, 0, 0, 0);
                                 if(down) {
                                     RIMouseDown?.Invoke(this, mea);
-                                } else {
+                                }else {
                                     RIMouseUp?.Invoke(this, mea);
                                 }
                             }
@@ -845,8 +843,6 @@ namespace DESpeedrunUtil {
 
         private void SetToolTips() {
             /** Options **/
-            toolTip7500.SetToolTip(enableMouseHookCheckbox, "Toggle mouse hotkeys and the scroll pattern tracker\n" +
-                "Disable this if you experience mouse lag when playing DE with DESRU running");
             toolTip7500.SetToolTip(enableHotkeysCheckbox, "Toggle global hotkeys for res. scaling and fps limits");
             toolTip7500.SetToolTip(autorunMacroCheckbox, "Toggle the Freescroll Emulation Macro");
             toolTip7500.SetToolTip(defaultFPS, "Set the max FPS you want DOOM Eternal to run at\n" +
@@ -905,7 +901,6 @@ namespace DESpeedrunUtil {
             hotkeyStatus.Font = EternalUIRegular;
             unlockOnStartupCheckbox.Font = EternalUIRegular;
             autoDynamicCheckbox.Font = EternalUIRegular;
-            enableMouseHookCheckbox.Font = EternalUIRegular;
             minResLabel.Font = EternalUIRegular;
             dynamicTargetLabel.Font = EternalUIRegular;
             minResInput.Font = EternalUIRegular;

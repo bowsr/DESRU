@@ -202,17 +202,5 @@ namespace DESpeedrunUtil.Properties {
                 this["ReplaceProfile"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool EnableMouseHook {
-            get {
-                return ((bool)(this["EnableMouseHook"]));
-            }
-            set {
-                this["EnableMouseHook"] = value;
-            }
-        }
     }
 }
