@@ -148,6 +148,7 @@ namespace DESpeedrunUtil.Macro {
             else binds = string.Format(DOWN_UP_FORMAT, (int) _downScrollKey, (int) _upScrollKey);
 
             File.WriteAllText(BINDINGS_FILE, binds);
+            Log.Information("Updated Macro bindings.txt file with binds: {Binds}", binds);
         }
 
         // Timer method that periodically terminates any Macro processes.

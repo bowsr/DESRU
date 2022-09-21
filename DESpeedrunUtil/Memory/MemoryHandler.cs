@@ -76,7 +76,7 @@ namespace DESpeedrunUtil.Memory {
 
             Reset = false;
             Initialize();
-            Log.Information("Initialized MemoryHandler. Version: {Version}", Version);
+            Log.Information("Initialized MemoryHandler. Game Version: {Version} [{ModuleSize}]", Version, _moduleSize);
         }
 
 
@@ -160,6 +160,7 @@ namespace DESpeedrunUtil.Memory {
                     _trainer = procList[0];
                     SetFlag(true, "restart");
                     _trainerFlag = true;
+                    Log.Information("Trainer process found running.");
                 }else {
                     _trainer = null;
                     _trainerFlag = false;

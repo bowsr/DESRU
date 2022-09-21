@@ -3,7 +3,6 @@ using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
 using System.Net;
-using System.Runtime.ExceptionServices;
 
 namespace DESpeedrunUtil {
     internal static class Program {
