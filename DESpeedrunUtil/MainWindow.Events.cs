@@ -5,6 +5,7 @@ using DESpeedrunUtil.Memory;
 using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
+using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil {
     partial class MainWindow {
@@ -74,7 +75,7 @@ namespace DESpeedrunUtil {
                 return;
             }
 
-            if((HotkeyHandler.GetAsyncKeyState(Keys.LButton) & 0x01) == 1) {
+            if((GetAsyncKeyState(Keys.LButton) & 0x01) == 1) {
                 _selectedHKField = (Label) sender;
                 _selectedHKField.Text = "Press a key";
                 _selectedHKField.BackColor = Color.WhiteSmoke;

@@ -8,9 +8,9 @@ using Microsoft.Win32;
 using Serilog;
 using System.Diagnostics;
 using System.Drawing.Text;
-using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
+using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
@@ -969,8 +969,5 @@ namespace DESpeedrunUtil {
             }
         }
         #endregion
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
     }
 }

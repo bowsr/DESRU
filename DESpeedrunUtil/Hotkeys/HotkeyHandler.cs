@@ -1,7 +1,7 @@
 ﻿using DESpeedrunUtil.Macro;
 using Newtonsoft.Json;
 using Serilog;
-using System.Runtime.InteropServices;
+using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
@@ -256,9 +256,6 @@ namespace DESpeedrunUtil.Hotkeys {
             };
         }
         #endregion
-
-        [DllImport("user32.dll")]
-        public static extern ushort GetAsyncKeyState(Keys vKey);
 
         /// <summary>
         /// Dictionary wrapper for storing FPS Hotkeys and their respective limits

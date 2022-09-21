@@ -3,9 +3,9 @@ using Newtonsoft.Json;
 using Serilog;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.InteropServices;
 using System.Text;
 using Timer = System.Windows.Forms.Timer;
+using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
@@ -218,11 +218,19 @@ namespace DESpeedrunUtil.Memory {
             var ms = ReadRaiseMillis();
             return ms > 0f && ms < 16f;
         }
+        /// <summary>
+        /// Checks if dynamic resolution scaling is enabled
+        /// </summary>
+        /// <returns><see langword="true"/> if <c>rs_enable</c> is set to 1</returns>
         public bool DynamicEnabled() {
             if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
             return false;
         }
 
+        /// <summary>
+        /// Sets the scroll pattern string to display on screen
+        /// </summary>
+        /// <param name="scrollString"><see langword="string"/> displayed on screen</param>
         public void SetScrollPatternString(string scrollString) => _scrollString = scrollString;
 
         private void SetMetrics(byte val) {
@@ -238,10 +246,18 @@ namespace DESpeedrunUtil.Memory {
                 _autoDynamic = false;
             }
         }
+        /// <summary>
+        /// Schedules dynamic scaling to be turned on when the game is loaded
+        /// </summary>
+        /// <param name="targetFPS">FPS Target the scaling will try to hit</param>
         public void ScheduleDynamicScaling(int targetFPS) {
             _targetFPS = targetFPS;
             _scheduleDynamic = true;
         }
+        /// <summary>
+        /// Enables dynamic resolution scaling with a specified target FPS
+        /// </summary>
+        /// <param name="targetFPS">FPS Target the scaling will try to hit</param>
         public void EnableDynamicScaling(int targetFPS) {
             if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
             if(_raiseMSPtr != IntPtr.Zero) _game.WriteBytes(_raiseMSPtr, FloatToBytes((1000f / targetFPS) * 0.95f));
@@ -325,6 +341,11 @@ namespace DESpeedrunUtil.Memory {
                 _ => false
             };
         }
+        /// <summary>
+        /// Schedules the resolution scaling unlock for the next time the game is in focus
+        /// </summary>
+        /// <param name="auto">Enable dynamic scaling at the same time</param>
+        /// <param name="targetFPS">Target FPS for dynamic scaling</param>
         public void ScheduleResUnlock(bool auto, int targetFPS) {
             if(_resUnlocked && Version != "6.66 Rev 2") {
                 if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
@@ -335,6 +356,10 @@ namespace DESpeedrunUtil.Memory {
             _targetFPS = targetFPS;
         }
 
+        /// <summary>
+        /// Checks if the current game version can cap FPS
+        /// </summary>
+        /// <returns><see langword="true"/> if the MaxHzPtr exists</returns>
         public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
 
         /// <summary>
@@ -526,6 +551,7 @@ namespace DESpeedrunUtil.Memory {
                     r9 = dlss + 0x40;
                 }
             }else {
+                Log.Error("Could not find the perf metrics rows in memory. Is this even DOOM Eternal?");
                 return;
             }
             Log.Information("Scanning for resolution scale values.");
@@ -588,9 +614,6 @@ namespace DESpeedrunUtil.Memory {
             Log.Warning("Offset List does not contain {Version}.", ver);
             return false;
         }
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
 
         internal struct KnownOffsets {
             public string Version { get; init; }
