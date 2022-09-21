@@ -40,8 +40,7 @@
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="RawInput.Sharp" Version="0.0.4" />
-    <PackageReference Include="Serilog" Version="2.11.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
+    <PackageReference Include="Serilog" Version="2.12.0" />
     <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
 
@@ -100,5 +99,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="mkdir &quot;$(TargetDir)\macro&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\meath00k&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\DESpeedrunUtil\bundle\macro\DOOMEternalMacro.exe&quot; &quot;$(TargetDir)\macro\DOOMEternalMacro.exe&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\DESpeedrunUtil\bundle\meath00k\XINPUT1_3.dll&quot; &quot;$(TargetDir)\meath00k\XINPUT1_3.dll&quot;&#xD;&#xA;WinRAR.exe a -ibck -ep1 -r &quot;$(TargetDir)\DESRU.zip&quot; &quot;$(TargetDir)&quot;" />
+  </Target>
 
 </Project>
