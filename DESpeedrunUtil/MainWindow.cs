@@ -497,7 +497,7 @@ namespace DESpeedrunUtil {
                 try {
                     steamPath = subKey.GetValue("InstallPath").ToString();
                     _steamInstallation = steamPath;
-                } catch(Exception e) {
+                }catch(Exception e) {
                     Log.Error(e, "Couldn't find a Steam installation!");
 
                     using GameDirectoryDialog gameSelection = new();
@@ -506,7 +506,7 @@ namespace DESpeedrunUtil {
                         _steamDirectory = _gameDirectory.Remove(_gameDirectory.IndexOf("\\DOOMEternal"));
                         Log.Information("User manually selected their game directory.");
                         DetectAllGameVersions();
-                    } else {
+                    }else {
                         this.Close();
                     }
                     return;
@@ -553,7 +553,7 @@ namespace DESpeedrunUtil {
                     _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
                     Log.Information("User manually selected their game directory.");
                     DetectAllGameVersions();
-                } else {
+                }else {
                     Log.CloseAndFlush();
                     this.Close();
                 }
@@ -595,7 +595,7 @@ namespace DESpeedrunUtil {
                         string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
                         string v = txt.Substring(txt.IndexOf('=') + 1);
                         if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
-                    } catch(Exception e) {
+                    }catch(Exception e) {
                         Log.Error(e, "An error occured when trying to read gameVersion.txt. Directory: {Directory}", dir);
                         continue;
                     }
@@ -610,7 +610,7 @@ namespace DESpeedrunUtil {
                 using RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\Steam");
                 try {
                     _steamInstallation = key.GetValue("InstallPath").ToString();
-                } catch(Exception e) {
+                }catch(Exception e) {
                     Log.Error(e, "Encountered an error when attempting to detect Steam's installation location.");
                     return;
                 }
@@ -668,7 +668,7 @@ namespace DESpeedrunUtil {
                         if(rs) Log.Information("ReShade is installed and is running over DOOMEternal.");
                         else Log.Information("ReShade is not running over DOOMEternal.");
                         return rs;
-                    } catch(Exception e) {
+                    }catch(Exception e) {
                         Log.Error(e, "An error occured when checking ReShade files. Assuming ReShade is running over DOOMEternal.");
                         return true;
                     }
@@ -699,18 +699,18 @@ namespace DESpeedrunUtil {
                             try {
                                 File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
                                 Log.Information("meath00k uninstalled.");
-                            } catch(Exception e) {
+                            }catch(Exception e) {
                                 Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
                             }
                         }
                         meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                     });
-                } else {
+                }else {
                     if(_mhScheduleRemoval == true && _mhExists) {
                         try {
                             File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
                             Log.Information("meath00k uninstalled.");
-                        } catch(Exception e) {
+                        }catch(Exception e) {
                             Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
                         }
                         _mhScheduleRemoval = false;
