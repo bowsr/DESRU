@@ -901,6 +901,7 @@ namespace DESpeedrunUtil {
             hotkeyStatus.Font = EternalUIRegular;
             unlockOnStartupCheckbox.Font = EternalUIRegular;
             autoDynamicCheckbox.Font = EternalUIRegular;
+            replaceProfileCheckbox.Font = EternalUIRegular;
             minResLabel.Font = EternalUIRegular;
             dynamicTargetLabel.Font = EternalUIRegular;
             minResInput.Font = EternalUIRegular;
