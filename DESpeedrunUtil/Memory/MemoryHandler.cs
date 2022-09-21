@@ -124,7 +124,7 @@ namespace DESpeedrunUtil.Memory {
                         if(!CheckIfGameIsFocused()) {
                             _windowFocused = false;
                         } else {
-                            if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 4000) {
+                            if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 1500) {
                                 UnlockResScale(_targetFPS);
                                 SendKeys.Send("%(~)");
                                 SendKeys.Send("%(~)");
