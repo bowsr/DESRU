@@ -25,12 +25,12 @@ namespace DESpeedrunUtil.Memory {
         KnownOffsets _currentOffsets;
 
         DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP,
-                    _row1DP, /*_row2DP, _row3DP, _row4DP, _row5DP,*/ _row6DP, /*_row7DP, _row8DP, _row9DP,*/
+                    _row1DP, _row6DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
                     _raiseMSDP, _dropMSDP;
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _dynamicResPtr, _resScalesPtr,
-               _row1Ptr, _row2Ptr, _row3Ptr, _row4Ptr, _row5Ptr, _row6Ptr, _row7Ptr, _row8Ptr, _row9Ptr,
+               _row1Ptr, _row6Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
                _raiseMSPtr, _dropMSPtr;
 
@@ -104,7 +104,7 @@ namespace DESpeedrunUtil.Memory {
                 if(_cpuPtr == IntPtr.Zero) {
                     _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
                     _cpu = "";
-                } else {
+                }else {
                     _cpu = (_scrollString != string.Empty) ? _scrollString : cheats;
                     _row3 = "";
                 }
@@ -123,7 +123,7 @@ namespace DESpeedrunUtil.Memory {
                     if(_windowFocused) {
                         if(!CheckIfGameIsFocused()) {
                             _windowFocused = false;
-                        } else {
+                        }else {
                             if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 1500) {
                                 UnlockResScale(_targetFPS);
                                 SendKeys.Send("%(~)");
@@ -178,17 +178,18 @@ namespace DESpeedrunUtil.Memory {
 
         private void ModifyMetricRows() {
             if(_row1Ptr != IntPtr.Zero) {
+                var r6 = (_row6Ptr != IntPtr.Zero) ? _row6Ptr : _row1Ptr + 0x98;
                 _game.VirtualProtect(_row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_row1Ptr, ToByteArray(_row1, 20));
-                _game.WriteBytes(_row2Ptr, ToByteArray(_row2, 16));
-                _game.WriteBytes(_row3Ptr, ToByteArray(_row3, 19));
-                _game.WriteBytes(_row4Ptr, ToByteArray(_row4, 7));
-                _game.WriteBytes(_row5Ptr, ToByteArray(_row5, 34));
-                _game.WriteBytes(_row6Ptr, ToByteArray(_row6, 34));
-                _game.WriteBytes(_row7Ptr, ToByteArray(_row7, 34));
+                _game.WriteBytes(_row1Ptr + 0x8, ToByteArray(_row2, 16));
+                _game.WriteBytes(_row1Ptr + 0x58, ToByteArray(_row3, 19));
+                _game.WriteBytes(_row1Ptr + 0x70, ToByteArray(_row4, 7));
+                _game.WriteBytes(_row1Ptr + 0x78, ToByteArray(_row5, 34));
+                _game.WriteBytes(r6, ToByteArray(_row6, 34));
+                _game.WriteBytes(r6 + 0x10, ToByteArray(_row7, 34));
             }
-            if(_row8Ptr != IntPtr.Zero) _game.WriteBytes(_row8Ptr, ToByteArray(_row8, 34));
-            if(_row9Ptr != IntPtr.Zero) _game.WriteBytes(_row9Ptr, ToByteArray(_row9, 34));
+            if(_row6Ptr != IntPtr.Zero) _game.WriteBytes(_row6Ptr + 0x30, ToByteArray(_row8, 34));
+            if(_row6Ptr != IntPtr.Zero) _game.WriteBytes(_row6Ptr + 0x40, ToByteArray(_row9, 34));
             if(_cpuPtr != IntPtr.Zero) {
                 _game.VirtualProtect(_cpuPtr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_cpuPtr, ToByteArray(_cpu, 64));
@@ -401,27 +402,8 @@ namespace DESpeedrunUtil.Memory {
             try {
                 if(_row1DP != null) {
                     _row1DP.DerefOffsets(_game, out _row1Ptr);
-                    _row2Ptr = _row1Ptr + 0x8;
-                    _row3Ptr = _row1Ptr + 0x58;
-                    _row4Ptr = _row1Ptr + 0x70;
-                    _row5Ptr = _row1Ptr + 0x78;
-                    if(_row6DP != null) {
-                        _row6DP.DerefOffsets(_game, out _row6Ptr);
-                        _row7Ptr = _row6Ptr + 0x10;
-                        _row8Ptr = _row6Ptr + 0x30;
-                        _row9Ptr = _row6Ptr + 0x40;
-                    }else {
-                        _row6Ptr = _row1Ptr + 0x98;
-                        _row7Ptr = _row1Ptr + 0xA8;
-                    }
+                    if(_row6DP != null) _row6DP.DerefOffsets(_game, out _row6Ptr);
                 }
-                //if(_row2DP != null) _row2DP.DerefOffsets(_game, out _row2Ptr);
-                //if(_row3DP != null) _row3DP.DerefOffsets(_game, out _row3Ptr);
-                //if(_row4DP != null) _row4DP.DerefOffsets(_game, out _row4Ptr);
-                //if(_row5DP != null) _row5DP.DerefOffsets(_game, out _row5Ptr);
-                //if(_row7DP != null) _row7DP.DerefOffsets(_game, out _row7Ptr);
-                //if(_row8DP != null) _row8DP.DerefOffsets(_game, out _row8Ptr);
-                //if(_row9DP != null) _row9DP.DerefOffsets(_game, out _row9Ptr);
                 if(_gpuVendorDP != null) _gpuVendorDP.DerefOffsets(_game, out _gpuVendorPtr);
                 if(_gpuNameDP != null) _gpuNameDP.DerefOffsets(_game, out _gpuNamePtr);
                 if(_metricsDP != null) _metricsDP.DerefOffsets(_game, out _metricsPtr);
@@ -495,14 +477,7 @@ namespace DESpeedrunUtil.Memory {
                 SigScans();
             }
             if(_currentOffsets.Row1 != 0) _row1DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row1);
-            //if(_currentOffsets.Row2 != 0) _row2DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row2);
-            //if(_currentOffsets.Row3 != 0) _row3DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row3);
-            //if(_currentOffsets.Row4 != 0) _row4DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row4);
-            //if(_currentOffsets.Row5 != 0) _row5DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row5);
-            //if(_currentOffsets.Row6 != 0) _row6DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row6);
-            //if(_currentOffsets.Row7 != 0) _row7DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row7);
             if(_currentOffsets.Row8 != 0) _row6DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row6);
-            //if(_currentOffsets.Row9 != 0) _row9DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row9);
 
             if(_currentOffsets.ResScales != 0) _resScalesDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.ResScales);
 
