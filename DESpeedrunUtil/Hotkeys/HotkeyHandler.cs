@@ -1,6 +1,7 @@
 ﻿using DESpeedrunUtil.Macro;
 using Newtonsoft.Json;
 using Serilog;
+using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil.Hotkeys {
@@ -32,7 +33,7 @@ namespace DESpeedrunUtil.Hotkeys {
 
             HookedHotkeys = new();
             if(ResScaleHotkey != Keys.None) HookedHotkeys.Add(ResScaleHotkey);
-            foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
+            foreach(FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
                 if(fkey.Key != Keys.None) HookedHotkeys.Add(fkey.Key);
             }
             Log.Information("Initialized HotkeyHandler");
@@ -78,7 +79,7 @@ namespace DESpeedrunUtil.Hotkeys {
         private void AddHotkeys() {
             HookedHotkeys.Clear();
             if(ResScaleHotkey != Keys.None) HookedHotkeys.Add(ResScaleHotkey);
-            foreach(FPSHotkeyMap.FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
+            foreach(FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
                 if(fkey.Key != Keys.None) HookedHotkeys.Add(fkey.Key);
             }
         }
@@ -412,20 +413,6 @@ namespace DESpeedrunUtil.Hotkeys {
             /// </summary>
             /// <returns>The JSON string representation</returns>
             public string SerializeIntoJSON() => JsonConvert.SerializeObject(_keys, Formatting.Indented);
-
-            /// <summary>
-            /// Struct that stores both the <see cref="Keys"/> and Limit together
-            /// </summary>
-            internal readonly struct FPSKey {
-                public Keys Key { get; init; }
-                public int Limit { get; init; }
-
-                public FPSKey(Keys k, int fps) {
-                    Key = k;
-                    Limit = fps;
-                }
-                public FPSKey() : this(Keys.None, -1) { }
-            }
         }
     }
 }

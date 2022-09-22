@@ -5,6 +5,7 @@ using DESpeedrunUtil.Memory;
 using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
+using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil {
@@ -304,7 +305,7 @@ namespace DESpeedrunUtil {
                 File.WriteAllText(@".\offsets.json", System.Text.Encoding.UTF8.GetString(Properties.Resources.offsets));
                 Log.Information("offsets.json does not exist. Using template from application resources.");
             }
-            MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<MemoryHandler.KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
+            MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
             InitializeFonts();
             var titleBar = new DESRUShadowLabel(windowTitle.Font, WINDOW_TITLE, windowTitle.Location, Color.FromArgb(190, 34, 34), FORM_BACKCOLOR);

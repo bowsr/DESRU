@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Drawing.Text;
 using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
+using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil {
@@ -66,16 +67,6 @@ namespace DESpeedrunUtil {
         string _storedDisplay = "";
         long _scrollTime, _scrollDisplayTime;
         ScrollPattern _scrollPattern = new();
-        struct ScrollPattern {
-            public int ScrollCount { get; set; }
-            public long DeltaTotal { get; set; }
-
-            public long Average() => (ScrollCount > 1) ? DeltaTotal / (ScrollCount - 1) : 0;
-            public void Reset() {
-                ScrollCount = 0;
-                DeltaTotal = 0;
-            }
-        }
 
         public MainWindow() {
             RawInputDevice.RegisterDevice(HidUsageAndPage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
