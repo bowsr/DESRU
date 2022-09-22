@@ -9,11 +9,6 @@ using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
-        private const string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";
-        // DLSS does not show up if you don't have a capable gpu (NVIDIA RTX) BUT it still exists in memory in the exact same spot.
-        private const string SIGSCAN_DLSS = "444C5353203A2025730000000000000056756C6B616E202573";
-        private const string SIGSCAN_RES_SCALES = 
-        "0000803FA4707D3F48E17A3FEC51783F8FC2753F3333733FD7A3703F7B146E3F1F856B3FC3F5683F6666663F0AD7633FAE47613FF6285C3F3D0A573F85EB513FCDCC4C3F14AE473F5C8F423FA4703D3FEC51383F3333333F7B142E3FC3F5283F0AD7233F52B81E3F9A99193FE17A143F295C0F3F713D0A3FB81E053F0000003F";
 
         private readonly float[] ONEPERCENT_RES_SCALES = new float[32] 
                 { 1.0f, 0.968f, 0.936f, 0.904f, 0.872f, 0.84f, 0.808f, 0.776f, 
@@ -495,6 +490,15 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void SigScans() {
+            const string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";
+            // DLSS does not show up if you don't have a capable gpu (NVIDIA RTX) BUT it still exists in memory in the exact same spot.
+            const string SIGSCAN_DLSS = "444C5353203A2025730000000000000056756C6B616E202573";
+            const string SIGSCAN_RES_SCALES = 
+            "0000803FA4707D3F48E17A3FEC51783F8FC2753F3333733FD7A3703F7B146E3F" +
+            "1F856B3FC3F5683F6666663F0AD7633FAE47613FF6285C3F3D0A573F85EB513F" +
+            "CDCC4C3F14AE473F5C8F423FA4703D3FEC51383F3333333F7B142E3FC3F5283F" +
+            "0AD7233F52B81E3F9A99193FE17A143F295C0F3F713D0A3FB81E053F0000003F";
+
             // This only needs to be done on the first hook of the game. Offsets can be saved since they're not pointer chains.
             // Despite knowing the offsets, they will still need to be placed in a DeepPointer to prevent massive memory usage and a possible leak
             Log.Information("Signature Scans initiated. moduleSize: {ModuleSize}", _moduleSize);
