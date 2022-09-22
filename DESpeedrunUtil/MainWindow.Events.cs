@@ -9,6 +9,14 @@ using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil {
     partial class MainWindow {
+
+        /** RawInput Events **/
+        internal event KeyEventHandler RIKeyDown;
+        internal event KeyEventHandler RIKeyUp;
+        internal event MouseEventHandler RIMouseDown;
+        internal event MouseEventHandler RIMouseUp;
+        internal event EventHandler<MouseWheelEventArgs> RIMouseScroll;
+
         #region Hotkey Assignment
         private void HotkeyAssignment_KeyDown(object sender, KeyEventArgs e) {
             if(!_hkAssignmentMode) return;

@@ -77,13 +77,6 @@ namespace DESpeedrunUtil {
             }
         }
 
-        /** RawInput Events **/
-        internal event KeyEventHandler RIKeyDown;
-        internal event KeyEventHandler RIKeyUp;
-        internal event MouseEventHandler RIMouseDown;
-        internal event MouseEventHandler RIMouseUp;
-        internal event EventHandler<MouseWheelEventArgs> RIMouseScroll;
-
         public MainWindow() {
             RawInputDevice.RegisterDevice(HidUsageAndPage.Keyboard, RawInputDeviceFlags.InputSink, this.Handle);
             RawInputDevice.RegisterDevice(HidUsageAndPage.Mouse, RawInputDeviceFlags.InputSink, this.Handle);
