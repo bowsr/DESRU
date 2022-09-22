@@ -931,6 +931,7 @@ namespace DESpeedrunUtil {
             discordButton.Font = EternalUIBold;
             helpButton.Font = EternalUIBold;
             unlockResButton.Font = EternalUIBold;
+            showMoreKeysButton.Font = EternalUIBold;
 
             // Eternal Logo Bold 14point
             hotkeysTitle.Font = EternalLogoBold;
