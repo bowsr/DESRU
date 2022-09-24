@@ -372,6 +372,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.SteamInstallation = _steamInstallation;
             Properties.Settings.Default.SteamID3 = _steamID3;
             Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
+            Properties.Settings.Default.ResScaleKey = (int) _hotkeys.ResScaleHotkey;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 
