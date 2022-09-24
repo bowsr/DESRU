@@ -3,7 +3,7 @@ This file explains how DESRU works under the hood.
 If you're looking for instructions on how to use DESRU, click the **HELP** button in DESRU. That page will explain basically everything you need to know regarding how to use it.
 ## Memory
 DESRU monitors and modifies DOOMEternal's memory, almost exactly like LiveSplit does (literally using their code lol).  
-Commands modified:
+cvars modified:
 ```
 [c] == Cheat Protected
 
