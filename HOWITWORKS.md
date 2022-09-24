@@ -1,6 +1,6 @@
-This file explains how DESRU works under the hood.
+#### This file explains how DESRU works under the hood.
 
-If you're looking for instructions on how to use DESRU, click the **HELP** button in DESRU. That page will explain basically everything you need to know regarding how to use it.
+*If you're looking for instructions on how to use DESRU, click the* **HELP** *button in DESRU. That page will explain basically everything you need to know regarding how to use it.*
 ## Memory
 DESRU monitors and modifies DOOMEternal's memory, almost exactly like LiveSplit does (literally using their code lol).  
 cvars modified:
@@ -69,7 +69,7 @@ DESRU will also periodically check for the Freescroll Macro running externally a
 DESRU will check the user's firewall outbound rules for a rule blocking traffic from their DOOMEternalx64vk.exe installation.  
 If this is found but not enabled, DESRU will enable it.
 
-Clicking the firewall button will either delete this rule, or create a new one named "DOOM Eternal (SR Utility).
+Clicking the firewall button will either delete this rule, or create a new one named "DOOMEternal (SR Utility)".
 
 ### ReShade
 For ReShade detection, DESRU searches for a Registry Value in the `HKEY_LOCAL_MACHINE\SOFTWARE\Khronos\Vulkan\ImplicitLayers\` Key.  
