@@ -119,7 +119,7 @@ namespace DESpeedrunUtil.Memory {
                         if(!CheckIfGameIsFocused()) {
                             _windowFocused = false;
                         }else {
-                            if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 1500) {
+                            if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 2500) {
                                 UnlockResScale(_targetFPS);
                                 SendKeys.Send("%(~)");
                                 SendKeys.Send("%(~)");
@@ -137,7 +137,7 @@ namespace DESpeedrunUtil.Memory {
                     _dynTime = DateTime.Now.Ticks;
                     _dynTimer = true;
                 }
-                if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 1500) {
+                if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 2500) {
                     EnableDynamicScaling(_targetFPS);
                     _scheduleDynamic = false;
                     _dynTimer = false;
@@ -258,6 +258,14 @@ namespace DESpeedrunUtil.Memory {
             if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
             if(_raiseMSPtr != IntPtr.Zero) _game.WriteBytes(_raiseMSPtr, FloatToBytes((1000f / targetFPS) * 0.95f));
             if(_dropMSPtr != IntPtr.Zero) _game.WriteBytes(_dropMSPtr, FloatToBytes((1000f / targetFPS) * 0.99f));
+        }
+        /// <summary>
+        /// Toggles Dynamic Resolution Scaling
+        /// </summary>
+        public void ToggleDynamicScaling() {
+            if(_dynamicResPtr == IntPtr.Zero) return;
+            if(DynamicEnabled()) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
+            else _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
         }
         private static byte[] FloatToBytes(float f) {
             byte[] output = new byte[4];

@@ -447,8 +447,7 @@ namespace DESpeedrunUtil {
 
         public void ToggleResScaling() {
             if(Hooked) {
-                _memory.SetMinRes(((int) (_memory.ReadMinRes() * 100)) == _minResPercent ? 1f : _minResPercent / 100f);
-                _memory.ScheduleResUnlock(false, _targetFPS);
+                _memory.ToggleDynamicScaling();
             }
         }
 

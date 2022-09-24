@@ -358,7 +358,7 @@ In order to unlock your resolution scaling, when DOOM Eternal is open you'll nee
 
 After scaling is unlocked, you can also set your own minimum scale. You can also automatically enable dynamic scaling with any FPS target up to 1000, though keep in mind that this change won't be shown in the settings menu.
 
-The Res. Scale Hotkey in the Keybinds section will toggle the minimum resolution between the value you set and 100%. This effectively disables dynamic scaling despite it still being enabled.</value>
+The Res. Scale Hotkey in the Keybinds section will toggle dynamic scaling on and off.</value>
   </data>
   <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
