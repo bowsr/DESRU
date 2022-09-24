@@ -426,7 +426,7 @@ namespace DESpeedrunUtil {
             if(_gameDirectory != string.Empty) {
                 try {
                     string s = File.ReadAllText(_gameDirectory + "\\gameVersion.txt").Trim();
-                    return s.Substring(s.IndexOf('=') + 1);
+                    return s[(s.IndexOf('=') + 1)..];
                 }catch(Exception e) {
                     Log.Error(e, "An error occured when trying to read gameVersion.txt. Directory: {Directory}", _gameDirectory);
 

@@ -26,7 +26,7 @@
             public FPSKey() : this(Keys.None, -1) { }
         }
 
-        internal struct KnownOffsets {
+        internal readonly struct KnownOffsets {
             public string Version { get; init; }
 
             public int Row1 { get; init; }

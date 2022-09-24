@@ -69,6 +69,7 @@ namespace DESpeedrunUtil.Memory {
 
             _restartCheatsTimer = new System.Timers.Timer(2500);
             _restartCheatsTimer.Elapsed += (sender, e) => { RestartTick(); };
+            _restartCheatsTimer.Start();
 
             Reset = false;
             Initialize();
@@ -78,8 +79,6 @@ namespace DESpeedrunUtil.Memory {
 
         public void MemoryTick() {
             DerefPointers();
-
-            if(_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
 
             if(!_trainerFlag && ReadyToUnlockRes()) {
                 if(_restartGame) {
@@ -138,7 +137,7 @@ namespace DESpeedrunUtil.Memory {
                     _dynTime = DateTime.Now.Ticks;
                     _dynTimer = true;
                 }
-                if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 5000) {
+                if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 1500) {
                     EnableDynamicScaling(_targetFPS);
                     _scheduleDynamic = false;
                     _dynTimer = false;
