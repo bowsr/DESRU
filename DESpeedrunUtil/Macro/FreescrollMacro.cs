@@ -57,11 +57,10 @@ namespace DESpeedrunUtil.Macro {
         /// </summary>
         public void Start() {
             if(!CanStart()) return;
+            if(_timer.Enabled) _timer.Stop();
             TerminateUnmanagedMacros(); // One final check before running our own macro instance
             _macroProcess = Process.Start(MACRO_START_INFO);
-            IsRunning = true;
-            Log.Verbose("Freescroll macro started.");
-            if(_timer.Enabled) _timer.Stop();
+            Log.Verbose("Macro process started.");
             try {
                 if(!CheckModuleSize()) {
                     Stop(true);
@@ -79,7 +78,12 @@ namespace DESpeedrunUtil.Macro {
                 if(_macroProcess == null) {
                     Restart();
                 }else {
-                    if(_macroProcess.HasExited) Restart();
+                    if(_macroProcess.HasExited) {
+                        Restart();
+                    }else {
+                        IsRunning = true;
+                        Log.Verbose("Freescroll Macro is running.");
+                    }
                 }
             }
         }
@@ -161,7 +165,7 @@ namespace DESpeedrunUtil.Macro {
         public static void TerminateUnmanagedMacros() {
             List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro"));
             if(procList.Count == 0) return;
-            Log.Information("Found extra macro processes. Terminating...");
+            Log.Information("Found {Count} macro processes. Terminating...", procList.Count);
             var c = 0;
             foreach(Process proc in procList) {
                 proc.Kill();

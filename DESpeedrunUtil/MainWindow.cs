@@ -45,7 +45,7 @@ namespace DESpeedrunUtil {
         bool _reshadeExists = false;
 
         FreescrollMacro _macroProcess;
-        bool _enableMacro = true;
+        bool _enableMacro = true, _startingMacro = false;
 
         HotkeyHandler _hotkeys;
         int _fpsDefault, _minResPercent, _targetFPS;
@@ -230,7 +230,12 @@ namespace DESpeedrunUtil {
                         if(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
                             _macroProcess.Restart();
                         }
-                        if(!_macroProcess.IsRunning) _macroProcess.Start();
+                        if(!_macroProcess.IsRunning && !_startingMacro) {
+                            _macroProcess.Start();
+                            _startingMacro = true;
+                        }else if(_macroProcess.IsRunning) {
+                            _startingMacro = false;
+                        }
                     }
                 }
             }catch(Exception e) {
