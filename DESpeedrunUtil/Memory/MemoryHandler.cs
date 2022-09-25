@@ -149,10 +149,11 @@ namespace DESpeedrunUtil.Memory {
             // If the trainer is detected, metric rows are no longer modified, and the restart game flag is set to true
             // This is done here since this process takes upwards of 3ms and this timer has a longer interval.
             // This will eventually be removed once the trainer is integrated directly into DESRU
+            List<Process> processes = Process.GetProcesses().ToList();
             if(_trainer == null) {
-                List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
-                if(procList.Count > 0) {
-                    _trainer = procList[0];
+                var trainers = processes.FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
+                if(trainers.Count > 0) {
+                    _trainer = trainers[0];
                     SetFlag(true, "restart");
                     _trainerFlag = true;
                     Log.Information("Trainer process found running.");
@@ -167,7 +168,16 @@ namespace DESpeedrunUtil.Memory {
                 }
             }
             if(_restartGame) {
+                if(_cheatsFlag) {
                 _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED";
+                }else {
+                    _cheatString = "RESTART GAME";
+            }
+            }else {
+                if(processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
+                    SetFlag(true, "restart");
+                    _cheatString = "RESTART GAME";
+        }
             }
         }
 
