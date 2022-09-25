@@ -11,6 +11,15 @@ using static DESpeedrunUtil.Interop.DLLImports;
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
 
+        private const int OFFSET_ROW2 = 0x8;
+        private const int OFFSET_ROW3 = 0x58;
+        private const int OFFSET_ROW4 = 0x70;
+        private const int OFFSET_ROW5 = 0x78;
+        private const int OFFSET_ROW6 = 0x98;
+        private const int OFFSET_ROW7 = 0x10;
+        private const int OFFSET_ROW8 = 0x30;
+        private const int OFFSET_ROW9 = 0x40;
+
         private readonly float[] ONEPERCENT_RES_SCALES = new float[32] 
                 { 1.0f, 0.968f, 0.936f, 0.904f, 0.872f, 0.84f, 0.808f, 0.776f, 
                 0.744f, 0.712f, 0.68f, 0.648f, 0.616f, 0.584f, 0.552f, 0.52f, 
@@ -183,18 +192,18 @@ namespace DESpeedrunUtil.Memory {
 
         private void ModifyMetricRows() {
             if(_row1Ptr != IntPtr.Zero) {
-                var r6 = (_row6Ptr != IntPtr.Zero) ? _row6Ptr : _row1Ptr + 0x98;
+                var r6 = (_row6Ptr != IntPtr.Zero) ? _row6Ptr : _row1Ptr + OFFSET_ROW6;
                 _game.VirtualProtect(_row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_row1Ptr, ToByteArray(_row1, 20));
-                _game.WriteBytes(_row1Ptr + 0x8, ToByteArray(_row2, 16));
-                _game.WriteBytes(_row1Ptr + 0x58, ToByteArray(_row3, 19));
-                _game.WriteBytes(_row1Ptr + 0x70, ToByteArray(_row4, 7));
-                _game.WriteBytes(_row1Ptr + 0x78, ToByteArray(_row5, 34));
+                _game.WriteBytes(_row1Ptr + OFFSET_ROW2, ToByteArray(_row2, 16));
+                _game.WriteBytes(_row1Ptr + OFFSET_ROW3, ToByteArray(_row3, 19));
+                _game.WriteBytes(_row1Ptr + OFFSET_ROW4, ToByteArray(_row4, 7));
+                _game.WriteBytes(_row1Ptr + OFFSET_ROW5, ToByteArray(_row5, 34));
                 _game.WriteBytes(r6, ToByteArray(_row6, 34));
-                _game.WriteBytes(r6 + 0x10, ToByteArray(_row7, 34));
+                _game.WriteBytes(r6 + OFFSET_ROW7, ToByteArray(_row7, 34));
             }
-            if(_row6Ptr != IntPtr.Zero) _game.WriteBytes(_row6Ptr + 0x30, ToByteArray(_row8, 34));
-            if(_row6Ptr != IntPtr.Zero) _game.WriteBytes(_row6Ptr + 0x40, ToByteArray(_row9, 34));
+            if(_row6Ptr != IntPtr.Zero) _game.WriteBytes(_row6Ptr + OFFSET_ROW8, ToByteArray(_row8, 34));
+            if(_row6Ptr != IntPtr.Zero) _game.WriteBytes(_row6Ptr + OFFSET_ROW9, ToByteArray(_row9, 34));
             if(_cpuPtr != IntPtr.Zero) {
                 _game.VirtualProtect(_cpuPtr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_cpuPtr, ToByteArray(_cpu, 64));
@@ -247,7 +256,7 @@ namespace DESpeedrunUtil.Memory {
             MemoryTimer.Stop();
             _row3 = "DESRU CLOSED";
             if(_cpuPtr == IntPtr.Zero)
-                _game.WriteBytes(_row1Ptr + 0x58, ToByteArray(_row3, 19));
+                _game.WriteBytes(_row1Ptr + OFFSET_ROW3, ToByteArray(_row3, 19));
             else
                 _game.WriteBytes(_cpuPtr, ToByteArray(_row3, 64));
         }
@@ -543,12 +552,12 @@ namespace DESpeedrunUtil.Memory {
             r1 = scanner.Scan(fpsTarget);
             if(r1 != IntPtr.Zero) {
                 Log.Information("Found FPS counter.");
-                r2 = r1 + 0x8;
-                r3 = r1 + 0x58;
-                r4 = r1 + 0x70;
-                r5 = r1 + 0x78;
-                r6 = r1 + 0x98;
-                r7 = r1 + 0xA8;
+                r2 = r1 + OFFSET_ROW2;
+                r3 = r1 + OFFSET_ROW3;
+                r4 = r1 + OFFSET_ROW4;
+                r5 = r1 + OFFSET_ROW5;
+                r6 = r1 + OFFSET_ROW6;
+                r7 = r1 + OFFSET_ROW6 + OFFSET_ROW7;
                 r8 = IntPtr.Zero;
                 r9 = IntPtr.Zero;
                 Log.Information("Scanning for DLSS string.");
@@ -556,9 +565,9 @@ namespace DESpeedrunUtil.Memory {
                 if(dlss.ToInt64() != 0) {
                     Log.Information("Found DLSS string.");
                     r6 = dlss;
-                    r7 = dlss + 0x10;
-                    r8 = dlss + 0x30;
-                    r9 = dlss + 0x40;
+                    r7 = dlss + OFFSET_ROW7;
+                    r8 = dlss + OFFSET_ROW8;
+                    r9 = dlss + OFFSET_ROW9;
                 }
             }else {
                 Log.Error("Could not find the perf metrics rows in memory. Is this even DOOM Eternal?");
