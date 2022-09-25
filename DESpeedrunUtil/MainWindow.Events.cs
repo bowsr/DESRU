@@ -383,6 +383,7 @@ namespace DESpeedrunUtil {
 
             _hotkeys.DisableHotkeys();
             _macroProcess.Stop(false);
+            if(_memory != null) _memory.ClosingDESRU();
         }
     }
 }

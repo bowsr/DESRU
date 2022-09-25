@@ -169,15 +169,15 @@ namespace DESpeedrunUtil.Memory {
             }
             if(_restartGame) {
                 if(_cheatsFlag) {
-                _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED";
+                    _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED";
                 }else {
                     _cheatString = "RESTART GAME";
-            }
+                }
             }else {
                 if(processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
                     SetFlag(true, "restart");
                     _cheatString = "RESTART GAME";
-        }
+                }
             }
         }
 
@@ -238,6 +238,19 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <param name="scrollString"><see langword="string"/> displayed on screen</param>
         public void SetScrollPatternString(string scrollString) => _scrollString = scrollString;
+
+        /// <summary>
+        /// Stops timers and sets 3rd metrics row to a <see cref="string"/> indicating DESRU was closed
+        /// </summary>
+        public void ClosingDESRU() {
+            _restartCheatsTimer.Stop();
+            MemoryTimer.Stop();
+            _row3 = "DESRU CLOSED";
+            if(_cpuPtr == IntPtr.Zero)
+                _game.WriteBytes(_row1Ptr + 0x58, ToByteArray(_row3, 19));
+            else
+                _game.WriteBytes(_cpuPtr, ToByteArray(_row3, 64));
+        }
 
         private void SetMetrics(byte val) {
             if(val > 6) return;
