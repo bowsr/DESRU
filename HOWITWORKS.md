@@ -43,7 +43,8 @@ S - Slopeboosts are disabled [pm_allowRampJumping 0]; 1.0 only
 Below the version, a few things can show up.
 ```
 CHEATS ENABLED -> meath00k is detected
-RESTART GAME   -> DESRU was started after DOOMEternal or the Trainer was detected at some point
+RESTART GAME   -> DESRU was started after DOOMEternal or CheatEngine/Trainer was detected at some point
+DESRU CLOSED   -> DESRU was closed by the user
 ```  
 This row will also display a scroll pattern tracker.  
 Format: `X (Y.YYms)` X == # of scroll inputs; Y == avg time between scroll inputs  
