@@ -1,4 +1,5 @@
 ﻿using Serilog;
+using System.ComponentModel;
 using System.Diagnostics;
 using Timer = System.Windows.Forms.Timer;
 
@@ -22,10 +23,9 @@ namespace DESpeedrunUtil.Macro {
         private bool _incorrectMacroVersion = false;
 
         public FreescrollMacro(Keys downScroll, Keys upScroll) {
-            MACRO_START_INFO = new ProcessStartInfo(@".\DOOMEternalMacro.exe");
+            MACRO_START_INFO = new ProcessStartInfo(@".\macro\DOOMEternalMacro.exe");
             MACRO_START_INFO.WorkingDirectory = @".\macro";
-            MACRO_START_INFO.UseShellExecute = true;
-            MACRO_START_INFO.WindowStyle = ProcessWindowStyle.Hidden;
+            MACRO_START_INFO.CreateNoWindow = true;
             IsRunning = false;
 
             // Timer that runs every five seconds to prevent unmanaged macro processes
@@ -59,7 +59,12 @@ namespace DESpeedrunUtil.Macro {
             if(!CanStart()) return;
             if(_timer.Enabled) _timer.Stop();
             TerminateUnmanagedMacros(); // One final check before running our own macro instance
-            _macroProcess = Process.Start(MACRO_START_INFO);
+            try {
+                _macroProcess = Process.Start(MACRO_START_INFO);
+            }catch(Exception e) {
+                Log.Error(e, "Failed to start Freescroll Macro.");
+                return;
+            }
             Log.Verbose("Macro process started.");
             try {
                 if(!CheckModuleSize()) {

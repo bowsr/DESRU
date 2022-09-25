@@ -45,7 +45,7 @@ namespace DESpeedrunUtil {
                 } catch(FormatException f) {
                     Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
                 }
-                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
+                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macro, _hotkeys);
             }
             UpdateHotkeyAndInputFields();
             e.Handled = true;
@@ -73,7 +73,7 @@ namespace DESpeedrunUtil {
                     "hkResToggle" => 2,
                     _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 3 : -1,
                 };
-                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macroProcess, _hotkeys);
+                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macro, _hotkeys);
             }
             UpdateHotkeyAndInputFields();
         }
@@ -322,7 +322,7 @@ namespace DESpeedrunUtil {
             // User Settings
             var fpsJson = "";
             if(File.Exists(FPSKEYS_JSON)) fpsJson = File.ReadAllText(FPSKEYS_JSON);
-            _macroProcess = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
+            _macro = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
             _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, fpsJson, this);
             _fpsDefault = Properties.Settings.Default.DefaultFPSCap;
             autorunMacroCheckbox.Checked = Properties.Settings.Default.MacroEnabled;
@@ -359,8 +359,8 @@ namespace DESpeedrunUtil {
         // Event method that runs upon closing of the <c>MainWindow</c> form.
         private void MainWindow_Closing(object sender, FormClosingEventArgs e) {
             // User Settings
-            Properties.Settings.Default.DownScrollKey = (int) _macroProcess.GetHotkey(true);
-            Properties.Settings.Default.UpScrollKey = (int) _macroProcess.GetHotkey(false);
+            Properties.Settings.Default.DownScrollKey = (int) _macro.GetHotkey(true);
+            Properties.Settings.Default.UpScrollKey = (int) _macro.GetHotkey(false);
             Properties.Settings.Default.DefaultFPSCap = _fpsDefault;
             Properties.Settings.Default.MacroEnabled = autorunMacroCheckbox.Checked;
             Properties.Settings.Default.HotkeysEnabled = enableHotkeysCheckbox.Checked;
@@ -382,7 +382,7 @@ namespace DESpeedrunUtil {
             Log.Information("User settings saved");
 
             _hotkeys.DisableHotkeys();
-            _macroProcess.Stop(false);
+            _macro.Stop(false);
             if(_memory != null) _memory.ClosingDESRU();
         }
     }

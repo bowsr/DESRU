@@ -44,7 +44,7 @@ namespace DESpeedrunUtil {
         bool _mhExists = false, _mhScheduleRemoval = false, _mhDoRemovalTask = false;
         bool _reshadeExists = false;
 
-        FreescrollMacro _macroProcess;
+        FreescrollMacro _macro;
         bool _enableMacro = true, _startingMacro = false;
 
         HotkeyHandler _hotkeys;
@@ -201,15 +201,19 @@ namespace DESpeedrunUtil {
                     Log.Error(e, "An error occured when attempting to hook into the game.");
                     return;
                 }
-                _firstRun = false;
             }
             if(!Hooked) {
                 versionDropDownSelector.Enabled = true;
-                _macroProcess.Stop(true);
+                _macro.Stop(true);
                 _fwRestart = false;
                 meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                 return;
             }
+            if(_memory == null) {
+                _gameProcess = null;
+                return;
+            }
+            _firstRun = false;
 
             /** Toggling Hotkeys/Macro when game changes focus **/
             try {
@@ -224,16 +228,17 @@ namespace DESpeedrunUtil {
                     }
                 }
                 if(!_gameInFocus) {
-                    _macroProcess.Stop(true);
+                    _macro.Stop(true);
+                    _startingMacro = false;
                 }else {
                     if(_enableMacro) {
                         if(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
-                            _macroProcess.Restart();
+                            _macro.Restart();
                         }
-                        if(!_macroProcess.IsRunning && !_startingMacro) {
-                            _macroProcess.Start();
+                        if(!_macro.IsRunning && !_startingMacro) {
+                            _macro.Start();
                             _startingMacro = true;
-                        }else if(_macroProcess.IsRunning) {
+                        }else if(_macro.IsRunning && _startingMacro) {
                             _startingMacro = false;
                         }
                     }
@@ -242,12 +247,12 @@ namespace DESpeedrunUtil {
                 Log.Error(e, "Failed to check if DOOM Eternal was in focus.");
             }
 
-            if(!_enableMacro) _macroProcess.Stop(true);
+            if(!_enableMacro) _macro.Stop(true);
             
             /** Memory Flags **/
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
             if(_enableMacro) {
-                _memory.SetFlag(_macroProcess.HasKeyBound(), "macro");
+                _memory.SetFlag(_macro.HasKeyBound(), "macro");
             }else {
                 _memory.SetFlag(false, "macro");
             }
@@ -298,8 +303,8 @@ namespace DESpeedrunUtil {
                 Log.Error(e, "Failed to check if firewall rule exists.");
             }
 
-            macroStatus.Text = (_macroProcess.IsRunning) ? "Running" : "Stopped";
-            macroStatus.ForeColor = (_macroProcess.IsRunning) ? Color.Lime : TEXT_FORECOLOR;
+            macroStatus.Text = (_macro.IsRunning) ? "Running" : "Stopped";
+            macroStatus.ForeColor = (_macro.IsRunning) ? Color.Lime : TEXT_FORECOLOR;
             hotkeyStatus.Text = (_hotkeys.Enabled) ? "Enabled" : "Disabled";
 
             if(_memory != null) {
@@ -392,8 +397,8 @@ namespace DESpeedrunUtil {
             foreach(Label l in _hotkeyFields) {
                 string tag = (string) l.Tag;
                 Keys key = tag switch {
-                    "hkMacroDown" => _macroProcess.GetHotkey(true),
-                    "hkMacroUp" => _macroProcess.GetHotkey(false),
+                    "hkMacroDown" => _macro.GetHotkey(true),
+                    "hkMacroUp" => _macro.GetHotkey(false),
                     "hkResToggle" => _hotkeys.ResScaleHotkey,
                     _ => _hotkeys.FPSHotkeys.GetKeyFromID(int.TryParse(tag.Replace("hkFps", ""), out int id) ? id : -1),
                 };
