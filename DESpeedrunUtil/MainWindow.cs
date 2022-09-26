@@ -201,6 +201,10 @@ namespace DESpeedrunUtil {
                     Log.Error(e, "An error occured when attempting to hook into the game.");
                     return;
                 }
+                if(Hooked && _memory == null) {
+                    _gameProcess = null;
+                    return;
+                }
             }
             if(!Hooked) {
                 versionDropDownSelector.Enabled = true;
@@ -209,11 +213,6 @@ namespace DESpeedrunUtil {
                 meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                 return;
             }
-            if(_memory == null) {
-                _gameProcess = null;
-                return;
-            }
-            _firstRun = false;
 
             /** Toggling Hotkeys/Macro when game changes focus **/
             try {
@@ -719,6 +718,7 @@ namespace DESpeedrunUtil {
             if(procList.Count == 0) {
                 _gameProcess = null;
                 _duplicateProcesses = false;
+                _firstRun = false;
                 return false;
             }
             if(procList.Count > 1) {
@@ -786,6 +786,7 @@ namespace DESpeedrunUtil {
             }
             _memory.SetMaxHz(_fpsDefault);
             _memory.MemoryTimer.Start();
+            _firstRun = false;
             return true;
         }
 
