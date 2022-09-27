@@ -26,10 +26,10 @@ namespace Updater {
                     NewVersion = ValidateVersionString(s);
                     if(NewVersion != EMPTY_VERSION) break;
                 }
-            }
-            if(NewVersion != EMPTY_VERSION) {
-                Application.Run(new ProgressWindow());
-                if(LaunchOnClose) LaunchDESRU();
+                if(NewVersion != EMPTY_VERSION) {
+                    Application.Run(new ProgressWindow());
+                    if(LaunchOnClose) LaunchDESRU();
+                }
             }
         }
 

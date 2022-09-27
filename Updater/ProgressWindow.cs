@@ -26,6 +26,7 @@ namespace Updater {
             if(Directory.Exists(UPDATE_DIR)) Directory.Delete(UPDATE_DIR, true);
             InvokeLabelChangeText("Extracting files");
             ZipFile.ExtractToDirectory(_zipName, UPDATE_DIR);
+            File.Delete(_zipName);
             backgroundWorker.ReportProgress(updateProgressBar.Value + updateProgressBar.Step);
             _totalFiles = CountFiles(UPDATE_DIR);
             Directory.CreateDirectory(@".\fonts");
@@ -61,9 +62,13 @@ namespace Updater {
         private async void Download() {
             var response = await new HttpClient().GetAsync(_downloadURI);
             using var fs = new FileStream(_zipName, FileMode.Create);
-            await response.Content.CopyToAsync(fs);
-            updateProgressBar.PerformStep();
-            backgroundWorker.RunWorkerAsync();
+            if(response.IsSuccessStatusCode) {
+                await response.Content.CopyToAsync(fs);
+                updateProgressBar.PerformStep();
+                backgroundWorker.RunWorkerAsync();
+            }else {
+                progressLabel.Text = "Update Failed to Download";
+            }
         }
 
         private void MoveFiles(string path) {
