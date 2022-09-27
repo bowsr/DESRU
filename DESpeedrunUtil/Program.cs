@@ -8,7 +8,7 @@ using System.Reflection;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "1.0.6";
+        public const string APP_VERSION = "1.1.0";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
 
