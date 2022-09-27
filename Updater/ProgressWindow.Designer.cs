@@ -24,22 +24,26 @@
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProgressWindow));
-            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
+            this.backgroundWorker = new System.ComponentModel.BackgroundWorker();
             this.updateProgressBar = new System.Windows.Forms.ProgressBar();
             this.openDESRUButton = new System.Windows.Forms.Button();
             this.progressLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // backgroundWorker1
+            // backgroundWorker
             // 
-            this.backgroundWorker1.WorkerReportsProgress = true;
-            this.backgroundWorker1.WorkerSupportsCancellation = true;
+            this.backgroundWorker.WorkerReportsProgress = true;
+            this.backgroundWorker.WorkerSupportsCancellation = true;
+            this.backgroundWorker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.BackgroundWorker_DoWork);
+            this.backgroundWorker.ProgressChanged += new System.ComponentModel.ProgressChangedEventHandler(this.BackgroundWorker_ProgessChanged);
+            this.backgroundWorker.RunWorkerCompleted += new System.ComponentModel.RunWorkerCompletedEventHandler(this.BackgroundWorker_RunWorkerCompleted);
             // 
             // updateProgressBar
             // 
             this.updateProgressBar.Location = new System.Drawing.Point(12, 47);
             this.updateProgressBar.Name = "updateProgressBar";
             this.updateProgressBar.Size = new System.Drawing.Size(460, 23);
+            this.updateProgressBar.Step = 5;
             this.updateProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.updateProgressBar.TabIndex = 0;
             // 
@@ -76,6 +80,7 @@
             this.Name = "ProgressWindow";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "DESRU Updater";
+            this.Shown += new System.EventHandler(this.ProgressWindow_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -83,7 +88,7 @@
 
         #endregion
 
-        private System.ComponentModel.BackgroundWorker backgroundWorker1;
+        private System.ComponentModel.BackgroundWorker backgroundWorker;
         private ProgressBar updateProgressBar;
         private Button openDESRUButton;
         private Label progressLabel;
