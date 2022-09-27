@@ -364,3 +364,5 @@ FodyWeavers.xsd
 /DESpeedrunUtil/bundle
 /DESpeedrunUtil/notes.txt
 /DESpeedrunUtil/Properties/launchSettings.json
+/Updater/Properties/launchSettings.json
+/output

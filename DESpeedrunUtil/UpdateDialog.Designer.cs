@@ -80,7 +80,7 @@
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(150, 23);
             this.button3.TabIndex = 4;
-            this.button3.Text = "Open Download Page";
+            this.button3.Text = "Update DESRU";
             this.button3.UseVisualStyleBackColor = true;
             // 
             // versionLabel
