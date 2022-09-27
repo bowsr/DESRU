@@ -120,4 +120,8 @@
     <Exec Command="mkdir &quot;$(TargetDir)\macro&quot;&#xD;&#xA;mkdir &quot;$(TargetDir)\meath00k&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\DESpeedrunUtil\bundle\macro\DOOMEternalMacro.exe&quot; &quot;$(TargetDir)\macro\DOOMEternalMacro.exe&quot;&#xD;&#xA;copy &quot;$(SolutionDir)\DESpeedrunUtil\bundle\meath00k\XINPUT1_3.dll&quot; &quot;$(TargetDir)\meath00k\XINPUT1_3.dll&quot;&#xD;&#xA;rmdir /S /Q &quot;$(SolutionDir)output&quot;&#xD;&#xA;mkdir &quot;$(SolutionDir)\output&quot;&#xD;&#xA;robocopy &quot;$(TargetDir) &quot; &quot;$(SolutionDir)output&quot; /S" />
   </Target>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="rmdir /S /Q &quot;$(TargetDir)&quot;" />
+  </Target>
+
 </Project>

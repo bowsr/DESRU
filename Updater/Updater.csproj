@@ -37,4 +37,8 @@
     <Exec Command="robocopy &quot;$(TargetDir) &quot; &quot;$(SolutionDir)output&quot; /S&#xD;&#xA;del &quot;$(SolutionDir)output\DESRU.zip&quot;&#xD;&#xA;WinRAR.exe a -ibck -ep1 -r &quot;$(SolutionDir)\output\DESRU.zip&quot; &quot;$(SolutionDir)\output\&quot;" />
   </Target>
 
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="rmdir &quot;$(TargetDir)&quot;" />
+  </Target>
+
 </Project>

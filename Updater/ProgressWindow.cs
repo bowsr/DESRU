@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO.Compression;
 
 namespace Updater {
@@ -26,7 +27,6 @@ namespace Updater {
             if(Directory.Exists(UPDATE_DIR)) Directory.Delete(UPDATE_DIR, true);
             InvokeLabelChangeText("Extracting files");
             ZipFile.ExtractToDirectory(_zipName, UPDATE_DIR);
-            File.Delete(_zipName);
             backgroundWorker.ReportProgress(updateProgressBar.Value + updateProgressBar.Step);
             _totalFiles = CountFiles(UPDATE_DIR);
             Directory.CreateDirectory(@".\fonts");
@@ -42,6 +42,7 @@ namespace Updater {
         private void BackgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
             progressLabel.Text = "Installation Complete";
             openDESRUButton.Enabled = true;
+            File.Delete(_zipName);
         }
 
         private void LaunchDESRU_Click(object sender, EventArgs e) {
@@ -66,7 +67,7 @@ namespace Updater {
                 await response.Content.CopyToAsync(fs);
                 updateProgressBar.PerformStep();
                 backgroundWorker.RunWorkerAsync();
-            }else {
+            } else {
                 progressLabel.Text = "Update Failed to Download";
             }
         }
@@ -77,7 +78,7 @@ namespace Updater {
                 Directory.Delete(dir);
             }
             foreach(string file in Directory.GetFiles(path)) {
-                if(file[file.LastIndexOf('\\')..].StartsWith("Updater")) continue;
+                if(file[(file.LastIndexOf('\\') + 1)..].StartsWith("Updater.")) continue;
                 InvokeLabelChangeText(string.Format("Installing {0}", file[file.LastIndexOf('\\')..]));
                 File.Move(file, file.Replace("updateFiles\\", ""), true);
                 _installedFiles++;
@@ -92,7 +93,9 @@ namespace Updater {
                 count += CountFiles(dir);
             }
             foreach(string file in Directory.GetFiles(path)) {
-                if(!file[file.LastIndexOf('\\')..].StartsWith("Updater")) count++;
+                Debug.WriteLine(file[(file.LastIndexOf('\\') + 1)..]);
+                if(file[(file.LastIndexOf('\\') + 1)..].StartsWith("Updater.")) continue;
+                count++;
             }
             return count;
         }
