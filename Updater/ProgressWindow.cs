@@ -1,5 +1,4 @@
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO.Compression;
 
 namespace Updater {
@@ -79,7 +78,7 @@ namespace Updater {
             }
             foreach(string file in Directory.GetFiles(path)) {
                 if(file[(file.LastIndexOf('\\') + 1)..].StartsWith("Updater.")) continue;
-                InvokeLabelChangeText(string.Format("Installing {0}", file[file.LastIndexOf('\\')..]));
+                InvokeLabelChangeText(string.Format("Installing {0}", file[(file.LastIndexOf('\\') + 1)..]));
                 File.Move(file, file.Replace("updateFiles\\", ""), true);
                 _installedFiles++;
                 backgroundWorker.ReportProgress(10 + ((_installedFiles * 90) / _totalFiles));
@@ -93,7 +92,6 @@ namespace Updater {
                 count += CountFiles(dir);
             }
             foreach(string file in Directory.GetFiles(path)) {
-                Debug.WriteLine(file[(file.LastIndexOf('\\') + 1)..]);
                 if(file[(file.LastIndexOf('\\') + 1)..].StartsWith("Updater.")) continue;
                 count++;
             }

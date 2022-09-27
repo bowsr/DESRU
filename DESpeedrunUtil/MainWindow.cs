@@ -570,10 +570,10 @@ namespace DESpeedrunUtil {
                     if(!dir.Contains("DOOMEternal")) continue;
                     directories.Add(dir);
 
-                    var subDir = dir.Substring(dir.IndexOf("DOOMEternal"));
+                    var subDir = dir[dir.IndexOf("DOOMEternal")..];
                     if(!subDir.StartsWith("DOOMEternal ")) continue;
 
-                    var ver = subDir.Substring(subDir.IndexOf(' ') + 1);
+                    var ver = subDir[(subDir.IndexOf(' ') + 1)..];
                     if(MemoryHandler.IsValidVersionString(ver)) File.WriteAllText(dir + "\\gameVersion.txt", "version=" + ver);
                     Log.Information("Found extra game installation; Version: {Version}", ver);
                 }
@@ -585,7 +585,7 @@ namespace DESpeedrunUtil {
                 foreach(var dir in directories) {
                     try {
                         string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
-                        string v = txt.Substring(txt.IndexOf('=') + 1);
+                        string v = txt[(txt.IndexOf('=') + 1)..];
                         if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
                     }catch(Exception e) {
                         Log.Error(e, "An error occured when trying to read gameVersion.txt. Directory: {Directory}", dir);
@@ -688,26 +688,34 @@ namespace DESpeedrunUtil {
                         _mhDoRemovalTask = false;
                         await Task.Delay(2000);
                         if(_mhExists) {
-                            try {
-                                File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
-                                Log.Information("meath00k uninstalled.");
-                            }catch(Exception e) {
-                                Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
-                            }
+                            UninstallMeathook();
                         }
                         meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                     });
                 }else {
                     if(_mhScheduleRemoval == true && _mhExists) {
-                        try {
-                            File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
-                            Log.Information("meath00k uninstalled.");
-                        }catch(Exception e) {
-                            Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
-                        }
+                        UninstallMeathook();
                         _mhScheduleRemoval = false;
                         meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
                     }
+                }
+            }
+        }
+
+        private void UninstallMeathook() {
+            try {
+                File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
+                Log.Information("meath00k uninstalled.");
+            }catch(Exception e) {
+                Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
+            }
+
+            foreach(string v in _gameVersions) {
+                try {
+                    File.Delete(_gameDirectory + " " + v + "\\XINPUT1_3.dll");
+                }catch(Exception e) {
+                    Log.Error(e, "An error occured when attempting to uninstall meath00k. v: {Version}", v);
+                    continue;
                 }
             }
         }

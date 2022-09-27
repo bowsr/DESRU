@@ -276,8 +276,15 @@ namespace DESpeedrunUtil {
             if(_mhExists) {
                 _mhScheduleRemoval = true;
                 Log.Information("meath00k scheduled for removal.");
-            } else {
+            }else {
                 File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + "\\XINPUT1_3.dll");
+                foreach(string v in _gameVersions) {
+                    try {
+                        File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + " " + v + "\\XINPUT1_3.dll");
+                    }catch(Exception ex) {
+                        Log.Error(ex, "An error occured when attempting to install meath00k. v: {Version}", v);
+                    }
+                }
                 if(Hooked) meathookRestartLabel.ForeColor = TEXT_FORECOLOR;
                 Log.Information("meath00k installed.");
             }
@@ -348,7 +355,7 @@ namespace DESpeedrunUtil {
             Log.Information("Loaded user settings");
 
             AddMouseIntercepts(this);
-
+            
             SearchForSteamGameDir();
             if(_steamInstallation != "n/a") SearchForGameSaves();
             _formTimer.Start();

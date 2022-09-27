@@ -8,7 +8,7 @@ using System.Reflection;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "1.1.1";
+        public const string APP_VERSION = "1.1.2";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
 
@@ -58,7 +58,7 @@ namespace DESpeedrunUtil {
             Log.Information("----- DESRU Session Started -----");
             if(Directory.Exists(@".\updateFiles"))
                 Task.Run(async delegate {
-                    await Task.Delay(2500);
+                    await Task.Delay(1500);
                     Log.Information("Cleaning up previous update.");
                     foreach(string file in Directory.GetFiles(@".\updateFiles")) {
                         File.Move(file, file.Replace("updateFiles\\", ""), true);
