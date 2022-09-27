@@ -3,6 +3,7 @@ using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
 using System.Net;
+using System.Reflection;
 
 namespace DESpeedrunUtil {
     internal static class Program {
@@ -55,6 +56,16 @@ namespace DESpeedrunUtil {
                 Log.Logger = logCfg.MinimumLevel.Debug().CreateLogger();
             }
             Log.Information("----- DESRU Session Started -----");
+            if(Directory.Exists(@".\updateFiles"))
+                Task.Run(async delegate {
+                    await Task.Delay(2500);
+                    Log.Information("Cleaning up previous update.");
+                    foreach(string file in Directory.GetFiles(@".\updateFiles")) {
+                        File.Move(file, file.Replace("updateFiles\\", ""), true);
+                    }
+                    Directory.Delete(@".\updateFiles");
+                    Log.Information("Finished up previous update.");
+                });
             if(verbose) Log.Verbose("Verbose Logging Enabled");
             if(timer) {
                 if(interval == 0) {
@@ -87,8 +98,13 @@ namespace DESpeedrunUtil {
                 System.Media.SystemSounds.Asterisk.Play();
                 var result = dialog.ShowDialog();
                 if(result == DialogResult.OK) {
-                    Process.Start(new ProcessStartInfo("https://github.com/bowsr/DESRU/releases/latest") { UseShellExecute = true });
-                    Log.Information("Opened new update's release page.");
+                    var loc = Assembly.GetExecutingAssembly().Location;
+                    var psi = new ProcessStartInfo("cmd.exe", string.Format("/c \"{0}\\Updater.exe\" {1}", loc[..loc.LastIndexOf('\\')], _latestVersion)) {
+                        CreateNoWindow = true
+                    };
+                    Process.Start(psi);
+
+                    Log.Information("Initiated update for version {Version}", _latestVersion);
                     CloseLogger();
                     return;
                 }else if(result == DialogResult.Cancel) {
