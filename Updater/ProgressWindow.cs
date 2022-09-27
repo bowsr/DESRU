@@ -60,14 +60,18 @@ namespace Updater {
         }
 
         private async void Download() {
-            var response = await new HttpClient().GetAsync(_downloadURI);
-            using var fs = new FileStream(_zipName, FileMode.Create);
-            if(response.IsSuccessStatusCode) {
-                await response.Content.CopyToAsync(fs);
-                updateProgressBar.PerformStep();
-                backgroundWorker.RunWorkerAsync();
-            } else {
-                progressLabel.Text = "Update Failed to Download";
+            try {
+                var response = await new HttpClient().GetAsync(_downloadURI);
+                using var fs = new FileStream(_zipName, FileMode.Create);
+                if(response.IsSuccessStatusCode) {
+                    await response.Content.CopyToAsync(fs);
+                    updateProgressBar.PerformStep();
+                    backgroundWorker.RunWorkerAsync();
+                }else {
+                    progressLabel.Text = "Update Failed to Download";
+                }
+            }catch(Exception) {
+                progressLabel.Text = "An error occurred when attempting to download update";
             }
         }
 
