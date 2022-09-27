@@ -8,9 +8,10 @@ using System.Reflection;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "1.1.2";
+        public const string APP_VERSION = "1.1.3";
         public static bool UpdateDetected = false;
         private static string _latestVersion;
+        private static bool _checkFailed = false;
 
         /// <summary>
         /// Form/Memory Timer intervals, in milliseconds
@@ -91,7 +92,12 @@ namespace DESpeedrunUtil {
                 return;
             }
 
-            if(UpdateCheck()) {
+            var update = UpdateCheck();
+            if(!update && _checkFailed && Properties.Settings.Default.DetectedUpdate != "0.0") {
+                _latestVersion = Properties.Settings.Default.DetectedUpdate;
+                update = new Version(_latestVersion).CompareTo(new Version(APP_VERSION)) > 0;
+            }
+            if(update) {
                 UpdateDetected = true;
                 Log.Information("An update has been detected. New: {LatestVersion} | Installed: {AppVersion}", _latestVersion, APP_VERSION);
                 UpdateDialog dialog = new(_latestVersion);
@@ -108,11 +114,14 @@ namespace DESpeedrunUtil {
                     CloseLogger();
                     return;
                 }else if(result == DialogResult.Cancel) {
+                    Properties.Settings.Default.DetectedUpdate = _latestVersion;
                     CloseLogger();
                     return;
                 }
                 Log.Warning("User chose to ignore update.");
+                Properties.Settings.Default.DetectedUpdate = _latestVersion;
             }
+            if(!UpdateDetected) Properties.Settings.Default.DetectedUpdate = "0.0";
             if(!FileCheck()) {
                 MessageBox.Show("Your DESRU installation is broken.\n" +
                     "Please reinstall DESRU, and make sure every file is extracted from the ZIP archive.", "Broken DESRU Installation");
@@ -151,6 +160,7 @@ namespace DESpeedrunUtil {
             }catch(WebException we) {
                 Log.Error(we, "An error occured when attempting to retrieve app releases." +
                     "Make sure this program has the ability to connect to the internet.");
+                _checkFailed = true;
                 return false;
             }
             dynamic info = JsonConvert.DeserializeObject(json);

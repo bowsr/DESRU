@@ -202,5 +202,17 @@ namespace DESpeedrunUtil.Properties {
                 this["ReplaceProfile"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0.0")]
+        public string DetectedUpdate {
+            get {
+                return ((string)(this["DetectedUpdate"]));
+            }
+            set {
+                this["DetectedUpdate"] = value;
+            }
+        }
     }
 }
