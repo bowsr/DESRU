@@ -1,5 +1,3 @@
-using Serilog;
-
 namespace Updater {
     internal static class Program {
 
@@ -14,28 +12,18 @@ namespace Updater {
         static void Main(string[] args) {
             ApplicationConfiguration.Initialize();
 
-            Log.Logger = new LoggerConfiguration()
-                .WriteTo.File(@".\logs\updater\updater_.log", rollingInterval: RollingInterval.Day)
-                .MinimumLevel.Verbose()
-                .CreateLogger();
-
             if(args.Length > 0) {
                 for(int i = 0; i < args.Length; i++) {
                     var s = args[i];
                     try {
                         NewVersion = ValidateVersionString(s);
                         if(NewVersion != EMPTY_VERSION) break;
-                    }catch(Exception e) {
-                        Log.Error(e, "\"{String}\" is not a valid version string.", s);
-                    }
+                    }catch(Exception) { }
                 }
             }
             if(NewVersion != EMPTY_VERSION) {
                 Application.Run(new ProgressWindow());
-            }else {
-                Log.Error("No valid version was passed. Aborting.");
             }
-            Log.CloseAndFlush();
         }
 
         private static Version ValidateVersionString(string ver) {
