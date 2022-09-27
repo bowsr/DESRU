@@ -8,7 +8,7 @@ namespace Updater {
         public static Version NewVersion { get; private set; } = EMPTY_VERSION;
 
         /// <summary>
-        ///  The main entry point for the application.
+        /// The main entry point for the application.
         /// </summary>
         [STAThread]
         static void Main(string[] args) {
