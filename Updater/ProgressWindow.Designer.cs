@@ -42,7 +42,7 @@
             // 
             this.updateProgressBar.Location = new System.Drawing.Point(12, 47);
             this.updateProgressBar.Name = "updateProgressBar";
-            this.updateProgressBar.Size = new System.Drawing.Size(460, 23);
+            this.updateProgressBar.Size = new System.Drawing.Size(360, 23);
             this.updateProgressBar.Step = 5;
             this.updateProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
             this.updateProgressBar.TabIndex = 0;
@@ -50,12 +50,13 @@
             // openDESRUButton
             // 
             this.openDESRUButton.Enabled = false;
-            this.openDESRUButton.Location = new System.Drawing.Point(366, 76);
+            this.openDESRUButton.Location = new System.Drawing.Point(266, 76);
             this.openDESRUButton.Name = "openDESRUButton";
             this.openDESRUButton.Size = new System.Drawing.Size(106, 23);
             this.openDESRUButton.TabIndex = 1;
             this.openDESRUButton.Text = "Launch DESRU";
             this.openDESRUButton.UseVisualStyleBackColor = true;
+            this.openDESRUButton.Click += new System.EventHandler(this.LaunchDESRU_Click);
             // 
             // progressLabel
             // 
@@ -70,7 +71,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(484, 111);
+            this.ClientSize = new System.Drawing.Size(384, 111);
             this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.openDESRUButton);
             this.Controls.Add(this.updateProgressBar);
@@ -80,6 +81,7 @@
             this.Name = "ProgressWindow";
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "DESRU Updater";
+            this.Load += new System.EventHandler(this.ProgressWindow_Load);
             this.Shown += new System.EventHandler(this.ProgressWindow_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

@@ -43,6 +43,17 @@ namespace Updater {
             openDESRUButton.Enabled = true;
         }
 
+        private void LaunchDESRU_Click(object sender, EventArgs e) {
+            Program.LaunchOnClose = true;
+            this.Close();
+        }
+
+        private void ProgressWindow_Load(object sender, EventArgs e) {
+            this.Location = new Point(
+                Screen.PrimaryScreen.WorkingArea.Left + (Screen.PrimaryScreen.WorkingArea.Width / 2 - (this.Width / 2)),
+                Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
+        }
+
         private void ProgressWindow_Shown(object sender, EventArgs e) {
             Download();
         }
