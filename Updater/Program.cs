@@ -1,5 +1,4 @@
 using Serilog;
-using System.Diagnostics;
 
 namespace Updater {
     internal static class Program {
@@ -32,7 +31,7 @@ namespace Updater {
                 }
             }
             if(NewVersion != EMPTY_VERSION) {
-                Application.Run(new Form1());
+                Application.Run(new ProgressWindow());
             }else {
                 Log.Error("No valid version was passed. Aborting.");
             }

@@ -1,5 +1,5 @@
 ﻿namespace Updater {
-    partial class Form1 {
+    partial class ProgressWindow {
         /// <summary>
         ///  Required designer variable.
         /// </summary>
