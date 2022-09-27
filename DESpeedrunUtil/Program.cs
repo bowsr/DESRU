@@ -104,21 +104,18 @@ namespace DESpeedrunUtil {
                 System.Media.SystemSounds.Asterisk.Play();
                 var result = dialog.ShowDialog();
                 if(result == DialogResult.OK) {
-                    bool upd = true;
-                    if(!File.Exists(@".\Updater.exe") || !File.Exists(@".\Updater.dll") || !File.Exists(@".\Updater.deps.json") ||
-                        !File.Exists(@".\Updater.runtimeconfig.json")) {
+                    bool upd = !File.Exists(@".\Updater.exe") || !File.Exists(@".\Updater.dll") ||
+                        !File.Exists(@".\Updater.deps.json") || !File.Exists(@".\Updater.runtimeconfig.json");
+                    if(upd) {
                         Log.Error("One or more Updater files are missing. Aborting program.");
-                        upd = false;
-                    }
-                    if(!upd) {
                         var msg = MessageBox.Show("Cannot launch the Updater. One or more files are missing.\n" +
                             "You will need to manually update DESRU.", "Broken Updater Installation");
                         if(msg == DialogResult.OK) {
                             Process.Start(new ProcessStartInfo("https://github.com/bowsr/DESRU/releases/latest") { UseShellExecute = true });
                             Log.Information("Opened new update's release page.");
-                            CloseLogger();
-                            return;
                         }
+                        CloseLogger();
+                        return;
                     }
                     var loc = Assembly.GetExecutingAssembly().Location;
                     var psi = new ProcessStartInfo("cmd.exe", string.Format("/c \"{0}\\Updater.exe\" {1}", loc[..loc.LastIndexOf('\\')], _latestVersion)) {
@@ -203,11 +200,6 @@ namespace DESpeedrunUtil {
             if(!File.Exists(@".\fonts\EternalBattleBold.ttf") || !File.Exists(@".\fonts\EternalLogo.ttf") || 
                 !File.Exists(@".\fonts\EternalUi2Bold.ttf") || !File.Exists(@".\fonts\EternalUi2Regular.ttf")) {
                 Log.Error("One or more fonts are missing. Aborting program.");
-                return false;
-            }
-            if(!File.Exists(@".\Updater.exe") || !File.Exists(@".\Updater.dll") || !File.Exists(@".\Updater.deps.json") ||
-                !File.Exists(@".\Updater.runtimeconfig.json")) {
-                Log.Error("One or more Updater files are missing. Aborting program.");
                 return false;
             }
             return true;
