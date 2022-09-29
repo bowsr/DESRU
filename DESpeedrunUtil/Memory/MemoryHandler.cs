@@ -396,7 +396,7 @@ namespace DESpeedrunUtil.Memory {
         /// Checks if the current game version can cap FPS
         /// </summary>
         /// <returns><see langword="true"/> if the MaxHzPtr exists</returns>
-        public bool CanCapFPS() => _maxHzPtr.ToInt64() != 0;
+        public bool CanCapFPS() => _maxHzPtr != IntPtr.Zero;
 
         /// <summary>
         /// Sets the stored fps limit and also modifies the value in DOOMEternal's memory for an instant response
@@ -407,9 +407,9 @@ namespace DESpeedrunUtil.Memory {
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
         }
         /// <summary>
-        /// Reads the current value of com_adaptiveTickMaxHz from memory.
+        /// Reads the current value of com_adaptiveTickMaxHz from memory
         /// </summary>
-        /// <returns>An <see langword="int"/> representing max Hz. <c>-1</c> if it cannot read the memory</returns>
+        /// <returns>An <see cref="int"/> representing max Hz. <c>-1</c> if it cannot be read from memory</returns>
         public int ReadMaxHz() {
             int cap = -1;
             if(CanCapFPS()) _game.ReadValue(_maxHzPtr, out cap);
@@ -417,10 +417,18 @@ namespace DESpeedrunUtil.Memory {
         }
         public void SetMinRes(float min) => _minRes = min;
         public float GetMinRes() => _minRes;
+        /// <summary>
+        /// Reads the curreent value of rs_minimumResolution from memory
+        /// </summary>
+        /// <returns>A <see cref="float"/> representing minimum resolution scale. <c>-1f</c> if it cannot be read from memory</returns>
         public float ReadMinRes() {
             if(_minResPtr != IntPtr.Zero) return _game.ReadValue<float>(_minResPtr);
             return -1f;
         }
+        /// <summary>
+        /// Reads the current value of rs_raiseMilliseconds from memory
+        /// </summary>
+        /// <returns>A <see cref="float"/> representing minimum frametime for scaling. <c>-1f</c> if it cannot be read from memory</returns>
         public float ReadRaiseMillis() {
             if(_raiseMSPtr != IntPtr.Zero) return _game.ReadValue<float>(_raiseMSPtr);
             return -1f;

@@ -315,18 +315,28 @@ namespace DESpeedrunUtil {
                 }else {
                     slopeboostStatus.Text = "N/A";
                 }
-                currentFPSCap.Text = (hz != -1) ? hz.ToString() : "N/A";
-                var ms = _memory.ReadRaiseMillis();
-                var min = _memory.ReadMinRes();
-                if((ms > 0 && ms < 16) && min > 0) {
-                    var rs = "Enabled (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
-                    resScaleStatus.Text = (_memory.ReadDynamicRes() && min < 1.0f) ? rs : "Disabled";
+                if(hz == -1) {
+                    currentFPSCap.ForeColor = Color.Red;
+                    currentFPSCap.Text = "UNSUPPORTED";
+                    toolTip7500.SetToolTip(currentFPSCap, "This version of DOOM Eternal is not fully supported by DESRU.\n" +
+                        "You will need to cap your FPS to 250 through another method, like RTSS or the NVIDIA Control Panel.");
                 }else {
-                    resScaleStatus.Text = "Disabled";
+                    currentFPSCap.ForeColor = TEXT_FORECOLOR;
+                    currentFPSCap.Text = hz.ToString();
+                    toolTip7500.SetToolTip(currentFPSCap, null);
+                }
+                var ms = _memory.ReadRaiseMillis();
+                if((ms > 0 && ms < 16)) {
+                    var rs = "Enabled (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
+                    resScaleStatus.Text = (_memory.ReadDynamicRes()) ? rs : "Disabled";
+                }else {
+                    resScaleStatus.Text = "N/A";
                 }
             }else {
                 slopeboostStatus.Text = "-";
                 currentFPSCap.Text = "-";
+                currentFPSCap.ForeColor = TEXT_FORECOLOR;
+                toolTip7500.SetToolTip(currentFPSCap, null);
                 resScaleStatus.Text = "-";
                 gameStatus.Text = "Not Running";
             }
