@@ -230,17 +230,17 @@ namespace DESpeedrunUtil {
                     if(desired == "3.1") {
                         File.Move(dir + PROFILE_FILE, dir + "\\main.bin");
                         if(File.Exists(dir + "\\3.1.bin")) File.Move(dir + "\\3.1.bin", dir + PROFILE_FILE);
-                    } else {
+                    }else {
                         if(current == "3.1") {
                             if(File.Exists(dir + "\\main.bin")) {
                                 if(File.Exists(dir + PROFILE_FILE)) File.Move(dir + PROFILE_FILE, dir + "\\3.1.bin");
                                 File.Move(dir + "\\main.bin", dir + PROFILE_FILE);
-                            } else {
+                            }else {
                                 File.Copy(dir + PROFILE_FILE, dir + "\\3.1.bin");
                             }
                         }
                     }
-                } catch(Exception ex) {
+                }catch(Exception ex) {
                     Log.Error(ex, "An error occured when attempting to change profile.bin files.");
                 }
             }
@@ -261,7 +261,7 @@ namespace DESpeedrunUtil {
                     _memory.SetFlag(_fwRuleExists, "firewall");
                 }
                 firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
-            } else {
+            }else {
                 FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe");
                 firewallToggleButton.Text = "Remove Firewall Rule";
                 _fwRestart = true;
@@ -294,7 +294,7 @@ namespace DESpeedrunUtil {
                 this.Height = 943;
                 extraFPSHotkeysPanel.Visible = true;
                 showMoreKeysButton.Text = "Hide Extra FPS Hotkeys";
-            } else {
+            }else {
                 this.Height = 725;
                 extraFPSHotkeysPanel.Visible = false;
                 showMoreKeysButton.Text = "Show More FPS Hotkeys";

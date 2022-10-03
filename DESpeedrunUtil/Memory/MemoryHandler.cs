@@ -86,18 +86,14 @@ namespace DESpeedrunUtil.Memory {
         }
 
 
-        public void MemoryTick() {
+        private void MemoryTick() {
+            if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
+
             DerefPointers();
 
             if(!_trainerFlag && ReadyToUnlockRes()) {
-                if(_restartGame) {
-                    if(_cheatsFlag && !_restartCheatsTimer.Enabled) {
-                        _restartCheatsTimer.Start();
-                    }else if(!_cheatsFlag) {
-                        _cheatString = "RESTART GAME";
-                    }
-                }
-                if(Version == "1.0 (Release)") SetFlag(_game.ReadBytes(_rampJumpPtr, 1)[0] == 0, "slopeboost");
+                if(_restartGame) _cheatString = (_cheatsFlag) ? "CHEATS ENABLED" : "RESTART GAME";
+                if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
                 _row1 = "%i FPS" + ((_outOfDateFlag) ? "*" : "");
                 _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
@@ -163,7 +159,7 @@ namespace DESpeedrunUtil.Memory {
                 var trainers = processes.FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
                 if(trainers.Count > 0) {
                     _trainer = trainers[0];
-                    SetFlag(true, "restart");
+                    if(!_cheatsFlag) SetFlag(true, "restart");
                     _trainerFlag = true;
                     Log.Information("Trainer process found running.");
                 }else {
@@ -176,14 +172,8 @@ namespace DESpeedrunUtil.Memory {
                     _trainerFlag = false;
                 }
             }
-            if(_restartGame) {
-                if(_cheatsFlag) {
-                    _cheatString = (_cheatString == "CHEATS ENABLED") ? "RESTART GAME" : "CHEATS ENABLED";
-                }else {
-                    _cheatString = "RESTART GAME";
-                }
-            }else {
-                if(processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
+            if(!_restartGame) {
+                if(!_cheatsFlag && processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
                     SetFlag(true, "restart");
                     _cheatString = "RESTART GAME";
                 }

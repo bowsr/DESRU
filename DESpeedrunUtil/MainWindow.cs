@@ -793,8 +793,8 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(CheckForMeathook(), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
-            _memory.SetFlag(_firstRun, "restart");
-            if(_firstRun) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
+            _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
+            if(_memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
             _memory.SetMinRes(_minResPercent / 100f);
             if(unlockOnStartupCheckbox.Checked) {
                 _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
