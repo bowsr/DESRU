@@ -462,7 +462,6 @@ namespace DESpeedrunUtil.Memory {
                 Debug.WriteLine(e.StackTrace);
                 return;
             }
-            if(Version == "1.0 (Release)") _slopeboostFlag = _game.ReadBytes(_rampJumpPtr, 1)[0] == 0;
         }
 
         /// <summary>
