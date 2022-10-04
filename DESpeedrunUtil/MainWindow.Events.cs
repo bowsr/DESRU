@@ -195,6 +195,7 @@ namespace DESpeedrunUtil {
         }
         private void MaxFPS_CheckChanged(object sender, EventArgs e) {
             if(!((CheckBox) sender).Checked && !_justLaunched) {
+                Log.Warning("Max FPS Limiter disabled.");
                 if(Hooked) {
                     _memory.SetMaxHz(1000);
                     _memory.SetFlag(false, "limiter");
@@ -204,6 +205,7 @@ namespace DESpeedrunUtil {
                     "Common options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, etc.\n\n" +
                     "If you use a 3rd party program like RTSS, ensure that it is running at all times during your run.", "External FPS Limit Required");
             }else {
+                Log.Information("Max FPS Limiter enabled.");
                 if(Hooked) {
                     _memory.SetMaxHz(_fpsDefault);
                     _memory.SetFlag(true, "limiter");
@@ -420,12 +422,15 @@ namespace DESpeedrunUtil {
         private void MainWindow_Shown(object sender, EventArgs e) {
             if(Properties.Settings.Default.ShowFPSLimitWarning) {
                 var dialog = new FPSLimitWarning(this.Location, this.Width, this.Height);
+                Log.Information("Displayed FPS Limiter Warning to user.");
                 if(dialog.ShowDialog() == DialogResult.Yes) {
                     _justLaunched = true;
                     enableMaxFPSCheckbox.Checked = false;
                     _justLaunched = false;
+                    Log.Warning("User chose to disable the max FPS limiter.");
                 }
                 Properties.Settings.Default.ShowFPSLimitWarning = !dialog.disableWarningCheckbox.Checked;
+                if(!Properties.Settings.Default.ShowFPSLimitWarning) Log.Information("FPS Limiter Warning will not be displayed again.");
                 Properties.Settings.Default.Save();
             }
         }
