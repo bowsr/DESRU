@@ -214,5 +214,29 @@ namespace DESpeedrunUtil.Properties {
                 this["DetectedUpdate"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool EnableMaxFPSLimit {
+            get {
+                return ((bool)(this["EnableMaxFPSLimit"]));
+            }
+            set {
+                this["EnableMaxFPSLimit"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowFPSLimitWarning {
+            get {
+                return ((bool)(this["ShowFPSLimitWarning"]));
+            }
+            set {
+                this["ShowFPSLimitWarning"] = value;
+            }
+        }
     }
 }

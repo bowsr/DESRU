@@ -49,7 +49,7 @@ namespace DESpeedrunUtil.Memory {
 
         bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false,
              _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _outOfDateFlag = false, _restartGame = false,
-             _trainerFlag = false, _scheduleDynamic = false;
+             _trainerFlag = false, _scheduleDynamic = false, _limiterFlag = true;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         string _cheatString = "CHEATS ENABLED", _scrollString = "";
         int _fpsLimit = 250, _targetFPS = 1000;
@@ -98,8 +98,8 @@ namespace DESpeedrunUtil.Memory {
                 _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
                 if(_row2.Contains("Unknown")) _row2 = "Unknown";
-                if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag)
-                    _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ")";
+                if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag || !_limiterFlag)
+                    _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ((!_limiterFlag) ? "L" : "") + ")";
                 var cheats = (_cheatsFlag || _restartGame) ? _cheatString : "";
                 if(_cpuPtr == IntPtr.Zero) {
                     _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
@@ -185,7 +185,7 @@ namespace DESpeedrunUtil.Memory {
                 var r6 = (_row6Ptr != IntPtr.Zero) ? _row6Ptr : _row1Ptr + OFFSET_ROW6;
                 _game.VirtualProtect(_row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_row1Ptr, ToByteArray(_row1, 20));
-                _game.WriteBytes(_row1Ptr + OFFSET_ROW2, ToByteArray(_row2, 16));
+                _game.WriteBytes(_row1Ptr + OFFSET_ROW2, ToByteArray(_row2, 18));
                 _game.WriteBytes(_row1Ptr + OFFSET_ROW3, ToByteArray(_row3, 19));
                 _game.WriteBytes(_row1Ptr + OFFSET_ROW4, ToByteArray(_row4, 7));
                 _game.WriteBytes(_row1Ptr + OFFSET_ROW5, ToByteArray(_row5, 34));
@@ -345,6 +345,9 @@ namespace DESpeedrunUtil.Memory {
                 case "restart":
                     _restartGame = flag;
                     break;
+                case "limiter":
+                    _limiterFlag = flag;
+                    break;
             }
         }
 
@@ -364,6 +367,7 @@ namespace DESpeedrunUtil.Memory {
                 "unlockscheduled" => _unlockResFlag,
                 "outofdate" => _outOfDateFlag,
                 "restart" => _restartGame,
+                "limiter" => _limiterFlag,
                 _ => false
             };
         }

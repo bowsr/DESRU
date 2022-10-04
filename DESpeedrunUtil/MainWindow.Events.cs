@@ -2,6 +2,7 @@
 using DESpeedrunUtil.Hotkeys;
 using DESpeedrunUtil.Macro;
 using DESpeedrunUtil.Memory;
+using Linearstar.Windows.RawInput;
 using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
@@ -192,6 +193,23 @@ namespace DESpeedrunUtil {
                 if(Hooked && !_memory.DynamicEnabled()) _memory.EnableDynamicScaling(_targetFPS);
             }
         }
+        private void MaxFPS_CheckChanged(object sender, EventArgs e) {
+            if(!((CheckBox) sender).Checked && !_justLaunched) {
+                if(Hooked) {
+                    _memory.SetMaxHz(1000);
+                    _memory.SetFlag(false, "limiter");
+                }
+                System.Media.SystemSounds.Asterisk.Play();
+                MessageBox.Show("Disabling this option means you MUST limit your framerate to 250 or lower through external means.\n\n" +
+                    "Common options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, etc.\n\n" +
+                    "If you use a 3rd party program like RTSS, ensure that it is running at all times during your run.", "External FPS Limit Required");
+            }else {
+                if(Hooked) {
+                    _memory.SetMaxHz(_fpsDefault);
+                    _memory.SetFlag(true, "limiter");
+                }
+            }
+        }
         #endregion
 
         #region Buttons
@@ -343,6 +361,7 @@ namespace DESpeedrunUtil {
             _steamInstallation = Properties.Settings.Default.SteamInstallation;
             _steamID3 = Properties.Settings.Default.SteamID3;
             replaceProfileCheckbox.Checked = Properties.Settings.Default.ReplaceProfile;
+            enableMaxFPSCheckbox.Checked = Properties.Settings.Default.EnableMaxFPSLimit;
             UpdateHotkeyAndInputFields();
 
             var defaultLocation = new Point(
@@ -360,6 +379,7 @@ namespace DESpeedrunUtil {
             if(_steamInstallation != "n/a") SearchForGameSaves();
             _formTimer.Start();
             _statusTimer.Start();
+            _justLaunched = false;
             Log.Information("Loaded MainWindow");
         }
 
@@ -380,6 +400,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.SteamID3 = _steamID3;
             Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
             Properties.Settings.Default.ResScaleKey = (int) _hotkeys.ResScaleHotkey;
+            Properties.Settings.Default.EnableMaxFPSLimit = enableMaxFPSCheckbox.Checked;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 

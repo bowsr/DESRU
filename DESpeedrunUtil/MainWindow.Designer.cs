@@ -68,6 +68,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.enableMaxFPSCheckbox = new System.Windows.Forms.CheckBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.defaultFPS = new System.Windows.Forms.TextBox();
             this.titleSeparator = new System.Windows.Forms.Panel();
@@ -329,6 +330,8 @@
             // enableHotkeysCheckbox
             // 
             this.enableHotkeysCheckbox.AutoSize = true;
+            this.enableHotkeysCheckbox.Checked = true;
+            this.enableHotkeysCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableHotkeysCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.enableHotkeysCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.enableHotkeysCheckbox.Location = new System.Drawing.Point(6, 33);
@@ -503,7 +506,7 @@
             this.defaultFPSLabel.AutoSize = true;
             this.defaultFPSLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.defaultFPSLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.defaultFPSLabel.Location = new System.Drawing.Point(197, 34);
+            this.defaultFPSLabel.Location = new System.Drawing.Point(197, 59);
             this.defaultFPSLabel.Name = "defaultFPSLabel";
             this.defaultFPSLabel.Size = new System.Drawing.Size(64, 18);
             this.defaultFPSLabel.TabIndex = 20;
@@ -743,6 +746,7 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.enableMaxFPSCheckbox);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.enableHotkeysCheckbox);
             this.panel2.Controls.Add(this.autorunMacroCheckbox);
@@ -756,13 +760,28 @@
             this.panel2.Size = new System.Drawing.Size(304, 156);
             this.panel2.TabIndex = 31;
             // 
+            // enableMaxFPSCheckbox
+            // 
+            this.enableMaxFPSCheckbox.AutoSize = true;
+            this.enableMaxFPSCheckbox.Checked = true;
+            this.enableMaxFPSCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.enableMaxFPSCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.enableMaxFPSCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.enableMaxFPSCheckbox.Location = new System.Drawing.Point(6, 58);
+            this.enableMaxFPSCheckbox.Name = "enableMaxFPSCheckbox";
+            this.enableMaxFPSCheckbox.Size = new System.Drawing.Size(163, 22);
+            this.enableMaxFPSCheckbox.TabIndex = 30;
+            this.enableMaxFPSCheckbox.Text = "Enable Max FPS Limit";
+            this.enableMaxFPSCheckbox.UseVisualStyleBackColor = true;
+            this.enableMaxFPSCheckbox.CheckedChanged += new System.EventHandler(this.MaxFPS_CheckChanged);
+            // 
             // panel3
             // 
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.defaultFPS);
             this.panel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.panel3.Location = new System.Drawing.Point(264, 30);
+            this.panel3.Location = new System.Drawing.Point(264, 55);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(34, 26);
             this.panel3.TabIndex = 29;
@@ -2076,6 +2095,7 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainWindow_Closing);
             this.Load += new System.EventHandler(this.MainWindow_Load);
+            this.Shown += new System.EventHandler(this.MainWindow_Shown);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.HotkeyAssignment_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.HotkeyAssignment_MouseDown);
             this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseMove);
@@ -2280,5 +2300,6 @@
         private Label label15;
         private Label moreHotkeysTitle;
         private ToolTip toolTip7500;
+        private CheckBox enableMaxFPSCheckbox;
     }
 }

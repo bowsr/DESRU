@@ -34,7 +34,7 @@ namespace DESpeedrunUtil {
 
         Process? _gameProcess;
         public bool Hooked = false;
-        bool _duplicateProcesses = false, _firstRun = true;
+        bool _duplicateProcesses = false, _firstRun = true, _justLaunched = true;
         bool _gameInFocus = false;
 
         bool _mouseDown;
@@ -461,7 +461,7 @@ namespace DESpeedrunUtil {
         public void ToggleFPSCap(int fps) {
             if(!Hooked || fps == -1) return;
             int current = _memory.ReadMaxHz();
-            _memory.SetMaxHz((current != fps) ? fps : _fpsDefault);
+            _memory.SetMaxHz((current != fps) ? fps : (enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
         }
 
         public void ToggleResScaling() {
@@ -794,6 +794,7 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
+            _memory.SetFlag(enableMaxFPSCheckbox.Checked, "limiter");
             if(_memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
             _memory.SetMinRes(_minResPercent / 100f);
             if(unlockOnStartupCheckbox.Checked) {
@@ -802,7 +803,7 @@ namespace DESpeedrunUtil {
             }else {
                 if(autoDynamicCheckbox.Checked) _memory.ScheduleDynamicScaling(_targetFPS);
             }
-            _memory.SetMaxHz(_fpsDefault);
+            _memory.SetMaxHz((enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
             _memory.MemoryTimer.Start();
             _firstRun = false;
             return true;
