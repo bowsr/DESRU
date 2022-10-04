@@ -269,6 +269,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <param name="targetFPS">FPS Target the scaling will try to hit</param>
         public void ScheduleDynamicScaling(int targetFPS) {
+            if(Version.Contains("Unknown")) return;
             _targetFPS = targetFPS;
             _scheduleDynamic = true;
         }
@@ -377,6 +378,7 @@ namespace DESpeedrunUtil.Memory {
         /// <param name="auto">Enable dynamic scaling at the same time</param>
         /// <param name="targetFPS">Target FPS for dynamic scaling</param>
         public void ScheduleResUnlock(bool auto, int targetFPS) {
+            if(Version.Contains("Unknown")) return;
             if(_resUnlocked && Version != "6.66 Rev 2") {
                 if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
                 return;

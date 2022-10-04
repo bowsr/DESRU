@@ -329,8 +329,11 @@ namespace DESpeedrunUtil {
                 if((ms > 0 && ms < 16)) {
                     var rs = "Enabled (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
                     resScaleStatus.Text = (_memory.ReadDynamicRes()) ? rs : "Disabled";
+                    toolTip7500.SetToolTip(resScaleStatus, null);
                 }else {
-                    resScaleStatus.Text = "N/A";
+                    resScaleStatus.Text = "UNSUPPORTED";
+                    toolTip7500.SetToolTip(resScaleStatus, "This version of DOOM Eternal is not fully supported by DESRU.\n" +
+                        "Please contact bowsr in the MDSR Discord with the version of the game you're playing, and what platform you're playing on (Steam, Gamepass).");
                 }
             }else {
                 slopeboostStatus.Text = "-";
@@ -338,6 +341,7 @@ namespace DESpeedrunUtil {
                 currentFPSCap.ForeColor = TEXT_FORECOLOR;
                 toolTip7500.SetToolTip(currentFPSCap, null);
                 resScaleStatus.Text = "-";
+                toolTip7500.SetToolTip(resScaleStatus, null);
                 gameStatus.Text = "Not Running";
             }
 
