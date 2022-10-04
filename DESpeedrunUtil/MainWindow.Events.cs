@@ -412,6 +412,22 @@ namespace DESpeedrunUtil {
             _hotkeys.DisableHotkeys();
             _macro.Stop(false);
             if(_memory != null) _memory.ClosingDESRU();
+
+            RawInputDevice.UnregisterDevice(HidUsageAndPage.Keyboard);
+            RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);
+        }
+
+        private void MainWindow_Shown(object sender, EventArgs e) {
+            if(Properties.Settings.Default.ShowFPSLimitWarning) {
+                var dialog = new FPSLimitWarning(this.Location, this.Width, this.Height);
+                if(dialog.ShowDialog() == DialogResult.Yes) {
+                    _justLaunched = true;
+                    enableMaxFPSCheckbox.Checked = false;
+                    _justLaunched = false;
+                }
+                Properties.Settings.Default.ShowFPSLimitWarning = !dialog.disableWarningCheckbox.Checked;
+                Properties.Settings.Default.Save();
+            }
         }
     }
 }
