@@ -30,6 +30,11 @@
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             this.versionLabel = new System.Windows.Forms.Label();
+            this.changelogWebViewer = new Microsoft.Web.WebView2.WinForms.WebView2();
+            this.changelogLabel = new System.Windows.Forms.Label();
+            this.webViewerPanel = new System.Windows.Forms.Panel();
+            ((System.ComponentModel.ISupportInitialize)(this.changelogWebViewer)).BeginInit();
+            this.webViewerPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -55,7 +60,7 @@
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(354, 84);
+            this.button1.Location = new System.Drawing.Point(354, 339);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -66,7 +71,7 @@
             // 
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Continue;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button2.Location = new System.Drawing.Point(198, 84);
+            this.button2.Location = new System.Drawing.Point(198, 339);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(150, 23);
             this.button2.TabIndex = 3;
@@ -76,7 +81,7 @@
             // button3
             // 
             this.button3.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button3.Location = new System.Drawing.Point(42, 84);
+            this.button3.Location = new System.Drawing.Point(42, 339);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(150, 23);
             this.button3.TabIndex = 4;
@@ -93,11 +98,44 @@
             this.versionLabel.TabIndex = 5;
             this.versionLabel.Text = "9.9.9";
             // 
+            // changelogWebViewer
+            // 
+            this.changelogWebViewer.AllowExternalDrop = false;
+            this.changelogWebViewer.CreationProperties = null;
+            this.changelogWebViewer.DefaultBackgroundColor = System.Drawing.SystemColors.Control;
+            this.changelogWebViewer.Location = new System.Drawing.Point(-1, -1);
+            this.changelogWebViewer.Name = "changelogWebViewer";
+            this.changelogWebViewer.Size = new System.Drawing.Size(417, 232);
+            this.changelogWebViewer.TabIndex = 6;
+            this.changelogWebViewer.TabStop = false;
+            this.changelogWebViewer.ZoomFactor = 0.75D;
+            // 
+            // changelogLabel
+            // 
+            this.changelogLabel.AutoSize = true;
+            this.changelogLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.changelogLabel.Location = new System.Drawing.Point(12, 81);
+            this.changelogLabel.Name = "changelogLabel";
+            this.changelogLabel.Size = new System.Drawing.Size(74, 17);
+            this.changelogLabel.TabIndex = 7;
+            this.changelogLabel.Text = "Changelog:";
+            // 
+            // webViewerPanel
+            // 
+            this.webViewerPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.webViewerPanel.Controls.Add(this.changelogWebViewer);
+            this.webViewerPanel.Location = new System.Drawing.Point(12, 101);
+            this.webViewerPanel.Name = "webViewerPanel";
+            this.webViewerPanel.Size = new System.Drawing.Size(417, 232);
+            this.webViewerPanel.TabIndex = 8;
+            // 
             // UpdateDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(441, 119);
+            this.ClientSize = new System.Drawing.Size(441, 374);
+            this.Controls.Add(this.webViewerPanel);
+            this.Controls.Add(this.changelogLabel);
             this.Controls.Add(this.versionLabel);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
@@ -110,6 +148,8 @@
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.Text = "Update Required";
             this.Load += new System.EventHandler(this.UpdateDialog_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.changelogWebViewer)).EndInit();
+            this.webViewerPanel.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -123,5 +163,8 @@
         private Button button2;
         private Button button3;
         private Label versionLabel;
+        private Microsoft.Web.WebView2.WinForms.WebView2 changelogWebViewer;
+        private Label changelogLabel;
+        private Panel webViewerPanel;
     }
 }

@@ -10,7 +10,7 @@ namespace DESpeedrunUtil {
 
         public const string APP_VERSION = "1.1.3";
         public static bool UpdateDetected = false;
-        private static string _latestVersion;
+        private static string _latestVersion, _changelog;
         private static bool _checkFailed = false;
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace DESpeedrunUtil {
             if(update) {
                 UpdateDetected = true;
                 Log.Information("An update has been detected. New: {LatestVersion} | Installed: {AppVersion}", _latestVersion, APP_VERSION);
-                UpdateDialog dialog = new(_latestVersion);
+                UpdateDialog dialog = new(_latestVersion, _changelog[.._changelog.LastIndexOf("## Installation")]);
                 System.Media.SystemSounds.Asterisk.Play();
                 var result = dialog.ShowDialog();
                 if(result == DialogResult.OK) {
@@ -179,6 +179,7 @@ namespace DESpeedrunUtil {
             dynamic info = JsonConvert.DeserializeObject(json);
             if(info.Count > 0) {
                 _latestVersion = info[0].tag_name;
+                _changelog = info[0].body;
                 Version latest = new(_latestVersion);
                 Version current = new(APP_VERSION);
                 return latest.CompareTo(current) > 0;

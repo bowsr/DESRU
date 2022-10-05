@@ -269,7 +269,7 @@ namespace DESpeedrunUtil {
                 unlockResButton.Enabled = false;
                 unlockResButton.Text = "Unlock in Progress";
             }
-
+            
             /** Scroll Pattern Tracking **/
             if(_trackScroll) {
                 var delta = DateTime.Now.Ticks - _scrollTime;
