@@ -48,5 +48,9 @@ This can be safely ignored by pressing "More Info" then "Run Anyway"
 If you're worried about DESRU doing anything malicious, the full source code is available in this repository.
 ## Usage
 You can find instructions for usage of this utility by clicking the **HELP** button in DESRU.
+### Known Issues
+#### Modbot Input Duplication
+If your melee/interact action is bound to `E` or `Q`, interacting with a Modbot may duplicate the input, causing the mod selection menu to tab over to another weapon. If you use either of these keys for your interact action, you will either need to rebind it to another key, or disable the Max FPS Limit in DESRU's options.  
+If you disable the Max FPS Limit, you are **REQUIRED** to limit your framerate to 250 (or lower) through external means. Your options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, among others. Make sure that this external limit is running **at all times**. NVIDIA Control Panel is recommended for this reason as you'll only need to set it once.
 ### Feedback and Questions
 If you have any feedback or questions about the program, please let me know in the MDSR Discord, **@bowsr#0238**.
