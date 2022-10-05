@@ -183,6 +183,8 @@ namespace DESpeedrunUtil {
 
                 unlockResButton.Enabled = false;
                 unlockResButton.Text = "Unlock Resolution Scaling";
+
+                enableMaxFPSCheckbox.Enabled = true;
             }
             if(!_fwRestart) firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
@@ -247,14 +249,14 @@ namespace DESpeedrunUtil {
             }
 
             if(!_enableMacro) _macro.Stop(true);
-            
+
             /** Memory Flags **/
+            var v = _memory.Version.Contains("Unknown");
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
-            if(_enableMacro) {
-                _memory.SetFlag(_macro.HasKeyBound(), "macro");
-            }else {
-                _memory.SetFlag(false, "macro");
-            }
+            _memory.SetFlag(_enableMacro && _macro.HasKeyBound(), "macro");
+            _memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
+
+            enableMaxFPSCheckbox.Enabled = !v;
 
             if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
                 unlockResButton.Enabled = true;
@@ -319,7 +321,8 @@ namespace DESpeedrunUtil {
                     currentFPSCap.ForeColor = Color.Red;
                     currentFPSCap.Text = "UNSUPPORTED";
                     toolTip7500.SetToolTip(currentFPSCap, "This version of DOOM Eternal is not fully supported by DESRU.\n" +
-                        "You will need to cap your FPS to 250 through another method, like RTSS or the NVIDIA Control Panel.");
+                        "You will need to cap your FPS to 250 through another method, like RTSS or the NVIDIA Control Panel.\n" +
+                        "Please contact bowsr in the MDSR Discord with the version of the game you're playing, and what platform you're playing on (Steam, Gamepass).");
                 }else {
                     currentFPSCap.ForeColor = TEXT_FORECOLOR;
                     currentFPSCap.Text = hz.ToString();
@@ -798,7 +801,7 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
-            _memory.SetFlag(enableMaxFPSCheckbox.Checked, "limiter");
+            _memory.SetFlag(!_memory.Version.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
             if(_memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
             _memory.SetMinRes(_minResPercent / 100f);
             if(unlockOnStartupCheckbox.Checked) {
