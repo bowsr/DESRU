@@ -4,10 +4,10 @@ namespace DESpeedrunUtil {
     public partial class UpdateDialog: Form {
         public UpdateDialog(string newVersion, string changelog) {
             InitializeComponent();
-            changelogWebViewer.EnsureCoreWebView2Async(null, null);
             changelogWebViewer.CoreWebView2InitializationCompleted += (sender, e) => {
                 changelogWebViewer.CoreWebView2.NavigateToString(string.Format("<font face=\"Segoe UI\">{0}</font>", Markdown.ToHtml(changelog)));
             };
+            changelogWebViewer.EnsureCoreWebView2Async(null, null);
             versionLabel.Text = string.Format("{0} -> {1}", Program.APP_VERSION, newVersion);
         }
 

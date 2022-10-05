@@ -893,6 +893,7 @@ namespace DESpeedrunUtil {
         private void SetFonts() {
             // Eternal UI 2 Regular 11.25point
             foreach(Control c in _hotkeyFields) c.Font = EternalUIRegular;
+            foreach(Control c in _fpsLimitFields) c.Font = EternalUIRegular;
             macroUpKeyLabel.Font = EternalUIRegular;
             macroDownKeyLabel.Font = EternalUIRegular;
             resKeyLabel.Font = EternalUIRegular;
@@ -910,6 +911,7 @@ namespace DESpeedrunUtil {
             versionDropDownSelector.Font = EternalUIRegular;
             autorunMacroCheckbox.Font = EternalUIRegular;
             enableHotkeysCheckbox.Font = EternalUIRegular;
+            enableMaxFPSCheckbox.Font = EternalUIRegular;
             gameStatus.Font = EternalUIRegular;
             currentFPSCap.Font = EternalUIRegular;
             macroStatus.Font = EternalUIRegular;
@@ -928,6 +930,31 @@ namespace DESpeedrunUtil {
             targetFPSInput.Font = EternalUIRegular;
             percentLabel.Font = EternalUIRegular;
             targetFPSLabel.Font = EternalUIRegular;
+
+            label1.Font = EternalUIRegular;
+            label2.Font = EternalUIRegular;
+            label3.Font = EternalUIRegular;
+            label4.Font = EternalUIRegular;
+            label5.Font = EternalUIRegular;
+            label6.Font = EternalUIRegular;
+            label7.Font = EternalUIRegular;
+            label9.Font = EternalUIRegular;
+            label10.Font = EternalUIRegular;
+            label11.Font = EternalUIRegular;
+            label12.Font = EternalUIRegular;
+            label14.Font = EternalUIRegular;
+            label15.Font = EternalUIRegular;
+            label16.Font = EternalUIRegular;
+            label17.Font = EternalUIRegular;
+            label18.Font = EternalUIRegular;
+            label19.Font = EternalUIRegular;
+            label21.Font = EternalUIRegular;
+            label22.Font = EternalUIRegular;
+            label23.Font = EternalUIRegular;
+            label25.Font = EternalUIRegular;
+            label27.Font = EternalUIRegular;
+            label28.Font = EternalUIRegular;
+            label30.Font = EternalUIRegular;
 
             // Eternal UI 2 Bold 11.25point
             versionChangedLabel.Font = EternalUIBold;
