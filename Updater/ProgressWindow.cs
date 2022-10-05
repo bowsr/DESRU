@@ -28,9 +28,6 @@ namespace Updater {
             ZipFile.ExtractToDirectory(_zipName, UPDATE_DIR);
             backgroundWorker.ReportProgress(updateProgressBar.Value + updateProgressBar.Step);
             _totalFiles = CountFiles(UPDATE_DIR);
-            Directory.CreateDirectory(@".\fonts");
-            Directory.CreateDirectory(@".\macro");
-            Directory.CreateDirectory(@".\meath00k");
             MoveFiles(UPDATE_DIR);
         }
 
@@ -75,7 +72,15 @@ namespace Updater {
             }
         }
 
+        private void CreateDirectories(string path) {
+            foreach(string dir in Directory.GetDirectories(path)) {
+                Directory.CreateDirectory(dir.Replace("updateFiles\\", ""));
+                CreateDirectories(dir);
+            }
+        }
+
         private void MoveFiles(string path) {
+            CreateDirectories(path);
             foreach(string dir in Directory.GetDirectories(path)) {
                 MoveFiles(dir);
                 Directory.Delete(dir);
