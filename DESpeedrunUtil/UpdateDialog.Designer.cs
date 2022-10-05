@@ -60,7 +60,7 @@
             // button1
             // 
             this.button1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.button1.Location = new System.Drawing.Point(354, 339);
+            this.button1.Location = new System.Drawing.Point(422, 339);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 2;
@@ -71,7 +71,7 @@
             // 
             this.button2.DialogResult = System.Windows.Forms.DialogResult.Continue;
             this.button2.FlatStyle = System.Windows.Forms.FlatStyle.System;
-            this.button2.Location = new System.Drawing.Point(198, 339);
+            this.button2.Location = new System.Drawing.Point(266, 339);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(150, 23);
             this.button2.TabIndex = 3;
@@ -81,7 +81,7 @@
             // button3
             // 
             this.button3.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.button3.Location = new System.Drawing.Point(42, 339);
+            this.button3.Location = new System.Drawing.Point(110, 339);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(150, 23);
             this.button3.TabIndex = 4;
@@ -105,10 +105,10 @@
             this.changelogWebViewer.DefaultBackgroundColor = System.Drawing.SystemColors.Control;
             this.changelogWebViewer.Location = new System.Drawing.Point(-1, -1);
             this.changelogWebViewer.Name = "changelogWebViewer";
-            this.changelogWebViewer.Size = new System.Drawing.Size(417, 232);
+            this.changelogWebViewer.Size = new System.Drawing.Size(485, 232);
             this.changelogWebViewer.TabIndex = 6;
             this.changelogWebViewer.TabStop = false;
-            this.changelogWebViewer.ZoomFactor = 0.75D;
+            this.changelogWebViewer.ZoomFactor = 0.8D;
             // 
             // changelogLabel
             // 
@@ -126,14 +126,14 @@
             this.webViewerPanel.Controls.Add(this.changelogWebViewer);
             this.webViewerPanel.Location = new System.Drawing.Point(12, 101);
             this.webViewerPanel.Name = "webViewerPanel";
-            this.webViewerPanel.Size = new System.Drawing.Size(417, 232);
+            this.webViewerPanel.Size = new System.Drawing.Size(485, 232);
             this.webViewerPanel.TabIndex = 8;
             // 
             // UpdateDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(441, 374);
+            this.ClientSize = new System.Drawing.Size(509, 374);
             this.Controls.Add(this.webViewerPanel);
             this.Controls.Add(this.changelogLabel);
             this.Controls.Add(this.versionLabel);
