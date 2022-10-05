@@ -91,7 +91,7 @@ namespace DESpeedrunUtil.Memory {
 
             DerefPointers();
 
-            if(!_trainerFlag && ReadyToUnlockRes()) {
+            if(!_trainerFlag) {
                 if(_restartGame) _cheatString = (_cheatsFlag) ? "CHEATS ENABLED" : "RESTART GAME";
                 if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
                 _row1 = "%i FPS" + ((_outOfDateFlag) ? "*" : "");
