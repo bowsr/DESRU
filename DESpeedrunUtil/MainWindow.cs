@@ -182,7 +182,7 @@ namespace DESpeedrunUtil {
                 _gameInFocus = false;
 
                 unlockResButton.Enabled = false;
-                unlockResButton.Text = "Unlock Resolution Scaling";
+                unlockResButton.Text = "Game Not Running";
 
                 enableMaxFPSCheckbox.Enabled = true;
             }
@@ -257,17 +257,21 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
 
             enableMaxFPSCheckbox.Enabled = !v;
-
-            if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
-                unlockResButton.Enabled = true;
-                unlockResButton.Text = "Update Minimum Resolution";
-            }else if(!_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
-                unlockResButton.Enabled = true;
-                unlockResButton.Text = "Unlock Resolution Scaling";
-            }
-            if(_memory.GetFlag("unlockscheduled")) {
+            if(!v) {
+                if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
+                    unlockResButton.Enabled = true;
+                    unlockResButton.Text = "Update Minimum Resolution";
+                } else if(!_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
+                    unlockResButton.Enabled = true;
+                    unlockResButton.Text = "Unlock Resolution Scaling";
+                }
+                if(_memory.GetFlag("unlockscheduled")) {
+                    unlockResButton.Enabled = false;
+                    unlockResButton.Text = "Unlock in Progress";
+                }
+            }else {
                 unlockResButton.Enabled = false;
-                unlockResButton.Text = "Unlock in Progress";
+                unlockResButton.Text = "Version Unsupported";
             }
             
             /** Scroll Pattern Tracking **/
@@ -333,10 +337,15 @@ namespace DESpeedrunUtil {
                     var rs = "Enabled (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
                     resScaleStatus.Text = (_memory.ReadDynamicRes()) ? rs : "Disabled";
                     toolTip7500.SetToolTip(resScaleStatus, null);
-                }else {
-                    resScaleStatus.Text = "UNSUPPORTED";
-                    toolTip7500.SetToolTip(resScaleStatus, "This version of DOOM Eternal is not fully supported by DESRU.\n" +
-                        "Please contact bowsr in the MDSR Discord with the version of the game you're playing, and what platform you're playing on (Steam, Gamepass).");
+                } else {
+                    if(v.Contains("Unknown")) {
+                        resScaleStatus.Text = "UNSUPPORTED";
+                        toolTip7500.SetToolTip(resScaleStatus, "This version of DOOM Eternal is not fully supported by DESRU.\n" +
+                            "Please contact bowsr in the MDSR Discord with the version of the game you're playing, and what platform you're playing on (Steam, Gamepass).");
+                    }else {
+                        resScaleStatus.Text = "N/A";
+                        toolTip7500.SetToolTip(resScaleStatus, null);
+                    }
                 }
             }else {
                 slopeboostStatus.Text = "-";
