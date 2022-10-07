@@ -41,16 +41,17 @@
             // updateProgressBar
             // 
             this.updateProgressBar.Location = new System.Drawing.Point(12, 47);
+            this.updateProgressBar.MarqueeAnimationSpeed = 25;
             this.updateProgressBar.Name = "updateProgressBar";
-            this.updateProgressBar.Size = new System.Drawing.Size(360, 23);
+            this.updateProgressBar.Size = new System.Drawing.Size(360, 20);
             this.updateProgressBar.Step = 5;
-            this.updateProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Continuous;
+            this.updateProgressBar.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
             this.updateProgressBar.TabIndex = 0;
             // 
             // openDESRUButton
             // 
             this.openDESRUButton.Enabled = false;
-            this.openDESRUButton.Location = new System.Drawing.Point(266, 76);
+            this.openDESRUButton.Location = new System.Drawing.Point(266, 73);
             this.openDESRUButton.Name = "openDESRUButton";
             this.openDESRUButton.Size = new System.Drawing.Size(106, 23);
             this.openDESRUButton.TabIndex = 1;
@@ -71,7 +72,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(384, 111);
+            this.ClientSize = new System.Drawing.Size(384, 108);
             this.Controls.Add(this.progressLabel);
             this.Controls.Add(this.openDESRUButton);
             this.Controls.Add(this.updateProgressBar);

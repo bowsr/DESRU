@@ -62,7 +62,7 @@ namespace Updater {
                 using var fs = new FileStream(_zipName, FileMode.Create);
                 if(response.IsSuccessStatusCode) {
                     await response.Content.CopyToAsync(fs);
-                    updateProgressBar.PerformStep();
+                    updateProgressBar.Style = ProgressBarStyle.Continuous;
                     backgroundWorker.RunWorkerAsync();
                 }else {
                     progressLabel.Text = "Update Failed to Download";
@@ -90,7 +90,7 @@ namespace Updater {
                 InvokeLabelChangeText(string.Format("Installing {0}", file[(file.LastIndexOf('\\') + 1)..]));
                 File.Move(file, file.Replace("updateFiles\\", ""), true);
                 _installedFiles++;
-                backgroundWorker.ReportProgress(10 + ((_installedFiles * 90) / _totalFiles));
+                backgroundWorker.ReportProgress((_installedFiles * 100) / _totalFiles);
             }
             
         }

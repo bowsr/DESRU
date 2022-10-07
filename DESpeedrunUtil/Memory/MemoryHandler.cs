@@ -429,6 +429,10 @@ namespace DESpeedrunUtil.Memory {
             if(_raiseMSPtr != IntPtr.Zero) return _game.ReadValue<float>(_raiseMSPtr);
             return -1f;
         }
+        /// <summary>
+        /// Reads the current value of rs_enable from memory
+        /// </summary>
+        /// <returns><see langword="true"/> if rs_enable is set to 1. <see langword="false"/> otherwise</returns>
         public bool ReadDynamicRes() {
             if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
             return false;
