@@ -117,6 +117,13 @@ namespace DESpeedrunUtil.Memory {
                         _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : cheats[0]);
                         _row2 = _row1.Contains('*') ? cheats : cheats[1..];
                     }
+                    if(_cpuPtr == IntPtr.Zero) {
+                        _row3 = _scrollString;
+                        _cpu = string.Empty;
+                    }else {
+                        _cpu = _scrollString;
+                        _row3 = string.Empty;
+                    }
                 }else {
                     if(_cpuPtr == IntPtr.Zero) {
                         _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
