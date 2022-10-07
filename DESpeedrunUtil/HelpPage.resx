@@ -417,11 +417,10 @@ If 3.1 is your current version, you can also do the same with your main profile.
 You can enable/disable the macro and hotkeys from here, instead of removing binds.
 
 You can specify your desired maximum FPS that DOOM Eternal will run at.
-FPS Hotkeys will toggle between their specified limit and this overall max FPS, even if the hotkey limit value is higher.
 
-If you run into an issue where your mouse feels like it is lagging when DESRU is open and you're playing Eternal, disable the Mouse Hotkeys here.
+You can also disable the max FPS limiter here. Hotkeys will still work, and you will need to limit your FPS to 250 or lower through external means, like through RTSS or NVIDIA Control Panel.
 
-There's also a button to create (or delete) a firewall rule blocking DOOM Eternal from accessing the internet. This is to prevent the download of server side balance patches, which can affect the single player campaign.
+There's also a button to toggle a firewall rule blocking DOOM Eternal from accessing the internet. This is to prevent the download of server side balance patches, which can affect the single player campaign.
 This firewall rule is REQUIRED to exist during speedruns, so make sure the Info Panel shows "Blocked."
 
 The other button will enable cheats, allowing you to use basically any dev console command in game, along with adding other features like noclip/notarget/enemySpawning.
@@ -866,6 +865,7 @@ M - Freescroll Macro Enabled
 F - Firewall Rule Enabled
 R - ReShade Detected
 S - Slopeboosting disabled
+L - Max FPS Limiter Disabled
 
 Finally, under the version, "CHEATS ENABLED" will show if meath00k is detected. If you see "RESTART GAME" here at any point, you need to restart DOOM Eternal in order for runs to be legal. DESRU must be running first before DOOM Eternal is launched, and if the trainer is ever detected, you'll need to restart your game for that, too.
 
