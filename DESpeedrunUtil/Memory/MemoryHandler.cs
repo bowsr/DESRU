@@ -97,18 +97,36 @@ namespace DESpeedrunUtil.Memory {
                 _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
                 _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
-                if(_row2.Contains("Unknown")) _row2 = "Unknown";
-                if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter)
-                    _row2 += " (" + ((_osdFlagMacro) ? "M" : "") + ((_osdFlagFirewall) ? "F" : "") + ((_osdFlagReshade) ? "R" : "") + ((_osdFlagSlopeboost) ? "S" : "") + ((!_osdFlagLimiter) ? "L" : "") + ")";
-                var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : "";
-                if(_cpuPtr == IntPtr.Zero) {
-                    _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
-                    _cpu = "";
-                }else {
-                    _cpu = (_scrollString != string.Empty) ? _scrollString : cheats;
-                    _row3 = "";
+                if(_row2.Contains("Unknown")) _row2 = string.Empty;
+                if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
+                    if(_row2 != string.Empty) {
+                        _row2 += " (";
+                    }else {
+                        _row1 += " ";
+                        if(!_osdFlagOutOfDate) {
+                            _row1 += "(";
+                        }else {
+                            _row2 += "(";
+                        }
+                    }
+                    _row2 += (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
                 }
-                SetMetrics(2);
+                var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : "";
+                if(_currentOffsets.Version.Contains("Unknown")) {
+                    if(cheats != string.Empty) {
+                        _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : cheats[0]);
+                        _row2 = _row1.Contains('*') ? cheats : cheats[1..];
+                    }
+                }else {
+                    if(_cpuPtr == IntPtr.Zero) {
+                        _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
+                        _cpu = "";
+                    }else {
+                        _cpu = (_scrollString != string.Empty) ? _scrollString : cheats;
+                        _row3 = "";
+                    }
+                    SetMetrics(2);
+                }
                 ModifyMetricRows();
             }
 
@@ -237,6 +255,10 @@ namespace DESpeedrunUtil.Memory {
             _restartCheatsTimer.Stop();
             MemoryTimer.Stop();
             _row3 = "DESRU CLOSED";
+            if(_currentOffsets.Version.Contains("Unknown")) {
+                _game.WriteBytes(_row1Ptr + 0x7 + (_row1.Contains('*') ? 0x1 : 0x0), ToByteArray(_row3, 18));
+                return;
+            }
             if(_cpuPtr == IntPtr.Zero)
                 _game.WriteBytes(_row1Ptr + OFFSET_ROW3, ToByteArray(_row3, 19));
             else
@@ -507,7 +529,7 @@ namespace DESpeedrunUtil.Memory {
         private void Initialize() {
             _row1DP = /*_row2DP = _row3DP = _row4DP = _row5DP =*/ _row6DP = /*_row7DP = _row8DP = _row9DP =*/ null;
             _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = _rampJumpDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = null;
-            if(!SetCurrentKnownOffsets(Version)) {
+            if(!SetCurrentKnownOffsets()) {
                 SigScans();
             }
             if(_currentOffsets.Row1 != 0) _row1DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row1);
@@ -622,14 +644,14 @@ namespace DESpeedrunUtil.Memory {
             };
         }
 
-        private bool SetCurrentKnownOffsets(string ver) {
+        private bool SetCurrentKnownOffsets() {
             foreach(KnownOffsets k in OffsetList) {
-                if(k.Version == ver) {
+                if(k.Version == Version) {
                     _currentOffsets = k;
                     return true;
                 }
             }
-            Log.Warning("Offset List does not contain {Version}.", ver);
+            Log.Warning("Offset List does not contain {Version}.", Version);
             return false;
         }
     }
