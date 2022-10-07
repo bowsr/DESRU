@@ -15,17 +15,17 @@ using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
-        private readonly Color FORM_BACKCOLOR = Color.FromArgb(35, 35, 35);
-        private readonly Color PANEL_BACKCOLOR = Color.FromArgb(45, 45, 45);
-        private readonly Color TEXT_BACKCOLOR = Color.FromArgb(70, 70, 70);
-        private readonly Color TEXT_FORECOLOR = Color.FromArgb(230, 230, 230);
+        private readonly Color COLOR_FORM_BACK = Color.FromArgb(35, 35, 35);
+        private readonly Color COLOR_PANEL_BACK = Color.FromArgb(45, 45, 45);
+        private readonly Color COLOR_TEXT_BACK = Color.FromArgb(70, 70, 70);
+        private readonly Color COLOR_TEXT_FORE = Color.FromArgb(230, 230, 230);
 
         private readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
         private const string WINDOW_TITLE = "DOOM ETERNAL SPEEDRUN UTILITY";
-        private const string PROFILE_DIR = @"\782330\remote\PROFILE";
-        private const string PROFILE_FILE = @"\profile.bin";
-        private const string FPSKEYS_JSON = @".\fpskeys.json";
+        private const string PATH_PROFILE_DIR = @"\782330\remote\PROFILE";
+        private const string PATH_PROFILE_FILE = @"\profile.bin";
+        private const string PATH_FPSKEYS_JSON = @".\fpskeys.json";
 
         private const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
 
@@ -186,7 +186,7 @@ namespace DESpeedrunUtil {
 
                 enableMaxFPSCheckbox.Enabled = true;
             }
-            if(!_fwRestart) firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
+            if(!_fwRestart) firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
 
             CheckForMeathook();
@@ -212,7 +212,7 @@ namespace DESpeedrunUtil {
                 versionDropDownSelector.Enabled = true;
                 _macro.Stop(true);
                 _fwRestart = false;
-                meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
+                meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
                 return;
             }
 
@@ -309,7 +309,7 @@ namespace DESpeedrunUtil {
             }
 
             macroStatus.Text = (_macro.IsRunning) ? "Running" : "Stopped";
-            macroStatus.ForeColor = (_macro.IsRunning) ? Color.Lime : TEXT_FORECOLOR;
+            macroStatus.ForeColor = (_macro.IsRunning) ? Color.Lime : COLOR_TEXT_FORE;
             hotkeyStatus.Text = (_hotkeys.Enabled) ? "Enabled" : "Disabled";
 
             if(_memory != null) {
@@ -328,7 +328,7 @@ namespace DESpeedrunUtil {
                         "You will need to cap your FPS to 250 through another method, like RTSS or the NVIDIA Control Panel.\n" +
                         "Please contact bowsr in the MDSR Discord with the version of the game you're playing, and what platform you're playing on (Steam, Gamepass).");
                 }else {
-                    currentFPSCap.ForeColor = TEXT_FORECOLOR;
+                    currentFPSCap.ForeColor = COLOR_TEXT_FORE;
                     currentFPSCap.Text = hz.ToString();
                     toolTip7500.SetToolTip(currentFPSCap, null);
                 }
@@ -350,7 +350,7 @@ namespace DESpeedrunUtil {
             }else {
                 slopeboostStatus.Text = "-";
                 currentFPSCap.Text = "-";
-                currentFPSCap.ForeColor = TEXT_FORECOLOR;
+                currentFPSCap.ForeColor = COLOR_TEXT_FORE;
                 toolTip7500.SetToolTip(currentFPSCap, null);
                 resScaleStatus.Text = "-";
                 toolTip7500.SetToolTip(resScaleStatus, null);
@@ -364,7 +364,7 @@ namespace DESpeedrunUtil {
                     cheatsStatus.ForeColor = Color.Red;
                 }else {
                     cheatsStatus.Text = "Disabled";
-                    cheatsStatus.ForeColor = TEXT_FORECOLOR;
+                    cheatsStatus.ForeColor = COLOR_TEXT_FORE;
                 }
                 if(_reshadeExists) {
                     reshadeStatus.Text = "Enabled";
@@ -373,7 +373,7 @@ namespace DESpeedrunUtil {
                 }
             }else {
                 cheatsStatus.Text = "-";
-                cheatsStatus.ForeColor = TEXT_FORECOLOR;
+                cheatsStatus.ForeColor = COLOR_TEXT_FORE;
                 reshadeStatus.Text = "-";
             }
         }
@@ -428,8 +428,8 @@ namespace DESpeedrunUtil {
                     _ => _hotkeys.FPSHotkeys.GetKeyFromID(int.TryParse(tag.Replace("hkFps", ""), out int id) ? id : -1),
                 };
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
-                l.ForeColor = TEXT_FORECOLOR;
-                l.BackColor = TEXT_BACKCOLOR;
+                l.ForeColor = COLOR_TEXT_FORE;
+                l.BackColor = COLOR_TEXT_BACK;
             }
             foreach(TextBox t in _fpsLimitFields) {
                 string tag = (string) t.Tag;
@@ -644,7 +644,7 @@ namespace DESpeedrunUtil {
                 Log.Information("Found {Num} Steam userdata directories.", userProfiles.Count);
                 if(userProfiles.Count == 0) return;
                 foreach(string profile in userProfiles) {
-                    if(!File.Exists(_steamInstallation + "\\userdata\\" + profile + PROFILE_DIR + PROFILE_FILE)) id3s.Remove(profile);
+                    if(!File.Exists(_steamInstallation + "\\userdata\\" + profile + PATH_PROFILE_DIR + PATH_PROFILE_FILE)) id3s.Remove(profile);
                 }
             }
             if(id3s.Count == 1) {
@@ -702,7 +702,7 @@ namespace DESpeedrunUtil {
                     if(_memory.GetFlag("cheats")) {
                         _mhDoRemovalTask = true;
                         meathookToggleButton.Enabled = false;
-                        meathookRestartLabel.ForeColor = TEXT_FORECOLOR;
+                        meathookRestartLabel.ForeColor = COLOR_TEXT_FORE;
                         return;
                     }
                 }
@@ -716,13 +716,13 @@ namespace DESpeedrunUtil {
                         if(_mhExists) {
                             UninstallMeathook();
                         }
-                        meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
+                        meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
                     });
                 }else {
                     if(_mhScheduleRemoval == true && _mhExists) {
                         UninstallMeathook();
                         _mhScheduleRemoval = false;
-                        meathookRestartLabel.ForeColor = PANEL_BACKCOLOR;
+                        meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
                     }
                 }
             }

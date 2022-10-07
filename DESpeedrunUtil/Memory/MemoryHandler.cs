@@ -47,9 +47,9 @@ namespace DESpeedrunUtil.Memory {
         int _moduleSize;
         public string Version { get; init; }
 
-        bool _cheatsFlag = false, _macroFlag = false, _firewallFlag = false, _slopeboostFlag = false, _reshadeFlag = false,
-             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _outOfDateFlag = false, _restartGame = false,
-             _trainerFlag = false, _scheduleDynamic = false, _limiterFlag = true;
+        bool _osdFlagCheats = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
+             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
+             _trainerFlag = false, _scheduleDynamic = false, _osdFlagLimiter = true;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         string _cheatString = "CHEATS ENABLED", _scrollString = "";
         int _fpsLimit = 250, _targetFPS = 1000;
@@ -92,15 +92,15 @@ namespace DESpeedrunUtil.Memory {
             DerefPointers();
 
             if(!_trainerFlag) {
-                if(_restartGame) _cheatString = (_cheatsFlag) ? "CHEATS ENABLED" : "RESTART GAME";
+                if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
                 if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
-                _row1 = "%i FPS" + ((_outOfDateFlag) ? "*" : "");
+                _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
                 _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
                 if(_row2.Contains("Unknown")) _row2 = "Unknown";
-                if(_macroFlag || _firewallFlag || _slopeboostFlag || _reshadeFlag || !_limiterFlag)
-                    _row2 += " (" + ((_macroFlag) ? "M" : "") + ((_firewallFlag) ? "F" : "") + ((_reshadeFlag) ? "R" : "") + ((_slopeboostFlag) ? "S" : "") + ((!_limiterFlag) ? "L" : "") + ")";
-                var cheats = (_cheatsFlag || _restartGame) ? _cheatString : "";
+                if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter)
+                    _row2 += " (" + ((_osdFlagMacro) ? "M" : "") + ((_osdFlagFirewall) ? "F" : "") + ((_osdFlagReshade) ? "R" : "") + ((_osdFlagSlopeboost) ? "S" : "") + ((!_osdFlagLimiter) ? "L" : "") + ")";
+                var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : "";
                 if(_cpuPtr == IntPtr.Zero) {
                     _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
                     _cpu = "";
@@ -159,7 +159,7 @@ namespace DESpeedrunUtil.Memory {
                 var trainers = processes.FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
                 if(trainers.Count > 0) {
                     _trainer = trainers[0];
-                    if(!_cheatsFlag) SetFlag(true, "restart");
+                    if(!_osdFlagCheats) SetFlag(true, "restart");
                     _trainerFlag = true;
                     Log.Information("Trainer process found running.");
                 }else {
@@ -172,8 +172,8 @@ namespace DESpeedrunUtil.Memory {
                     _trainerFlag = false;
                 }
             }
-            if(!_restartGame) {
-                if(!_cheatsFlag && processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
+            if(!_osdFlagRestartGame) {
+                if(!_osdFlagCheats && processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
                     SetFlag(true, "restart");
                     _cheatString = "RESTART GAME";
                 }
@@ -223,19 +223,11 @@ namespace DESpeedrunUtil.Memory {
             var ms = ReadRaiseMillis();
             return ms > 0f && ms < 16f;
         }
-        /// <summary>
-        /// Checks if dynamic resolution scaling is enabled
-        /// </summary>
-        /// <returns><see langword="true"/> if <c>rs_enable</c> is set to 1</returns>
-        public bool DynamicEnabled() {
-            if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
-            return false;
-        }
 
         /// <summary>
         /// Sets the scroll pattern string to display on screen
         /// </summary>
-        /// <param name="scrollString"><see langword="string"/> displayed on screen</param>
+        /// <param name="scrollString"><see cref="string"/> displayed on screen</param>
         public void SetScrollPatternString(string scrollString) => _scrollString = scrollString;
 
         /// <summary>
@@ -287,7 +279,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         public void ToggleDynamicScaling() {
             if(_dynamicResPtr == IntPtr.Zero) return;
-            if(DynamicEnabled()) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
+            if(ReadDynamicRes()) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
             else _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
         }
         private static byte[] FloatToBytes(float f) {
@@ -326,28 +318,28 @@ namespace DESpeedrunUtil.Memory {
         public void SetFlag(bool flag, string flagName) {
             switch(flagName) {
                 case "cheats":
-                    _cheatsFlag = flag;
-                    break;
-                case "macro":
-                    _macroFlag = flag;
+                    _osdFlagCheats = flag;
                     break;
                 case "firewall":
-                    _firewallFlag = flag;
-                    break;
-                case "reshade":
-                    _reshadeFlag = flag;
-                    break;
-                case "slopeboost":
-                    _slopeboostFlag = flag;
-                    break;
-                case "outofdate":
-                    _outOfDateFlag = flag;
-                    break;
-                case "restart":
-                    _restartGame = flag;
+                    _osdFlagFirewall = flag;
                     break;
                 case "limiter":
-                    _limiterFlag = flag;
+                    _osdFlagLimiter = flag;
+                    break;
+                case "macro":
+                    _osdFlagMacro = flag;
+                    break;
+                case "outofdate":
+                    _osdFlagOutOfDate = flag;
+                    break;
+                case "reshade":
+                    _osdFlagReshade = flag;
+                    break;
+                case "restart":
+                    _osdFlagRestartGame = flag;
+                    break;
+                case "slopeboost":
+                    _osdFlagSlopeboost = flag;
                     break;
             }
         }
@@ -359,16 +351,16 @@ namespace DESpeedrunUtil.Memory {
         /// <returns>State of the specified <see langword="bool"/> flag</returns>
         public bool GetFlag(string flagName) {
             return flagName switch {
-                "cheats" => _cheatsFlag,
-                "macro" => _macroFlag,
-                "firewall" => _firewallFlag,
-                "reshade" => _reshadeFlag,
-                "slopeboost" => _slopeboostFlag,
+                "cheats" => _osdFlagCheats,
+                "firewall" => _osdFlagFirewall,
+                "limiter" => _osdFlagLimiter,
+                "macro" => _osdFlagMacro,
+                "outofdate" => _osdFlagOutOfDate,
+                "reshade" => _osdFlagReshade,
+                "restart" => _osdFlagRestartGame,
+                "slopeboost" => _osdFlagSlopeboost,
                 "resunlocked" => _resUnlocked,
                 "unlockscheduled" => _unlockResFlag,
-                "outofdate" => _outOfDateFlag,
-                "restart" => _restartGame,
-                "limiter" => _limiterFlag,
                 _ => false
             };
         }
@@ -402,6 +394,16 @@ namespace DESpeedrunUtil.Memory {
             _fpsLimit = fps;
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
         }
+        public void SetMinRes(float min) => _minRes = min;
+        public float GetMinRes() => _minRes;
+        /// <summary>
+        /// Reads the current value of rs_enable from memory
+        /// </summary>
+        /// <returns><see langword="true"/> if rs_enable is set to 1. <see langword="false"/> otherwise</returns>
+        public bool ReadDynamicRes() {
+            if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
+            return false;
+        }
         /// <summary>
         /// Reads the current value of com_adaptiveTickMaxHz from memory
         /// </summary>
@@ -411,8 +413,6 @@ namespace DESpeedrunUtil.Memory {
             if(CanCapFPS()) _game.ReadValue(_maxHzPtr, out cap);
             return cap;
         }
-        public void SetMinRes(float min) => _minRes = min;
-        public float GetMinRes() => _minRes;
         /// <summary>
         /// Reads the curreent value of rs_minimumResolution from memory
         /// </summary>
@@ -428,14 +428,6 @@ namespace DESpeedrunUtil.Memory {
         public float ReadRaiseMillis() {
             if(_raiseMSPtr != IntPtr.Zero) return _game.ReadValue<float>(_raiseMSPtr);
             return -1f;
-        }
-        /// <summary>
-        /// Reads the current value of rs_enable from memory
-        /// </summary>
-        /// <returns><see langword="true"/> if rs_enable is set to 1. <see langword="false"/> otherwise</returns>
-        public bool ReadDynamicRes() {
-            if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
-            return false;
         }
 
         /// <summary>
@@ -465,7 +457,7 @@ namespace DESpeedrunUtil.Memory {
         }
 
         /// <summary>
-        /// Converts a <see langword="string"/> of text into a byte array of a specified length
+        /// Converts a <see cref="string"/> of text into a byte array of a specified length
         /// </summary>
         /// <param name="text">Text to convert</param>
         /// <param name="length">Length of byte array</param>

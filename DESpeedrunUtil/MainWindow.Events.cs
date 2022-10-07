@@ -190,7 +190,7 @@ namespace DESpeedrunUtil {
         }
         private void AutoDynamic_CheckChanged(object sender, EventArgs e) {
             if(((CheckBox) sender).Checked) {
-                if(Hooked && !_memory.DynamicEnabled()) _memory.EnableDynamicScaling(_targetFPS);
+                if(Hooked && !_memory.ReadDynamicRes()) _memory.EnableDynamicScaling(_targetFPS);
             }
         }
         private void MaxFPS_CheckChanged(object sender, EventArgs e) {
@@ -245,18 +245,18 @@ namespace DESpeedrunUtil {
             Directory.Move(_gameDirectory + " " + desired, _gameDirectory);
             Log.Information("Game Version changed to [{Version}]", desired);
             if(_steamID3 != string.Empty && replaceProfileCheckbox.Checked) {
-                var dir = _steamInstallation + "\\userdata\\" + _steamID3 + PROFILE_DIR;
+                var dir = _steamInstallation + "\\userdata\\" + _steamID3 + PATH_PROFILE_DIR;
                 try {
                     if(desired == "3.1") {
-                        File.Move(dir + PROFILE_FILE, dir + "\\main.bin");
-                        if(File.Exists(dir + "\\3.1.bin")) File.Move(dir + "\\3.1.bin", dir + PROFILE_FILE);
+                        File.Move(dir + PATH_PROFILE_FILE, dir + "\\main.bin");
+                        if(File.Exists(dir + "\\3.1.bin")) File.Move(dir + "\\3.1.bin", dir + PATH_PROFILE_FILE);
                     }else {
                         if(current == "3.1") {
                             if(File.Exists(dir + "\\main.bin")) {
-                                if(File.Exists(dir + PROFILE_FILE)) File.Move(dir + PROFILE_FILE, dir + "\\3.1.bin");
-                                File.Move(dir + "\\main.bin", dir + PROFILE_FILE);
+                                if(File.Exists(dir + PATH_PROFILE_FILE)) File.Move(dir + PATH_PROFILE_FILE, dir + "\\3.1.bin");
+                                File.Move(dir + "\\main.bin", dir + PATH_PROFILE_FILE);
                             }else {
-                                File.Copy(dir + PROFILE_FILE, dir + "\\3.1.bin");
+                                File.Copy(dir + PATH_PROFILE_FILE, dir + "\\3.1.bin");
                             }
                         }
                     }
@@ -268,7 +268,7 @@ namespace DESpeedrunUtil {
             Task.Run(async delegate {
                 versionChangedLabel.ForeColor = Color.LimeGreen;
                 await Task.Delay(3000);
-                versionChangedLabel.ForeColor = PANEL_BACKCOLOR;
+                versionChangedLabel.ForeColor = COLOR_PANEL_BACK;
             });
         }
         private void FirewallToggle_Click(object sender, EventArgs e) {
@@ -280,13 +280,13 @@ namespace DESpeedrunUtil {
                 if(Hooked) {
                     _memory.SetFlag(_fwRuleExists, "firewall");
                 }
-                firewallRestartLabel.ForeColor = PANEL_BACKCOLOR;
+                firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
             }else {
                 FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe");
                 firewallToggleButton.Text = "Remove Firewall Rule";
                 _fwRestart = true;
                 _fwRuleExists = true;
-                if(Hooked) firewallRestartLabel.ForeColor = TEXT_FORECOLOR;
+                if(Hooked) firewallRestartLabel.ForeColor = COLOR_TEXT_FORE;
             }
         }
         private void MeathookToggle_Click(object sender, EventArgs e) {
@@ -305,7 +305,7 @@ namespace DESpeedrunUtil {
                         Log.Error(ex, "An error occured when attempting to install meath00k. v: {Version}", v);
                     }
                 }
-                if(Hooked) meathookRestartLabel.ForeColor = TEXT_FORECOLOR;
+                if(Hooked) meathookRestartLabel.ForeColor = COLOR_TEXT_FORE;
                 Log.Information("meath00k installed.");
             }
         }
@@ -335,20 +335,20 @@ namespace DESpeedrunUtil {
             MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
 
             InitializeFonts();
-            var titleBar = new DESRUShadowLabel(windowTitle.Font, WINDOW_TITLE, windowTitle.Location, Color.FromArgb(190, 34, 34), FORM_BACKCOLOR);
+            var titleBar = new DESRUShadowLabel(windowTitle.Font, WINDOW_TITLE, windowTitle.Location, Color.FromArgb(190, 34, 34), COLOR_FORM_BACK);
             titleBar.MouseMove += new MouseEventHandler(DragWindow_MouseMove);
             titleBar.MouseUp += new MouseEventHandler(DragWindow_MouseUp);
             this.Controls.Add(titleBar);
-            this.Controls.Add(new DESRUShadowLabel(hotkeysTitle.Font, "KEYBINDS", hotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(optionsTitle.Font, "OPTIONS", optionsTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
-            this.Controls.Add(new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, TEXT_FORECOLOR, FORM_BACKCOLOR));
+            this.Controls.Add(new DESRUShadowLabel(hotkeysTitle.Font, "KEYBINDS", hotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            this.Controls.Add(new DESRUShadowLabel(optionsTitle.Font, "OPTIONS", optionsTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            this.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            this.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            this.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            this.Controls.Add(new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
 
             // User Settings
             var fpsJson = "";
-            if(File.Exists(FPSKEYS_JSON)) fpsJson = File.ReadAllText(FPSKEYS_JSON);
+            if(File.Exists(PATH_FPSKEYS_JSON)) fpsJson = File.ReadAllText(PATH_FPSKEYS_JSON);
             _macro = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
             _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, fpsJson, this);
             _fpsDefault = Properties.Settings.Default.DefaultFPSCap;
@@ -406,7 +406,7 @@ namespace DESpeedrunUtil {
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
 
-            File.WriteAllText(FPSKEYS_JSON, _hotkeys.FPSHotkeys.SerializeIntoJSON());
+            File.WriteAllText(PATH_FPSKEYS_JSON, _hotkeys.FPSHotkeys.SerializeIntoJSON());
 
             Properties.Settings.Default.Save();
             Log.Information("User settings saved");
