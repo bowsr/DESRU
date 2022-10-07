@@ -52,7 +52,7 @@ namespace DESpeedrunUtil {
 
         MemoryHandler? _memory;
 
-        Timer _formTimer, _statusTimer;
+        Timer _formTimer, _statusTimer, _settingsTimer;
 
         bool _hkAssignmentMode = false, _mouse1Pressed = false;
         Label _selectedHKField = null;
@@ -84,6 +84,10 @@ namespace DESpeedrunUtil {
             _statusTimer = new Timer();
             _statusTimer.Interval = 1000;
             _statusTimer.Tick += (sender, e) => { StatusTick(); };
+
+            _settingsTimer = new Timer();
+            _settingsTimer.Interval = 300000;
+            _settingsTimer.Tick += (sender, e) => { SaveSettings(); };
 
             desruVersionLabel.Text = Program.APP_VERSION;
 
@@ -832,6 +836,27 @@ namespace DESpeedrunUtil {
                 File.WriteAllText(_gameDirectory + "\\gameVersion.txt", "version=" + _memory.Version);
             }
             if(!_memory.CanCapFPS()) _hotkeys.DisableHotkeys();
+        }
+
+        private void SaveSettings() {
+            Properties.Settings.Default.DownScrollKey = (int) _macro.GetHotkey(true);
+            Properties.Settings.Default.UpScrollKey = (int) _macro.GetHotkey(false);
+            Properties.Settings.Default.DefaultFPSCap = _fpsDefault;
+            Properties.Settings.Default.MacroEnabled = autorunMacroCheckbox.Checked;
+            Properties.Settings.Default.HotkeysEnabled = enableHotkeysCheckbox.Checked;
+            Properties.Settings.Default.GameLocation = _gameDirectory;
+            Properties.Settings.Default.StartupUnlock = unlockOnStartupCheckbox.Checked;
+            Properties.Settings.Default.AutoDynamic = autoDynamicCheckbox.Checked;
+            Properties.Settings.Default.MinResPercent = _minResPercent;
+            Properties.Settings.Default.TargetFPSScaling = _targetFPS;
+            Properties.Settings.Default.SteamInstallation = _steamInstallation;
+            Properties.Settings.Default.SteamID3 = _steamID3;
+            Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
+            Properties.Settings.Default.ResScaleKey = (int) _hotkeys.ResScaleHotkey;
+            Properties.Settings.Default.EnableMaxFPSLimit = enableMaxFPSCheckbox.Checked;
+            if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
+            else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
+            Properties.Settings.Default.Save();
         }
 
         private void InitializeFonts() {

@@ -8,7 +8,7 @@ using System.Reflection;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "1.1.5";
+        public const string APP_VERSION = "1.1.6";
         public static bool UpdateDetected = false;
         private static string _latestVersion, _changelog;
         private static bool _checkFailed = false;
@@ -104,9 +104,9 @@ namespace DESpeedrunUtil {
                 System.Media.SystemSounds.Asterisk.Play();
                 var result = dialog.ShowDialog();
                 if(result == DialogResult.OK) {
-                    bool upd = !File.Exists(@".\Updater.exe") || !File.Exists(@".\Updater.dll") ||
+                    bool brokenUpdater = !File.Exists(@".\Updater.exe") || !File.Exists(@".\Updater.dll") ||
                         !File.Exists(@".\Updater.deps.json") || !File.Exists(@".\Updater.runtimeconfig.json");
-                    if(upd) {
+                    if(brokenUpdater) {
                         Log.Error("One or more Updater files are missing. Aborting program.");
                         var msg = MessageBox.Show("Cannot launch the Updater. One or more files are missing.\n" +
                             "You will need to manually update DESRU.", "Broken Updater Installation");
@@ -114,6 +114,8 @@ namespace DESpeedrunUtil {
                             Process.Start(new ProcessStartInfo("https://github.com/bowsr/DESRU/releases/latest") { UseShellExecute = true });
                             Log.Information("Opened new update's release page.");
                         }
+                        Properties.Settings.Default.DetectedUpdate = _latestVersion;
+                        Properties.Settings.Default.Save();
                         CloseLogger();
                         return;
                     }
@@ -128,13 +130,18 @@ namespace DESpeedrunUtil {
                     return;
                 }else if(result == DialogResult.Cancel) {
                     Properties.Settings.Default.DetectedUpdate = _latestVersion;
+                    Properties.Settings.Default.Save();
                     CloseLogger();
                     return;
                 }
                 Log.Warning("User chose to ignore update.");
                 Properties.Settings.Default.DetectedUpdate = _latestVersion;
+                Properties.Settings.Default.Save();
             }
-            if(!UpdateDetected) Properties.Settings.Default.DetectedUpdate = "0.0";
+            if(!UpdateDetected) {
+                Properties.Settings.Default.DetectedUpdate = "0.0";
+                Properties.Settings.Default.Save();
+            }
             if(!FileCheck()) {
                 MessageBox.Show("Your DESRU installation is broken.\n" +
                     "Please reinstall DESRU, and make sure every file is extracted from the ZIP archive.", "Broken DESRU Installation");

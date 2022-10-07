@@ -381,34 +381,22 @@ namespace DESpeedrunUtil {
             if(_steamInstallation != "n/a") SearchForGameSaves();
             _formTimer.Start();
             _statusTimer.Start();
+            _settingsTimer.Start();
             _justLaunched = false;
             Log.Information("Loaded MainWindow");
         }
 
         // Event method that runs upon closing of the <c>MainWindow</c> form.
         private void MainWindow_Closing(object sender, FormClosingEventArgs e) {
+            _formTimer.Stop();
+            _statusTimer.Stop();
+            _settingsTimer.Stop();
+
             // User Settings
-            Properties.Settings.Default.DownScrollKey = (int) _macro.GetHotkey(true);
-            Properties.Settings.Default.UpScrollKey = (int) _macro.GetHotkey(false);
-            Properties.Settings.Default.DefaultFPSCap = _fpsDefault;
-            Properties.Settings.Default.MacroEnabled = autorunMacroCheckbox.Checked;
-            Properties.Settings.Default.HotkeysEnabled = enableHotkeysCheckbox.Checked;
-            Properties.Settings.Default.GameLocation = _gameDirectory;
-            Properties.Settings.Default.StartupUnlock = unlockOnStartupCheckbox.Checked;
-            Properties.Settings.Default.AutoDynamic = autoDynamicCheckbox.Checked;
-            Properties.Settings.Default.MinResPercent = _minResPercent;
-            Properties.Settings.Default.TargetFPSScaling = _targetFPS;
-            Properties.Settings.Default.SteamInstallation = _steamInstallation;
-            Properties.Settings.Default.SteamID3 = _steamID3;
-            Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
-            Properties.Settings.Default.ResScaleKey = (int) _hotkeys.ResScaleHotkey;
-            Properties.Settings.Default.EnableMaxFPSLimit = enableMaxFPSCheckbox.Checked;
-            if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
-            else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
+            SaveSettings();
 
             File.WriteAllText(PATH_FPSKEYS_JSON, _hotkeys.FPSHotkeys.SerializeIntoJSON());
 
-            Properties.Settings.Default.Save();
             Log.Information("User settings saved");
 
             _hotkeys.DisableHotkeys();
