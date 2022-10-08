@@ -97,7 +97,7 @@ namespace DESpeedrunUtil.Memory {
                 _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
                 _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
-                if(_row2.Contains("Unknown")) _row2 = string.Empty;
+                if(_metricsPtr == IntPtr.Zero) _row2 = string.Empty;
                 if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
                     if(_row2 != string.Empty) {
                         _row2 += " (";
@@ -112,7 +112,7 @@ namespace DESpeedrunUtil.Memory {
                     _row2 += (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
                 }
                 var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : "";
-                if(_currentOffsets.Version.Contains("Unknown")) {
+                if(_currentOffsets.Version.Contains("Unknown") || _metricsPtr == IntPtr.Zero) {
                     if(cheats != string.Empty) {
                         _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : cheats[0]);
                         _row2 = _row1.Contains('*') ? cheats : cheats[1..];
