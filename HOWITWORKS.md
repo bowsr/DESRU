@@ -32,7 +32,7 @@ Under the FPS counter, the version of the game will show up.
 Some version names are shortened as there's a limited amount of text that can be shown in this row.  
 *(e.g. 6.66r2 means 6.66 Rev 2)*
 
-Some letters representing flags will show up next to the game version in parentheses `(MFRS)`.
+Some letters representing flags will show up next to the game version in parentheses `(MFRSL)`.
 ```
 M - Bundled Freescroll Macro is enabled
 F - Firewall rule is detected and enabled
