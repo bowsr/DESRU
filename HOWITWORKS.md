@@ -38,6 +38,7 @@ M - Bundled Freescroll Macro is enabled
 F - Firewall rule is detected and enabled
 R - ReShade is detected
 S - Slopeboosts are disabled [pm_allowRampJumping 0]; 1.0 only
+L - Framerate Limiter is disabled or unsupported; User must limit their frames to 250 through external means
 ```  
 ### Row 3
 Below the version, a few things can show up.
@@ -54,6 +55,12 @@ Format: `X (Y.YYms)` X == # of scroll inputs; Y == avg time between scroll input
 ### Row 4+
 Rest of the rows are set to a blank string.  
 *Non-NVIDIA GPU users may find one of these rows to be unmodified. Nothing I can do about this since I only have NVIDIA GPUs.*
+
+### Unsupported Versions
+Since DESRU cannot modify `com_showConsumerPerfMetrics` on unsupported versions, the OSD is modified to display on a single line in the case that the user has their Performance Metrics set to Low.  
+Version of the game is omitted, and the scroll tracker will not display.
+
+If the user has their Performance Metrics set to Medium, some information will be shown twice. The scroll tracker will appear again as normal.
 
 ## Other Info
 ### Running DESRU
