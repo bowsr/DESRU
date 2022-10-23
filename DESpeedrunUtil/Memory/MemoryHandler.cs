@@ -29,12 +29,12 @@ namespace DESpeedrunUtil.Memory {
         public static List<KnownOffsets> OffsetList = new(), ScannedOffsetList = new();
         KnownOffsets _currentOffsets;
 
-        DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP,
+        DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP, _skipIntroDP,
                     _row1DP, _row6DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
                     _raiseMSDP, _dropMSDP;
 
-        IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _dynamicResPtr, _resScalesPtr,
+        IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _dynamicResPtr, _resScalesPtr, _skipIntroPtr,
                _row1Ptr, _row6Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
                _raiseMSPtr, _dropMSPtr;
@@ -90,6 +90,7 @@ namespace DESpeedrunUtil.Memory {
             if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
 
             DerefPointers();
+            if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr)) _game.WriteBytes(_skipIntroPtr, new byte[1] { 1 });
 
             if(!_trainerFlag) {
                 if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
@@ -471,9 +472,10 @@ namespace DESpeedrunUtil.Memory {
                 }
                 if(_gpuVendorDP != null) _gpuVendorDP.DerefOffsets(_game, out _gpuVendorPtr);
                 if(_gpuNameDP != null) _gpuNameDP.DerefOffsets(_game, out _gpuNamePtr);
+                if(_cpuDP != null) _cpuDP.DerefOffsets(_game, out _cpuPtr);
                 if(_metricsDP != null) _metricsDP.DerefOffsets(_game, out _metricsPtr);
                 if(_maxHzDP != null) _maxHzDP.DerefOffsets(_game, out _maxHzPtr);
-                if(_cpuDP != null) _cpuDP.DerefOffsets(_game, out _cpuPtr);
+                if(_skipIntroDP != null) _skipIntroDP.DerefOffsets(_game, out _skipIntroPtr);
                 if(_rampJumpDP != null) _rampJumpDP.DerefOffsets(_game, out _rampJumpPtr);
                 if(_minResDP != null) _minResDP.DerefOffsets(_game, out _minResPtr);
                 if(_dynamicResDP != null) _dynamicResDP.DerefOffsets(_game, out _dynamicResPtr);
@@ -536,8 +538,8 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void Initialize() {
-            _row1DP = /*_row2DP = _row3DP = _row4DP = _row5DP =*/ _row6DP = /*_row7DP = _row8DP = _row9DP =*/ null;
-            _gpuVendorDP = _gpuNameDP = _metricsDP = _maxHzDP = _cpuDP = _rampJumpDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = null;
+            _row1DP = _row6DP = _gpuVendorDP = _gpuNameDP = _cpuDP = null;
+            _metricsDP = _maxHzDP = _rampJumpDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = _skipIntroDP = null;
             if(!SetCurrentKnownOffsets()) {
                 SigScans();
             }
@@ -552,6 +554,8 @@ namespace DESpeedrunUtil.Memory {
 
             if(_currentOffsets.Metrics != 0) _metricsDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Metrics);
             if(_currentOffsets.MaxHz != 0) _maxHzDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MaxHz);
+            if(_currentOffsets.SkipIntro != 0) _skipIntroDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.SkipIntro);
+
             if(_currentOffsets.MinRes != 0) _minResDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MinRes);
             if(_currentOffsets.DynamicRes != 0) _dynamicResDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.DynamicRes);
             if(_currentOffsets.RaiseMS != 0) _raiseMSDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.RaiseMS);
