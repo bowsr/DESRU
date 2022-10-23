@@ -318,7 +318,7 @@ namespace DESpeedrunUtil {
 
             if(_memory != null) {
                 var hz = _memory.ReadMaxHz();
-                var v = _memory.Version;
+                var v = _memory.Version.Replace("(Gamepass)", "(GP)");
                 gameStatus.Text = v;
                 if(v == "1.0 (Release)") {
                     slopeboostStatus.Text = (_memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
@@ -681,6 +681,7 @@ namespace DESpeedrunUtil {
             _mhExists = mh;
             return mh;
         }
+        private bool CheckForMeathookInPath(string path) => File.Exists(path + "\\XINPUT1_3.dll");
 
         // Checks if ReShade is both installed for Vulkan and set to run over DOOMEternalx64vk
         private bool CheckForReShade() {
@@ -814,7 +815,8 @@ namespace DESpeedrunUtil {
             }
             versionDropDownSelector.Enabled = false;
             _memory.SetFlag(_fwRuleExists, "firewall");
-            _memory.SetFlag(CheckForMeathook(), "cheats");
+            var gamePath = _gameProcess.MainModule.FileName;
+            _memory.SetFlag(CheckForMeathookInPath(gamePath[..gamePath.LastIndexOf('\\')]), "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
