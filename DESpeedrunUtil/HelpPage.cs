@@ -8,15 +8,6 @@ namespace DESpeedrunUtil {
 
         public HelpPage() {
             InitializeComponent();
-            _infoPanels = new() {
-                macroPanel,
-                keybindPanel,
-                resPanel,
-                versionPanel,
-                optionPanel,
-                infoPanel,
-                osdPanel
-            };
             _buttons = new() {
                 helpTabButton0,
                 helpTabButton1,
@@ -33,13 +24,7 @@ namespace DESpeedrunUtil {
         private void SetFonts() {
             foreach(Button b in _buttons) b.Font = MainWindow.EternalUIBold;
             closeButton.Font = MainWindow.EternalUIBold;
-            helpText0.Font = MainWindow.EternalUIRegular;
-            helpText1.Font = MainWindow.EternalUIRegular;
-            helpText2.Font = MainWindow.EternalUIRegular;
-            helpText3.Font = MainWindow.EternalUIRegular;
-            helpText4.Font = MainWindow.EternalUIRegular;
-            helpText5.Font = MainWindow.EternalUIRegular;
-            helpText6.Font = MainWindow.EternalUIRegular;
+            helpTextbox.Font = MainWindow.EternalUIRegular;
             titleText.Font = MainWindow.EternalUIRegular;
         }
 
@@ -50,25 +35,31 @@ namespace DESpeedrunUtil {
         private void TabButton_Click(object sender, EventArgs e) {
             var button = (Button) sender;
             string tag = (string) button.Tag;
-            blankPanel.Visible = false;
             button.Enabled = false;
+
+            helpTextbox.Text = tag switch {
+                "macro" => Properties.Resources.HelpPage_Macro,
+                "hk" => Properties.Resources.HelpPage_Keybinds,
+                "res" => Properties.Resources.HelpPage_ResScaling,
+                "ver" => Properties.Resources.HelpPage_VersionChanger,
+                "option" => Properties.Resources.HelpPage_Options,
+                "info" => Properties.Resources.HelpPage_InfoPanel,
+                "osd" => Properties.Resources.HelpPage_OSD,
+                _ => ""
+            };
+
+            helpPageVersionImage.Visible = tag == "ver";
+            helpPageOSDImage.Visible = tag == "osd";
 
             foreach(Button b in _buttons)
                 if((string) b.Tag != tag)
                     b.Enabled = true;
-
-            foreach(Panel p in _infoPanels)
-                p.Visible = (string) p.Tag == tag;
         }
 
         private void HelpPage_Load(object sender, EventArgs e) {
             var loc = blankPanel.Location;
             foreach(Button b in _buttons) 
                 b.Enabled = true;
-            foreach(Panel p in _infoPanels) {
-                p.Location = loc;
-                p.Visible = false;
-            }
             blankPanel.Visible = true;
             this.Width = 800;
             this.Height = 700;

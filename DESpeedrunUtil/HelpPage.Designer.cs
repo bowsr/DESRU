@@ -26,8 +26,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HelpPage));
             this.closeButton = new System.Windows.Forms.Button();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.macroPanel = new System.Windows.Forms.Panel();
-            this.helpText0 = new System.Windows.Forms.TextBox();
+            this.helpTextbox = new System.Windows.Forms.TextBox();
             this.helpTabButton0 = new System.Windows.Forms.Button();
             this.helpTabButton1 = new System.Windows.Forms.Button();
             this.helpTabButton2 = new System.Windows.Forms.Button();
@@ -35,32 +34,14 @@
             this.helpTabButton4 = new System.Windows.Forms.Button();
             this.helpTabButton5 = new System.Windows.Forms.Button();
             this.helpTabButton6 = new System.Windows.Forms.Button();
-            this.keybindPanel = new System.Windows.Forms.Panel();
-            this.helpText1 = new System.Windows.Forms.TextBox();
-            this.resPanel = new System.Windows.Forms.Panel();
-            this.helpText2 = new System.Windows.Forms.TextBox();
-            this.versionPanel = new System.Windows.Forms.Panel();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.helpText3 = new System.Windows.Forms.TextBox();
-            this.optionPanel = new System.Windows.Forms.Panel();
-            this.helpText4 = new System.Windows.Forms.TextBox();
-            this.infoPanel = new System.Windows.Forms.Panel();
-            this.helpText5 = new System.Windows.Forms.TextBox();
-            this.osdPanel = new System.Windows.Forms.Panel();
-            this.pictureBox3 = new System.Windows.Forms.PictureBox();
-            this.helpText6 = new System.Windows.Forms.TextBox();
+            this.helpPageVersionImage = new System.Windows.Forms.PictureBox();
+            this.helpPageOSDImage = new System.Windows.Forms.PictureBox();
             this.blankPanel = new System.Windows.Forms.Panel();
             this.titleText = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            this.macroPanel.SuspendLayout();
-            this.keybindPanel.SuspendLayout();
-            this.resPanel.SuspendLayout();
-            this.versionPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            this.optionPanel.SuspendLayout();
-            this.infoPanel.SuspendLayout();
-            this.osdPanel.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.helpPageVersionImage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.helpPageOSDImage)).BeginInit();
+            this.blankPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // closeButton
@@ -88,31 +69,19 @@
             this.pictureBox1.TabIndex = 9;
             this.pictureBox1.TabStop = false;
             // 
-            // macroPanel
+            // helpTextbox
             // 
-            this.macroPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.macroPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.macroPanel.Controls.Add(this.helpText0);
-            this.macroPanel.Location = new System.Drawing.Point(807, 125);
-            this.macroPanel.Name = "macroPanel";
-            this.macroPanel.Size = new System.Drawing.Size(550, 490);
-            this.macroPanel.TabIndex = 10;
-            this.macroPanel.Tag = "macro";
-            // 
-            // helpText0
-            // 
-            this.helpText0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.helpText0.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.helpText0.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpText0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpText0.Location = new System.Drawing.Point(3, 3);
-            this.helpText0.Multiline = true;
-            this.helpText0.Name = "helpText0";
-            this.helpText0.ReadOnly = true;
-            this.helpText0.Size = new System.Drawing.Size(542, 461);
-            this.helpText0.TabIndex = 0;
-            this.helpText0.TabStop = false;
-            this.helpText0.Text = resources.GetString("helpText0.Text");
+            this.helpTextbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.helpTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.helpTextbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.helpTextbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.helpTextbox.Location = new System.Drawing.Point(3, 3);
+            this.helpTextbox.Multiline = true;
+            this.helpTextbox.Name = "helpTextbox";
+            this.helpTextbox.ReadOnly = true;
+            this.helpTextbox.Size = new System.Drawing.Size(542, 482);
+            this.helpTextbox.TabIndex = 0;
+            this.helpTextbox.TabStop = false;
             // 
             // helpTabButton0
             // 
@@ -226,186 +195,33 @@
             this.helpTabButton6.UseVisualStyleBackColor = false;
             this.helpTabButton6.Click += new System.EventHandler(this.TabButton_Click);
             // 
-            // keybindPanel
+            // helpPageVersionImage
             // 
-            this.keybindPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.keybindPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.keybindPanel.Controls.Add(this.helpText1);
-            this.keybindPanel.Location = new System.Drawing.Point(1399, 125);
-            this.keybindPanel.Name = "keybindPanel";
-            this.keybindPanel.Size = new System.Drawing.Size(550, 490);
-            this.keybindPanel.TabIndex = 11;
-            this.keybindPanel.Tag = "hk";
+            this.helpPageVersionImage.Image = ((System.Drawing.Image)(resources.GetObject("helpPageVersionImage.Image")));
+            this.helpPageVersionImage.Location = new System.Drawing.Point(372, 331);
+            this.helpPageVersionImage.Name = "helpPageVersionImage";
+            this.helpPageVersionImage.Size = new System.Drawing.Size(173, 154);
+            this.helpPageVersionImage.TabIndex = 1;
+            this.helpPageVersionImage.TabStop = false;
+            this.helpPageVersionImage.Visible = false;
             // 
-            // helpText1
+            // helpPageOSDImage
             // 
-            this.helpText1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.helpText1.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.helpText1.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpText1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpText1.Location = new System.Drawing.Point(3, 3);
-            this.helpText1.Multiline = true;
-            this.helpText1.Name = "helpText1";
-            this.helpText1.ReadOnly = true;
-            this.helpText1.Size = new System.Drawing.Size(542, 461);
-            this.helpText1.TabIndex = 0;
-            this.helpText1.TabStop = false;
-            this.helpText1.Text = resources.GetString("helpText1.Text");
-            // 
-            // resPanel
-            // 
-            this.resPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.resPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.resPanel.Controls.Add(this.helpText2);
-            this.resPanel.Location = new System.Drawing.Point(1955, 125);
-            this.resPanel.Name = "resPanel";
-            this.resPanel.Size = new System.Drawing.Size(550, 490);
-            this.resPanel.TabIndex = 12;
-            this.resPanel.Tag = "res";
-            // 
-            // helpText2
-            // 
-            this.helpText2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.helpText2.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.helpText2.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpText2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpText2.Location = new System.Drawing.Point(3, 3);
-            this.helpText2.Multiline = true;
-            this.helpText2.Name = "helpText2";
-            this.helpText2.ReadOnly = true;
-            this.helpText2.Size = new System.Drawing.Size(542, 461);
-            this.helpText2.TabIndex = 0;
-            this.helpText2.TabStop = false;
-            this.helpText2.Text = resources.GetString("helpText2.Text");
-            // 
-            // versionPanel
-            // 
-            this.versionPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.versionPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.versionPanel.Controls.Add(this.pictureBox2);
-            this.versionPanel.Controls.Add(this.helpText3);
-            this.versionPanel.Location = new System.Drawing.Point(12, 676);
-            this.versionPanel.Name = "versionPanel";
-            this.versionPanel.Size = new System.Drawing.Size(550, 490);
-            this.versionPanel.TabIndex = 13;
-            this.versionPanel.Tag = "ver";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(372, 331);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(173, 154);
-            this.pictureBox2.TabIndex = 1;
-            this.pictureBox2.TabStop = false;
-            // 
-            // helpText3
-            // 
-            this.helpText3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.helpText3.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.helpText3.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpText3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpText3.Location = new System.Drawing.Point(3, 3);
-            this.helpText3.Multiline = true;
-            this.helpText3.Name = "helpText3";
-            this.helpText3.ReadOnly = true;
-            this.helpText3.Size = new System.Drawing.Size(542, 349);
-            this.helpText3.TabIndex = 0;
-            this.helpText3.TabStop = false;
-            this.helpText3.Text = resources.GetString("helpText3.Text");
-            // 
-            // optionPanel
-            // 
-            this.optionPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.optionPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.optionPanel.Controls.Add(this.helpText4);
-            this.optionPanel.Location = new System.Drawing.Point(568, 676);
-            this.optionPanel.Name = "optionPanel";
-            this.optionPanel.Size = new System.Drawing.Size(550, 490);
-            this.optionPanel.TabIndex = 14;
-            this.optionPanel.Tag = "option";
-            // 
-            // helpText4
-            // 
-            this.helpText4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.helpText4.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.helpText4.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpText4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpText4.Location = new System.Drawing.Point(3, 3);
-            this.helpText4.Multiline = true;
-            this.helpText4.Name = "helpText4";
-            this.helpText4.ReadOnly = true;
-            this.helpText4.Size = new System.Drawing.Size(542, 482);
-            this.helpText4.TabIndex = 0;
-            this.helpText4.TabStop = false;
-            this.helpText4.Text = resources.GetString("helpText4.Text");
-            // 
-            // infoPanel
-            // 
-            this.infoPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.infoPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.infoPanel.Controls.Add(this.helpText5);
-            this.infoPanel.Location = new System.Drawing.Point(1124, 676);
-            this.infoPanel.Name = "infoPanel";
-            this.infoPanel.Size = new System.Drawing.Size(550, 490);
-            this.infoPanel.TabIndex = 15;
-            this.infoPanel.Tag = "info";
-            // 
-            // helpText5
-            // 
-            this.helpText5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.helpText5.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.helpText5.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpText5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpText5.Location = new System.Drawing.Point(3, 3);
-            this.helpText5.Multiline = true;
-            this.helpText5.Name = "helpText5";
-            this.helpText5.ReadOnly = true;
-            this.helpText5.Size = new System.Drawing.Size(542, 461);
-            this.helpText5.TabIndex = 0;
-            this.helpText5.TabStop = false;
-            this.helpText5.Text = resources.GetString("helpText5.Text");
-            // 
-            // osdPanel
-            // 
-            this.osdPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.osdPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.osdPanel.Controls.Add(this.pictureBox3);
-            this.osdPanel.Controls.Add(this.helpText6);
-            this.osdPanel.Location = new System.Drawing.Point(1680, 676);
-            this.osdPanel.Name = "osdPanel";
-            this.osdPanel.Size = new System.Drawing.Size(550, 490);
-            this.osdPanel.TabIndex = 16;
-            this.osdPanel.Tag = "osd";
-            // 
-            // pictureBox3
-            // 
-            this.pictureBox3.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox3.Image")));
-            this.pictureBox3.Location = new System.Drawing.Point(346, 168);
-            this.pictureBox3.Name = "pictureBox3";
-            this.pictureBox3.Size = new System.Drawing.Size(199, 83);
-            this.pictureBox3.TabIndex = 1;
-            this.pictureBox3.TabStop = false;
-            // 
-            // helpText6
-            // 
-            this.helpText6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.helpText6.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.helpText6.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpText6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpText6.Location = new System.Drawing.Point(3, 3);
-            this.helpText6.Multiline = true;
-            this.helpText6.Name = "helpText6";
-            this.helpText6.ReadOnly = true;
-            this.helpText6.Size = new System.Drawing.Size(542, 482);
-            this.helpText6.TabIndex = 0;
-            this.helpText6.TabStop = false;
-            this.helpText6.Text = resources.GetString("helpText6.Text");
+            this.helpPageOSDImage.Image = ((System.Drawing.Image)(resources.GetObject("helpPageOSDImage.Image")));
+            this.helpPageOSDImage.Location = new System.Drawing.Point(348, 168);
+            this.helpPageOSDImage.Name = "helpPageOSDImage";
+            this.helpPageOSDImage.Size = new System.Drawing.Size(199, 83);
+            this.helpPageOSDImage.TabIndex = 1;
+            this.helpPageOSDImage.TabStop = false;
+            this.helpPageOSDImage.Visible = false;
             // 
             // blankPanel
             // 
             this.blankPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.blankPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.blankPanel.Controls.Add(this.helpPageOSDImage);
+            this.blankPanel.Controls.Add(this.helpPageVersionImage);
+            this.blankPanel.Controls.Add(this.helpTextbox);
             this.blankPanel.Location = new System.Drawing.Point(222, 125);
             this.blankPanel.Name = "blankPanel";
             this.blankPanel.Size = new System.Drawing.Size(550, 490);
@@ -433,15 +249,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(2514, 1178);
+            this.ClientSize = new System.Drawing.Size(784, 661);
             this.Controls.Add(this.titleText);
             this.Controls.Add(this.blankPanel);
-            this.Controls.Add(this.osdPanel);
-            this.Controls.Add(this.infoPanel);
-            this.Controls.Add(this.optionPanel);
-            this.Controls.Add(this.versionPanel);
-            this.Controls.Add(this.resPanel);
-            this.Controls.Add(this.keybindPanel);
             this.Controls.Add(this.helpTabButton6);
             this.Controls.Add(this.helpTabButton5);
             this.Controls.Add(this.helpTabButton4);
@@ -449,7 +259,6 @@
             this.Controls.Add(this.helpTabButton2);
             this.Controls.Add(this.helpTabButton1);
             this.Controls.Add(this.helpTabButton0);
-            this.Controls.Add(this.macroPanel);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.closeButton);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -460,22 +269,10 @@
             this.Text = "Help and Instructions";
             this.Load += new System.EventHandler(this.HelpPage_Load);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            this.macroPanel.ResumeLayout(false);
-            this.macroPanel.PerformLayout();
-            this.keybindPanel.ResumeLayout(false);
-            this.keybindPanel.PerformLayout();
-            this.resPanel.ResumeLayout(false);
-            this.resPanel.PerformLayout();
-            this.versionPanel.ResumeLayout(false);
-            this.versionPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            this.optionPanel.ResumeLayout(false);
-            this.optionPanel.PerformLayout();
-            this.infoPanel.ResumeLayout(false);
-            this.infoPanel.PerformLayout();
-            this.osdPanel.ResumeLayout(false);
-            this.osdPanel.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox3)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.helpPageVersionImage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.helpPageOSDImage)).EndInit();
+            this.blankPanel.ResumeLayout(false);
+            this.blankPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -484,29 +281,16 @@
         #endregion
         private Button closeButton;
         private PictureBox pictureBox1;
-        private Panel macroPanel;
         private Button helpTabButton0;
         private Button helpTabButton1;
         private Button helpTabButton2;
         private Button helpTabButton3;
         private Button helpTabButton4;
         private Button helpTabButton5;
-        private TextBox helpText0;
+        private TextBox helpTextbox;
         private Button helpTabButton6;
-        private Panel keybindPanel;
-        private TextBox helpText1;
-        private Panel resPanel;
-        private TextBox helpText2;
-        private Panel versionPanel;
-        private TextBox helpText3;
-        private Panel optionPanel;
-        private TextBox helpText4;
-        private Panel infoPanel;
-        private TextBox helpText5;
-        private PictureBox pictureBox2;
-        private Panel osdPanel;
-        private PictureBox pictureBox3;
-        private TextBox helpText6;
+        private PictureBox helpPageVersionImage;
+        private PictureBox helpPageOSDImage;
         private Panel blankPanel;
         private TextBox titleText;
     }

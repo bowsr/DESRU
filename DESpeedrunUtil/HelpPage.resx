@@ -317,50 +317,7 @@
         eFKH4gAAAABJRU5ErkJggg==
 </value>
   </data>
-  <data name="helpText0.Text" xml:space="preserve">
-    <value>Due to the fact that some speedtech in DOOM Eternal directly benefits from quick inputs, the Freescroll Emulation Macro was designed to emulate the scroll wheel of a freescrolling mouse (e.g. G502) for those that do not own one.
-
-This macro sends scroll inputs, a single direction at a time, to your OS at a frequency of 100hz.
-It is included in your DESRU download, and will run in the background whenever DOOM Eternal is in focus.
-
-This is currently allowed for use during speedruns in any situation where you may need it, like Slopeboosting.
-
-If you wish to enable this feature, click the checkbox in the Options section, and bind at least one macro direction to a key.
-
-
-If you plan on using the macro for jump inputs, you will need to use a console command to bind jump to your scroll wheel.
-These are the two commands for doing that:
-bind mwheeldown _jump
-bind mwheelup _jump
-Press the Tilde (~) key in DOOM Eternal and type or paste in one or both of those commands.
-Normally console commands are not allowed, but these are some of the very few exceptions.</value>
-  </data>
-  <data name="helpText1.Text" xml:space="preserve">
-    <value>In the top left of the main DESRU window, you'll find a section where you can bind various actions to keys.
-
-In order to bind an action to a key, click the box next to the label of your desired action, then press a key or mouse button that you wish to bind that action to.
-Most keys can be bound, with notable exceptions being the ESCAPE and Tilde keys, and the Left and Right mouse buttons.
-
-For the FPS Hotkey actions, you can also specify what FPS limit you want to toggle with that key. This limit can be anywhere from 1 FPS to 250 FPS.
-Every hotkey can also be used to toggle back to your set max FPS by pressing it again.
-
-If you need more FPS Hotkeys than the three shown, you can click the button at the bottom of this section labeled "Show More FPS Hotkeys." This will expand the window at the bottom, revealing 12 more bindable FPS limit toggles.
-
-
-Like the macro, hotkeys will be disabled when DOOM Eternal is not in focus.</value>
-  </data>
-  <data name="helpText2.Text" xml:space="preserve">
-    <value>Under the Keybinds section, you'll find some options for unlocking the resolution scaling in DOOM Eternal.
-
-By default, DOOM Eternal only allows the dynamic resolution scaling to scale down to a minimum of 50% of your selected resolution. DESRU can unlock this, allowing a minimum scale of as low as 1%.
-
-In order to unlock your resolution scaling, when DOOM Eternal is open you'll need to click the Unlock button, or have the "Unlock on Startup" checkbox checked when starting the game. After a few seconds of the game being in focus, DESRU will automatically set DOOM Eternal to windowed mode, then back to fullscreen. This is to ensure the unlock takes effect.
-
-After scaling is unlocked, you can also set your own minimum scale. You can also automatically enable dynamic scaling with any FPS target up to 1000, though keep in mind that this change won't be shown in the settings menu.
-
-The Res. Scale Hotkey in the Keybinds section will toggle dynamic scaling on and off.</value>
-  </data>
-  <data name="pictureBox2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="helpPageVersionImage.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAK4AAACYCAMAAABK8SJsAAAABGdBTUEAALGPC/xhBQAAAa1QTFRFICAg
         8dBN8dBM8c9M8M9M8M5M781L78xL7stK7cpKxqlBISAg/+uj/+ui/+ug/+qf/+qd/+qc/+ma/+mZ/+iX
@@ -397,56 +354,7 @@ The Res. Scale Hotkey in the Keybinds section will toggle dynamic scaling on and
         NLheFfdFdUejlpnPu2iTPqv/ILWWklJrqVKpjDzvb7LUGHG1WTLpAAAAAElFTkSuQmCC
 </value>
   </data>
-  <data name="helpText3.Text" xml:space="preserve">
-    <value>To the right of the resolution scaling section are some options to change the version of DOOM Eternal you have currently loaded.
-
-DESRU requires a specific folder structure for this feature to work.
-The name of a folder, besides the main one, should be "DOOMEternal &lt;version&gt;". A list of valid version names can be found in the "validVersions.txt" file.
-Your folder structure should then look something like the picture below.
-
-Once it's set up, click the Refresh button in DESRU, or restart DESRU.
-Changing versions is as simple as selecting one in the drop down then clicking the change version button when DOOM Eternal is closed.
-
-Version 3.1 has a known crash that sometimes happens if you don't delete your current profile.bin file. If this crash affects you, enable the checkbox and DESRU will automatically replace your profile.bin when changing to/from 3.1.
-If you already have a profile.bin file you use for 3.1, place it next to your normal one in your saves folder. This file must be named "3.1.bin" for it to be detected.
-If 3.1 is your current version, you can also do the same with your main profile.bin, but name it "main.bin".</value>
-  </data>
-  <data name="helpText4.Text" xml:space="preserve">
-    <value>In the bottom left of the DESRU window, there's a section with a few miscellaneous options.
-
-You can enable/disable the macro and hotkeys from here, instead of removing binds.
-
-You can specify your desired maximum FPS that DOOM Eternal will run at.
-
-You can also disable the max FPS limiter here. Hotkeys will still work, and you will need to limit your FPS to 250 or lower through external means, like through RTSS or NVIDIA Control Panel.
-
-There's also a button to toggle a firewall rule blocking DOOM Eternal from accessing the internet. This is to prevent the download of server side balance patches, which can affect the single player campaign.
-This firewall rule is REQUIRED to exist during speedruns, so make sure the Info Panel shows "Blocked."
-
-The other button will enable cheats, allowing you to use basically any dev console command in game, along with adding other features like noclip/notarget/enemySpawning.
-Clicking this button will place the meath00k mod (XINPUT1_3.dll) in your DOOM Eternal folder. If this is done while the game is running, it will require a restart to take effect.
-This should go without saying, but having cheats enabled is NOT allowed during speedruns.</value>
-  </data>
-  <data name="helpText5.Text" xml:space="preserve">
-    <value>The Info Panel will show you the status of DOOM Eternal and DESRU.
-
-Starting from the top, this panel will show you what version of DOOM Eternal is currently running.
-Your current FPS limit will be displayed below that.
-
-The status of the Freescroll Emulation Macro will also be shown. As a note, you'll see this toggle between Running and Stopped if you tab out of the game.
-
-If dynamic resolution scaling is enabled, this panel will display that, along with the current FPS target.
-It will also display if hotkeys are enabled. Like the macro, you'll see this toggle when tabbing out of DOOM.
-
-The Slopeboosting info shows whether pm_allowRampJumping is set to 0 or 1. This only applies to version 1.0 (Release), as any non-unrestricted category does not allow slopeboosting.
-In order to disable slopeboosting, you'll need to enable the option in your LiveSplit autosplitter settings.
-
-Balance Updates refers to the firewall rule. This must say "Blocked" when speedrunning.
-Cheats shows the status of the meath00k dll.
-
-ReShade displays whether ReShade is detected to be running over Vulkan.</value>
-  </data>
-  <data name="pictureBox3.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="helpPageOSDImage.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAMkAAABwCAIAAAA7YcPvAAAABGdBTUEAALGPC/xhBQAAAAlwSFlzAAAO
         vAAADrwBlbxySQAAXgRJREFUeF6t3QW4X9W1Nnru83z3nJ5iDVAcIgQSCEkgEEIguAR3d9fiVop70RYr
@@ -852,25 +760,6 @@ ReShade displays whether ReShade is detected to be running over Vulkan.</value>
         jRWZx7KTzbFi4Vb+XWUcRIhECEplTjJ2tUMqOUF76ZDImFQ/u2qTqBAyRSdDEXB+Bdl40CuUCsO4hVJ5
         DKuMEqbqkuMPmXCLjlt00NS9Z8//D0L0wrEJrd9wAAAAAElFTkSuQmCC
 </value>
-  </data>
-  <data name="helpText6.Text" xml:space="preserve">
-    <value>While DESRU is running, the performance metrics display in the top right of DOOM Eternal will be modified to display the state of a few things.
-This is here to help with the moderation of leaderboard submitted speedruns.
-
-If DESRU is detected to be out of date, an asterisk (*) will be displayed next to the FPS counter. DESRU is required to be up to date during speedruns.
-
-Under the FPS counter, the version of the game will be displayed, along with a few flags.
-These flags are:
-M - Freescroll Macro Enabled
-F - Firewall Rule Enabled
-R - ReShade Detected
-S - Slopeboosting disabled
-L - Max FPS Limiter Disabled
-
-Finally, under the version, "CHEATS ENABLED" will show if meath00k is detected. If you see "RESTART GAME" here at any point, you need to restart DOOM Eternal in order for runs to be legal. DESRU must be running first before DOOM Eternal is launched, and if the trainer is ever detected, you'll need to restart your game for that, too.
-
-On the same line, you'll also see some numbers pop up sometimes. This is your scroll pattern.
-The numbers show how many times you scrolled your mouse wheel in a single scroll, and the average time between each input.</value>
   </data>
   <data name="titleText.Text" xml:space="preserve">
     <value>DOOM Eternal Speedrun Utility
