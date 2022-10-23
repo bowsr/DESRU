@@ -213,7 +213,7 @@ namespace DESpeedrunUtil {
                 }
             }
             if(!Hooked) {
-                versionDropDownSelector.Enabled = true;
+                if(_gameDirectory.ToLower().Contains("steam")) versionDropDownSelector.Enabled = true;
                 _macro.Stop(true);
                 _fwRestart = false;
                 meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
@@ -448,13 +448,17 @@ namespace DESpeedrunUtil {
         /// Populates the Version selector with all currently detected game versions
         /// </summary>
         public void PopulateVersionDropDown() {
+            changeVersionButton.Enabled = false;
             versionDropDownSelector.Items.Clear();
+            if(!_gameDirectory.ToLower().Contains("steam")) {
+                versionDropDownSelector.Enabled = false;
+                return;
+            }
             for(int i = 0; i < _gameVersions.Count; i++) {
                 string v = _gameVersions.ElementAt(i);
                 versionDropDownSelector.Items.Add(v);
                 if(v == GetCurrentVersion()) versionDropDownSelector.SelectedIndex = i;
             }
-            changeVersionButton.Enabled = false;
         }
 
         /// <summary>
@@ -831,9 +835,10 @@ namespace DESpeedrunUtil {
 
         // Sets various game info variables based on the detected module size.
         private void SetGameInfoByModuleSize() {
-            gameStatus.Text = _memory.Version;
-            if(_gameDirectory != string.Empty) {
-                File.WriteAllText(_gameDirectory + "\\gameVersion.txt", "version=" + _memory.Version);
+            gameStatus.Text = _memory.Version.Replace("(Gamepass)", "(GP)");
+            var gamePath = _gameProcess.MainModule.FileName;
+            if(gamePath.ToLower().Contains("steam")) {
+                File.WriteAllText(gamePath[..gamePath.LastIndexOf('\\')] + "\\gameVersion.txt", "version=" + _memory.Version);
             }
             if(!_memory.CanCapFPS()) _hotkeys.DisableHotkeys();
         }
