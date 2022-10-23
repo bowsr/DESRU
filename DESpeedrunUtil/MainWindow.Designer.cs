@@ -68,6 +68,10 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.cvarLabel = new System.Windows.Forms.Label();
+            this.autoContinueCheckbox = new System.Windows.Forms.CheckBox();
+            this.unDelayCheckbox = new System.Windows.Forms.CheckBox();
+            this.antiAliasingCheckbox = new System.Windows.Forms.CheckBox();
             this.enableMaxFPSCheckbox = new System.Windows.Forms.CheckBox();
             this.panel3 = new System.Windows.Forms.Panel();
             this.defaultFPS = new System.Windows.Forms.TextBox();
@@ -493,7 +497,7 @@
             this.firewallToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.firewallToggleButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.firewallToggleButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.firewallToggleButton.Location = new System.Drawing.Point(3, 83);
+            this.firewallToggleButton.Location = new System.Drawing.Point(3, 179);
             this.firewallToggleButton.Name = "firewallToggleButton";
             this.firewallToggleButton.Size = new System.Drawing.Size(186, 32);
             this.firewallToggleButton.TabIndex = 0;
@@ -557,7 +561,7 @@
             this.meathookToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.meathookToggleButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.meathookToggleButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.meathookToggleButton.Location = new System.Drawing.Point(3, 121);
+            this.meathookToggleButton.Location = new System.Drawing.Point(3, 217);
             this.meathookToggleButton.Name = "meathookToggleButton";
             this.meathookToggleButton.Size = new System.Drawing.Size(186, 29);
             this.meathookToggleButton.TabIndex = 24;
@@ -570,7 +574,7 @@
             this.meathookRestartLabel.AutoSize = true;
             this.meathookRestartLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.meathookRestartLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.meathookRestartLabel.Location = new System.Drawing.Point(189, 126);
+            this.meathookRestartLabel.Location = new System.Drawing.Point(189, 222);
             this.meathookRestartLabel.Name = "meathookRestartLabel";
             this.meathookRestartLabel.Size = new System.Drawing.Size(114, 18);
             this.meathookRestartLabel.TabIndex = 25;
@@ -581,7 +585,7 @@
             this.firewallRestartLabel.AutoSize = true;
             this.firewallRestartLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.firewallRestartLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.firewallRestartLabel.Location = new System.Drawing.Point(189, 90);
+            this.firewallRestartLabel.Location = new System.Drawing.Point(189, 186);
             this.firewallRestartLabel.Name = "firewallRestartLabel";
             this.firewallRestartLabel.Size = new System.Drawing.Size(114, 18);
             this.firewallRestartLabel.TabIndex = 26;
@@ -746,19 +750,73 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.cvarLabel);
+            this.panel2.Controls.Add(this.autoContinueCheckbox);
+            this.panel2.Controls.Add(this.unDelayCheckbox);
+            this.panel2.Controls.Add(this.antiAliasingCheckbox);
             this.panel2.Controls.Add(this.enableMaxFPSCheckbox);
             this.panel2.Controls.Add(this.panel3);
             this.panel2.Controls.Add(this.enableHotkeysCheckbox);
             this.panel2.Controls.Add(this.autorunMacroCheckbox);
             this.panel2.Controls.Add(this.firewallToggleButton);
             this.panel2.Controls.Add(this.meathookRestartLabel);
-            this.panel2.Controls.Add(this.firewallRestartLabel);
-            this.panel2.Controls.Add(this.meathookToggleButton);
             this.panel2.Controls.Add(this.defaultFPSLabel);
+            this.panel2.Controls.Add(this.meathookToggleButton);
+            this.panel2.Controls.Add(this.firewallRestartLabel);
             this.panel2.Location = new System.Drawing.Point(12, 555);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(304, 156);
+            this.panel2.Size = new System.Drawing.Size(304, 251);
             this.panel2.TabIndex = 31;
+            // 
+            // cvarLabel
+            // 
+            this.cvarLabel.AutoSize = true;
+            this.cvarLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.cvarLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.cvarLabel.Location = new System.Drawing.Point(3, 83);
+            this.cvarLabel.Name = "cvarLabel";
+            this.cvarLabel.Size = new System.Drawing.Size(55, 18);
+            this.cvarLabel.TabIndex = 35;
+            this.cvarLabel.Text = "CVARS";
+            // 
+            // autoContinueCheckbox
+            // 
+            this.autoContinueCheckbox.AutoSize = true;
+            this.autoContinueCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.autoContinueCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.autoContinueCheckbox.Location = new System.Drawing.Point(6, 154);
+            this.autoContinueCheckbox.Name = "autoContinueCheckbox";
+            this.autoContinueCheckbox.Size = new System.Drawing.Size(242, 22);
+            this.autoContinueCheckbox.TabIndex = 33;
+            this.autoContinueCheckbox.Text = "Auto Continue in Loading Screens";
+            this.autoContinueCheckbox.UseVisualStyleBackColor = true;
+            this.autoContinueCheckbox.CheckedChanged += new System.EventHandler(this.AutoContinue_CheckChanged);
+            // 
+            // unDelayCheckbox
+            // 
+            this.unDelayCheckbox.AutoSize = true;
+            this.unDelayCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.unDelayCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.unDelayCheckbox.Location = new System.Drawing.Point(6, 129);
+            this.unDelayCheckbox.Name = "unDelayCheckbox";
+            this.unDelayCheckbox.Size = new System.Drawing.Size(273, 22);
+            this.unDelayCheckbox.TabIndex = 32;
+            this.unDelayCheckbox.Text = "Disable Ultra-Nightmare Quitout Delay";
+            this.unDelayCheckbox.UseVisualStyleBackColor = true;
+            this.unDelayCheckbox.CheckedChanged += new System.EventHandler(this.UNDelay_CheckChanged);
+            // 
+            // antiAliasingCheckbox
+            // 
+            this.antiAliasingCheckbox.AutoSize = true;
+            this.antiAliasingCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.antiAliasingCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.antiAliasingCheckbox.Location = new System.Drawing.Point(6, 104);
+            this.antiAliasingCheckbox.Name = "antiAliasingCheckbox";
+            this.antiAliasingCheckbox.Size = new System.Drawing.Size(158, 22);
+            this.antiAliasingCheckbox.TabIndex = 31;
+            this.antiAliasingCheckbox.Text = "Disable Anti-Aliasing";
+            this.antiAliasingCheckbox.UseVisualStyleBackColor = true;
+            this.antiAliasingCheckbox.CheckedChanged += new System.EventHandler(this.AA_CheckChanged);
             // 
             // enableMaxFPSCheckbox
             // 
@@ -818,7 +876,7 @@
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.exitButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.exitButton.Location = new System.Drawing.Point(478, 679);
+            this.exitButton.Location = new System.Drawing.Point(478, 774);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(149, 32);
             this.exitButton.TabIndex = 32;
@@ -1217,7 +1275,7 @@
             this.helpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.helpButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.helpButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpButton.Location = new System.Drawing.Point(323, 679);
+            this.helpButton.Location = new System.Drawing.Point(323, 774);
             this.helpButton.Name = "helpButton";
             this.helpButton.Size = new System.Drawing.Size(149, 32);
             this.helpButton.TabIndex = 35;
@@ -1232,7 +1290,7 @@
             this.downpatcherButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.downpatcherButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.downpatcherButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.downpatcherButton.Location = new System.Drawing.Point(323, 555);
+            this.downpatcherButton.Location = new System.Drawing.Point(323, 683);
             this.downpatcherButton.Name = "downpatcherButton";
             this.downpatcherButton.Size = new System.Drawing.Size(304, 32);
             this.downpatcherButton.TabIndex = 36;
@@ -1247,7 +1305,7 @@
             this.discordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.discordButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.discordButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.discordButton.Location = new System.Drawing.Point(323, 593);
+            this.discordButton.Location = new System.Drawing.Point(323, 721);
             this.discordButton.Name = "discordButton";
             this.discordButton.Size = new System.Drawing.Size(304, 32);
             this.discordButton.TabIndex = 37;
@@ -1259,7 +1317,7 @@
             this.desruVersionLabel.AutoSize = true;
             this.desruVersionLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.desruVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.desruVersionLabel.Location = new System.Drawing.Point(596, 661);
+            this.desruVersionLabel.Location = new System.Drawing.Point(596, 759);
             this.desruVersionLabel.Name = "desruVersionLabel";
             this.desruVersionLabel.Size = new System.Drawing.Size(31, 13);
             this.desruVersionLabel.TabIndex = 38;
@@ -1317,7 +1375,7 @@
             this.extraFPSHotkeysPanel.Controls.Add(this.panel7);
             this.extraFPSHotkeysPanel.Controls.Add(this.panel8);
             this.extraFPSHotkeysPanel.Controls.Add(this.label15);
-            this.extraFPSHotkeysPanel.Location = new System.Drawing.Point(12, 747);
+            this.extraFPSHotkeysPanel.Location = new System.Drawing.Point(12, 842);
             this.extraFPSHotkeysPanel.Name = "extraFPSHotkeysPanel";
             this.extraFPSHotkeysPanel.Size = new System.Drawing.Size(615, 183);
             this.extraFPSHotkeysPanel.TabIndex = 35;
@@ -2048,7 +2106,7 @@
             this.moreHotkeysTitle.AutoSize = true;
             this.moreHotkeysTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.moreHotkeysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.moreHotkeysTitle.Location = new System.Drawing.Point(187, 723);
+            this.moreHotkeysTitle.Location = new System.Drawing.Point(187, 818);
             this.moreHotkeysTitle.Name = "moreHotkeysTitle";
             this.moreHotkeysTitle.Size = new System.Drawing.Size(286, 21);
             this.moreHotkeysTitle.TabIndex = 39;
@@ -2066,7 +2124,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(639, 972);
+            this.ClientSize = new System.Drawing.Size(639, 1067);
             this.ControlBox = false;
             this.Controls.Add(this.moreHotkeysTitle);
             this.Controls.Add(this.extraFPSHotkeysPanel);
@@ -2301,5 +2359,9 @@
         private Label moreHotkeysTitle;
         private ToolTip toolTip7500;
         private CheckBox enableMaxFPSCheckbox;
+        private Label cvarLabel;
+        private CheckBox autoContinueCheckbox;
+        private CheckBox unDelayCheckbox;
+        private CheckBox antiAliasingCheckbox;
     }
 }

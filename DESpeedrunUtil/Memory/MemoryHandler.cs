@@ -29,15 +29,15 @@ namespace DESpeedrunUtil.Memory {
         public static List<KnownOffsets> OffsetList = new(), ScannedOffsetList = new();
         KnownOffsets _currentOffsets;
 
-        DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP, _skipIntroDP,
+        DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _skipIntroDP, _aliasingDP, _unDelayDP, _continueDP,
                     _row1DP, _row6DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
-                    _raiseMSDP, _dropMSDP;
+                    _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP;
 
-        IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _dynamicResPtr, _resScalesPtr, _skipIntroPtr,
+        IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _skipIntroPtr, _aliasingPtr, _unDelayPtr, _continuePtr,
                _row1Ptr, _row6Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
-               _raiseMSPtr, _dropMSPtr;
+               _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr;
 
         Process _game, _trainer;
         HotkeyHandler _hotkeys;
@@ -49,7 +49,8 @@ namespace DESpeedrunUtil.Memory {
 
         bool _osdFlagCheats = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
              _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
-             _trainerFlag = false, _scheduleDynamic = false, _osdFlagLimiter = true;
+             _trainerFlag = false, _scheduleDynamic = false, _osdFlagLimiter = true,
+             _antiAliasing = true, _unDelay = true, _autoContinue = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         string _cheatString = "CHEATS ENABLED", _scrollString = "";
         int _fpsLimit = 250, _targetFPS = 1000;
@@ -90,7 +91,22 @@ namespace DESpeedrunUtil.Memory {
             if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
 
             DerefPointers();
-            if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr)) _game.WriteBytes(_skipIntroPtr, new byte[1] { 1 });
+
+            // com_skipIntroVideo
+            if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr)) 
+                _game.WriteBytes(_skipIntroPtr, new byte[1] { 1 });
+
+            // r_antialiasing
+            if(_aliasingPtr != IntPtr.Zero && _game.ReadValue<byte>(_aliasingPtr) < 2 && _game.ReadValue<bool>(_aliasingPtr) != _antiAliasing) 
+                _game.WriteBytes(_aliasingPtr, new byte[1] { Convert.ToByte(_antiAliasing) });
+
+            // pauseMenu_delayUNPrompt
+            if(_unDelayPtr != IntPtr.Zero && _game.ReadValue<bool>(_unDelayPtr) != _unDelay) 
+                _game.WriteBytes(_unDelayPtr, new byte[1] { Convert.ToByte(_unDelay) });
+
+            // com_skipKeyPressOnLoadScreens
+            if(_continuePtr != IntPtr.Zero && _game.ReadValue<bool>(_continuePtr) != _autoContinue) 
+                _game.WriteBytes(_continuePtr, new byte[1] { Convert.ToByte(_autoContinue) });
 
             if(!_trainerFlag) {
                 if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
@@ -375,6 +391,29 @@ namespace DESpeedrunUtil.Memory {
             }
         }
 
+        public void SetCVAR(bool cvar, string cvarName) {
+            switch(cvarName) {
+                case "antialiasing":
+                    _antiAliasing = cvar;
+                    break;
+                case "undelay":
+                    _unDelay = cvar;
+                    break;
+                case "autocontinue":
+                    _autoContinue = cvar;
+                    break;
+            }
+        }
+
+        public bool GetCVAR(string cvarName) {
+            return cvarName switch {
+                "antialiasing" => _antiAliasing,
+                "undelay" => _unDelay,
+                "autocontinue" => _autoContinue,
+                _ => false
+            };
+        }
+
         /// <summary>
         /// Retrieves the state of a specified flag
         /// </summary>
@@ -468,20 +507,25 @@ namespace DESpeedrunUtil.Memory {
             try {
                 if(_row1DP != null) {
                     _row1DP.DerefOffsets(_game, out _row1Ptr);
-                    if(_row6DP != null) _row6DP.DerefOffsets(_game, out _row6Ptr);
+                    _row6DP?.DerefOffsets(_game, out _row6Ptr);
                 }
-                if(_gpuVendorDP != null) _gpuVendorDP.DerefOffsets(_game, out _gpuVendorPtr);
-                if(_gpuNameDP != null) _gpuNameDP.DerefOffsets(_game, out _gpuNamePtr);
-                if(_cpuDP != null) _cpuDP.DerefOffsets(_game, out _cpuPtr);
-                if(_metricsDP != null) _metricsDP.DerefOffsets(_game, out _metricsPtr);
-                if(_maxHzDP != null) _maxHzDP.DerefOffsets(_game, out _maxHzPtr);
-                if(_skipIntroDP != null) _skipIntroDP.DerefOffsets(_game, out _skipIntroPtr);
-                if(_rampJumpDP != null) _rampJumpDP.DerefOffsets(_game, out _rampJumpPtr);
-                if(_minResDP != null) _minResDP.DerefOffsets(_game, out _minResPtr);
-                if(_dynamicResDP != null) _dynamicResDP.DerefOffsets(_game, out _dynamicResPtr);
-                if(_resScalesDP != null) _resScalesDP.DerefOffsets(_game, out _resScalesPtr);
-                if(_raiseMSDP != null) _raiseMSDP.DerefOffsets(_game, out _raiseMSPtr);
-                if(_dropMSDP != null) _dropMSDP.DerefOffsets(_game, out _dropMSPtr);
+                _gpuVendorDP?.DerefOffsets(_game, out _gpuVendorPtr);
+                _gpuNameDP?.DerefOffsets(_game, out _gpuNamePtr);
+                _cpuDP?.DerefOffsets(_game, out _cpuPtr);
+
+                _metricsDP?.DerefOffsets(_game, out _metricsPtr);
+                _maxHzDP?.DerefOffsets(_game, out _maxHzPtr);
+                _skipIntroDP?.DerefOffsets(_game, out _skipIntroPtr);
+                _rampJumpDP?.DerefOffsets(_game, out _rampJumpPtr);
+                _aliasingDP?.DerefOffsets(_game, out _aliasingPtr);
+                _unDelayDP?.DerefOffsets(_game, out _unDelayPtr);
+                _continueDP?.DerefOffsets(_game, out _continuePtr);
+
+                _minResDP?.DerefOffsets(_game, out _minResPtr);
+                _dynamicResDP?.DerefOffsets(_game, out _dynamicResPtr);
+                _resScalesDP?.DerefOffsets(_game, out _resScalesPtr);
+                _raiseMSDP?.DerefOffsets(_game, out _raiseMSPtr);
+                _dropMSDP?.DerefOffsets(_game, out _dropMSPtr);
             }catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
                 return;
@@ -540,28 +584,34 @@ namespace DESpeedrunUtil.Memory {
         private void Initialize() {
             _row1DP = _row6DP = _gpuVendorDP = _gpuNameDP = _cpuDP = null;
             _metricsDP = _maxHzDP = _rampJumpDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = _skipIntroDP = null;
+            _aliasingDP = _unDelayDP = _continueDP = null;
             if(!SetCurrentKnownOffsets()) {
                 SigScans();
             }
-            if(_currentOffsets.Row1 != 0) _row1DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row1);
-            if(_currentOffsets.Row6 != 0) _row6DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row6);
+            _row1DP = CreateDP(_currentOffsets.Row1);
+            _row6DP = CreateDP(_currentOffsets.Row6);
 
-            if(_currentOffsets.ResScales != 0) _resScalesDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.ResScales);
+            _resScalesDP = CreateDP(_currentOffsets.ResScales);
 
-            if(_currentOffsets.GPUVendor != 0) _gpuVendorDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.GPUVendor);
-            if(_currentOffsets.GPUName != 0) _gpuNameDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.GPUName);
-            if(_currentOffsets.CPU != 0) _cpuDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.CPU, 0x0);
+            _gpuVendorDP = CreateDP(_currentOffsets.GPUVendor);
+            _gpuNameDP = CreateDP(_currentOffsets.GPUName);
+            _cpuDP = CreateDP(_currentOffsets.CPU, 0x0);
 
-            if(_currentOffsets.Metrics != 0) _metricsDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Metrics);
-            if(_currentOffsets.MaxHz != 0) _maxHzDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MaxHz);
-            if(_currentOffsets.SkipIntro != 0) _skipIntroDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.SkipIntro);
+            _metricsDP = CreateDP(_currentOffsets.Metrics);
+            _maxHzDP = CreateDP(_currentOffsets.MaxHz);
+            _skipIntroDP = CreateDP(_currentOffsets.SkipIntro);
+            _aliasingDP = CreateDP(_currentOffsets.AA);
+            _unDelayDP = CreateDP(_currentOffsets.UNDelay);
+            _continueDP = CreateDP(_currentOffsets.AutoContinue);
 
-            if(_currentOffsets.MinRes != 0) _minResDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.MinRes);
-            if(_currentOffsets.DynamicRes != 0) _dynamicResDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.DynamicRes);
-            if(_currentOffsets.RaiseMS != 0) _raiseMSDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.RaiseMS);
-            if(_currentOffsets.DropMS != 0) _dropMSDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.DropMS);
-            if(Version == "1.0 (Release)") _rampJumpDP = new DeepPointer("DOOMEternalx64vk.exe", 0x6126430);
+            _minResDP = CreateDP(_currentOffsets.MinRes);
+            _dynamicResDP = CreateDP(_currentOffsets.DynamicRes);
+            _raiseMSDP = CreateDP(_currentOffsets.RaiseMS);
+            _dropMSDP = CreateDP(_currentOffsets.DropMS);
+            if(Version == "1.0 (Release)") _rampJumpDP = CreateDP(0x6126430);
         }
+
+        private static DeepPointer? CreateDP(int baseOffset, params int[] offsets) => baseOffset != 0 ? new("DOOMEternalx64vk.exe", baseOffset, offsets) : null;
 
         private void SigScans() {
             const string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";

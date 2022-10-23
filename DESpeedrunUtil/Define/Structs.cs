@@ -39,6 +39,9 @@
             public int Metrics { get; init; }
             public int MaxHz { get; init; }
             public int SkipIntro { get; init; }
+            public int AA { get; init; }
+            public int UNDelay { get; init; }
+            public int AutoContinue { get; init; }
 
             public int MinRes { get; init; }
             public int DynamicRes { get; init; }
@@ -57,6 +60,9 @@
                 Metrics = 0;
                 MaxHz = 0;
                 SkipIntro = 0;
+                AA = 0;
+                UNDelay = 0;
+                AutoContinue = 0;
                 MinRes = 0;
                 DynamicRes = 0;
                 RaiseMS = 0;

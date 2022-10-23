@@ -212,6 +212,15 @@ namespace DESpeedrunUtil {
                 }
             }
         }
+        private void AA_CheckChanged(object sender, EventArgs e) {
+            if(Hooked) _memory.SetCVAR(!((CheckBox) sender).Checked, "antialiasing");
+        }
+        private void UNDelay_CheckChanged(object sender, EventArgs e) {
+            if(Hooked) _memory.SetCVAR(!((CheckBox) sender).Checked, "undelay");
+        }
+        private void AutoContinue_CheckChanged(object sender, EventArgs e) {
+            if(Hooked) _memory.SetCVAR(((CheckBox) sender).Checked, "autocontinue");
+        }
         #endregion
 
         #region Buttons
@@ -319,12 +328,12 @@ namespace DESpeedrunUtil {
             }
         }
         private void MoreKeysButton_Click(object sender, EventArgs e) {
-            if(this.Height == 725) {
-                this.Height = 943;
+            if(this.Height == 820) {
+                this.Height = 1038;
                 extraFPSHotkeysPanel.Visible = true;
                 showMoreKeysButton.Text = "Hide Extra FPS Hotkeys";
             }else {
-                this.Height = 725;
+                this.Height = 820;
                 extraFPSHotkeysPanel.Visible = false;
                 showMoreKeysButton.Text = "Show More FPS Hotkeys";
             }
@@ -370,6 +379,9 @@ namespace DESpeedrunUtil {
             _steamID3 = Properties.Settings.Default.SteamID3;
             replaceProfileCheckbox.Checked = Properties.Settings.Default.ReplaceProfile;
             enableMaxFPSCheckbox.Checked = Properties.Settings.Default.EnableMaxFPSLimit;
+            antiAliasingCheckbox.Checked = !Properties.Settings.Default.AntiAliasing;
+            unDelayCheckbox.Checked = !Properties.Settings.Default.UNDelay;
+            autoContinueCheckbox.Checked = Properties.Settings.Default.AutoContinue;
             _extraGameDirectories = new List<string>();
             string directories = Properties.Settings.Default.ExtraGameDirectories;
             while(directories.Contains('|')) {
@@ -384,7 +396,7 @@ namespace DESpeedrunUtil {
                 Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
-            this.Height = 725;
+            this.Height = 820;
             if(!IsFormOnScreen() || loc == Point.Empty) Location = defaultLocation;
             Log.Information("Loaded user settings");
 

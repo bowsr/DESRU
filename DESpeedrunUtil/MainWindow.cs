@@ -842,6 +842,11 @@ namespace DESpeedrunUtil {
                 if(autoDynamicCheckbox.Checked) _memory.ScheduleDynamicScaling(_targetFPS);
             }
             _memory.SetMaxHz((enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
+
+            _memory.SetCVAR(!antiAliasingCheckbox.Checked, "antialiasing");
+            _memory.SetCVAR(!unDelayCheckbox.Checked, "undelay");
+            _memory.SetCVAR(autoContinueCheckbox.Checked, "autocontinue");
+
             _memory.MemoryTimer.Start();
             _firstRun = false;
             return true;
@@ -878,6 +883,9 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
             Properties.Settings.Default.ResScaleKey = (int) _hotkeys.ResScaleHotkey;
             Properties.Settings.Default.EnableMaxFPSLimit = enableMaxFPSCheckbox.Checked;
+            Properties.Settings.Default.AntiAliasing = !antiAliasingCheckbox.Checked;
+            Properties.Settings.Default.UNDelay = !unDelayCheckbox.Checked;
+            Properties.Settings.Default.AutoContinue = autoContinueCheckbox.Checked;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
             var dirs = "";
@@ -973,6 +981,9 @@ namespace DESpeedrunUtil {
             autorunMacroCheckbox.Font = EternalUIRegular;
             enableHotkeysCheckbox.Font = EternalUIRegular;
             enableMaxFPSCheckbox.Font = EternalUIRegular;
+            antiAliasingCheckbox.Font = EternalUIRegular;
+            unDelayCheckbox.Font = EternalUIRegular;
+            autoContinueCheckbox.Font = EternalUIRegular;
             gameStatus.Font = EternalUIRegular;
             currentFPSCap.Font = EternalUIRegular;
             macroStatus.Font = EternalUIRegular;
@@ -1040,6 +1051,7 @@ namespace DESpeedrunUtil {
             helpButton.Font = EternalUIBold;
             unlockResButton.Font = EternalUIBold;
             showMoreKeysButton.Font = EternalUIBold;
+            cvarLabel.Font = EternalUIBold;
 
             // Eternal Logo Bold 14point
             hotkeysTitle.Font = EternalLogoBold;

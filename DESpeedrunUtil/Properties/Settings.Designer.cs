@@ -250,5 +250,41 @@ namespace DESpeedrunUtil.Properties {
                 this["ExtraGameDirectories"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool AntiAliasing {
+            get {
+                return ((bool)(this["AntiAliasing"]));
+            }
+            set {
+                this["AntiAliasing"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool UNDelay {
+            get {
+                return ((bool)(this["UNDelay"]));
+            }
+            set {
+                this["UNDelay"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AutoContinue {
+            get {
+                return ((bool)(this["AutoContinue"]));
+            }
+            set {
+                this["AutoContinue"] = value;
+            }
+        }
     }
 }
