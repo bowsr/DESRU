@@ -3,7 +3,6 @@
 namespace DESpeedrunUtil {
     public partial class HelpPage: Form {
 
-        List<Panel> _infoPanels;
         List<Button> _buttons;
 
         public HelpPage() {
@@ -57,12 +56,9 @@ namespace DESpeedrunUtil {
         }
 
         private void HelpPage_Load(object sender, EventArgs e) {
-            var loc = blankPanel.Location;
             foreach(Button b in _buttons) 
                 b.Enabled = true;
             blankPanel.Visible = true;
-            this.Width = 800;
-            this.Height = 700;
             this.Location = new Point(
                 Screen.PrimaryScreen.WorkingArea.Left + (Screen.PrimaryScreen.WorkingArea.Width / 2 - (this.Width / 2)),
                 Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));

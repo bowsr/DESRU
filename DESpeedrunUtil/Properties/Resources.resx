@@ -176,10 +176,14 @@ Normally console commands are not allowed, but these are some of the very few ex
     <value>In the bottom left of the DESRU window, there's a section with a few miscellaneous options.
 
 You can enable/disable the macro and hotkeys from here, instead of removing binds.
-
 You can specify your desired maximum FPS that DOOM Eternal will run at.
-
 You can also disable the max FPS limiter here. Hotkeys will still work, and you will need to limit your FPS to 250 or lower through external means, like through RTSS or NVIDIA Control Panel.
+
+Under the CVAR section, you'll find three checkboxes which will toggle various in-game variables.
+The first will toggle anti-aliasing. This can help boost your performance if needed.
+(note: this option does nothing if you have DLSS enabled)
+The second will toggle the forced delay before you're able to quit out of an Ultra-Nightmare run.
+And the third, if enabled, will cause load screens to automatically continue, so you don't need to press any button.
 
 There's also a button to toggle a firewall rule blocking DOOM Eternal from accessing the internet. This is to prevent the download of server side balance patches, which can affect the single player campaign.
 This firewall rule is REQUIRED to exist during speedruns, so make sure the Info Panel shows "Blocked."

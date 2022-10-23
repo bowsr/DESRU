@@ -119,12 +119,10 @@ namespace DESpeedrunUtil.Properties {
         ///   Looks up a localized string similar to In the bottom left of the DESRU window, there&apos;s a section with a few miscellaneous options.
         ///
         ///You can enable/disable the macro and hotkeys from here, instead of removing binds.
-        ///
         ///You can specify your desired maximum FPS that DOOM Eternal will run at.
-        ///
         ///You can also disable the max FPS limiter here. Hotkeys will still work, and you will need to limit your FPS to 250 or lower through external means, like through RTSS or NVIDIA Control Panel.
         ///
-        ///There&apos;s also a button to toggle a firewall rule blocking DOOM  [rest of string was truncated]&quot;;.
+        ///Under the CVAR section, you&apos;ll find three checkboxes which will to [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string HelpPage_Options {
             get {

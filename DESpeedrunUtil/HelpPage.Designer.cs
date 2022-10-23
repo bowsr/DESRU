@@ -51,7 +51,7 @@
             this.closeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.closeButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.closeButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.closeButton.Location = new System.Drawing.Point(650, 621);
+            this.closeButton.Location = new System.Drawing.Point(650, 721);
             this.closeButton.Name = "closeButton";
             this.closeButton.Size = new System.Drawing.Size(122, 28);
             this.closeButton.TabIndex = 8;
@@ -79,7 +79,7 @@
             this.helpTextbox.Multiline = true;
             this.helpTextbox.Name = "helpTextbox";
             this.helpTextbox.ReadOnly = true;
-            this.helpTextbox.Size = new System.Drawing.Size(542, 482);
+            this.helpTextbox.Size = new System.Drawing.Size(542, 582);
             this.helpTextbox.TabIndex = 0;
             this.helpTextbox.TabStop = false;
             // 
@@ -224,7 +224,7 @@
             this.blankPanel.Controls.Add(this.helpTextbox);
             this.blankPanel.Location = new System.Drawing.Point(222, 125);
             this.blankPanel.Name = "blankPanel";
-            this.blankPanel.Size = new System.Drawing.Size(550, 490);
+            this.blankPanel.Size = new System.Drawing.Size(550, 590);
             this.blankPanel.TabIndex = 11;
             this.blankPanel.Tag = "blank";
             // 
@@ -249,7 +249,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(784, 661);
+            this.ClientSize = new System.Drawing.Size(784, 761);
             this.Controls.Add(this.titleText);
             this.Controls.Add(this.blankPanel);
             this.Controls.Add(this.helpTabButton6);
