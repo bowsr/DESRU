@@ -148,6 +148,9 @@ namespace DESpeedrunUtil {
                 CloseLogger();
                 return;
             }
+
+            if(File.Exists(@".\offsets.json")) File.Delete(@".\offsets.json");
+
             try {
                 Application.Run(new MainWindow());
             }catch(Exception e) {

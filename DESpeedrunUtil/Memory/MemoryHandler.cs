@@ -26,7 +26,7 @@ namespace DESpeedrunUtil.Memory {
                 0.488f, 0.456f, 0.424f, 0.392f, 0.36f, 0.328f, 0.296f, 0.264f, 
                 0.232f, 0.2f, 0.168f, 0.136f, 0.104f, 0.072f, 0.04f, 0.01f };
 
-        public static List<KnownOffsets> OffsetList = new();
+        public static List<KnownOffsets> OffsetList = new(), ScannedOffsetList = new();
         KnownOffsets _currentOffsets;
 
         DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _dynamicResDP, _resScalesDP,
@@ -596,16 +596,12 @@ namespace DESpeedrunUtil.Memory {
             Log.Information("Scanning for resolution scale values.");
             res = scanner.Scan(resTarget);
             if(res != IntPtr.Zero) Log.Information("Found resolution scale values.");
-            KnownOffsets ko = new(Version,
-                GetOffset(r1),
-                GetOffset(r6),
-                0, 0, 0, 0, 0,
-                0, 0, 0, 0, GetOffset(res));
-            OffsetList.Add(ko);
+            KnownOffsets ko = new(Version, GetOffset(r1), GetOffset(r6), GetOffset(res));
+            ScannedOffsetList.Add(ko);
             _currentOffsets = ko;
 
-            string jsonString = JsonConvert.SerializeObject(OffsetList, Formatting.Indented);
-            File.WriteAllText(@".\offsets.json", jsonString);
+            string jsonString = JsonConvert.SerializeObject(ScannedOffsetList, Formatting.Indented);
+            File.WriteAllText(@".\scannedOffsets.json", jsonString);
             Log.Information("Added Unknown Version ({ModuleSize}) to known offset list.", _moduleSize);
         }
         private int GetOffset(IntPtr pointer) => (pointer != IntPtr.Zero) ? (int) (pointer.ToInt64() - _game.MainModule.BaseAddress.ToInt64()) : 0;
@@ -644,7 +640,14 @@ namespace DESpeedrunUtil.Memory {
                     return true;
                 }
             }
-            Log.Warning("Offset List does not contain {Version}.", Version);
+            foreach(KnownOffsets k in ScannedOffsetList) {
+                if(k.Version == Version) {
+                    _currentOffsets = k;
+                    Log.Information("Version {Version} is not officially supported. Using previously scanned offsets.", Version);
+                    return true;
+                }
+            }
+            Log.Warning("Offset Lists do not contain {Version}.", Version);
             return false;
         }
     }

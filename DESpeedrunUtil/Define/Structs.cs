@@ -45,21 +45,19 @@
 
             public int ResScales { get; init; }
 
-            public KnownOffsets(string v, int r1, int r6,
-                                int gpuv, int gpu, int cpu,
-                                int perf, int hz, int min, int dyn, int msR, int msD, int res) {
+            public KnownOffsets(string v, int r1, int r6, int res) {
                 Version = v;
                 Row1 = r1;
                 Row6 = r6;
-                GPUVendor = gpuv;
-                GPUName = gpu;
-                CPU = cpu;
-                Metrics = perf;
-                MaxHz = hz;
-                MinRes = min;
-                DynamicRes = dyn;
-                RaiseMS = msR;
-                DropMS = msD;
+                GPUVendor = 0;
+                GPUName = 0;
+                CPU = 0;
+                Metrics = 0;
+                MaxHz = 0;
+                MinRes = 0;
+                DynamicRes = 0;
+                RaiseMS = 0;
+                DropMS = 0;
                 ResScales = res;
             }
         }

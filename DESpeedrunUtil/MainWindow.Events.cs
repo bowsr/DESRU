@@ -337,11 +337,8 @@ namespace DESpeedrunUtil {
 
         // Event method that runs upon loading of the MainWindow form.
         private void MainWindow_Load(object sender, EventArgs e) {
-            if(!File.Exists(@".\offsets.json")) {
-                File.WriteAllText(@".\offsets.json", System.Text.Encoding.UTF8.GetString(Properties.Resources.offsets));
-                Log.Information("offsets.json does not exist. Using template from application resources.");
-            }
-            MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(File.ReadAllText(@".\offsets.json"));
+            MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(System.Text.Encoding.UTF8.GetString(Properties.Resources.offsets));
+            if(File.Exists(@".\scannedOffsets.json")) MemoryHandler.ScannedOffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(File.ReadAllText(@".\scannedOffsets.json"));
 
             InitializeFonts();
             var titleBar = new DESRUShadowLabel(windowTitle.Font, WINDOW_TITLE, windowTitle.Location, Color.FromArgb(190, 34, 34), COLOR_FORM_BACK);
