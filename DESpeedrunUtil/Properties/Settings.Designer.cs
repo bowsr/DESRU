@@ -238,5 +238,17 @@ namespace DESpeedrunUtil.Properties {
                 this["ShowFPSLimitWarning"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string ExtraGameDirectories {
+            get {
+                return ((string)(this["ExtraGameDirectories"]));
+            }
+            set {
+                this["ExtraGameDirectories"] = value;
+            }
+        }
     }
 }

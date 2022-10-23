@@ -61,7 +61,7 @@ namespace DESpeedrunUtil {
         List<TextBox> _fpsLimitFields;
 
         string _gameDirectory = "", _steamDirectory = "", _steamInstallation = "", _steamID3 = "";
-        List<string>? _gameVersions;
+        List<string>? _gameVersions, _extraGameDirectories;
 
         bool _trackScroll = false, _displayPattern = false, _direction = false, _directionChanged = false;
         string _storedDisplay = "";
@@ -565,7 +565,6 @@ namespace DESpeedrunUtil {
                     if(Directory.Exists(dir + "DOOMEternal")) {
                         var exe = dir + "DOOMEternal\\DOOMEternalx64vk.exe";
                         if(File.Exists(exe)) {
-                            _steamDirectory = dir;
                             _gameDirectory = dir + "DOOMEternal";
                             break;
                         }
@@ -573,19 +572,24 @@ namespace DESpeedrunUtil {
                 }
             }
             if(_gameDirectory == string.Empty) {
-                Log.Error("Couldn't find the game installation!");
-                using GameDirectoryDialog gameSelection = new();
-                if(gameSelection.ShowDialog() == DialogResult.OK) {
-                    _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
-                    Log.Information("User manually selected their game directory.");
-                    DetectAllGameVersions();
+                var gpDir = @"C:\XboxGames\Doom Eternal - PC\Content";
+                if(File.Exists(gpDir + "\\DOOMEternalx64vk.exe")) {
+                    _gameDirectory = gpDir;
+                    Log.Information("Found Gamepass installation.");
                 }else {
-                    Log.CloseAndFlush();
-                    this.Close();
+                    Log.Error("Couldn't find the game installation!");
+                    using GameDirectoryDialog gameSelection = new();
+                    if(gameSelection.ShowDialog() == DialogResult.OK) {
+                        _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
+                        Log.Information("User manually selected their game directory.");
+                    }else {
+                        Log.CloseAndFlush();
+                        this.Close();
+                    }
+                    gameSelection.Dispose();
                 }
-                gameSelection.Dispose();
             }
-            _steamDirectory = _gameDirectory.Remove(_gameDirectory.IndexOf("\\DOOMEternal"));
+            if(_gameDirectory.ToLower().Contains("steam")) _steamDirectory = _gameDirectory.Remove(_gameDirectory.IndexOf("\\DOOMEternal"));
             DetectAllGameVersions();
         }
 
@@ -753,6 +757,14 @@ namespace DESpeedrunUtil {
                     continue;
                 }
             }
+            foreach(string dir in _extraGameDirectories) {
+                try {
+                    File.Delete(dir + "\\XINPUT1_3.dll");
+                }catch(Exception e) {
+                    Log.Error(e, "An error occured when attempting to uninstall meath00k from directory: {Directory}", dir);
+                    continue;
+                }
+            }
         }
 
         // Hooks into the DOOMEternalx64vk.exe process, then sets up pointers for memory reading/writing.
@@ -842,6 +854,11 @@ namespace DESpeedrunUtil {
             if(gamePath.ToLower().Contains("steam")) {
                 File.WriteAllText(gamePath[..gamePath.LastIndexOf('\\')] + "\\gameVersion.txt", "version=" + _memory.Version);
             }
+
+            if(!gamePath.Contains(_gameDirectory) && _steamDirectory != string.Empty && !gamePath.Contains(_steamDirectory)) {
+                _extraGameDirectories.Add(gamePath[..gamePath.LastIndexOf('\\')]);
+            }
+
             if(!_memory.CanCapFPS()) _hotkeys.DisableHotkeys();
         }
 
@@ -863,6 +880,9 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.EnableMaxFPSLimit = enableMaxFPSCheckbox.Checked;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
+            var dirs = "";
+            foreach(string d in _extraGameDirectories) dirs += d + "|";
+            Properties.Settings.Default.ExtraGameDirectories = dirs;
             Properties.Settings.Default.Save();
         }
 

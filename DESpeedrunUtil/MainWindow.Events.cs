@@ -303,6 +303,15 @@ namespace DESpeedrunUtil {
                         File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + " " + v + "\\XINPUT1_3.dll");
                     }catch(Exception ex) {
                         Log.Error(ex, "An error occured when attempting to install meath00k. v: {Version}", v);
+                        continue;
+                    }
+                }
+                foreach(string dir in _extraGameDirectories) {
+                    try {
+                        File.Copy(@".\meath00k\XINPUT1_3.dll", dir + "\\XINPUT1_3.dll");
+                    }catch(Exception ex) {
+                        Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", dir);
+                        continue;
                     }
                 }
                 if(Hooked) meathookRestartLabel.ForeColor = COLOR_TEXT_FORE;
@@ -364,6 +373,13 @@ namespace DESpeedrunUtil {
             _steamID3 = Properties.Settings.Default.SteamID3;
             replaceProfileCheckbox.Checked = Properties.Settings.Default.ReplaceProfile;
             enableMaxFPSCheckbox.Checked = Properties.Settings.Default.EnableMaxFPSLimit;
+            _extraGameDirectories = new List<string>();
+            string directories = Properties.Settings.Default.ExtraGameDirectories;
+            while(directories.Contains('|')) {
+                var d = directories[..directories.IndexOf('|')];
+                if(File.Exists(d + "\\DOOMEternalx64vk.exe")) _extraGameDirectories.Add(d);
+                directories = directories.Replace(d + "|", "");
+            }
             UpdateHotkeyAndInputFields();
 
             var defaultLocation = new Point(
