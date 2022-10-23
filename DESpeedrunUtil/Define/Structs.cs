@@ -30,14 +30,7 @@
             public string Version { get; init; }
 
             public int Row1 { get; init; }
-            public int Row2 { get; init; }
-            public int Row3 { get; init; }
-            public int Row4 { get; init; }
-            public int Row5 { get; init; }
             public int Row6 { get; init; }
-            public int Row7 { get; init; }
-            public int Row8 { get; init; }
-            public int Row9 { get; init; }
 
             public int GPUVendor { get; init; }
             public int GPUName { get; init; }
@@ -52,18 +45,12 @@
 
             public int ResScales { get; init; }
 
-            public KnownOffsets(string v, int r1, int r2, int r3, int r4, int r5, int r6, int r7, int r8, int r9,
-                                int gpuv, int gpu, int cpu, int perf, int hz, int min, int dyn, int msR, int msD, int res) {
+            public KnownOffsets(string v, int r1, int r6,
+                                int gpuv, int gpu, int cpu,
+                                int perf, int hz, int min, int dyn, int msR, int msD, int res) {
                 Version = v;
                 Row1 = r1;
-                Row2 = r2;
-                Row3 = r3;
-                Row4 = r4;
-                Row5 = r5;
                 Row6 = r6;
-                Row7 = r7;
-                Row8 = r8;
-                Row9 = r9;
                 GPUVendor = gpuv;
                 GPUName = gpu;
                 CPU = cpu;

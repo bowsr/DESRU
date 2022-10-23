@@ -542,7 +542,7 @@ namespace DESpeedrunUtil.Memory {
                 SigScans();
             }
             if(_currentOffsets.Row1 != 0) _row1DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row1);
-            if(_currentOffsets.Row8 != 0) _row6DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row6);
+            if(_currentOffsets.Row6 != 0) _row6DP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.Row6);
 
             if(_currentOffsets.ResScales != 0) _resScalesDP = new DeepPointer("DOOMEternalx64vk.exe", _currentOffsets.ResScales);
 
@@ -572,8 +572,8 @@ namespace DESpeedrunUtil.Memory {
             // This only needs to be done on the first hook of the game. Offsets can be saved since they're not pointer chains.
             // Despite knowing the offsets, they will still need to be placed in a DeepPointer to prevent massive memory usage and a possible leak
             Log.Information("Signature Scans initiated. moduleSize: {ModuleSize}", _moduleSize);
-            IntPtr r1, r2, r3, r4, r5, r6, r7, r8, r9, res;
-            r1 = r2 = r3 = r4 = r5 = r6 = r7 = r8 = r9 = res = IntPtr.Zero;
+            IntPtr r1, r6, res;
+            r1 = r6 = res = IntPtr.Zero;
             SigScanTarget fpsTarget = new(SIGSCAN_FPS);
             SigScanTarget dlssTarget = new(SIGSCAN_DLSS);
             SigScanTarget resTarget = new(SIGSCAN_RES_SCALES);
@@ -582,22 +582,12 @@ namespace DESpeedrunUtil.Memory {
             r1 = scanner.Scan(fpsTarget);
             if(r1 != IntPtr.Zero) {
                 Log.Information("Found FPS counter.");
-                r2 = r1 + OFFSET_ROW2;
-                r3 = r1 + OFFSET_ROW3;
-                r4 = r1 + OFFSET_ROW4;
-                r5 = r1 + OFFSET_ROW5;
-                r6 = r1 + OFFSET_ROW6;
-                r7 = r1 + OFFSET_ROW6 + OFFSET_ROW7;
-                r8 = IntPtr.Zero;
-                r9 = IntPtr.Zero;
+                r6 = IntPtr.Zero;
                 Log.Information("Scanning for DLSS string.");
                 IntPtr dlss = scanner.Scan(dlssTarget);
                 if(dlss.ToInt64() != 0) {
                     Log.Information("Found DLSS string.");
                     r6 = dlss;
-                    r7 = dlss + OFFSET_ROW7;
-                    r8 = dlss + OFFSET_ROW8;
-                    r9 = dlss + OFFSET_ROW9;
                 }
             }else {
                 Log.Error("Could not find the perf metrics rows in memory. Is this even DOOM Eternal?");
@@ -608,14 +598,7 @@ namespace DESpeedrunUtil.Memory {
             if(res != IntPtr.Zero) Log.Information("Found resolution scale values.");
             KnownOffsets ko = new(Version,
                 GetOffset(r1),
-                GetOffset(r2),
-                GetOffset(r3),
-                GetOffset(r4),
-                GetOffset(r5),
                 GetOffset(r6),
-                GetOffset(r7),
-                GetOffset(r8),
-                GetOffset(r9),
                 0, 0, 0, 0, 0,
                 0, 0, 0, 0, GetOffset(res));
             OffsetList.Add(ko);
