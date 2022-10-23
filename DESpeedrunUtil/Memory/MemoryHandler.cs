@@ -95,7 +95,7 @@ namespace DESpeedrunUtil.Memory {
                 if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
                 if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
                 _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
-                _row2 = _currentOffsets.Version.Replace(" Rev ", "r");
+                _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
                 if(_metricsPtr == IntPtr.Zero) _row2 = string.Empty;
                 if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
@@ -201,6 +201,7 @@ namespace DESpeedrunUtil.Memory {
                 if(!_osdFlagCheats && processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
                     SetFlag(true, "restart");
                     _cheatString = "RESTART GAME";
+                    Log.Warning("CheatEngine process found running.");
                 }
             }
         }
@@ -529,6 +530,7 @@ namespace DESpeedrunUtil.Memory {
                 478367744 => "6.66 Rev 1",
                 475570176 => "6.66 Rev 1.1",
                 510251008 => "6.66 Rev 2",
+                445820928 => "6.66 Rev 2 (Gamepass)",
                 _ => "Unknown (" + _moduleSize.ToString() + ")",
             };
         }
@@ -647,6 +649,7 @@ namespace DESpeedrunUtil.Memory {
                 "6.66 Rev 1" => true,
                 "6.66 Rev 1.1" => true,
                 "6.66 Rev 2" => true,
+                "6.66 Rev 2 (Gamepass)" => true,
                 _ => false,
             };
         }
