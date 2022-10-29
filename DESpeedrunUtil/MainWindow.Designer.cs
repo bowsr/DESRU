@@ -2118,6 +2118,7 @@
             this.toolTip7500.AutoPopDelay = 7500;
             this.toolTip7500.InitialDelay = 500;
             this.toolTip7500.ReshowDelay = 100;
+            this.toolTip7500.ShowAlways = true;
             // 
             // MainWindow
             // 

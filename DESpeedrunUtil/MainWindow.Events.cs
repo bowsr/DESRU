@@ -426,7 +426,7 @@ namespace DESpeedrunUtil {
 
             _hotkeys.DisableHotkeys();
             _macro.Stop(false);
-            if(_memory != null) _memory.ClosingDESRU();
+            _memory?.ClosingDESRU();
 
             RawInputDevice.UnregisterDevice(HidUsageAndPage.Keyboard);
             RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);
