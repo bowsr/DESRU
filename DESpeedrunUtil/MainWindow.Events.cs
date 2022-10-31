@@ -200,6 +200,7 @@ namespace DESpeedrunUtil {
                     _memory.SetMaxHz(1000);
                     _memory.SetFlag(false, "limiter");
                 }
+                launchRTSSCheckbox.Visible = true;
                 System.Media.SystemSounds.Asterisk.Play();
                 MessageBox.Show("Disabling this option means you MUST limit your framerate to 250 or lower through external means.\n\n" +
                     "Common options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, etc.\n\n" +
@@ -209,6 +210,44 @@ namespace DESpeedrunUtil {
                 if(Hooked) {
                     _memory.SetMaxHz(_fpsDefault);
                     _memory.SetFlag(true, "limiter");
+                }
+                launchRTSSCheckbox.Visible = false;
+            }
+        }
+        private void LaunchRTSS_CheckChanged(object sender, EventArgs e) {
+            var checkbox = (CheckBox) sender;
+            if(checkbox.Checked) {
+                if(_rtssExecutable == string.Empty) {
+                    if(!DetectRTSSExecutable()) {
+                        System.Media.SystemSounds.Asterisk.Play();
+                        MessageBox.Show("Could not detect Rivatuner Statistics Server on this system.\n" +
+                            "Please select your RTSS.exe installation.", "RTSS Not Detected");
+                        using OpenFileDialog dialog = new();
+                        dialog.InitialDirectory = @"C:\";
+                        dialog.Filter = "Executable Files (*.exe)|*.exe";
+                        dialog.RestoreDirectory = true;
+                        bool first = true;
+                        string path = "";
+                        while(!path.EndsWith("RTSS.exe")) {
+                            if(!first) {
+                                System.Media.SystemSounds.Asterisk.Play();
+                                MessageBox.Show("Incorrect file. Please select RTSS.exe or hit cancel if you don't have RTSS installed.", "File Mismatch");
+                                dialog.InitialDirectory = dialog.FileName[..dialog.FileName.LastIndexOf('\\')];
+                            }
+                            if(dialog.ShowDialog() == DialogResult.OK) {
+                                Debug.WriteLine(dialog.FileName);
+                                path = dialog.FileName;
+                            }else {
+                                checkbox.Checked = false;
+                                return;
+                            }
+                            first = false;
+                        }
+                        _rtssExecutable = path;
+                    }
+                }
+                if(Process.GetProcesses().ToList().FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count == 0) {
+                    LaunchRTSS();
                 }
             }
         }
@@ -382,6 +421,10 @@ namespace DESpeedrunUtil {
             antiAliasingCheckbox.Checked = !Properties.Settings.Default.AntiAliasing;
             unDelayCheckbox.Checked = !Properties.Settings.Default.UNDelay;
             autoContinueCheckbox.Checked = Properties.Settings.Default.AutoContinue;
+            _rtssExecutable = Properties.Settings.Default.RTSSPath;
+            if(_rtssExecutable == string.Empty) DetectRTSSExecutable();
+            launchRTSSCheckbox.Visible = !Properties.Settings.Default.EnableMaxFPSLimit;
+            launchRTSSCheckbox.Checked = Properties.Settings.Default.LaunchRTSS;
             _extraGameDirectories = new List<string>();
             string directories = Properties.Settings.Default.ExtraGameDirectories;
             while(directories.Contains('|')) {

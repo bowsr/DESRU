@@ -286,5 +286,29 @@ namespace DESpeedrunUtil.Properties {
                 this["AutoContinue"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string RTSSPath {
+            get {
+                return ((string)(this["RTSSPath"]));
+            }
+            set {
+                this["RTSSPath"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool LaunchRTSS {
+            get {
+                return ((bool)(this["LaunchRTSS"]));
+            }
+            set {
+                this["LaunchRTSS"] = value;
+            }
+        }
     }
 }

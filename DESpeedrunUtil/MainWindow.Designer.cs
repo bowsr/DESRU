@@ -68,6 +68,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.launchRTSSCheckbox = new System.Windows.Forms.CheckBox();
             this.cvarLabel = new System.Windows.Forms.Label();
             this.autoContinueCheckbox = new System.Windows.Forms.CheckBox();
             this.unDelayCheckbox = new System.Windows.Forms.CheckBox();
@@ -78,6 +79,8 @@
             this.titleSeparator = new System.Windows.Forms.Panel();
             this.exitButton = new System.Windows.Forms.Button();
             this.statusPanel = new System.Windows.Forms.Panel();
+            this.rtssStatus = new System.Windows.Forms.Label();
+            this.rtssStatusLabel = new System.Windows.Forms.Label();
             this.hotkeyStatus = new System.Windows.Forms.Label();
             this.hotkeyStatusLabel = new System.Windows.Forms.Label();
             this.resScaleStatus = new System.Windows.Forms.Label();
@@ -338,7 +341,7 @@
             this.enableHotkeysCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableHotkeysCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.enableHotkeysCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.enableHotkeysCheckbox.Location = new System.Drawing.Point(6, 33);
+            this.enableHotkeysCheckbox.Location = new System.Drawing.Point(6, 29);
             this.enableHotkeysCheckbox.Name = "enableHotkeysCheckbox";
             this.enableHotkeysCheckbox.Size = new System.Drawing.Size(165, 22);
             this.enableHotkeysCheckbox.TabIndex = 9;
@@ -442,7 +445,7 @@
             this.versionDropDownSelector.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.versionDropDownSelector.ForeColor = System.Drawing.Color.Black;
             this.versionDropDownSelector.FormattingEnabled = true;
-            this.versionDropDownSelector.Location = new System.Drawing.Point(165, 13);
+            this.versionDropDownSelector.Location = new System.Drawing.Point(165, 6);
             this.versionDropDownSelector.Name = "versionDropDownSelector";
             this.versionDropDownSelector.Size = new System.Drawing.Size(123, 26);
             this.versionDropDownSelector.TabIndex = 9;
@@ -453,7 +456,7 @@
             this.versionChangedLabel.AutoSize = true;
             this.versionChangedLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.versionChangedLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.versionChangedLabel.Location = new System.Drawing.Point(6, 17);
+            this.versionChangedLabel.Location = new System.Drawing.Point(6, 10);
             this.versionChangedLabel.Name = "versionChangedLabel";
             this.versionChangedLabel.Size = new System.Drawing.Size(141, 18);
             this.versionChangedLabel.TabIndex = 9;
@@ -466,7 +469,7 @@
             this.refreshVersionsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.refreshVersionsButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.refreshVersionsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.refreshVersionsButton.Location = new System.Drawing.Point(154, 85);
+            this.refreshVersionsButton.Location = new System.Drawing.Point(154, 60);
             this.refreshVersionsButton.Name = "refreshVersionsButton";
             this.refreshVersionsButton.Size = new System.Drawing.Size(145, 32);
             this.refreshVersionsButton.TabIndex = 11;
@@ -482,7 +485,7 @@
             this.changeVersionButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.changeVersionButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.changeVersionButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.changeVersionButton.Location = new System.Drawing.Point(3, 85);
+            this.changeVersionButton.Location = new System.Drawing.Point(3, 60);
             this.changeVersionButton.Name = "changeVersionButton";
             this.changeVersionButton.Size = new System.Drawing.Size(145, 32);
             this.changeVersionButton.TabIndex = 10;
@@ -510,7 +513,7 @@
             this.defaultFPSLabel.AutoSize = true;
             this.defaultFPSLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.defaultFPSLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.defaultFPSLabel.Location = new System.Drawing.Point(197, 59);
+            this.defaultFPSLabel.Location = new System.Drawing.Point(197, 51);
             this.defaultFPSLabel.Name = "defaultFPSLabel";
             this.defaultFPSLabel.Size = new System.Drawing.Size(64, 18);
             this.defaultFPSLabel.TabIndex = 20;
@@ -535,7 +538,7 @@
             this.versionTitle.AutoSize = true;
             this.versionTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.versionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.versionTitle.Location = new System.Drawing.Point(323, 362);
+            this.versionTitle.Location = new System.Drawing.Point(323, 373);
             this.versionTitle.Name = "versionTitle";
             this.versionTitle.Size = new System.Drawing.Size(248, 21);
             this.versionTitle.TabIndex = 22;
@@ -729,9 +732,9 @@
             this.panel1.Controls.Add(this.versionChangedLabel);
             this.panel1.Controls.Add(this.changeVersionButton);
             this.panel1.Controls.Add(this.refreshVersionsButton);
-            this.panel1.Location = new System.Drawing.Point(323, 391);
+            this.panel1.Location = new System.Drawing.Point(323, 402);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(304, 122);
+            this.panel1.Size = new System.Drawing.Size(304, 97);
             this.panel1.TabIndex = 30;
             // 
             // replaceProfileCheckbox
@@ -739,7 +742,7 @@
             this.replaceProfileCheckbox.AutoSize = true;
             this.replaceProfileCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.replaceProfileCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.replaceProfileCheckbox.Location = new System.Drawing.Point(6, 51);
+            this.replaceProfileCheckbox.Location = new System.Drawing.Point(6, 36);
             this.replaceProfileCheckbox.Name = "replaceProfileCheckbox";
             this.replaceProfileCheckbox.Size = new System.Drawing.Size(203, 22);
             this.replaceProfileCheckbox.TabIndex = 30;
@@ -750,6 +753,7 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.launchRTSSCheckbox);
             this.panel2.Controls.Add(this.cvarLabel);
             this.panel2.Controls.Add(this.autoContinueCheckbox);
             this.panel2.Controls.Add(this.unDelayCheckbox);
@@ -768,12 +772,26 @@
             this.panel2.Size = new System.Drawing.Size(304, 251);
             this.panel2.TabIndex = 31;
             // 
+            // launchRTSSCheckbox
+            // 
+            this.launchRTSSCheckbox.AutoSize = true;
+            this.launchRTSSCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.launchRTSSCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.launchRTSSCheckbox.Location = new System.Drawing.Point(22, 71);
+            this.launchRTSSCheckbox.Name = "launchRTSSCheckbox";
+            this.launchRTSSCheckbox.Size = new System.Drawing.Size(190, 22);
+            this.launchRTSSCheckbox.TabIndex = 36;
+            this.launchRTSSCheckbox.Text = "Launch RTSS with DESRU";
+            this.launchRTSSCheckbox.UseVisualStyleBackColor = true;
+            this.launchRTSSCheckbox.Visible = false;
+            this.launchRTSSCheckbox.CheckedChanged += new System.EventHandler(this.LaunchRTSS_CheckChanged);
+            // 
             // cvarLabel
             // 
             this.cvarLabel.AutoSize = true;
             this.cvarLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.cvarLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.cvarLabel.Location = new System.Drawing.Point(3, 83);
+            this.cvarLabel.Location = new System.Drawing.Point(3, 95);
             this.cvarLabel.Name = "cvarLabel";
             this.cvarLabel.Size = new System.Drawing.Size(55, 18);
             this.cvarLabel.TabIndex = 35;
@@ -797,7 +815,7 @@
             this.unDelayCheckbox.AutoSize = true;
             this.unDelayCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.unDelayCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.unDelayCheckbox.Location = new System.Drawing.Point(6, 129);
+            this.unDelayCheckbox.Location = new System.Drawing.Point(6, 133);
             this.unDelayCheckbox.Name = "unDelayCheckbox";
             this.unDelayCheckbox.Size = new System.Drawing.Size(273, 22);
             this.unDelayCheckbox.TabIndex = 32;
@@ -810,7 +828,7 @@
             this.antiAliasingCheckbox.AutoSize = true;
             this.antiAliasingCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.antiAliasingCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.antiAliasingCheckbox.Location = new System.Drawing.Point(6, 104);
+            this.antiAliasingCheckbox.Location = new System.Drawing.Point(6, 112);
             this.antiAliasingCheckbox.Name = "antiAliasingCheckbox";
             this.antiAliasingCheckbox.Size = new System.Drawing.Size(158, 22);
             this.antiAliasingCheckbox.TabIndex = 31;
@@ -825,7 +843,7 @@
             this.enableMaxFPSCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableMaxFPSCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.enableMaxFPSCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.enableMaxFPSCheckbox.Location = new System.Drawing.Point(6, 58);
+            this.enableMaxFPSCheckbox.Location = new System.Drawing.Point(6, 50);
             this.enableMaxFPSCheckbox.Name = "enableMaxFPSCheckbox";
             this.enableMaxFPSCheckbox.Size = new System.Drawing.Size(163, 22);
             this.enableMaxFPSCheckbox.TabIndex = 30;
@@ -839,7 +857,7 @@
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.defaultFPS);
             this.panel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.panel3.Location = new System.Drawing.Point(264, 55);
+            this.panel3.Location = new System.Drawing.Point(264, 47);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(34, 26);
             this.panel3.TabIndex = 29;
@@ -888,6 +906,8 @@
             // 
             this.statusPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.statusPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.statusPanel.Controls.Add(this.rtssStatus);
+            this.statusPanel.Controls.Add(this.rtssStatusLabel);
             this.statusPanel.Controls.Add(this.hotkeyStatus);
             this.statusPanel.Controls.Add(this.hotkeyStatusLabel);
             this.statusPanel.Controls.Add(this.resScaleStatus);
@@ -908,8 +928,30 @@
             this.statusPanel.Controls.Add(this.gameStatus);
             this.statusPanel.Location = new System.Drawing.Point(323, 93);
             this.statusPanel.Name = "statusPanel";
-            this.statusPanel.Size = new System.Drawing.Size(304, 246);
+            this.statusPanel.Size = new System.Drawing.Size(304, 273);
             this.statusPanel.TabIndex = 31;
+            // 
+            // rtssStatus
+            // 
+            this.rtssStatus.AutoSize = true;
+            this.rtssStatus.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.rtssStatus.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.rtssStatus.Location = new System.Drawing.Point(171, 248);
+            this.rtssStatus.Name = "rtssStatus";
+            this.rtssStatus.Size = new System.Drawing.Size(14, 18);
+            this.rtssStatus.TabIndex = 47;
+            this.rtssStatus.Text = "-";
+            // 
+            // rtssStatusLabel
+            // 
+            this.rtssStatusLabel.AutoSize = true;
+            this.rtssStatusLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.rtssStatusLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.rtssStatusLabel.Location = new System.Drawing.Point(3, 248);
+            this.rtssStatusLabel.Name = "rtssStatusLabel";
+            this.rtssStatusLabel.Size = new System.Drawing.Size(48, 18);
+            this.rtssStatusLabel.TabIndex = 46;
+            this.rtssStatusLabel.Text = "RTSS:";
             // 
             // hotkeyStatus
             // 
@@ -1114,7 +1156,7 @@
             this.panel4.Controls.Add(this.minResPanel);
             this.panel4.Location = new System.Drawing.Point(12, 351);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(304, 162);
+            this.panel4.Size = new System.Drawing.Size(304, 148);
             this.panel4.TabIndex = 31;
             // 
             // dynamicTargetLabel
@@ -1122,7 +1164,7 @@
             this.dynamicTargetLabel.AutoSize = true;
             this.dynamicTargetLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.dynamicTargetLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.dynamicTargetLabel.Location = new System.Drawing.Point(22, 96);
+            this.dynamicTargetLabel.Location = new System.Drawing.Point(22, 86);
             this.dynamicTargetLabel.Name = "dynamicTargetLabel";
             this.dynamicTargetLabel.Size = new System.Drawing.Size(187, 18);
             this.dynamicTargetLabel.TabIndex = 33;
@@ -1133,7 +1175,7 @@
             this.targetFPSLabel.AutoSize = true;
             this.targetFPSLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.targetFPSLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.targetFPSLabel.Location = new System.Drawing.Point(264, 96);
+            this.targetFPSLabel.Location = new System.Drawing.Point(264, 86);
             this.targetFPSLabel.Name = "targetFPSLabel";
             this.targetFPSLabel.Size = new System.Drawing.Size(33, 18);
             this.targetFPSLabel.TabIndex = 30;
@@ -1145,7 +1187,7 @@
             this.targetFPSPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.targetFPSPanel.Controls.Add(this.targetFPSInput);
             this.targetFPSPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.targetFPSPanel.Location = new System.Drawing.Point(215, 92);
+            this.targetFPSPanel.Location = new System.Drawing.Point(215, 82);
             this.targetFPSPanel.Name = "targetFPSPanel";
             this.targetFPSPanel.Size = new System.Drawing.Size(46, 26);
             this.targetFPSPanel.TabIndex = 30;
@@ -1171,7 +1213,7 @@
             this.autoDynamicCheckbox.AutoSize = true;
             this.autoDynamicCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.autoDynamicCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.autoDynamicCheckbox.Location = new System.Drawing.Point(6, 33);
+            this.autoDynamicCheckbox.Location = new System.Drawing.Point(6, 29);
             this.autoDynamicCheckbox.Name = "autoDynamicCheckbox";
             this.autoDynamicCheckbox.Size = new System.Drawing.Size(209, 22);
             this.autoDynamicCheckbox.TabIndex = 32;
@@ -1199,7 +1241,7 @@
             this.unlockResButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.unlockResButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.unlockResButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.unlockResButton.Location = new System.Drawing.Point(3, 125);
+            this.unlockResButton.Location = new System.Drawing.Point(3, 111);
             this.unlockResButton.Name = "unlockResButton";
             this.unlockResButton.Size = new System.Drawing.Size(296, 32);
             this.unlockResButton.TabIndex = 12;
@@ -1212,7 +1254,7 @@
             this.percentLabel.AutoSize = true;
             this.percentLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.percentLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.percentLabel.Location = new System.Drawing.Point(263, 63);
+            this.percentLabel.Location = new System.Drawing.Point(263, 58);
             this.percentLabel.Name = "percentLabel";
             this.percentLabel.Size = new System.Drawing.Size(21, 18);
             this.percentLabel.TabIndex = 31;
@@ -1223,7 +1265,7 @@
             this.minResLabel.AutoSize = true;
             this.minResLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.minResLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.minResLabel.Location = new System.Drawing.Point(36, 63);
+            this.minResLabel.Location = new System.Drawing.Point(36, 58);
             this.minResLabel.Name = "minResLabel";
             this.minResLabel.Size = new System.Drawing.Size(173, 18);
             this.minResLabel.TabIndex = 30;
@@ -1235,7 +1277,7 @@
             this.minResPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.minResPanel.Controls.Add(this.minResInput);
             this.minResPanel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.minResPanel.Location = new System.Drawing.Point(215, 59);
+            this.minResPanel.Location = new System.Drawing.Point(215, 54);
             this.minResPanel.Name = "minResPanel";
             this.minResPanel.Size = new System.Drawing.Size(46, 26);
             this.minResPanel.TabIndex = 29;
@@ -2364,5 +2406,8 @@
         private CheckBox autoContinueCheckbox;
         private CheckBox unDelayCheckbox;
         private CheckBox antiAliasingCheckbox;
+        private CheckBox launchRTSSCheckbox;
+        private Label rtssStatus;
+        private Label rtssStatusLabel;
     }
 }

@@ -59,8 +59,9 @@ namespace DESpeedrunUtil {
 
         List<Label> _hotkeyFields;
         List<TextBox> _fpsLimitFields;
+        List<Process> _openProcesses;
 
-        string _gameDirectory = "", _steamDirectory = "", _steamInstallation = "", _steamID3 = "";
+        string _gameDirectory = "", _steamDirectory = "", _steamInstallation = "", _steamID3 = "", _rtssExecutable = "";
         List<string>? _gameVersions, _extraGameDirectories;
 
         bool _trackScroll = false, _displayPattern = false, _direction = false, _directionChanged = false;
@@ -75,6 +76,7 @@ namespace DESpeedrunUtil {
             InitializeComponent();
             _hotkeyFields = new();
             _fpsLimitFields = new();
+            _openProcesses = new();
             CollectHotkeyAndLimitFields(this);
 
             _formTimer = new Timer();
@@ -237,8 +239,9 @@ namespace DESpeedrunUtil {
                     _startingMacro = false;
                 }else {
                     if(_enableMacro) {
-                        if(Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
+                        if(_openProcesses.FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
                             _macro.Restart();
+                            _openProcesses.Clear();
                         }
                         if(!_macro.IsRunning && !_startingMacro) {
                             _macro.Start();
@@ -304,6 +307,10 @@ namespace DESpeedrunUtil {
 
         // Timer method used to update the info panel on the main form
         private void StatusTick() {
+            _openProcesses = Process.GetProcesses().ToList();
+            var rtss = _openProcesses.FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count > 0;
+            if(!rtss && launchRTSSCheckbox.Visible && launchRTSSCheckbox.Checked) LaunchRTSS();
+
             // Checking for the Firewall rule can take upwards of 8ms
             // so it was moved out of the main timer and into this one since the interval is longer, for better performance
             try {
@@ -315,6 +322,7 @@ namespace DESpeedrunUtil {
             macroStatus.Text = (_macro.IsRunning) ? "Running" : "Stopped";
             macroStatus.ForeColor = (_macro.IsRunning) ? Color.Lime : COLOR_TEXT_FORE;
             hotkeyStatus.Text = (_hotkeys.Enabled) ? "Enabled" : "Disabled";
+            rtssStatus.Text = (_openProcesses.FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count > 0) ? "Running" : "Stopped";
 
             if(_memory != null) {
                 var hz = _memory.ReadMaxHz();
@@ -709,6 +717,14 @@ namespace DESpeedrunUtil {
             return false;
         }
 
+        private bool DetectRTSSExecutable() {
+            using RegistryKey? rtssKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\WOW6432Node\Microsoft\Windows\CurrentVersion\Uninstall\RTSS");
+            string uninstallStr = rtssKey?.GetValue("UninstallString").ToString() ?? "";
+            if(uninstallStr != string.Empty) _rtssExecutable = uninstallStr[1..uninstallStr.LastIndexOf('\\')] + @"\RTSS.exe";
+            if(!File.Exists(_rtssExecutable)) _rtssExecutable = "";
+            return _rtssExecutable != string.Empty;
+        }
+
         private void MeathookRemoval() {
             if(_mhScheduleRemoval) {
                 if(Hooked) {
@@ -867,6 +883,8 @@ namespace DESpeedrunUtil {
             if(!_memory.CanCapFPS()) _hotkeys.DisableHotkeys();
         }
 
+        private void LaunchRTSS() => Process.Start(new ProcessStartInfo(_rtssExecutable) { WorkingDirectory = _rtssExecutable[.._rtssExecutable.LastIndexOf('\\')] });
+
         private void SaveSettings() {
             Properties.Settings.Default.DownScrollKey = (int) _macro.GetHotkey(true);
             Properties.Settings.Default.UpScrollKey = (int) _macro.GetHotkey(false);
@@ -886,6 +904,8 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.AntiAliasing = !antiAliasingCheckbox.Checked;
             Properties.Settings.Default.UNDelay = !unDelayCheckbox.Checked;
             Properties.Settings.Default.AutoContinue = autoContinueCheckbox.Checked;
+            Properties.Settings.Default.RTSSPath = _rtssExecutable;
+            Properties.Settings.Default.LaunchRTSS = launchRTSSCheckbox.Checked;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
             var dirs = "";
@@ -985,6 +1005,7 @@ namespace DESpeedrunUtil {
             autorunMacroCheckbox.Font = EternalUIRegular;
             enableHotkeysCheckbox.Font = EternalUIRegular;
             enableMaxFPSCheckbox.Font = EternalUIRegular;
+            launchRTSSCheckbox.Font = EternalUIRegular;
             antiAliasingCheckbox.Font = EternalUIRegular;
             unDelayCheckbox.Font = EternalUIRegular;
             autoContinueCheckbox.Font = EternalUIRegular;
@@ -996,6 +1017,7 @@ namespace DESpeedrunUtil {
             cheatsStatus.Font = EternalUIRegular;
             reshadeStatus.Font = EternalUIRegular;
             resScaleStatus.Font = EternalUIRegular;
+            rtssStatus.Font = EternalUIRegular;
             hotkeyStatus.Font = EternalUIRegular;
             unlockOnStartupCheckbox.Font = EternalUIRegular;
             autoDynamicCheckbox.Font = EternalUIRegular;
@@ -1048,6 +1070,7 @@ namespace DESpeedrunUtil {
             cheatsStatusLabel.Font = EternalUIBold;
             reshadeStatusLabel.Font = EternalUIBold;
             resScaleStatusLabel.Font = EternalUIBold;
+            rtssStatusLabel.Font = EternalUIBold;
             hotkeyStatusLabel.Font = EternalUIBold;
             exitButton.Font = EternalUIBold;
             downpatcherButton.Font = EternalUIBold;
