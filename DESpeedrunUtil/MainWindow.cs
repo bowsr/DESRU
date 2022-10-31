@@ -956,6 +956,8 @@ namespace DESpeedrunUtil {
             toolTip7500.SetToolTip(autorunMacroCheckbox, "Toggle the Freescroll Emulation Macro");
             toolTip7500.SetToolTip(defaultFPS, "Set the max FPS you want DOOM Eternal to run at\n" +
                 "Value must be in the range 1-250");
+            toolTip7500.SetToolTip(launchRTSSCheckbox, "Automatically launches RTSS with DESRU\n" +
+                "Will launch RTSS immediately if it isn't open");
             toolTip7500.SetToolTip(antiAliasingCheckbox, "Sets r_antialiasing to 0\n" +
                 "This option does nothing if you have DLSS enabled in the game settings");
             toolTip7500.SetToolTip(unDelayCheckbox, "Disables the delay before you're allowed to quit out of an Ultra-Nightmare run");

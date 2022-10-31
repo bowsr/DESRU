@@ -216,7 +216,7 @@ namespace DESpeedrunUtil {
         }
         private void LaunchRTSS_CheckChanged(object sender, EventArgs e) {
             var checkbox = (CheckBox) sender;
-            if(checkbox.Checked) {
+            if(checkbox.Checked && checkbox.Visible) {
                 if(_rtssExecutable == string.Empty) {
                     if(!DetectRTSSExecutable()) {
                         System.Media.SystemSounds.Asterisk.Play();
