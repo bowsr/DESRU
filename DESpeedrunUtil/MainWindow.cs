@@ -12,6 +12,7 @@ using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
+using System.Configuration;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
@@ -28,9 +29,14 @@ namespace DESpeedrunUtil {
         private const string PATH_FPSKEYS_JSON = @".\fpskeys.json";
 
         private const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
+        private const int WINDOW_HEIGHT_DEFAULT = 806;
+        private const int PANEL_HEIGHT_DEFAULT = 760;
+        private const int WINDOW_EXTRAHEIGHT_MOREKEYS = 218; // Amount to add/subtract when showing/hiding extra fps hotkeys
+        private const int PANEL_EXTRAHEIGHT_MOREKEYS = 222;
 
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
+
 
         Process? _gameProcess;
         public bool Hooked = false;
@@ -60,6 +66,10 @@ namespace DESpeedrunUtil {
         List<Label> _hotkeyFields;
         List<TextBox> _fpsLimitFields;
         List<Process> _openProcesses;
+
+        DESRUShadowLabel _moreHotkeysLabel;
+
+        bool _smallDisplay = false;
 
         string _gameDirectory = "", _steamDirectory = "", _steamInstallation = "", _steamID3 = "", _rtssExecutable = "";
         List<string>? _gameVersions, _extraGameDirectories;
@@ -322,7 +332,7 @@ namespace DESpeedrunUtil {
             macroStatus.Text = (_macro.IsRunning) ? "Running" : "Stopped";
             macroStatus.ForeColor = (_macro.IsRunning) ? Color.Lime : COLOR_TEXT_FORE;
             hotkeyStatus.Text = (_hotkeys.Enabled) ? "Enabled" : "Disabled";
-            rtssStatus.Text = (_openProcesses.FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count > 0) ? "Running" : "Stopped";
+            rtssStatus.Text = (_openProcesses.FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count > 0) ? "Running" : "Closed";
 
             if(_memory != null) {
                 var hz = _memory.ReadMaxHz();
@@ -950,6 +960,19 @@ namespace DESpeedrunUtil {
             }
         }
 
+        private void ModifyWindowForSmallDisplays() {
+            Screen screen = Screen.FromHandle(this.Handle);
+            if(screen.WorkingArea.Height < WINDOW_HEIGHT_DEFAULT + 220) {
+                this.Height = screen.WorkingArea.Height - 100;
+                collapsiblePanel.Height = PANEL_HEIGHT_DEFAULT - (WINDOW_HEIGHT_DEFAULT - this.Height) - 5;
+                _smallDisplay = true;
+            }else {
+                this.Height = (!extraFPSHotkeysPanel.Visible) ? WINDOW_HEIGHT_DEFAULT : WINDOW_HEIGHT_DEFAULT + WINDOW_EXTRAHEIGHT_MOREKEYS;
+                collapsiblePanel.Height = PANEL_HEIGHT_DEFAULT;
+                _smallDisplay = false;
+            }
+        }
+
         private void SetToolTips() {
             /** Options **/
             toolTip7500.SetToolTip(enableHotkeysCheckbox, "Toggle global hotkeys for res. scaling and fps limits");
@@ -1094,12 +1117,17 @@ namespace DESpeedrunUtil {
         }
 
         public bool IsFormOnScreen() {
-            Screen[] screens = Screen.AllScreens;
-            foreach(var display in screens) {
-                Rectangle rect = new(this.Left, this.Top, this.Width, this.Height);
+            foreach(var display in Screen.AllScreens) {
+                Rectangle rect = new(this.Left, this.Top, 1, 1);
                 if(display.WorkingArea.Contains(rect)) return true;
             }
             return false;
+        }
+
+        private void SnapFormToScreen() {
+            Screen display = Screen.FromHandle(this.Handle);
+            if(this.Top < display.WorkingArea.Top) this.Top = display.WorkingArea.Top + 1;
+            if(this.Left < display.WorkingArea.Left) this.Left = display.WorkingArea.Left + 1;
         }
 
         #region COMPONENTS

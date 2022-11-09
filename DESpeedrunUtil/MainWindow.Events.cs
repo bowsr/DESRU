@@ -43,7 +43,7 @@ namespace DESpeedrunUtil {
                         "hkResToggle" => 2,
                         _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 3 : -1,
                     };
-                } catch(FormatException f) {
+                }catch(FormatException f) {
                     Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macro, _hotkeys);
@@ -53,7 +53,7 @@ namespace DESpeedrunUtil {
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
             if(!_hkAssignmentMode) {
-                if((sender is MainWindow || (sender is DESRUShadowLabel && ((Label) sender).Text == WINDOW_TITLE)) && !_mouseDown) {
+                if((sender is MainWindow || (sender is Panel && ((Control) sender).Name == "collapsiblePanel") || (sender is DESRUShadowLabel && ((Label) sender).Text == WINDOW_TITLE)) && !_mouseDown) {
                     _mouseDown = true;
                     _lastLocation = e.Location;
                 }
@@ -106,7 +106,11 @@ namespace DESpeedrunUtil {
             }
         }
 
-        private void DragWindow_MouseUp(object sender, MouseEventArgs e) => _mouseDown = false;
+        private void DragWindow_MouseUp(object sender, MouseEventArgs e) {
+            _mouseDown = false;
+            SnapFormToScreen();
+            ModifyWindowForSmallDisplays();
+        }
 
         private void MainWindow_KeyPreviewKeyDown(object sender, PreviewKeyDownEventArgs e) {
             switch(e.KeyCode) {
@@ -367,14 +371,22 @@ namespace DESpeedrunUtil {
             }
         }
         private void MoreKeysButton_Click(object sender, EventArgs e) {
-            if(this.Height == 820) {
-                this.Height = 1038;
-                extraFPSHotkeysPanel.Visible = true;
-                showMoreKeysButton.Text = "Hide Extra FPS Hotkeys";
-            }else {
-                this.Height = 820;
+            if(extraFPSHotkeysPanel.Visible) {
+                if(!_smallDisplay) {
+                    this.Height -= WINDOW_EXTRAHEIGHT_MOREKEYS;
+                    collapsiblePanel.Height -= PANEL_EXTRAHEIGHT_MOREKEYS;
+                }
                 extraFPSHotkeysPanel.Visible = false;
+                _moreHotkeysLabel.Visible = false;
                 showMoreKeysButton.Text = "Show More FPS Hotkeys";
+            } else {
+                if(!_smallDisplay) {
+                    this.Height += WINDOW_EXTRAHEIGHT_MOREKEYS;
+                    collapsiblePanel.Height += PANEL_EXTRAHEIGHT_MOREKEYS;
+                }
+                extraFPSHotkeysPanel.Visible = true;
+                _moreHotkeysLabel.Visible = true;
+                showMoreKeysButton.Text = "Hide Extra FPS Hotkeys";
             }
         }
         #endregion
@@ -389,16 +401,18 @@ namespace DESpeedrunUtil {
             if(File.Exists(@".\scannedOffsets.json")) MemoryHandler.ScannedOffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(File.ReadAllText(@".\scannedOffsets.json"));
 
             InitializeFonts();
+            _moreHotkeysLabel = new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK);
+            _moreHotkeysLabel.Visible = false;
             var titleBar = new DESRUShadowLabel(windowTitle.Font, WINDOW_TITLE, windowTitle.Location, Color.FromArgb(190, 34, 34), COLOR_FORM_BACK);
             titleBar.MouseMove += new MouseEventHandler(DragWindow_MouseMove);
             titleBar.MouseUp += new MouseEventHandler(DragWindow_MouseUp);
             this.Controls.Add(titleBar);
-            this.Controls.Add(new DESRUShadowLabel(hotkeysTitle.Font, "KEYBINDS", hotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
-            this.Controls.Add(new DESRUShadowLabel(optionsTitle.Font, "OPTIONS", optionsTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
-            this.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
-            this.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
-            this.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
-            this.Controls.Add(new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            collapsiblePanel.Controls.Add(new DESRUShadowLabel(hotkeysTitle.Font, "KEYBINDS", hotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            collapsiblePanel.Controls.Add(new DESRUShadowLabel(optionsTitle.Font, "OPTIONS", optionsTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            collapsiblePanel.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            collapsiblePanel.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            collapsiblePanel.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            collapsiblePanel.Controls.Add(_moreHotkeysLabel);
 
             // User Settings
             var fpsJson = "";
@@ -439,8 +453,10 @@ namespace DESpeedrunUtil {
                 Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
             Point loc = Properties.Settings.Default.Location;
             if(loc != Point.Empty) Location = loc;
-            this.Height = 820;
+            this.Height = WINDOW_HEIGHT_DEFAULT;
+            collapsiblePanel.Height = PANEL_HEIGHT_DEFAULT;
             if(!IsFormOnScreen() || loc == Point.Empty) Location = defaultLocation;
+            ModifyWindowForSmallDisplays();
             Log.Information("Loaded user settings");
 
             AddMouseIntercepts(this);

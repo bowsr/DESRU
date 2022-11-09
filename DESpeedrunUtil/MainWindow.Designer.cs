@@ -178,6 +178,7 @@
             this.label15 = new System.Windows.Forms.Label();
             this.moreHotkeysTitle = new System.Windows.Forms.Label();
             this.toolTip7500 = new System.Windows.Forms.ToolTip(this.components);
+            this.collapsiblePanel = new System.Windows.Forms.Panel();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -202,6 +203,7 @@
             this.panel6.SuspendLayout();
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
+            this.collapsiblePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // hotkeyField0
@@ -283,7 +285,7 @@
             this.hotkeysTitle.AutoSize = true;
             this.hotkeysTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.hotkeysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.hotkeysTitle.Location = new System.Drawing.Point(12, 64);
+            this.hotkeysTitle.Location = new System.Drawing.Point(5, 9);
             this.hotkeysTitle.Name = "hotkeysTitle";
             this.hotkeysTitle.Size = new System.Drawing.Size(147, 21);
             this.hotkeysTitle.TabIndex = 5;
@@ -525,7 +527,7 @@
             this.windowTitle.BackColor = System.Drawing.Color.Transparent;
             this.windowTitle.Font = new System.Drawing.Font("Eternal Battle", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.windowTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
-            this.windowTitle.Location = new System.Drawing.Point(13, 9);
+            this.windowTitle.Location = new System.Drawing.Point(26, 3);
             this.windowTitle.Name = "windowTitle";
             this.windowTitle.Size = new System.Drawing.Size(614, 33);
             this.windowTitle.TabIndex = 21;
@@ -538,7 +540,7 @@
             this.versionTitle.AutoSize = true;
             this.versionTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.versionTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.versionTitle.Location = new System.Drawing.Point(323, 373);
+            this.versionTitle.Location = new System.Drawing.Point(316, 318);
             this.versionTitle.Name = "versionTitle";
             this.versionTitle.Size = new System.Drawing.Size(248, 21);
             this.versionTitle.TabIndex = 22;
@@ -550,7 +552,7 @@
             this.optionsTitle.AutoSize = true;
             this.optionsTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.optionsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.optionsTitle.Location = new System.Drawing.Point(12, 526);
+            this.optionsTitle.Location = new System.Drawing.Point(5, 471);
             this.optionsTitle.Name = "optionsTitle";
             this.optionsTitle.Size = new System.Drawing.Size(129, 21);
             this.optionsTitle.TabIndex = 23;
@@ -617,7 +619,7 @@
             this.hotkeyPanel.Controls.Add(this.hotkeyField1);
             this.hotkeyPanel.Controls.Add(this.fpsPanel0);
             this.hotkeyPanel.Controls.Add(this.fpsLabel2);
-            this.hotkeyPanel.Location = new System.Drawing.Point(12, 93);
+            this.hotkeyPanel.Location = new System.Drawing.Point(5, 38);
             this.hotkeyPanel.Name = "hotkeyPanel";
             this.hotkeyPanel.Size = new System.Drawing.Size(304, 216);
             this.hotkeyPanel.TabIndex = 27;
@@ -732,7 +734,7 @@
             this.panel1.Controls.Add(this.versionChangedLabel);
             this.panel1.Controls.Add(this.changeVersionButton);
             this.panel1.Controls.Add(this.refreshVersionsButton);
-            this.panel1.Location = new System.Drawing.Point(323, 402);
+            this.panel1.Location = new System.Drawing.Point(316, 347);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(304, 97);
             this.panel1.TabIndex = 30;
@@ -767,7 +769,7 @@
             this.panel2.Controls.Add(this.defaultFPSLabel);
             this.panel2.Controls.Add(this.meathookToggleButton);
             this.panel2.Controls.Add(this.firewallRestartLabel);
-            this.panel2.Location = new System.Drawing.Point(12, 555);
+            this.panel2.Location = new System.Drawing.Point(5, 500);
             this.panel2.Name = "panel2";
             this.panel2.Size = new System.Drawing.Size(304, 251);
             this.panel2.TabIndex = 31;
@@ -882,7 +884,7 @@
             // titleSeparator
             // 
             this.titleSeparator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(85)))), ((int)(((byte)(85)))), ((int)(((byte)(85)))));
-            this.titleSeparator.Location = new System.Drawing.Point(33, 45);
+            this.titleSeparator.Location = new System.Drawing.Point(46, 39);
             this.titleSeparator.Name = "titleSeparator";
             this.titleSeparator.Size = new System.Drawing.Size(570, 2);
             this.titleSeparator.TabIndex = 31;
@@ -894,7 +896,7 @@
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.exitButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.exitButton.Location = new System.Drawing.Point(478, 774);
+            this.exitButton.Location = new System.Drawing.Point(471, 719);
             this.exitButton.Name = "exitButton";
             this.exitButton.Size = new System.Drawing.Size(149, 32);
             this.exitButton.TabIndex = 32;
@@ -926,7 +928,7 @@
             this.statusPanel.Controls.Add(this.gameStatusLabel);
             this.statusPanel.Controls.Add(this.macroStatus);
             this.statusPanel.Controls.Add(this.gameStatus);
-            this.statusPanel.Location = new System.Drawing.Point(323, 93);
+            this.statusPanel.Location = new System.Drawing.Point(316, 38);
             this.statusPanel.Name = "statusPanel";
             this.statusPanel.Size = new System.Drawing.Size(304, 273);
             this.statusPanel.TabIndex = 31;
@@ -1134,7 +1136,7 @@
             this.infoPanelTitle.AutoSize = true;
             this.infoPanelTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.infoPanelTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.infoPanelTitle.Location = new System.Drawing.Point(323, 64);
+            this.infoPanelTitle.Location = new System.Drawing.Point(316, 9);
             this.infoPanelTitle.Name = "infoPanelTitle";
             this.infoPanelTitle.Size = new System.Drawing.Size(166, 21);
             this.infoPanelTitle.TabIndex = 33;
@@ -1154,7 +1156,7 @@
             this.panel4.Controls.Add(this.percentLabel);
             this.panel4.Controls.Add(this.minResLabel);
             this.panel4.Controls.Add(this.minResPanel);
-            this.panel4.Location = new System.Drawing.Point(12, 351);
+            this.panel4.Location = new System.Drawing.Point(5, 296);
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(304, 148);
             this.panel4.TabIndex = 31;
@@ -1303,7 +1305,7 @@
             this.resTitle.AutoSize = true;
             this.resTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.resTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.resTitle.Location = new System.Drawing.Point(12, 322);
+            this.resTitle.Location = new System.Drawing.Point(5, 267);
             this.resTitle.Name = "resTitle";
             this.resTitle.Size = new System.Drawing.Size(302, 21);
             this.resTitle.TabIndex = 34;
@@ -1317,7 +1319,7 @@
             this.helpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.helpButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.helpButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpButton.Location = new System.Drawing.Point(323, 774);
+            this.helpButton.Location = new System.Drawing.Point(316, 719);
             this.helpButton.Name = "helpButton";
             this.helpButton.Size = new System.Drawing.Size(149, 32);
             this.helpButton.TabIndex = 35;
@@ -1332,7 +1334,7 @@
             this.downpatcherButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.downpatcherButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.downpatcherButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.downpatcherButton.Location = new System.Drawing.Point(323, 683);
+            this.downpatcherButton.Location = new System.Drawing.Point(316, 628);
             this.downpatcherButton.Name = "downpatcherButton";
             this.downpatcherButton.Size = new System.Drawing.Size(304, 32);
             this.downpatcherButton.TabIndex = 36;
@@ -1347,7 +1349,7 @@
             this.discordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.discordButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.discordButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.discordButton.Location = new System.Drawing.Point(323, 721);
+            this.discordButton.Location = new System.Drawing.Point(316, 666);
             this.discordButton.Name = "discordButton";
             this.discordButton.Size = new System.Drawing.Size(304, 32);
             this.discordButton.TabIndex = 37;
@@ -1359,7 +1361,7 @@
             this.desruVersionLabel.AutoSize = true;
             this.desruVersionLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.desruVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.desruVersionLabel.Location = new System.Drawing.Point(596, 759);
+            this.desruVersionLabel.Location = new System.Drawing.Point(589, 704);
             this.desruVersionLabel.Name = "desruVersionLabel";
             this.desruVersionLabel.Size = new System.Drawing.Size(31, 13);
             this.desruVersionLabel.TabIndex = 38;
@@ -1417,7 +1419,7 @@
             this.extraFPSHotkeysPanel.Controls.Add(this.panel7);
             this.extraFPSHotkeysPanel.Controls.Add(this.panel8);
             this.extraFPSHotkeysPanel.Controls.Add(this.label15);
-            this.extraFPSHotkeysPanel.Location = new System.Drawing.Point(12, 842);
+            this.extraFPSHotkeysPanel.Location = new System.Drawing.Point(5, 787);
             this.extraFPSHotkeysPanel.Name = "extraFPSHotkeysPanel";
             this.extraFPSHotkeysPanel.Size = new System.Drawing.Size(615, 183);
             this.extraFPSHotkeysPanel.TabIndex = 35;
@@ -2148,7 +2150,7 @@
             this.moreHotkeysTitle.AutoSize = true;
             this.moreHotkeysTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.moreHotkeysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.moreHotkeysTitle.Location = new System.Drawing.Point(187, 818);
+            this.moreHotkeysTitle.Location = new System.Drawing.Point(180, 763);
             this.moreHotkeysTitle.Name = "moreHotkeysTitle";
             this.moreHotkeysTitle.Size = new System.Drawing.Size(286, 21);
             this.moreHotkeysTitle.TabIndex = 39;
@@ -2162,32 +2164,43 @@
             this.toolTip7500.ReshowDelay = 100;
             this.toolTip7500.ShowAlways = true;
             // 
+            // collapsiblePanel
+            // 
+            this.collapsiblePanel.AutoScroll = true;
+            this.collapsiblePanel.Controls.Add(this.hotkeyPanel);
+            this.collapsiblePanel.Controls.Add(this.moreHotkeysTitle);
+            this.collapsiblePanel.Controls.Add(this.hotkeysTitle);
+            this.collapsiblePanel.Controls.Add(this.extraFPSHotkeysPanel);
+            this.collapsiblePanel.Controls.Add(this.versionTitle);
+            this.collapsiblePanel.Controls.Add(this.desruVersionLabel);
+            this.collapsiblePanel.Controls.Add(this.optionsTitle);
+            this.collapsiblePanel.Controls.Add(this.discordButton);
+            this.collapsiblePanel.Controls.Add(this.panel1);
+            this.collapsiblePanel.Controls.Add(this.downpatcherButton);
+            this.collapsiblePanel.Controls.Add(this.panel2);
+            this.collapsiblePanel.Controls.Add(this.helpButton);
+            this.collapsiblePanel.Controls.Add(this.exitButton);
+            this.collapsiblePanel.Controls.Add(this.resTitle);
+            this.collapsiblePanel.Controls.Add(this.statusPanel);
+            this.collapsiblePanel.Controls.Add(this.panel4);
+            this.collapsiblePanel.Controls.Add(this.infoPanelTitle);
+            this.collapsiblePanel.Location = new System.Drawing.Point(19, 43);
+            this.collapsiblePanel.Name = "collapsiblePanel";
+            this.collapsiblePanel.Size = new System.Drawing.Size(644, 982);
+            this.collapsiblePanel.TabIndex = 40;
+            this.collapsiblePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseMove);
+            this.collapsiblePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseUp);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(639, 1067);
+            this.ClientSize = new System.Drawing.Size(664, 1067);
             this.ControlBox = false;
-            this.Controls.Add(this.moreHotkeysTitle);
-            this.Controls.Add(this.extraFPSHotkeysPanel);
-            this.Controls.Add(this.desruVersionLabel);
-            this.Controls.Add(this.discordButton);
-            this.Controls.Add(this.downpatcherButton);
-            this.Controls.Add(this.helpButton);
-            this.Controls.Add(this.resTitle);
-            this.Controls.Add(this.panel4);
-            this.Controls.Add(this.infoPanelTitle);
-            this.Controls.Add(this.statusPanel);
-            this.Controls.Add(this.exitButton);
+            this.Controls.Add(this.collapsiblePanel);
             this.Controls.Add(this.titleSeparator);
-            this.Controls.Add(this.panel2);
-            this.Controls.Add(this.panel1);
-            this.Controls.Add(this.hotkeyPanel);
-            this.Controls.Add(this.optionsTitle);
-            this.Controls.Add(this.versionTitle);
             this.Controls.Add(this.windowTitle);
-            this.Controls.Add(this.hotkeysTitle);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.KeyPreview = true;
@@ -2250,6 +2263,8 @@
             this.panel7.PerformLayout();
             this.panel8.ResumeLayout(false);
             this.panel8.PerformLayout();
+            this.collapsiblePanel.ResumeLayout(false);
+            this.collapsiblePanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2409,5 +2424,6 @@
         private CheckBox launchRTSSCheckbox;
         private Label rtssStatus;
         private Label rtssStatusLabel;
+        private Panel collapsiblePanel;
     }
 }
