@@ -310,5 +310,17 @@ namespace DESpeedrunUtil.Properties {
                 this["LaunchRTSS"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool MinimalOSD {
+            get {
+                return ((bool)(this["MinimalOSD"]));
+            }
+            set {
+                this["MinimalOSD"] = value;
+            }
+        }
     }
 }

@@ -859,6 +859,7 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
             _memory.SetFlag(!_memory.Version.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
+            _memory.SetFlag(minimalOSDCheckbox.Checked, "minimal");
             if(_memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
             _memory.SetMinRes(_minResPercent / 100f);
             if(unlockOnStartupCheckbox.Checked) {
@@ -916,6 +917,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.AutoContinue = autoContinueCheckbox.Checked;
             Properties.Settings.Default.RTSSPath = _rtssExecutable;
             Properties.Settings.Default.LaunchRTSS = launchRTSSCheckbox.Checked;
+            Properties.Settings.Default.MinimalOSD = minimalOSDCheckbox.Checked;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
             var dirs = "";
@@ -977,6 +979,7 @@ namespace DESpeedrunUtil {
             /** Options **/
             toolTip7500.SetToolTip(enableHotkeysCheckbox, "Toggle global hotkeys for res. scaling and fps limits");
             toolTip7500.SetToolTip(autorunMacroCheckbox, "Toggle the Freescroll Emulation Macro");
+            toolTip7500.SetToolTip(minimalOSDCheckbox, "Displays the in-game information on a single line if enabled");
             toolTip7500.SetToolTip(defaultFPS, "Set the max FPS you want DOOM Eternal to run at\n" +
                 "Value must be in the range 1-250");
             toolTip7500.SetToolTip(launchRTSSCheckbox, "Automatically launches RTSS with DESRU\n" +
@@ -1029,6 +1032,7 @@ namespace DESpeedrunUtil {
             versionDropDownSelector.Font = EternalUIRegular;
             autorunMacroCheckbox.Font = EternalUIRegular;
             enableHotkeysCheckbox.Font = EternalUIRegular;
+            minimalOSDCheckbox.Font = EternalUIRegular;
             enableMaxFPSCheckbox.Font = EternalUIRegular;
             launchRTSSCheckbox.Font = EternalUIRegular;
             antiAliasingCheckbox.Font = EternalUIRegular;

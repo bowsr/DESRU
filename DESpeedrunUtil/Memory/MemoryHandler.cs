@@ -50,7 +50,8 @@ namespace DESpeedrunUtil.Memory {
         bool _osdFlagCheats = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
              _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
              _trainerFlag = false, _scheduleDynamic = false, _osdFlagLimiter = true,
-             _antiAliasing = true, _unDelay = true, _autoContinue = false;
+             _antiAliasing = true, _unDelay = true, _autoContinue = false,
+             _minimalOSD = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
         string _cheatString = "CHEATS ENABLED", _scrollString = "";
         int _fpsLimit = 250, _targetFPS = 1000;
@@ -114,32 +115,22 @@ namespace DESpeedrunUtil.Memory {
                 _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
                 _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
-                if(_metricsPtr == IntPtr.Zero) _row2 = string.Empty;
                 if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
-                    if(_row2 != string.Empty) {
-                        _row2 += " (";
-                    }else {
-                        _row1 += " ";
-                        if(!_osdFlagOutOfDate) {
-                            _row1 += "(";
-                        }else {
-                            _row2 += "(";
-                        }
-                    }
-                    _row2 += (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
+                    _row2 += " (" + (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
                 }
                 var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : "";
-                if(_currentOffsets.Version.Contains("Unknown") || _metricsPtr == IntPtr.Zero) {
-                    if(cheats != string.Empty) {
-                        _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : cheats[0]);
-                        _row2 = _row1.Contains('*') ? cheats : cheats[1..];
-                    }
-                    if(_cpuPtr == IntPtr.Zero) {
-                        _row3 = _scrollString;
-                        _cpu = string.Empty;
+                if(_minimalOSD) {
+                    var row2Mod = (_scrollString != string.Empty) ? "[" + _scrollString + "]" : cheats;
+                    _row1 += " ";
+                    _row2 = _row2.Replace("(", "");
+                    if(!_osdFlagOutOfDate) {
+                        _row1 += "(";
                     }else {
-                        _cpu = _scrollString;
-                        _row3 = string.Empty;
+                        _row2 = "(" + _row2;
+                    }
+                    if(row2Mod != string.Empty) {
+                        _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : row2Mod[0]);
+                        _row2 = _row1.Contains('*') ? row2Mod : row2Mod[1..];
                     }
                 }else {
                     if(_cpuPtr == IntPtr.Zero) {
@@ -149,8 +140,8 @@ namespace DESpeedrunUtil.Memory {
                         _cpu = (_scrollString != string.Empty) ? _scrollString : cheats;
                         _row3 = "";
                     }
-                    SetMetrics(2);
                 }
+                if(_metricsPtr != IntPtr.Zero) SetMetrics((byte) ((_minimalOSD) ? 1 : 2));
                 ModifyMetricRows();
             }
 
@@ -284,10 +275,17 @@ namespace DESpeedrunUtil.Memory {
                 _game.WriteBytes(_row1Ptr + 0x7 + (_row1.Contains('*') ? 0x1 : 0x0), ToByteArray(_row3, 18));
                 return;
             }
-            if(_cpuPtr == IntPtr.Zero)
-                _game.WriteBytes(_row1Ptr + OFFSET_ROW3, ToByteArray(_row3, 19));
-            else
-                _game.WriteBytes(_cpuPtr, ToByteArray(_row3, 64));
+            if(_minimalOSD) {
+                _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : _row3[0]);
+                _row2 = _row1.Contains('*') ? _row3 : _row3[1..];
+                _game.WriteBytes(_row1Ptr, ToByteArray(_row1, 20));
+                _game.WriteBytes(_row1Ptr + OFFSET_ROW2, ToByteArray(_row2, 18));
+            }else {
+                if(_cpuPtr == IntPtr.Zero)
+                    _game.WriteBytes(_row1Ptr + OFFSET_ROW3, ToByteArray(_row3, 19));
+                else
+                    _game.WriteBytes(_cpuPtr, ToByteArray(_row3, 64));
+            }
         }
 
         private void SetMetrics(byte val) {
@@ -387,6 +385,9 @@ namespace DESpeedrunUtil.Memory {
                     break;
                 case "slopeboost":
                     _osdFlagSlopeboost = flag;
+                    break;
+                case "minimal":
+                    _minimalOSD = flag;
                     break;
             }
         }
@@ -598,6 +599,7 @@ namespace DESpeedrunUtil.Memory {
             _cpuDP = CreateDP(_currentOffsets.CPU, 0x0);
 
             _metricsDP = CreateDP(_currentOffsets.Metrics);
+            if(_currentOffsets.Metrics == 0) SetFlag(true, "minimal");
             _maxHzDP = CreateDP(_currentOffsets.MaxHz);
             _skipIntroDP = CreateDP(_currentOffsets.SkipIntro);
             _aliasingDP = CreateDP(_currentOffsets.AA);

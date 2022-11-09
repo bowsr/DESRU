@@ -264,6 +264,9 @@ namespace DESpeedrunUtil {
         private void AutoContinue_CheckChanged(object sender, EventArgs e) {
             if(Hooked) _memory.SetCVAR(((CheckBox) sender).Checked, "autocontinue");
         }
+        private void MinimalOSD_CheckChanged(object sender, EventArgs e) {
+            if(Hooked) _memory.SetFlag(((CheckBox) sender).Checked, "minimal");
+        }
         #endregion
 
         #region Buttons
@@ -435,6 +438,7 @@ namespace DESpeedrunUtil {
             antiAliasingCheckbox.Checked = !Properties.Settings.Default.AntiAliasing;
             unDelayCheckbox.Checked = !Properties.Settings.Default.UNDelay;
             autoContinueCheckbox.Checked = Properties.Settings.Default.AutoContinue;
+            minimalOSDCheckbox.Checked = Properties.Settings.Default.MinimalOSD;
             _rtssExecutable = Properties.Settings.Default.RTSSPath;
             if(_rtssExecutable == string.Empty) DetectRTSSExecutable();
             launchRTSSCheckbox.Visible = !Properties.Settings.Default.EnableMaxFPSLimit;
