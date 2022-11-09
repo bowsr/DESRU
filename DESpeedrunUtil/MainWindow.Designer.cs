@@ -528,7 +528,7 @@
             this.windowTitle.BackColor = System.Drawing.Color.Transparent;
             this.windowTitle.Font = new System.Drawing.Font("Eternal Battle", 20.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.windowTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(34)))), ((int)(((byte)(34)))));
-            this.windowTitle.Location = new System.Drawing.Point(26, 3);
+            this.windowTitle.Location = new System.Drawing.Point(13, 3);
             this.windowTitle.Name = "windowTitle";
             this.windowTitle.Size = new System.Drawing.Size(614, 33);
             this.windowTitle.TabIndex = 21;
@@ -899,7 +899,7 @@
             // titleSeparator
             // 
             this.titleSeparator.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(85)))), ((int)(((byte)(85)))), ((int)(((byte)(85)))));
-            this.titleSeparator.Location = new System.Drawing.Point(46, 39);
+            this.titleSeparator.Location = new System.Drawing.Point(33, 39);
             this.titleSeparator.Name = "titleSeparator";
             this.titleSeparator.Size = new System.Drawing.Size(570, 2);
             this.titleSeparator.TabIndex = 31;
@@ -2199,7 +2199,7 @@
             this.collapsiblePanel.Controls.Add(this.statusPanel);
             this.collapsiblePanel.Controls.Add(this.panel4);
             this.collapsiblePanel.Controls.Add(this.infoPanelTitle);
-            this.collapsiblePanel.Location = new System.Drawing.Point(19, 43);
+            this.collapsiblePanel.Location = new System.Drawing.Point(6, 43);
             this.collapsiblePanel.Name = "collapsiblePanel";
             this.collapsiblePanel.Size = new System.Drawing.Size(644, 982);
             this.collapsiblePanel.TabIndex = 40;
@@ -2211,7 +2211,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(664, 1067);
+            this.ClientSize = new System.Drawing.Size(651, 1067);
             this.ControlBox = false;
             this.Controls.Add(this.collapsiblePanel);
             this.Controls.Add(this.titleSeparator);

@@ -29,10 +29,11 @@ namespace DESpeedrunUtil {
         private const string PATH_FPSKEYS_JSON = @".\fpskeys.json";
 
         private const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
-        private const int WINDOW_HEIGHT_DEFAULT = 806;
+        private const int WINDOW_HEIGHT_DEFAULT = 805;
         private const int PANEL_HEIGHT_DEFAULT = 760;
         private const int WINDOW_EXTRAHEIGHT_MOREKEYS = 218; // Amount to add/subtract when showing/hiding extra fps hotkeys
         private const int PANEL_EXTRAHEIGHT_MOREKEYS = 222;
+        private const int WINDOW_EXTRAWIDTH = 12;
 
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
@@ -966,10 +967,12 @@ namespace DESpeedrunUtil {
             Screen screen = Screen.FromHandle(this.Handle);
             if(screen.WorkingArea.Height < WINDOW_HEIGHT_DEFAULT + 220) {
                 this.Height = screen.WorkingArea.Height - 100;
+                this.Width += WINDOW_EXTRAWIDTH;
                 collapsiblePanel.Height = PANEL_HEIGHT_DEFAULT - (WINDOW_HEIGHT_DEFAULT - this.Height) - 5;
                 _smallDisplay = true;
             }else {
                 this.Height = (!extraFPSHotkeysPanel.Visible) ? WINDOW_HEIGHT_DEFAULT : WINDOW_HEIGHT_DEFAULT + WINDOW_EXTRAHEIGHT_MOREKEYS;
+                this.Width -= WINDOW_EXTRAWIDTH;
                 collapsiblePanel.Height = PANEL_HEIGHT_DEFAULT;
                 _smallDisplay = false;
             }
