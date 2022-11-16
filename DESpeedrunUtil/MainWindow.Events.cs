@@ -329,6 +329,7 @@ namespace DESpeedrunUtil {
         private void FirewallToggle_Click(object sender, EventArgs e) {
             if(_fwRuleExists) {
                 FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", true);
+                foreach(string dir in _extraGameDirectories) FirewallHandler.CheckForFirewallRule(dir + "\\DOOMEternalx64vk.exe", true);
                 firewallToggleButton.Text = "Create Firewall Rule";
                 if(_fwRestart) _fwRestart = false;
                 _fwRuleExists = false;
@@ -337,7 +338,10 @@ namespace DESpeedrunUtil {
                 }
                 firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
             }else {
-                FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe");
+                FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", 0);
+                for(int i = 0; i < _extraGameDirectories.Count; i++) {
+                    FirewallHandler.CreateFirewallRule(_extraGameDirectories[i] + "\\DOOMEternalx64vk.exe", i + 1);
+                }
                 firewallToggleButton.Text = "Remove Firewall Rule";
                 _fwRestart = true;
                 _fwRuleExists = true;
@@ -471,6 +475,7 @@ namespace DESpeedrunUtil {
             _statusTimer.Start();
             _settingsTimer.Start();
             _justLaunched = false;
+
             Log.Information("Loaded MainWindow");
         }
 

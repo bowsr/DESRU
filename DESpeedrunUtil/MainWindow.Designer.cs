@@ -286,7 +286,7 @@
             this.hotkeysTitle.AutoSize = true;
             this.hotkeysTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.hotkeysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.hotkeysTitle.Location = new System.Drawing.Point(5, 9);
+            this.hotkeysTitle.Location = new System.Drawing.Point(5, 14);
             this.hotkeysTitle.Name = "hotkeysTitle";
             this.hotkeysTitle.Size = new System.Drawing.Size(147, 21);
             this.hotkeysTitle.TabIndex = 5;
@@ -553,7 +553,7 @@
             this.optionsTitle.AutoSize = true;
             this.optionsTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.optionsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.optionsTitle.Location = new System.Drawing.Point(5, 449);
+            this.optionsTitle.Location = new System.Drawing.Point(5, 454);
             this.optionsTitle.Name = "optionsTitle";
             this.optionsTitle.Size = new System.Drawing.Size(129, 21);
             this.optionsTitle.TabIndex = 23;
@@ -1151,7 +1151,7 @@
             this.infoPanelTitle.AutoSize = true;
             this.infoPanelTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.infoPanelTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.infoPanelTitle.Location = new System.Drawing.Point(316, 9);
+            this.infoPanelTitle.Location = new System.Drawing.Point(316, 14);
             this.infoPanelTitle.Name = "infoPanelTitle";
             this.infoPanelTitle.Size = new System.Drawing.Size(166, 21);
             this.infoPanelTitle.TabIndex = 33;
@@ -1320,7 +1320,7 @@
             this.resTitle.AutoSize = true;
             this.resTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.resTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.resTitle.Location = new System.Drawing.Point(5, 267);
+            this.resTitle.Location = new System.Drawing.Point(5, 272);
             this.resTitle.Name = "resTitle";
             this.resTitle.Size = new System.Drawing.Size(302, 21);
             this.resTitle.TabIndex = 34;

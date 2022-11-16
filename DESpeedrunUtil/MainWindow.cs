@@ -326,7 +326,11 @@ namespace DESpeedrunUtil {
             // Checking for the Firewall rule can take upwards of 8ms
             // so it was moved out of the main timer and into this one since the interval is longer, for better performance
             try {
-                _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
+                if(Hooked) {
+                    _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameProcess.MainModule.FileName, false);
+                }else {
+                    _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
+                }
             }catch(Exception e) {
                 Log.Error(e, "Failed to check if firewall rule exists.");
             }
@@ -885,12 +889,16 @@ namespace DESpeedrunUtil {
         private void SetGameInfoByModuleSize() {
             gameStatus.Text = _memory.Version.Replace("(Gamepass)", "(GP)");
             var gamePath = _gameProcess.MainModule.FileName;
+            var dir = gamePath[..gamePath.LastIndexOf('\\')];
             if(gamePath.ToLower().Contains("steam")) {
-                File.WriteAllText(gamePath[..gamePath.LastIndexOf('\\')] + "\\gameVersion.txt", "version=" + _memory.Version);
+                File.WriteAllText(dir + "\\gameVersion.txt", "version=" + _memory.Version);
             }
 
-            if(!gamePath.Contains(_gameDirectory) && _steamDirectory != string.Empty && !gamePath.Contains(_steamDirectory)) {
-                _extraGameDirectories.Add(gamePath[..gamePath.LastIndexOf('\\')]);
+            if(!gamePath.Contains(_gameDirectory)) {
+                if(!_extraGameDirectories.Contains(dir)) {
+                    _extraGameDirectories.Add(dir);
+                    FirewallHandler.CreateFirewallRule(gamePath, _extraGameDirectories.Count);
+                }
             }
 
             if(!_memory.CanCapFPS()) _hotkeys.DisableHotkeys();
