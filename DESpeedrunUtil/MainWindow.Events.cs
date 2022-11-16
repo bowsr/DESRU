@@ -338,9 +338,11 @@ namespace DESpeedrunUtil {
                 }
                 firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
             }else {
-                FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", 0);
+                if(!FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false))
+                    FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", 0);
                 for(int i = 0; i < _extraGameDirectories.Count; i++) {
-                    FirewallHandler.CreateFirewallRule(_extraGameDirectories[i] + "\\DOOMEternalx64vk.exe", i + 1);
+                    if(!FirewallHandler.CheckForFirewallRule(_extraGameDirectories[i] + "\\DOOMEternalx64vk.exe", false))
+                        FirewallHandler.CreateFirewallRule(_extraGameDirectories[i] + "\\DOOMEternalx64vk.exe", i + 1);
                 }
                 firewallToggleButton.Text = "Remove Firewall Rule";
                 _fwRestart = true;
