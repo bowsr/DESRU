@@ -326,7 +326,7 @@ namespace DESpeedrunUtil {
             // Checking for the Firewall rule can take upwards of 8ms
             // so it was moved out of the main timer and into this one since the interval is longer, for better performance
             try {
-                if(Hooked) {
+                if(Hooked && !_gameProcess.MainModule.FileName.Contains("WindowsApps")) {
                     _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameProcess.MainModule.FileName, false);
                 }else {
                     _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
