@@ -713,20 +713,34 @@ namespace DESpeedrunUtil {
 
         // Checks if ReShade is both installed for Vulkan and set to run over DOOMEternalx64vk
         private bool CheckForReShade() {
-            using RegistryKey vkKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
-            var names = vkKey.GetValueNames();
+            using RegistryKey localMachineKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
+            var names = localMachineKey.GetValueNames();
+            var foundLayer = false;
             foreach(string s in names) {
-                if(s.Contains("ReShade")) {
-                    Log.Information("ReShade Vulkan Layer found in registry.");
-                    try {
-                        var rs =  File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
-                        if(rs) Log.Information("ReShade is installed and is running over DOOMEternal.");
-                        else Log.Information("ReShade is not running over DOOMEternal.");
-                        return rs;
-                    }catch(Exception e) {
-                        Log.Error(e, "An error occured when checking ReShade files. Assuming ReShade is running over DOOMEternal.");
-                        return true;
+                if(s.ToLower().Contains("reshade")) {
+                    foundLayer = true;
+                    Log.Information("ReShade Vulkan Layer found in Local Machine registry.");
+                }
+            }
+            if(!foundLayer) {
+                using RegistryKey currentUserKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
+                names = currentUserKey.GetValueNames();
+                foreach(string s in names) {
+                    if(s.ToLower().Contains("reshade")) {
+                        foundLayer = true;
+                        Log.Information("ReShade Vulkan Layer found in Current User registry.");
                     }
+                }
+            }
+            if(foundLayer) {
+                try {
+                    var rs = File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
+                    if(rs) Log.Information("ReShade is installed and is running over DOOMEternal.");
+                    else Log.Information("ReShade is not running over DOOMEternal.");
+                    return rs;
+                } catch(Exception e) {
+                    Log.Error(e, "An error occured when checking ReShade files. Assuming ReShade is running over DOOMEternal.");
+                    return true;
                 }
             }
             Log.Information("ReShade Vulkan Layer not found in registry.");
