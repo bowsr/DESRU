@@ -2,7 +2,7 @@
 ![DESRU Icon](https://user-images.githubusercontent.com/26034933/191414580-21e0c691-cf32-43c3-b45a-a48bc0b234b6.png)  
 DESRU is an all-in-one utility program designed to make your DOOM Eternal speedrunning experience a lot smoother.
 
-You are allowed, and **encouraged**, to use this program during your speedruns. Eventually DESRU will be **required** for any speedruns done on Windows PCs, so stay tuned to the [MDSR Discord](https://discord.gg/dtDa9VZ) for updates.
+You are **required** to use this program during your speedruns if you are running on Windows.
 
 ## Features
 - [Freescroll Emulation Macro](https://github.com/henyK/doom-eternal-macro)
@@ -29,7 +29,7 @@ You are allowed, and **encouraged**, to use this program during your speedruns. 
       - Valid version names can be found in the included `validVersions.txt` file
 - Firewall rule creation/deletion
   - DOOM Eternal automatically downloads a server-side balance update on launch
-  - This can effect the campaign, so speedruns require a firewall rule to block this
+  - This can affect the campaign, so speedruns **require** a firewall rule to block this
 - [meath00k](https://github.com/brongo/m3337ho0o0ok)
   - meath00k is bundled with DESRU
   - Use the Cheats button to install/uninstall meath00k to enable the use of cheat protected commands, along with adding features like noclip/notarget/entitySpawning
@@ -53,4 +53,4 @@ You can find instructions for usage of this utility by clicking the **HELP** but
 If your melee/interact action is bound to `E` or `Q`, interacting with a Modbot may duplicate the input, causing the mod selection menu to tab over to another weapon. If you use either of these keys for your interact action, you will either need to rebind it to another key, or disable the Max FPS Limit in DESRU's options.  
 If you disable the Max FPS Limit, you are **REQUIRED** to limit your framerate to 250 (or lower) through external means. Your options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, among others. Make sure that this external limit is running **at all times**. NVIDIA Control Panel is recommended for this reason as you'll only need to set it once.
 ### Feedback and Questions
-If you have any feedback or questions about the program, please let me know in the MDSR Discord, **@bowsr#0238**.
+If you have any feedback or questions about the program, please let me know in the [MDSR Discord](https://discord.com/invite/dtDa9VZ), **@bowsr#0238**.
