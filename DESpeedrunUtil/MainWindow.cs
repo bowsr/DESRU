@@ -713,8 +713,8 @@ namespace DESpeedrunUtil {
 
         // Checks if ReShade is both installed for Vulkan and set to run over DOOMEternalx64vk
         private bool CheckForReShade() {
-            using RegistryKey localMachineKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
-            var names = localMachineKey.GetValueNames();
+            using RegistryKey? localMachineKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
+            string[] names = localMachineKey?.GetValueNames() ?? Array.Empty<string>();
             var foundLayer = false;
             foreach(string s in names) {
                 if(s.ToLower().Contains("reshade")) {
@@ -723,8 +723,8 @@ namespace DESpeedrunUtil {
                 }
             }
             if(!foundLayer) {
-                using RegistryKey currentUserKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
-                names = currentUserKey.GetValueNames();
+                using RegistryKey? currentUserKey = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Khronos\Vulkan\ImplicitLayers\");
+                names = currentUserKey?.GetValueNames() ?? Array.Empty<string>();
                 foreach(string s in names) {
                     if(s.ToLower().Contains("reshade")) {
                         foundLayer = true;
@@ -734,11 +734,11 @@ namespace DESpeedrunUtil {
             }
             if(foundLayer) {
                 try {
-                    var rs = File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").Contains(_gameDirectory);
+                    var rs = File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").ToLower().Contains(_gameDirectory.ToLower());
                     if(rs) Log.Information("ReShade is installed and is running over DOOMEternal.");
                     else Log.Information("ReShade is not running over DOOMEternal.");
                     return rs;
-                } catch(Exception e) {
+                }catch(Exception e) {
                     Log.Error(e, "An error occured when checking ReShade files. Assuming ReShade is running over DOOMEternal.");
                     return true;
                 }
