@@ -274,6 +274,7 @@ namespace DESpeedrunUtil {
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
             _memory.SetFlag(_enableMacro && _macro.HasKeyBound(), "macro");
             _memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
+            _memory.SetFlag(trainerTestCheckbox.Checked, "trainer");
 
             enableMaxFPSCheckbox.Enabled = !v;
             if(!v) {

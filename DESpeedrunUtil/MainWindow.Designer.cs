@@ -180,6 +180,7 @@
             this.moreHotkeysTitle = new System.Windows.Forms.Label();
             this.toolTip7500 = new System.Windows.Forms.ToolTip(this.components);
             this.collapsiblePanel = new System.Windows.Forms.Panel();
+            this.trainerTestCheckbox = new System.Windows.Forms.CheckBox();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -2182,6 +2183,7 @@
             // collapsiblePanel
             // 
             this.collapsiblePanel.AutoScroll = true;
+            this.collapsiblePanel.Controls.Add(this.trainerTestCheckbox);
             this.collapsiblePanel.Controls.Add(this.hotkeyPanel);
             this.collapsiblePanel.Controls.Add(this.moreHotkeysTitle);
             this.collapsiblePanel.Controls.Add(this.hotkeysTitle);
@@ -2205,6 +2207,18 @@
             this.collapsiblePanel.TabIndex = 40;
             this.collapsiblePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseMove);
             this.collapsiblePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseUp);
+            // 
+            // trainerTestCheckbox
+            // 
+            this.trainerTestCheckbox.AutoSize = true;
+            this.trainerTestCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.trainerTestCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.trainerTestCheckbox.Location = new System.Drawing.Point(353, 487);
+            this.trainerTestCheckbox.Name = "trainerTestCheckbox";
+            this.trainerTestCheckbox.Size = new System.Drawing.Size(120, 22);
+            this.trainerTestCheckbox.TabIndex = 38;
+            this.trainerTestCheckbox.Text = "Enable Trainer";
+            this.trainerTestCheckbox.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
@@ -2441,5 +2455,6 @@
         private Label rtssStatusLabel;
         private Panel collapsiblePanel;
         private CheckBox minimalOSDCheckbox;
+        private CheckBox trainerTestCheckbox;
     }
 }
