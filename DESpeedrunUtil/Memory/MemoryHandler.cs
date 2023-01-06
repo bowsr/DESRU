@@ -649,12 +649,15 @@ namespace DESpeedrunUtil.Memory {
             _raiseMSDP = CreateDP(_currentOffsets.RaiseMS);
             _dropMSDP = CreateDP(_currentOffsets.DropMS);
             if(Version == "1.0 (Release)") _rampJumpDP = CreateDP(0x6126430);
-
-            if(Version.ToLower().Contains("6.66 rev 2")) {
-                _velocityDP = CreateDP(0x5190FA8, 0x1510, 0x5C0, 0x1D0, 0x3F40);
-                _positionDP = CreateDP(0x6472C60);
-                _rotationDP = CreateDP(0x6BC1098);
+            
+            if(int.TryParse(Version[0..1], out int versionMajor)) {
+                _velocityDP = CreateDP(_currentOffsets.Velocity, versionMajor < 3 ? VEL_OFFSETS_OLD : VEL_OFFSETS_CURRENT);
+            }else {
+                _velocityDP = CreateDP(_currentOffsets.Velocity, VEL_OFFSETS_OLD);
             }
+
+            _positionDP = CreateDP(_currentOffsets.Position);
+            _rotationDP = CreateDP(_currentOffsets.Rotation);
         }
 
         private static DeepPointer? CreateDP(int baseOffset, params int[] offsets) => baseOffset != 0 ? new("DOOMEternalx64vk.exe", baseOffset, offsets) : null;
