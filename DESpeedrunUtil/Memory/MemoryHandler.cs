@@ -26,6 +26,9 @@ namespace DESpeedrunUtil.Memory {
                 0.488f, 0.456f, 0.424f, 0.392f, 0.36f, 0.328f, 0.296f, 0.264f, 
                 0.232f, 0.2f, 0.168f, 0.136f, 0.104f, 0.072f, 0.04f, 0.01f };
 
+        private readonly int[] VEL_OFFSETS_CURRENT = new int[4] { 0x1510, 0x5C0, 0x1D0, 0x3F40 };
+        private readonly int[] VEL_OFFSETS_OLD = new int[4] { 0x1510, 0x598, 0x1D0, 0x3F40 };
+
         public static List<KnownOffsets> OffsetList = new(), ScannedOffsetList = new();
         KnownOffsets _currentOffsets;
 
