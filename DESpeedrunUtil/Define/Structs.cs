@@ -50,6 +50,10 @@
 
             public int ResScales { get; init; }
 
+            public int Velocity { get; init; }
+            public int Position { get; init; }
+            public int Rotation { get; init; }
+
             public KnownOffsets(string v, int r1, int r6, int res) {
                 Version = v;
                 Row1 = r1;
@@ -68,6 +72,9 @@
                 RaiseMS = 0;
                 DropMS = 0;
                 ResScales = res;
+                Velocity = 0;
+                Position = 0;
+                Rotation = 0;
             }
         }
     }
