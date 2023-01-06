@@ -16,7 +16,10 @@
     "DynamicRes": 106052560,
     "RaiseMS": 106053428,
     "DropMS": 106053204,
-    "ResScales": 45753552
+    "ResScales": 45753552,
+    "Velocity": 0,
+    "Position": 0,
+    "Rotation": 0
   },
   {
     "Version": "6.66 Rev 2",
@@ -35,7 +38,10 @@
     "DynamicRes": 105290832,
     "RaiseMS": 105291700,
     "DropMS": 105291476,
-    "ResScales": 45060240
+    "ResScales": 45060240,
+    "Velocity": 85528488,
+    "Position": 105327712,
+    "Rotation": 112988312
   },
   {
     "Version": "6.4",
@@ -54,7 +60,10 @@
     "DynamicRes": 103364272,
     "RaiseMS": 103365364,
     "DropMS": 103365140,
-    "ResScales": 43863664
+    "ResScales": 43863664,
+    "Velocity": 83537832,
+    "Position": 0,
+    "Rotation": 0
   },
   {
     "Version": "6.3",
@@ -73,7 +82,10 @@
     "DynamicRes": 103364272,
     "RaiseMS": 103365364,
     "DropMS": 103365140,
-    "ResScales": 43863664
+    "ResScales": 43863664,
+    "Velocity": 83537832,
+    "Position": 0,
+    "Rotation": 0
   },
   {
     "Version": "5.1",
@@ -92,7 +104,10 @@
     "DynamicRes": 99290400,
     "RaiseMS": 99291492,
     "DropMS": 99291268,
-    "ResScales": 42460576
+    "ResScales": 42460576,
+    "Velocity": 82457688,
+    "Position": 0,
+    "Rotation": 0
   },
   {
     "Version": "5.0",
@@ -111,7 +126,10 @@
     "DynamicRes": 99290400,
     "RaiseMS": 99291492,
     "DropMS": 99291268,
-    "ResScales": 42460576
+    "ResScales": 42460576,
+    "Velocity": 82457688,
+    "Position": 0,
+    "Rotation": 0
   },
   {
     "Version": "4.1",
@@ -130,7 +148,10 @@
     "DynamicRes": 102465680,
     "RaiseMS": 102466772,
     "DropMS": 102466548,
-    "ResScales": 41663872
+    "ResScales": 41663872,
+    "Velocity": 0,
+    "Position": 0,
+    "Rotation": 0
   },
   {
     "Version": "3.1",
@@ -149,7 +170,10 @@
     "DynamicRes": 102737264,
     "RaiseMS": 102738356,
     "DropMS": 102738132,
-    "ResScales": 42091856
+    "ResScales": 42091856,
+    "Velocity": 85871576,
+    "Position": 0,
+    "Rotation": 0
   },
   {
     "Version": "1.1",
@@ -168,7 +192,10 @@
     "DynamicRes": 96352944,
     "RaiseMS": 96354036,
     "DropMS": 96353812,
-    "ResScales": 40347328
+    "ResScales": 40347328,
+    "Velocity": 80143112,
+    "Position": 0,
+    "Rotation": 0
   },
   {
     "Version": "1.0 (Release)",
@@ -187,6 +214,9 @@
     "DynamicRes": 96412272,
     "RaiseMS": 96413364,
     "DropMS": 96413140,
-    "ResScales": 40005232
+    "ResScales": 40005232,
+    "Velocity": 80202248,
+    "Position": 0,
+    "Rotation": 0
   }
 ]
