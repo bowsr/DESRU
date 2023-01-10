@@ -62,8 +62,8 @@
     "DropMS": 103365140,
     "ResScales": 43863664,
     "Velocity": 83537832,
-    "Position": 0,
-    "Rotation": 0
+    "Position": 103401376,
+    "Rotation": 111044856
   },
   {
     "Version": "6.3",
@@ -84,8 +84,8 @@
     "DropMS": 103365140,
     "ResScales": 43863664,
     "Velocity": 83537832,
-    "Position": 0,
-    "Rotation": 0
+    "Position": 103401376,
+    "Rotation": 111044856
   },
   {
     "Version": "5.1",
@@ -106,8 +106,8 @@
     "DropMS": 99291268,
     "ResScales": 42460576,
     "Velocity": 82457688,
-    "Position": 0,
-    "Rotation": 0
+    "Position": 99330400,
+    "Rotation": 107003960
   },
   {
     "Version": "5.0",
@@ -128,8 +128,8 @@
     "DropMS": 99291268,
     "ResScales": 42460576,
     "Velocity": 82457688,
-    "Position": 0,
-    "Rotation": 0
+    "Position": 99330400,
+    "Rotation": 107003960
   },
   {
     "Version": "4.1",
@@ -149,9 +149,9 @@
     "RaiseMS": 102466772,
     "DropMS": 102466548,
     "ResScales": 41663872,
-    "Velocity": 0,
-    "Position": 0,
-    "Rotation": 0
+    "Velocity": 85428984,
+    "Position": 106291920,
+    "Rotation": 109144648
   },
   {
     "Version": "3.1",
@@ -172,8 +172,8 @@
     "DropMS": 102738132,
     "ResScales": 42091856,
     "Velocity": 85871576,
-    "Position": 0,
-    "Rotation": 0
+    "Position": 106434896,
+    "Rotation": 109029208
   },
   {
     "Version": "1.1",
@@ -194,8 +194,8 @@
     "DropMS": 96353812,
     "ResScales": 40347328,
     "Velocity": 80143112,
-    "Position": 0,
-    "Rotation": 0
+    "Position": 100048976,
+    "Rotation": 102364280
   },
   {
     "Version": "1.0 (Release)",
@@ -216,7 +216,7 @@
     "DropMS": 96413140,
     "ResScales": 40005232,
     "Velocity": 80202248,
-    "Position": 0,
-    "Rotation": 0
+    "Position": 100108224,
+    "Rotation": 102418216
   }
 ]

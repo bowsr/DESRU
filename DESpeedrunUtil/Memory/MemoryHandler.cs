@@ -161,9 +161,16 @@ namespace DESpeedrunUtil.Memory {
                 var yaw = _game.ReadValue<float>(_yawPtr);
                 _row1 = "%i FPS";
                 _row2 = string.Format("{0:0.00} | {1:0.00}", Math.Sqrt(xVel * xVel + yVel * yVel), Math.Sqrt(xVel * xVel + yVel * yVel + zVel * zVel));
-                _cpu = string.Format("{0:0.00} {1:0.00} {2:0.00}", xPos, yPos, zPos);
-                _row3 = string.Format("{0:0.0} {1:0.0}", (360f + yaw) % 360f, (360f + pitch) % 360f);
-                _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _gpuV = _gpuN = "";
+                if(_cpuPtr != IntPtr.Zero) {
+                    _cpu = string.Format("{0:0.00} {1:0.00} {2:0.00}", xPos, yPos, zPos);
+                    _row3 = string.Format("{0:0.0} {1:0.0}", (360f + yaw) % 360f, (360f + pitch) % 360f);
+                    _row4 = "";
+                }else {
+                    _row3 = string.Format("{0:0.00} {1:0.00} {2:0.00}", xPos, yPos, zPos);
+                    _row4 = string.Format("{0:0.0} {1:0.0}", (360f + yaw) % 360f, (360f + pitch) % 360f);
+                    _cpu = "";
+                }
+                _row5 = _row6 = _row7 = _row8 = _row9 = _gpuV = _gpuN = "";
                 ModifyMetricRows();
             }
 
