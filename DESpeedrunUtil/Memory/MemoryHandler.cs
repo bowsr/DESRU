@@ -42,9 +42,7 @@ namespace DESpeedrunUtil.Memory {
                _row1Ptr, _row6Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
                _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr,
-               _velocityXPtr, _velocityYPtr, _velocityZPtr,
-               _positionXPtr, _positionYPtr, _positionZPtr,
-               _yawPtr, _pitchPtr;
+               _velocityPtr, _positionPtr, _rotationPtr;
 
         Process _game, _trainer;
         HotkeyHandler _hotkeys;
@@ -66,6 +64,10 @@ namespace DESpeedrunUtil.Memory {
 
         bool _windowFocused = false, _dynTimer = false;
         long _focusedTime, _dynTime;
+
+        float _velocityX = 0f, _velocityY = 0f, _velocityZ = 0f, _velocityHorizontal = 0f, _velocityTotal = 0f,
+              _positionX = 0f, _positionY = 0f, _positionZ = 0f,
+              _yaw = 0f, _pitch = 0f;
 
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
             _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
@@ -116,10 +118,11 @@ namespace DESpeedrunUtil.Memory {
             if(_continuePtr != IntPtr.Zero && _game.ReadValue<bool>(_continuePtr) != _autoContinue) 
                 _game.WriteBytes(_continuePtr, new byte[1] { Convert.ToByte(_autoContinue) });
 
+            _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
+
             if(!_trainerFlag) {
                 if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
                 if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
-                _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
                 _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
                 if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
@@ -151,26 +154,29 @@ namespace DESpeedrunUtil.Memory {
                 if(_metricsPtr != IntPtr.Zero) SetMetrics((byte) ((_minimalOSD) ? 1 : 2));
                 ModifyMetricRows();
             }else {
-                var xVel = _game.ReadValue<float>(_velocityXPtr);
-                var yVel = _game.ReadValue<float>(_velocityYPtr);
-                var zVel = _game.ReadValue<float>(_velocityZPtr);
-                var xPos = _game.ReadValue<float>(_positionXPtr);
-                var yPos = _game.ReadValue<float>(_positionYPtr);
-                var zPos = _game.ReadValue<float>(_positionZPtr);
-                var pitch = _game.ReadValue<float>(_pitchPtr);
-                var yaw = _game.ReadValue<float>(_yawPtr);
-                _row1 = "%i FPS";
-                _row2 = string.Format("{0:0.00} | {1:0.00}", Math.Sqrt(xVel * xVel + yVel * yVel), Math.Sqrt(xVel * xVel + yVel * yVel + zVel * zVel));
+                ReadTrainerValues();
+                string velocity = string.Format("vel: {0:0.00}", _velocityTotal),
+                       position = string.Format("x: {0:0.00} y: {1:0.00} z: {2:0.00}", _positionX, _positionY, _positionZ),
+                       hzVelocity = string.Format("h: {0:0.00} v: {1:0.00}", _velocityHorizontal, _velocityZ),
+                       yaw = string.Format("yaw: {0:0.0}", _yaw),
+                       pitch = string.Format("pitch: {0:0.0}", _pitch);
+
+                _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _gpuV = _gpuN = "";
+                _row2 = velocity;
+                _gpuN = position;
                 if(_cpuPtr != IntPtr.Zero) {
-                    _cpu = string.Format("{0:0.00} {1:0.00} {2:0.00}", xPos, yPos, zPos);
-                    _row3 = string.Format("{0:0.0} {1:0.0}", (360f + yaw) % 360f, (360f + pitch) % 360f);
-                    _row4 = "";
+                    _cpu  = hzVelocity;
                 }else {
-                    _row3 = string.Format("{0:0.00} {1:0.00} {2:0.00}", xPos, yPos, zPos);
-                    _row4 = string.Format("{0:0.0} {1:0.0}", (360f + yaw) % 360f, (360f + pitch) % 360f);
+                    _row3 = hzVelocity;
                     _cpu = "";
                 }
-                _row5 = _row6 = _row7 = _row8 = _row9 = _gpuV = _gpuN = "";
+                if(_row6Ptr != IntPtr.Zero) {
+                    _row8 = yaw;
+                    _row9 = pitch;
+                }else {
+                    _row6 = yaw;
+                    _row7 = pitch;
+                }
                 ModifyMetricRows();
             }
 
@@ -241,6 +247,27 @@ namespace DESpeedrunUtil.Memory {
                     Log.Warning("CheatEngine process found running.");
                 }
             }
+        }
+
+        private void ReadTrainerValues() {
+            byte[] pos = _game.ReadBytes(_positionPtr, 12);
+            byte[] vel = _game.ReadBytes(_velocityPtr, 12);
+            byte[] rot = _game.ReadBytes(_rotationPtr, 8);
+
+            _positionX = BitConverter.ToSingle(pos, 0);
+            _positionY = BitConverter.ToSingle(pos, 4);
+            _positionZ = BitConverter.ToSingle(pos, 8);
+
+            _velocityX = BitConverter.ToSingle(vel, 0);
+            _velocityY = BitConverter.ToSingle(vel, 4);
+            _velocityZ = BitConverter.ToSingle(vel, 8);
+            _velocityHorizontal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY));
+            _velocityTotal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
+
+            _pitch = BitConverter.ToSingle(rot, 0);
+            _yaw = BitConverter.ToSingle(rot, 4);
+            _pitch = (360f + _pitch) % 360f;
+            _yaw = (360f + _yaw) % 360f;
         }
 
         private void ModifyMetricRows() {
@@ -560,18 +587,9 @@ namespace DESpeedrunUtil.Memory {
                 _raiseMSDP?.DerefOffsets(_game, out _raiseMSPtr);
                 _dropMSDP?.DerefOffsets(_game, out _dropMSPtr);
 
-                _velocityDP?.DerefOffsets(_game, out _velocityXPtr);
-                if(_velocityXPtr != IntPtr.Zero) {
-                    _velocityYPtr = _velocityXPtr + 4;
-                    _velocityZPtr = _velocityXPtr + 8;
-                }
-                _positionDP?.DerefOffsets(_game, out _positionXPtr);
-                if(_positionXPtr != IntPtr.Zero) {
-                    _positionYPtr = _positionXPtr + 4;
-                    _positionZPtr = _positionXPtr + 8;
-                }
-                _rotationDP?.DerefOffsets(_game, out _pitchPtr);
-                if(_pitchPtr != IntPtr.Zero) _yawPtr = _pitchPtr + 4;
+                _velocityDP?.DerefOffsets(_game, out _velocityPtr);
+                _positionDP?.DerefOffsets(_game, out _positionPtr);
+                _rotationDP?.DerefOffsets(_game, out _rotationPtr);
             }catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
                 return;
