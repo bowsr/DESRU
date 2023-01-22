@@ -421,6 +421,7 @@ namespace DESpeedrunUtil {
             collapsiblePanel.Controls.Add(new DESRUShadowLabel(versionTitle.Font, "CHANGE VERSION", versionTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
             collapsiblePanel.Controls.Add(new DESRUShadowLabel(infoPanelTitle.Font, "INFO PANEL", infoPanelTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
             collapsiblePanel.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
+            collapsiblePanel.Controls.Add(new DESRUShadowLabel(trainerTitle.Font, "TRAINER", trainerTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
             collapsiblePanel.Controls.Add(_moreHotkeysLabel);
 
             // User Settings
