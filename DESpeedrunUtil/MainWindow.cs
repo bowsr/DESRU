@@ -13,6 +13,7 @@ using Timer = System.Windows.Forms.Timer;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
 using System.Configuration;
+using System.Runtime.CompilerServices;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
@@ -27,6 +28,8 @@ namespace DESpeedrunUtil {
         private const string PATH_PROFILE_DIR = @"\782330\remote\PROFILE";
         private const string PATH_PROFILE_FILE = @"\profile.bin";
         private const string PATH_FPSKEYS_JSON = @".\fpskeys.json";
+        private const string TEXTBOX_POSITION_TEXT = "Position\r\nx: {0:0.00}\r\ny: {1:0.00}\r\nz: {2:0.00}\r\nyaw: {3:0.0}\r\npitch: {4:0.0}";
+        private const string TEXTBOX_VELOCITY_TEXT = "Velocity\r\nx: {0:0.00}\r\ny: {1:0.00}\r\nz: {2:0.00}\r\nhorizontal: {3:0.0}\r\ntotal: {4:0.0}";
 
         private const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
         private const int WINDOW_HEIGHT_DEFAULT = 805;
@@ -191,6 +194,7 @@ namespace DESpeedrunUtil {
 
         // Main timer method that runs this utility's logic.
         private void UpdateTick() {
+
             if(_gameProcess == null || _gameProcess.HasExited) {
                 Hooked = false;
                 _hotkeys.DisableHotkeys();
@@ -274,7 +278,7 @@ namespace DESpeedrunUtil {
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
             _memory.SetFlag(_enableMacro && _macro.HasKeyBound(), "macro");
             _memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
-            _memory.SetFlag(trainerTestCheckbox.Checked, "trainer");
+            _memory.SetFlag(trainerOSDCheckbox.Checked, "trainer");
 
             enableMaxFPSCheckbox.Enabled = !v;
             if(!v) {
@@ -315,6 +319,17 @@ namespace DESpeedrunUtil {
             if(_displayPattern && ((DateTime.Now.Ticks - _scrollDisplayTime) / 10000) >= 2000) {
                 _displayPattern = false;
                 _memory.SetScrollPatternString(string.Empty);
+            }
+            /** Trainer **/
+            if(_memory.GetFlag("cheats")) {
+                float[] pos = _memory.GetPlayerPosition(),
+                        vel = _memory.GetPlayerVelocity();
+
+                positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, pos[0], pos[1], pos[2], pos[3], pos[4]);
+                velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
+
+                positionTextBox.Visible = true;
+                velocityTextBox.Visible = true;
             }
         }
 
@@ -1084,6 +1099,9 @@ namespace DESpeedrunUtil {
             targetFPSInput.Font = EternalUIRegular;
             percentLabel.Font = EternalUIRegular;
             targetFPSLabel.Font = EternalUIRegular;
+            trainerOSDCheckbox.Font = EternalUIRegular;
+            positionTextBox.Font = EternalUIRegular;
+            velocityTextBox.Font = EternalUIRegular;
 
             label1.Font = EternalUIRegular;
             label2.Font = EternalUIRegular;
@@ -1135,6 +1153,7 @@ namespace DESpeedrunUtil {
             unlockResButton.Font = EternalUIBold;
             showMoreKeysButton.Font = EternalUIBold;
             cvarLabel.Font = EternalUIBold;
+            speedometerButton.Font = EternalUIBold;
 
             // Eternal Logo Bold 14point
             hotkeysTitle.Font = EternalLogoBold;
@@ -1142,6 +1161,7 @@ namespace DESpeedrunUtil {
             optionsTitle.Font = EternalLogoBold;
             resTitle.Font = EternalLogoBold;
             infoPanelTitle.Font = EternalLogoBold;
+            trainerTitle.Font = EternalLogoBold;
 
             // Eternal Battle Bold 20.25point
             windowTitle.Font = EternalBattleBold;
