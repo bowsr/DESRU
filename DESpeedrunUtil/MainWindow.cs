@@ -206,7 +206,16 @@ namespace DESpeedrunUtil {
                 unlockResButton.Text = "Game Not Running";
 
                 enableMaxFPSCheckbox.Enabled = true;
+
+                HideTrainerControls();
             }
+
+            speedometerPrecisionCheckbox.Visible = speedometerCheckbox.Checked;
+            trainerRadioLabel.Visible = speedometerCheckbox.Checked;
+            velocityRadioNone.Visible = speedometerCheckbox.Checked;
+            velocityRadioTotal.Visible = speedometerCheckbox.Checked;
+            velocityRadioVertical.Visible = speedometerCheckbox.Checked;
+
             if(!_fwRestart) firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
 
@@ -329,25 +338,9 @@ namespace DESpeedrunUtil {
                     positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, pos[0], pos[1], pos[2], pos[3], pos[4]);
                     velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
 
-                    positionTextBox.Visible = true;
-                    velocityTextBox.Visible = true;
-                    _speedometer.Visible = false;
-                    speedometerPrecisionCheckbox.Visible = false;
-                    trainerRadioLabel.Visible = false;
-                    velocityRadioNone.Visible = false;
-                    velocityRadioTotal.Visible = false;
-                    velocityRadioVertical.Visible = false;
-                    altPositionTextbox.Visible = false;
+                    ToggleTrainerControls(true);
                 }else {
-                    positionTextBox.Visible = false;
-                    velocityTextBox.Visible = false;
-                    _speedometer.Visible = true;
-                    speedometerPrecisionCheckbox.Visible = true;
-                    trainerRadioLabel.Visible = true;
-                    velocityRadioNone.Visible = true;
-                    velocityRadioTotal.Visible = true;
-                    velocityRadioVertical.Visible = true;
-                    altPositionTextbox.Visible = true;
+                    ToggleTrainerControls(false);
 
                     altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, pos[0], pos[1], pos[2], pos[3], pos[4]);
 
@@ -1031,6 +1024,19 @@ namespace DESpeedrunUtil {
                 }
                 if(c.Controls.Count > 0) CollectHotkeyAndLimitFields(c);
             }
+        }
+
+        private void ToggleTrainerControls(bool state) {
+            positionTextBox.Visible = state;
+            velocityTextBox.Visible = state;
+            _speedometer.Visible = !state;
+            altPositionTextbox.Visible = !state;
+        }
+        private void HideTrainerControls() {
+            positionTextBox.Visible = false;
+            velocityTextBox.Visible = false;
+            _speedometer.Visible = false;
+            altPositionTextbox.Visible = false;
         }
 
         private void ModifyWindowForSmallDisplays() {

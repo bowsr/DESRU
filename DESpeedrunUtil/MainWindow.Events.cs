@@ -413,6 +413,7 @@ namespace DESpeedrunUtil {
             _moreHotkeysLabel = new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK);
             _moreHotkeysLabel.Visible = false;
             _speedometer = new Speedometer(EternalUIRegular32, EternalUIRegular20, speedometerPanel.Location, speedometerPanel.Size, COLOR_TEXT_FORE, COLOR_PANEL_BACK);
+            _speedometer.Visible = false;
             trainerPanel.Controls.Add(_speedometer);
             var titleBar = new DESRUShadowLabel(windowTitle.Font, WINDOW_TITLE, windowTitle.Location, Color.FromArgb(190, 34, 34), COLOR_FORM_BACK);
             titleBar.MouseMove += new MouseEventHandler(DragWindow_MouseMove);
