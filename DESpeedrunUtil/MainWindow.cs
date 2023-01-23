@@ -1198,6 +1198,81 @@ namespace DESpeedrunUtil {
                 e.Graphics.DrawString(Text, Font, new SolidBrush(ForeColor), 0, 0);
             }
         }
+        public class Speedometer: Panel {
+
+            private static readonly Color EMPTY = Color.FromArgb(45, 45, 45);
+            private static readonly Color GREEN = Color.FromArgb(255, 15, 115, 0);
+            private static readonly Color ORANGE = Color.FromArgb(255, 200, 136, 0);
+            private static readonly Color RED = Color.FromArgb(255, 141, 0, 0);
+
+            private const string TEXT_FORMAT = "{0:0.0} M/S";
+            private const string TEXT_FORMAT_PRECISION = "{0:0.00} M/S";
+
+            private const double BHOP_SPEEDCAP = 38.5;
+
+            public float HorizontalVelocity { get; set; } = 0f;
+            public float VerticalVelocity { get; set; } = 0f;
+            public float TotalVelocity { get; set; } = 0f;
+
+            public Font AltFont { get; set; }
+
+            public bool ShowVerticalVelocity { get; set; } = false;
+            public bool IncreasedPrecision { get; set; } = false;
+            public bool HideSecondaryVelocity { get; set; } = false;
+
+            public Speedometer(Font font, Font alt, Point loc, Size size, Color textColor, Color backColor) {
+                this.Font = font;
+                AltFont = alt;
+                this.Location = loc;
+                this.Size = size;
+                this.ForeColor = textColor;
+                this.BackColor = backColor;
+                SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            }
+            protected override void OnPaint(PaintEventArgs e) {
+                base.OnPaint(e);
+
+                string hVelText = FormatVelocity(HorizontalVelocity);
+                string visualizerText = FormatVelocity((ShowVerticalVelocity) ? VerticalVelocity : TotalVelocity);
+                var sizePercent = 1.0;
+                var colorPercent = 0.0;
+                if(!ShowVerticalVelocity) {
+                    sizePercent = TotalVelocity >= BHOP_SPEEDCAP ? 1 : TotalVelocity / BHOP_SPEEDCAP;
+                    colorPercent = TotalVelocity >= (BHOP_SPEEDCAP * 1.5) ? 1 : TotalVelocity / (BHOP_SPEEDCAP * 1.5);
+                }
+                if(!HideSecondaryVelocity) {
+                    e.Graphics.FillRectangle(new SolidBrush(GradientPick(colorPercent, GREEN, ORANGE, RED)), new Rectangle(8, this.Size.Height - 38, (int) (175 * sizePercent), 36));
+
+                    // Total/Vertical Velocity
+                    e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(Color.Black), 15, this.Size.Height - 35);
+                    e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(this.ForeColor), 13, this.Size.Height - 37);
+                }
+
+                // Horizontal Velocity
+                e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(Color.Black), 2, this.Size.Height - 82);
+                e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(this.ForeColor), 0, this.Size.Height - 84);
+            }
+
+            private static Color GradientPick(double percent, Color start, Color middle, Color end) {
+                if(percent <= 0.5) {
+                    if(percent == 0) return EMPTY;
+                    return GREEN;
+                }else if(percent > 0.5 && percent <= 0.75) {
+                    return ColorInterp(start, middle, (percent - 0.5) / 0.25);
+                }else {
+                    return ColorInterp(middle, end, (percent - 0.75) / 0.25);
+                }
+            }
+
+            private string FormatVelocity(float velocity) => string.Format((IncreasedPrecision) ? TEXT_FORMAT_PRECISION : TEXT_FORMAT, velocity);
+
+            private static Color ColorInterp(Color start, Color end, double percent) => Color.FromArgb(LinearInterpolate(start.A, end.A, percent),
+                LinearInterpolate(start.R, end.R, percent),
+                LinearInterpolate(start.G, end.G, percent),
+                LinearInterpolate(start.B, end.B, percent));
+
+            private static byte LinearInterpolate(int start, int end, double percent) => (byte) (start + (int) Math.Round(percent * (end - start)));
+        }
         #endregion
     }
 }
