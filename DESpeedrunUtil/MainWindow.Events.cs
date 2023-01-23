@@ -412,6 +412,8 @@ namespace DESpeedrunUtil {
             InitializeFonts();
             _moreHotkeysLabel = new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK);
             _moreHotkeysLabel.Visible = false;
+            _speedometer = new Speedometer(EternalUIRegular32, EternalUIRegular20, speedometerPanel.Location, speedometerPanel.Size, COLOR_TEXT_FORE, COLOR_PANEL_BACK);
+            trainerPanel.Controls.Add(_speedometer);
             var titleBar = new DESRUShadowLabel(windowTitle.Font, WINDOW_TITLE, windowTitle.Location, Color.FromArgb(190, 34, 34), COLOR_FORM_BACK);
             titleBar.MouseMove += new MouseEventHandler(DragWindow_MouseMove);
             titleBar.MouseUp += new MouseEventHandler(DragWindow_MouseUp);
@@ -423,6 +425,7 @@ namespace DESpeedrunUtil {
             collapsiblePanel.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
             collapsiblePanel.Controls.Add(new DESRUShadowLabel(trainerTitle.Font, "TRAINER", trainerTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
             collapsiblePanel.Controls.Add(_moreHotkeysLabel);
+            
 
             // User Settings
             var fpsJson = "";

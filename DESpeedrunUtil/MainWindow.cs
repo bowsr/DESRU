@@ -12,8 +12,6 @@ using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
-using System.Configuration;
-using System.Runtime.CompilerServices;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
@@ -40,7 +38,7 @@ namespace DESpeedrunUtil {
         private const int WINDOW_EXTRAWIDTH = 12;
 
         private PrivateFontCollection _fonts = new();
-        public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
+        public static Font EternalUIRegular, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalLogoBold, EternalBattleBold;
 
 
         Process? _gameProcess;
@@ -73,6 +71,7 @@ namespace DESpeedrunUtil {
         List<Process> _openProcesses;
 
         DESRUShadowLabel _moreHotkeysLabel;
+        Speedometer _speedometer;
 
         bool _smallDisplay = false;
 
@@ -194,7 +193,6 @@ namespace DESpeedrunUtil {
 
         // Main timer method that runs this utility's logic.
         private void UpdateTick() {
-
             if(_gameProcess == null || _gameProcess.HasExited) {
                 Hooked = false;
                 _hotkeys.DisableHotkeys();
@@ -320,16 +318,42 @@ namespace DESpeedrunUtil {
                 _displayPattern = false;
                 _memory.SetScrollPatternString(string.Empty);
             }
+            
             /** Trainer **/
             if(_memory.GetFlag("cheats")) {
                 float[] pos = _memory.GetPlayerPosition(),
                         vel = _memory.GetPlayerVelocity();
 
-                positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, pos[0], pos[1], pos[2], pos[3], pos[4]);
-                velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
+                if(!speedometerCheckbox.Checked) {
+                    positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, pos[0], pos[1], pos[2], pos[3], pos[4]);
+                    velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
 
-                positionTextBox.Visible = true;
-                velocityTextBox.Visible = true;
+                    positionTextBox.Visible = true;
+                    velocityTextBox.Visible = true;
+                    _speedometer.Visible = false;
+                    speedometerPrecisionCheckbox.Visible = false;
+                    trainerRadioLabel.Visible = false;
+                    velocityRadioNone.Visible = false;
+                    velocityRadioTotal.Visible = false;
+                    velocityRadioVertical.Visible = false;
+                }else {
+                    positionTextBox.Visible = false;
+                    velocityTextBox.Visible = false;
+                    _speedometer.Visible = true;
+                    speedometerPrecisionCheckbox.Visible = true;
+                    trainerRadioLabel.Visible = true;
+                    velocityRadioNone.Visible = true;
+                    velocityRadioTotal.Visible = true;
+                    velocityRadioVertical.Visible = true;
+
+                    _speedometer.VerticalVelocity = vel[2];
+                    _speedometer.HorizontalVelocity = vel[3];
+                    _speedometer.TotalVelocity = vel[4];
+                    _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
+                    _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
+                    _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
+                    _speedometer.Refresh();
+                }
             }
         }
 
@@ -972,6 +996,8 @@ namespace DESpeedrunUtil {
                 switch(ff.Name) {
                     case "Eternal UI 2":
                         EternalUIRegular = new(ff, 11.25f, FontStyle.Regular, GraphicsUnit.Point);
+                        EternalUIRegular20 = new(ff, 20f, FontStyle.Regular, GraphicsUnit.Point);
+                        EternalUIRegular32 = new(ff, 32f, FontStyle.Regular, GraphicsUnit.Point);
                         EternalUIBold = new(ff, 11.25f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                     case "Eternal Battle":
@@ -1153,7 +1179,6 @@ namespace DESpeedrunUtil {
             unlockResButton.Font = EternalUIBold;
             showMoreKeysButton.Font = EternalUIBold;
             cvarLabel.Font = EternalUIBold;
-            speedometerButton.Font = EternalUIBold;
 
             // Eternal Logo Bold 14point
             hotkeysTitle.Font = EternalLogoBold;
