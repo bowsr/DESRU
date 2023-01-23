@@ -81,7 +81,6 @@ namespace DESpeedrunUtil.Memory {
                 return;
             }
             Version = TranslateModuleSize();
-            _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
 
             MemoryTimer = new Timer();
             MemoryTimer.Interval = Program.TimerInterval;
@@ -119,6 +118,7 @@ namespace DESpeedrunUtil.Memory {
             if(_continuePtr != IntPtr.Zero && _game.ReadValue<bool>(_continuePtr) != _autoContinue) 
                 _game.WriteBytes(_continuePtr, new byte[1] { Convert.ToByte(_autoContinue) });
 
+            _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
             _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
 
             if(!_trainerFlag) {
@@ -161,7 +161,6 @@ namespace DESpeedrunUtil.Memory {
                        yaw = string.Format("yaw: {0:0.0}", _yaw),
                        pitch = string.Format("pitch: {0:0.0}", _pitch);
 
-                _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _gpuV = _gpuN = "";
                 _row2 = velocity;
                 _gpuN = position;
                 if(_cpuPtr != IntPtr.Zero) {
@@ -250,24 +249,18 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void ReadTrainerValues() {
-            byte[] pos = _game.ReadBytes(_positionPtr, 12);
-            byte[] vel = _game.ReadBytes(_velocityPtr, 12);
-            byte[] rot = _game.ReadBytes(_rotationPtr, 8);
+            _positionX = _game.ReadValue<float>(_positionPtr);
+            _positionY = _game.ReadValue<float>(_positionPtr + 4);
+            _positionZ = _game.ReadValue<float>(_positionPtr + 8);
 
-            _positionX = BitConverter.ToSingle(pos, 0);
-            _positionY = BitConverter.ToSingle(pos, 4);
-            _positionZ = BitConverter.ToSingle(pos, 8);
-
-            _velocityX = BitConverter.ToSingle(vel, 0);
-            _velocityY = BitConverter.ToSingle(vel, 4);
-            _velocityZ = BitConverter.ToSingle(vel, 8);
+            _velocityX = _game.ReadValue<float>(_velocityPtr);
+            _velocityY = _game.ReadValue<float>(_velocityPtr + 4);
+            _velocityZ = _game.ReadValue<float>(_velocityPtr + 8);
             _velocityHorizontal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY));
             _velocityTotal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
 
-            _pitch = BitConverter.ToSingle(rot, 0);
-            _yaw = BitConverter.ToSingle(rot, 4);
-            _pitch = (360f + _pitch) % 360f;
-            _yaw = (360f + _yaw) % 360f;
+            _pitch = (360f + _game.ReadValue<float>(_rotationPtr)) % 360f;
+            _yaw = (360f + _game.ReadValue<float>(_rotationPtr + 4)) % 360f;
         }
 
         private void ModifyMetricRows() {
