@@ -182,7 +182,13 @@
             this.collapsiblePanel = new System.Windows.Forms.Panel();
             this.trainerTitle = new System.Windows.Forms.Label();
             this.trainerPanel = new System.Windows.Forms.Panel();
-            this.speedometerButton = new System.Windows.Forms.Button();
+            this.trainerRadioLabel = new System.Windows.Forms.Label();
+            this.velocityRadioVertical = new System.Windows.Forms.RadioButton();
+            this.velocityRadioTotal = new System.Windows.Forms.RadioButton();
+            this.velocityRadioNone = new System.Windows.Forms.RadioButton();
+            this.speedometerPrecisionCheckbox = new System.Windows.Forms.CheckBox();
+            this.speedometerCheckbox = new System.Windows.Forms.CheckBox();
+            this.speedometerPanel = new System.Windows.Forms.Panel();
             this.velocityTextBox = new System.Windows.Forms.TextBox();
             this.positionTextBox = new System.Windows.Forms.TextBox();
             this.trainerOSDCheckbox = new System.Windows.Forms.CheckBox();
@@ -2231,7 +2237,13 @@
             // 
             this.trainerPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.trainerPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.trainerPanel.Controls.Add(this.speedometerButton);
+            this.trainerPanel.Controls.Add(this.trainerRadioLabel);
+            this.trainerPanel.Controls.Add(this.velocityRadioVertical);
+            this.trainerPanel.Controls.Add(this.velocityRadioTotal);
+            this.trainerPanel.Controls.Add(this.velocityRadioNone);
+            this.trainerPanel.Controls.Add(this.speedometerPrecisionCheckbox);
+            this.trainerPanel.Controls.Add(this.speedometerCheckbox);
+            this.trainerPanel.Controls.Add(this.speedometerPanel);
             this.trainerPanel.Controls.Add(this.velocityTextBox);
             this.trainerPanel.Controls.Add(this.positionTextBox);
             this.trainerPanel.Controls.Add(this.trainerOSDCheckbox);
@@ -2240,20 +2252,91 @@
             this.trainerPanel.Size = new System.Drawing.Size(304, 173);
             this.trainerPanel.TabIndex = 31;
             // 
-            // speedometerButton
+            // trainerRadioLabel
             // 
-            this.speedometerButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.speedometerButton.Enabled = false;
-            this.speedometerButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.speedometerButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.speedometerButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.speedometerButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.speedometerButton.Location = new System.Drawing.Point(3, 139);
-            this.speedometerButton.Name = "speedometerButton";
-            this.speedometerButton.Size = new System.Drawing.Size(296, 28);
-            this.speedometerButton.TabIndex = 41;
-            this.speedometerButton.Text = "Open Speedometer";
-            this.speedometerButton.UseVisualStyleBackColor = false;
+            this.trainerRadioLabel.AutoSize = true;
+            this.trainerRadioLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.trainerRadioLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.trainerRadioLabel.Location = new System.Drawing.Point(207, 4);
+            this.trainerRadioLabel.Name = "trainerRadioLabel";
+            this.trainerRadioLabel.Size = new System.Drawing.Size(86, 18);
+            this.trainerRadioLabel.TabIndex = 48;
+            this.trainerRadioLabel.Text = "2nd Velocity";
+            this.trainerRadioLabel.Visible = false;
+            // 
+            // velocityRadioVertical
+            // 
+            this.velocityRadioVertical.AutoSize = true;
+            this.velocityRadioVertical.Font = new System.Drawing.Font("Eternal UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.velocityRadioVertical.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.velocityRadioVertical.Location = new System.Drawing.Point(210, 57);
+            this.velocityRadioVertical.Name = "velocityRadioVertical";
+            this.velocityRadioVertical.Size = new System.Drawing.Size(72, 21);
+            this.velocityRadioVertical.TabIndex = 51;
+            this.velocityRadioVertical.Text = "Vertical";
+            this.velocityRadioVertical.UseVisualStyleBackColor = true;
+            this.velocityRadioVertical.Visible = false;
+            // 
+            // velocityRadioTotal
+            // 
+            this.velocityRadioTotal.AutoSize = true;
+            this.velocityRadioTotal.Checked = true;
+            this.velocityRadioTotal.Font = new System.Drawing.Font("Eternal UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.velocityRadioTotal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.velocityRadioTotal.Location = new System.Drawing.Point(210, 39);
+            this.velocityRadioTotal.Name = "velocityRadioTotal";
+            this.velocityRadioTotal.Size = new System.Drawing.Size(53, 21);
+            this.velocityRadioTotal.TabIndex = 50;
+            this.velocityRadioTotal.TabStop = true;
+            this.velocityRadioTotal.Text = "Total";
+            this.velocityRadioTotal.UseVisualStyleBackColor = true;
+            this.velocityRadioTotal.Visible = false;
+            // 
+            // velocityRadioNone
+            // 
+            this.velocityRadioNone.AutoSize = true;
+            this.velocityRadioNone.Font = new System.Drawing.Font("Eternal UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.velocityRadioNone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.velocityRadioNone.Location = new System.Drawing.Point(210, 21);
+            this.velocityRadioNone.Name = "velocityRadioNone";
+            this.velocityRadioNone.Size = new System.Drawing.Size(52, 21);
+            this.velocityRadioNone.TabIndex = 49;
+            this.velocityRadioNone.Text = "Hide";
+            this.velocityRadioNone.UseVisualStyleBackColor = true;
+            this.velocityRadioNone.Visible = false;
+            // 
+            // speedometerPrecisionCheckbox
+            // 
+            this.speedometerPrecisionCheckbox.AutoSize = true;
+            this.speedometerPrecisionCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.speedometerPrecisionCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.speedometerPrecisionCheckbox.Location = new System.Drawing.Point(22, 45);
+            this.speedometerPrecisionCheckbox.Name = "speedometerPrecisionCheckbox";
+            this.speedometerPrecisionCheckbox.Size = new System.Drawing.Size(152, 22);
+            this.speedometerPrecisionCheckbox.TabIndex = 44;
+            this.speedometerPrecisionCheckbox.Text = "Increased Precision";
+            this.speedometerPrecisionCheckbox.UseVisualStyleBackColor = true;
+            this.speedometerPrecisionCheckbox.Visible = false;
+            // 
+            // speedometerCheckbox
+            // 
+            this.speedometerCheckbox.AutoSize = true;
+            this.speedometerCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.speedometerCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.speedometerCheckbox.Location = new System.Drawing.Point(6, 24);
+            this.speedometerCheckbox.Name = "speedometerCheckbox";
+            this.speedometerCheckbox.Size = new System.Drawing.Size(152, 22);
+            this.speedometerCheckbox.TabIndex = 43;
+            this.speedometerCheckbox.Text = "Show Speedometer";
+            this.speedometerCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // speedometerPanel
+            // 
+            this.speedometerPanel.Location = new System.Drawing.Point(6, 84);
+            this.speedometerPanel.Name = "speedometerPanel";
+            this.speedometerPanel.Size = new System.Drawing.Size(291, 79);
+            this.speedometerPanel.TabIndex = 42;
+            this.speedometerPanel.Visible = false;
             // 
             // velocityTextBox
             // 
@@ -2261,7 +2344,7 @@
             this.velocityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.velocityTextBox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.velocityTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.velocityTextBox.Location = new System.Drawing.Point(108, 26);
+            this.velocityTextBox.Location = new System.Drawing.Point(108, 53);
             this.velocityTextBox.Multiline = true;
             this.velocityTextBox.Name = "velocityTextBox";
             this.velocityTextBox.Size = new System.Drawing.Size(134, 107);
@@ -2277,7 +2360,7 @@
             this.positionTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.positionTextBox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.positionTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.positionTextBox.Location = new System.Drawing.Point(6, 26);
+            this.positionTextBox.Location = new System.Drawing.Point(6, 53);
             this.positionTextBox.Multiline = true;
             this.positionTextBox.Name = "positionTextBox";
             this.positionTextBox.Size = new System.Drawing.Size(96, 107);
@@ -2293,9 +2376,9 @@
             this.trainerOSDCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.trainerOSDCheckbox.Location = new System.Drawing.Point(6, 3);
             this.trainerOSDCheckbox.Name = "trainerOSDCheckbox";
-            this.trainerOSDCheckbox.Size = new System.Drawing.Size(174, 22);
+            this.trainerOSDCheckbox.Size = new System.Drawing.Size(166, 22);
             this.trainerOSDCheckbox.TabIndex = 38;
-            this.trainerOSDCheckbox.Text = "Enable In-Game Display";
+            this.trainerOSDCheckbox.Text = "Show In-Game Display";
             this.trainerOSDCheckbox.UseVisualStyleBackColor = true;
             // 
             // MainWindow
@@ -2540,6 +2623,12 @@
         private Panel trainerPanel;
         private TextBox velocityTextBox;
         private TextBox positionTextBox;
-        private Button speedometerButton;
+        private Panel speedometerPanel;
+        private CheckBox speedometerCheckbox;
+        private Label trainerRadioLabel;
+        private RadioButton velocityRadioVertical;
+        private RadioButton velocityRadioTotal;
+        private RadioButton velocityRadioNone;
+        private CheckBox speedometerPrecisionCheckbox;
     }
 }
