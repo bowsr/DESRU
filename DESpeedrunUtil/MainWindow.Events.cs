@@ -450,6 +450,22 @@ namespace DESpeedrunUtil {
             unDelayCheckbox.Checked = !Properties.Settings.Default.UNDelay;
             autoContinueCheckbox.Checked = Properties.Settings.Default.AutoContinue;
             minimalOSDCheckbox.Checked = Properties.Settings.Default.MinimalOSD;
+            trainerOSDCheckbox.Checked = Properties.Settings.Default.TrainerOSD;
+            speedometerCheckbox.Checked = Properties.Settings.Default.ShowSpeedometer;
+            speedometerPrecisionCheckbox.Checked = Properties.Settings.Default.IncreasedPrecision;
+            switch(Properties.Settings.Default.SecondaryVelocity) {
+                case 0:
+                    velocityRadioNone.Checked = true;
+                    break;
+                case 1:
+                default:
+                    velocityRadioTotal.Checked = true;
+                    break;
+                case 2:
+                    velocityRadioVertical.Checked = true;
+                    break;
+
+            }
             _rtssExecutable = Properties.Settings.Default.RTSSPath;
             if(_rtssExecutable == string.Empty) DetectRTSSExecutable();
             launchRTSSCheckbox.Visible = !Properties.Settings.Default.EnableMaxFPSLimit;

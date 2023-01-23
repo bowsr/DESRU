@@ -980,6 +980,13 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.RTSSPath = _rtssExecutable;
             Properties.Settings.Default.LaunchRTSS = launchRTSSCheckbox.Checked;
             Properties.Settings.Default.MinimalOSD = minimalOSDCheckbox.Checked;
+            Properties.Settings.Default.TrainerOSD = trainerOSDCheckbox.Checked;
+            Properties.Settings.Default.ShowSpeedometer = speedometerCheckbox.Checked;
+            Properties.Settings.Default.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
+            int radio = 1;
+            if(velocityRadioNone.Checked) radio = 0;
+            if(velocityRadioVertical.Checked) radio = 2;
+            Properties.Settings.Default.SecondaryVelocity = radio;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
             var dirs = "";
