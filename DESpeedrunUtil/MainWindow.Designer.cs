@@ -180,6 +180,19 @@
             this.moreHotkeysTitle = new System.Windows.Forms.Label();
             this.toolTip7500 = new System.Windows.Forms.ToolTip(this.components);
             this.collapsiblePanel = new System.Windows.Forms.Panel();
+            this.trainerTitle = new System.Windows.Forms.Label();
+            this.trainerPanel = new System.Windows.Forms.Panel();
+            this.altPositionTextbox = new System.Windows.Forms.TextBox();
+            this.trainerRadioLabel = new System.Windows.Forms.Label();
+            this.velocityRadioVertical = new System.Windows.Forms.RadioButton();
+            this.velocityRadioTotal = new System.Windows.Forms.RadioButton();
+            this.velocityRadioNone = new System.Windows.Forms.RadioButton();
+            this.speedometerPrecisionCheckbox = new System.Windows.Forms.CheckBox();
+            this.speedometerCheckbox = new System.Windows.Forms.CheckBox();
+            this.speedometerPanel = new System.Windows.Forms.Panel();
+            this.velocityTextBox = new System.Windows.Forms.TextBox();
+            this.positionTextBox = new System.Windows.Forms.TextBox();
+            this.trainerOSDCheckbox = new System.Windows.Forms.CheckBox();
             this.hotkeyPanel.SuspendLayout();
             this.fpsPanel1.SuspendLayout();
             this.fpsPanel2.SuspendLayout();
@@ -205,6 +218,7 @@
             this.panel7.SuspendLayout();
             this.panel8.SuspendLayout();
             this.collapsiblePanel.SuspendLayout();
+            this.trainerPanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // hotkeyField0
@@ -240,7 +254,7 @@
             this.autorunMacroCheckbox.AutoSize = true;
             this.autorunMacroCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.autorunMacroCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.autorunMacroCheckbox.Location = new System.Drawing.Point(6, 8);
+            this.autorunMacroCheckbox.Location = new System.Drawing.Point(6, 3);
             this.autorunMacroCheckbox.Name = "autorunMacroCheckbox";
             this.autorunMacroCheckbox.Size = new System.Drawing.Size(179, 22);
             this.autorunMacroCheckbox.TabIndex = 8;
@@ -344,7 +358,7 @@
             this.enableHotkeysCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableHotkeysCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.enableHotkeysCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.enableHotkeysCheckbox.Location = new System.Drawing.Point(6, 29);
+            this.enableHotkeysCheckbox.Location = new System.Drawing.Point(6, 24);
             this.enableHotkeysCheckbox.Name = "enableHotkeysCheckbox";
             this.enableHotkeysCheckbox.Size = new System.Drawing.Size(165, 22);
             this.enableHotkeysCheckbox.TabIndex = 9;
@@ -472,9 +486,9 @@
             this.refreshVersionsButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.refreshVersionsButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.refreshVersionsButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.refreshVersionsButton.Location = new System.Drawing.Point(154, 60);
+            this.refreshVersionsButton.Location = new System.Drawing.Point(153, 60);
             this.refreshVersionsButton.Name = "refreshVersionsButton";
-            this.refreshVersionsButton.Size = new System.Drawing.Size(145, 32);
+            this.refreshVersionsButton.Size = new System.Drawing.Size(146, 32);
             this.refreshVersionsButton.TabIndex = 11;
             this.refreshVersionsButton.Text = "Refresh List";
             this.refreshVersionsButton.UseVisualStyleBackColor = false;
@@ -490,7 +504,7 @@
             this.changeVersionButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.changeVersionButton.Location = new System.Drawing.Point(3, 60);
             this.changeVersionButton.Name = "changeVersionButton";
-            this.changeVersionButton.Size = new System.Drawing.Size(145, 32);
+            this.changeVersionButton.Size = new System.Drawing.Size(146, 32);
             this.changeVersionButton.TabIndex = 10;
             this.changeVersionButton.Text = "Change Version";
             this.changeVersionButton.UseVisualStyleBackColor = false;
@@ -503,7 +517,7 @@
             this.firewallToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.firewallToggleButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.firewallToggleButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.firewallToggleButton.Location = new System.Drawing.Point(3, 201);
+            this.firewallToggleButton.Location = new System.Drawing.Point(3, 205);
             this.firewallToggleButton.Name = "firewallToggleButton";
             this.firewallToggleButton.Size = new System.Drawing.Size(186, 32);
             this.firewallToggleButton.TabIndex = 0;
@@ -516,7 +530,7 @@
             this.defaultFPSLabel.AutoSize = true;
             this.defaultFPSLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.defaultFPSLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.defaultFPSLabel.Location = new System.Drawing.Point(197, 73);
+            this.defaultFPSLabel.Location = new System.Drawing.Point(197, 67);
             this.defaultFPSLabel.Name = "defaultFPSLabel";
             this.defaultFPSLabel.Size = new System.Drawing.Size(64, 18);
             this.defaultFPSLabel.TabIndex = 20;
@@ -553,7 +567,7 @@
             this.optionsTitle.AutoSize = true;
             this.optionsTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.optionsTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.optionsTitle.Location = new System.Drawing.Point(5, 454);
+            this.optionsTitle.Location = new System.Drawing.Point(5, 452);
             this.optionsTitle.Name = "optionsTitle";
             this.optionsTitle.Size = new System.Drawing.Size(129, 21);
             this.optionsTitle.TabIndex = 23;
@@ -567,7 +581,7 @@
             this.meathookToggleButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.meathookToggleButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.meathookToggleButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.meathookToggleButton.Location = new System.Drawing.Point(3, 239);
+            this.meathookToggleButton.Location = new System.Drawing.Point(3, 241);
             this.meathookToggleButton.Name = "meathookToggleButton";
             this.meathookToggleButton.Size = new System.Drawing.Size(186, 29);
             this.meathookToggleButton.TabIndex = 24;
@@ -580,7 +594,7 @@
             this.meathookRestartLabel.AutoSize = true;
             this.meathookRestartLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.meathookRestartLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.meathookRestartLabel.Location = new System.Drawing.Point(189, 244);
+            this.meathookRestartLabel.Location = new System.Drawing.Point(189, 246);
             this.meathookRestartLabel.Name = "meathookRestartLabel";
             this.meathookRestartLabel.Size = new System.Drawing.Size(114, 18);
             this.meathookRestartLabel.TabIndex = 25;
@@ -591,7 +605,7 @@
             this.firewallRestartLabel.AutoSize = true;
             this.firewallRestartLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.firewallRestartLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.firewallRestartLabel.Location = new System.Drawing.Point(189, 208);
+            this.firewallRestartLabel.Location = new System.Drawing.Point(189, 212);
             this.firewallRestartLabel.Name = "firewallRestartLabel";
             this.firewallRestartLabel.Size = new System.Drawing.Size(114, 18);
             this.firewallRestartLabel.TabIndex = 26;
@@ -745,7 +759,7 @@
             this.replaceProfileCheckbox.AutoSize = true;
             this.replaceProfileCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.replaceProfileCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.replaceProfileCheckbox.Location = new System.Drawing.Point(6, 36);
+            this.replaceProfileCheckbox.Location = new System.Drawing.Point(6, 38);
             this.replaceProfileCheckbox.Name = "replaceProfileCheckbox";
             this.replaceProfileCheckbox.Size = new System.Drawing.Size(203, 22);
             this.replaceProfileCheckbox.TabIndex = 30;
@@ -771,9 +785,9 @@
             this.panel2.Controls.Add(this.defaultFPSLabel);
             this.panel2.Controls.Add(this.meathookToggleButton);
             this.panel2.Controls.Add(this.firewallRestartLabel);
-            this.panel2.Location = new System.Drawing.Point(5, 478);
+            this.panel2.Location = new System.Drawing.Point(5, 476);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(304, 273);
+            this.panel2.Size = new System.Drawing.Size(304, 275);
             this.panel2.TabIndex = 31;
             // 
             // minimalOSDCheckbox
@@ -781,7 +795,7 @@
             this.minimalOSDCheckbox.AutoSize = true;
             this.minimalOSDCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.minimalOSDCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.minimalOSDCheckbox.Location = new System.Drawing.Point(6, 50);
+            this.minimalOSDCheckbox.Location = new System.Drawing.Point(6, 45);
             this.minimalOSDCheckbox.Name = "minimalOSDCheckbox";
             this.minimalOSDCheckbox.Size = new System.Drawing.Size(197, 22);
             this.minimalOSDCheckbox.TabIndex = 37;
@@ -794,7 +808,7 @@
             this.launchRTSSCheckbox.AutoSize = true;
             this.launchRTSSCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.launchRTSSCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.launchRTSSCheckbox.Location = new System.Drawing.Point(22, 93);
+            this.launchRTSSCheckbox.Location = new System.Drawing.Point(22, 84);
             this.launchRTSSCheckbox.Name = "launchRTSSCheckbox";
             this.launchRTSSCheckbox.Size = new System.Drawing.Size(190, 22);
             this.launchRTSSCheckbox.TabIndex = 36;
@@ -808,7 +822,7 @@
             this.cvarLabel.AutoSize = true;
             this.cvarLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.cvarLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.cvarLabel.Location = new System.Drawing.Point(3, 117);
+            this.cvarLabel.Location = new System.Drawing.Point(3, 124);
             this.cvarLabel.Name = "cvarLabel";
             this.cvarLabel.Size = new System.Drawing.Size(55, 18);
             this.cvarLabel.TabIndex = 35;
@@ -819,7 +833,7 @@
             this.autoContinueCheckbox.AutoSize = true;
             this.autoContinueCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.autoContinueCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.autoContinueCheckbox.Location = new System.Drawing.Point(6, 176);
+            this.autoContinueCheckbox.Location = new System.Drawing.Point(6, 183);
             this.autoContinueCheckbox.Name = "autoContinueCheckbox";
             this.autoContinueCheckbox.Size = new System.Drawing.Size(242, 22);
             this.autoContinueCheckbox.TabIndex = 33;
@@ -832,7 +846,7 @@
             this.unDelayCheckbox.AutoSize = true;
             this.unDelayCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.unDelayCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.unDelayCheckbox.Location = new System.Drawing.Point(6, 155);
+            this.unDelayCheckbox.Location = new System.Drawing.Point(6, 162);
             this.unDelayCheckbox.Name = "unDelayCheckbox";
             this.unDelayCheckbox.Size = new System.Drawing.Size(273, 22);
             this.unDelayCheckbox.TabIndex = 32;
@@ -845,7 +859,7 @@
             this.antiAliasingCheckbox.AutoSize = true;
             this.antiAliasingCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.antiAliasingCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.antiAliasingCheckbox.Location = new System.Drawing.Point(6, 134);
+            this.antiAliasingCheckbox.Location = new System.Drawing.Point(6, 141);
             this.antiAliasingCheckbox.Name = "antiAliasingCheckbox";
             this.antiAliasingCheckbox.Size = new System.Drawing.Size(158, 22);
             this.antiAliasingCheckbox.TabIndex = 31;
@@ -860,7 +874,7 @@
             this.enableMaxFPSCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableMaxFPSCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.enableMaxFPSCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.enableMaxFPSCheckbox.Location = new System.Drawing.Point(6, 72);
+            this.enableMaxFPSCheckbox.Location = new System.Drawing.Point(6, 66);
             this.enableMaxFPSCheckbox.Name = "enableMaxFPSCheckbox";
             this.enableMaxFPSCheckbox.Size = new System.Drawing.Size(163, 22);
             this.enableMaxFPSCheckbox.TabIndex = 30;
@@ -874,7 +888,7 @@
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.defaultFPS);
             this.panel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.panel3.Location = new System.Drawing.Point(264, 69);
+            this.panel3.Location = new System.Drawing.Point(264, 63);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(34, 26);
             this.panel3.TabIndex = 29;
@@ -911,9 +925,9 @@
             this.exitButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exitButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.exitButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.exitButton.Location = new System.Drawing.Point(471, 719);
+            this.exitButton.Location = new System.Drawing.Point(470, 723);
             this.exitButton.Name = "exitButton";
-            this.exitButton.Size = new System.Drawing.Size(149, 32);
+            this.exitButton.Size = new System.Drawing.Size(150, 28);
             this.exitButton.TabIndex = 32;
             this.exitButton.Text = "Exit";
             this.exitButton.UseVisualStyleBackColor = false;
@@ -1230,7 +1244,7 @@
             this.autoDynamicCheckbox.AutoSize = true;
             this.autoDynamicCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.autoDynamicCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.autoDynamicCheckbox.Location = new System.Drawing.Point(6, 29);
+            this.autoDynamicCheckbox.Location = new System.Drawing.Point(6, 24);
             this.autoDynamicCheckbox.Name = "autoDynamicCheckbox";
             this.autoDynamicCheckbox.Size = new System.Drawing.Size(209, 22);
             this.autoDynamicCheckbox.TabIndex = 32;
@@ -1243,7 +1257,7 @@
             this.unlockOnStartupCheckbox.AutoSize = true;
             this.unlockOnStartupCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.unlockOnStartupCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.unlockOnStartupCheckbox.Location = new System.Drawing.Point(6, 8);
+            this.unlockOnStartupCheckbox.Location = new System.Drawing.Point(6, 3);
             this.unlockOnStartupCheckbox.Name = "unlockOnStartupCheckbox";
             this.unlockOnStartupCheckbox.Size = new System.Drawing.Size(142, 22);
             this.unlockOnStartupCheckbox.TabIndex = 30;
@@ -1334,9 +1348,9 @@
             this.helpButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.helpButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.helpButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpButton.Location = new System.Drawing.Point(316, 719);
+            this.helpButton.Location = new System.Drawing.Point(316, 723);
             this.helpButton.Name = "helpButton";
-            this.helpButton.Size = new System.Drawing.Size(149, 32);
+            this.helpButton.Size = new System.Drawing.Size(150, 28);
             this.helpButton.TabIndex = 35;
             this.helpButton.Text = "Help";
             this.helpButton.UseVisualStyleBackColor = false;
@@ -1349,9 +1363,9 @@
             this.downpatcherButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.downpatcherButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.downpatcherButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.downpatcherButton.Location = new System.Drawing.Point(316, 628);
+            this.downpatcherButton.Location = new System.Drawing.Point(316, 659);
             this.downpatcherButton.Name = "downpatcherButton";
-            this.downpatcherButton.Size = new System.Drawing.Size(304, 32);
+            this.downpatcherButton.Size = new System.Drawing.Size(304, 28);
             this.downpatcherButton.TabIndex = 36;
             this.downpatcherButton.Text = "Download Downpatcher";
             this.downpatcherButton.UseVisualStyleBackColor = false;
@@ -1364,9 +1378,9 @@
             this.discordButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.discordButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.discordButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.discordButton.Location = new System.Drawing.Point(316, 666);
+            this.discordButton.Location = new System.Drawing.Point(316, 691);
             this.discordButton.Name = "discordButton";
-            this.discordButton.Size = new System.Drawing.Size(304, 32);
+            this.discordButton.Size = new System.Drawing.Size(304, 28);
             this.discordButton.TabIndex = 37;
             this.discordButton.Text = "MDSR Discord";
             this.discordButton.UseVisualStyleBackColor = false;
@@ -1376,7 +1390,7 @@
             this.desruVersionLabel.AutoSize = true;
             this.desruVersionLabel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.desruVersionLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.desruVersionLabel.Location = new System.Drawing.Point(589, 704);
+            this.desruVersionLabel.Location = new System.Drawing.Point(589, 22);
             this.desruVersionLabel.Name = "desruVersionLabel";
             this.desruVersionLabel.Size = new System.Drawing.Size(31, 13);
             this.desruVersionLabel.TabIndex = 38;
@@ -2182,6 +2196,8 @@
             // collapsiblePanel
             // 
             this.collapsiblePanel.AutoScroll = true;
+            this.collapsiblePanel.Controls.Add(this.trainerTitle);
+            this.collapsiblePanel.Controls.Add(this.trainerPanel);
             this.collapsiblePanel.Controls.Add(this.hotkeyPanel);
             this.collapsiblePanel.Controls.Add(this.moreHotkeysTitle);
             this.collapsiblePanel.Controls.Add(this.hotkeysTitle);
@@ -2205,6 +2221,181 @@
             this.collapsiblePanel.TabIndex = 40;
             this.collapsiblePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseMove);
             this.collapsiblePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseUp);
+            // 
+            // trainerTitle
+            // 
+            this.trainerTitle.AutoSize = true;
+            this.trainerTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.trainerTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.trainerTitle.Location = new System.Drawing.Point(316, 452);
+            this.trainerTitle.Name = "trainerTitle";
+            this.trainerTitle.Size = new System.Drawing.Size(128, 21);
+            this.trainerTitle.TabIndex = 40;
+            this.trainerTitle.Text = "TRAINER";
+            this.trainerTitle.Visible = false;
+            // 
+            // trainerPanel
+            // 
+            this.trainerPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.trainerPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.trainerPanel.Controls.Add(this.altPositionTextbox);
+            this.trainerPanel.Controls.Add(this.trainerRadioLabel);
+            this.trainerPanel.Controls.Add(this.velocityRadioVertical);
+            this.trainerPanel.Controls.Add(this.velocityRadioTotal);
+            this.trainerPanel.Controls.Add(this.velocityRadioNone);
+            this.trainerPanel.Controls.Add(this.speedometerPrecisionCheckbox);
+            this.trainerPanel.Controls.Add(this.speedometerCheckbox);
+            this.trainerPanel.Controls.Add(this.speedometerPanel);
+            this.trainerPanel.Controls.Add(this.velocityTextBox);
+            this.trainerPanel.Controls.Add(this.positionTextBox);
+            this.trainerPanel.Controls.Add(this.trainerOSDCheckbox);
+            this.trainerPanel.Location = new System.Drawing.Point(316, 476);
+            this.trainerPanel.Name = "trainerPanel";
+            this.trainerPanel.Size = new System.Drawing.Size(304, 179);
+            this.trainerPanel.TabIndex = 31;
+            // 
+            // altPositionTextbox
+            // 
+            this.altPositionTextbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.altPositionTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.altPositionTextbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.altPositionTextbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.altPositionTextbox.Location = new System.Drawing.Point(6, 77);
+            this.altPositionTextbox.Multiline = true;
+            this.altPositionTextbox.Name = "altPositionTextbox";
+            this.altPositionTextbox.Size = new System.Drawing.Size(293, 19);
+            this.altPositionTextbox.TabIndex = 52;
+            this.altPositionTextbox.Text = "x: {0:0.00} y: {1:0.00} z: {2:0.00}";
+            this.altPositionTextbox.WordWrap = false;
+            // 
+            // trainerRadioLabel
+            // 
+            this.trainerRadioLabel.AutoSize = true;
+            this.trainerRadioLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.trainerRadioLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.trainerRadioLabel.Location = new System.Drawing.Point(207, 4);
+            this.trainerRadioLabel.Name = "trainerRadioLabel";
+            this.trainerRadioLabel.Size = new System.Drawing.Size(86, 18);
+            this.trainerRadioLabel.TabIndex = 48;
+            this.trainerRadioLabel.Text = "2nd Velocity";
+            this.trainerRadioLabel.Visible = false;
+            // 
+            // velocityRadioVertical
+            // 
+            this.velocityRadioVertical.AutoSize = true;
+            this.velocityRadioVertical.Font = new System.Drawing.Font("Eternal UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.velocityRadioVertical.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.velocityRadioVertical.Location = new System.Drawing.Point(210, 57);
+            this.velocityRadioVertical.Name = "velocityRadioVertical";
+            this.velocityRadioVertical.Size = new System.Drawing.Size(72, 21);
+            this.velocityRadioVertical.TabIndex = 51;
+            this.velocityRadioVertical.Text = "Vertical";
+            this.velocityRadioVertical.UseVisualStyleBackColor = true;
+            this.velocityRadioVertical.Visible = false;
+            // 
+            // velocityRadioTotal
+            // 
+            this.velocityRadioTotal.AutoSize = true;
+            this.velocityRadioTotal.Checked = true;
+            this.velocityRadioTotal.Font = new System.Drawing.Font("Eternal UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.velocityRadioTotal.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.velocityRadioTotal.Location = new System.Drawing.Point(210, 39);
+            this.velocityRadioTotal.Name = "velocityRadioTotal";
+            this.velocityRadioTotal.Size = new System.Drawing.Size(53, 21);
+            this.velocityRadioTotal.TabIndex = 50;
+            this.velocityRadioTotal.TabStop = true;
+            this.velocityRadioTotal.Text = "Total";
+            this.velocityRadioTotal.UseVisualStyleBackColor = true;
+            this.velocityRadioTotal.Visible = false;
+            // 
+            // velocityRadioNone
+            // 
+            this.velocityRadioNone.AutoSize = true;
+            this.velocityRadioNone.Font = new System.Drawing.Font("Eternal UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.velocityRadioNone.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.velocityRadioNone.Location = new System.Drawing.Point(210, 21);
+            this.velocityRadioNone.Name = "velocityRadioNone";
+            this.velocityRadioNone.Size = new System.Drawing.Size(52, 21);
+            this.velocityRadioNone.TabIndex = 49;
+            this.velocityRadioNone.Text = "Hide";
+            this.velocityRadioNone.UseVisualStyleBackColor = true;
+            this.velocityRadioNone.Visible = false;
+            // 
+            // speedometerPrecisionCheckbox
+            // 
+            this.speedometerPrecisionCheckbox.AutoSize = true;
+            this.speedometerPrecisionCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.speedometerPrecisionCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.speedometerPrecisionCheckbox.Location = new System.Drawing.Point(22, 42);
+            this.speedometerPrecisionCheckbox.Name = "speedometerPrecisionCheckbox";
+            this.speedometerPrecisionCheckbox.Size = new System.Drawing.Size(152, 22);
+            this.speedometerPrecisionCheckbox.TabIndex = 44;
+            this.speedometerPrecisionCheckbox.Text = "Increased Precision";
+            this.speedometerPrecisionCheckbox.UseVisualStyleBackColor = true;
+            this.speedometerPrecisionCheckbox.Visible = false;
+            // 
+            // speedometerCheckbox
+            // 
+            this.speedometerCheckbox.AutoSize = true;
+            this.speedometerCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.speedometerCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.speedometerCheckbox.Location = new System.Drawing.Point(6, 24);
+            this.speedometerCheckbox.Name = "speedometerCheckbox";
+            this.speedometerCheckbox.Size = new System.Drawing.Size(152, 22);
+            this.speedometerCheckbox.TabIndex = 43;
+            this.speedometerCheckbox.Text = "Show Speedometer";
+            this.speedometerCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // speedometerPanel
+            // 
+            this.speedometerPanel.Location = new System.Drawing.Point(6, 100);
+            this.speedometerPanel.Name = "speedometerPanel";
+            this.speedometerPanel.Size = new System.Drawing.Size(291, 72);
+            this.speedometerPanel.TabIndex = 42;
+            this.speedometerPanel.Visible = false;
+            // 
+            // velocityTextBox
+            // 
+            this.velocityTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.velocityTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.velocityTextBox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.velocityTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.velocityTextBox.Location = new System.Drawing.Point(108, 53);
+            this.velocityTextBox.Multiline = true;
+            this.velocityTextBox.Name = "velocityTextBox";
+            this.velocityTextBox.Size = new System.Drawing.Size(134, 107);
+            this.velocityTextBox.TabIndex = 40;
+            this.velocityTextBox.Text = "Velocity\r\nx: {0:0.00}\r\ny: {0:0.00}\r\nz: {0:0.00}\r\nhorizontal: {0:0.00}\r\ntotal: {0:" +
+    "0.00}";
+            this.velocityTextBox.Visible = false;
+            this.velocityTextBox.WordWrap = false;
+            // 
+            // positionTextBox
+            // 
+            this.positionTextBox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.positionTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.positionTextBox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.positionTextBox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.positionTextBox.Location = new System.Drawing.Point(6, 53);
+            this.positionTextBox.Multiline = true;
+            this.positionTextBox.Name = "positionTextBox";
+            this.positionTextBox.Size = new System.Drawing.Size(96, 107);
+            this.positionTextBox.TabIndex = 39;
+            this.positionTextBox.Text = "Position\r\nx: {0:0.00}\r\ny: {0:0.00}\r\nz: {0:0.00}\r\nyaw: {0:0.0}\r\npitch: {0:0.0}";
+            this.positionTextBox.Visible = false;
+            this.positionTextBox.WordWrap = false;
+            // 
+            // trainerOSDCheckbox
+            // 
+            this.trainerOSDCheckbox.AutoSize = true;
+            this.trainerOSDCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.trainerOSDCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.trainerOSDCheckbox.Location = new System.Drawing.Point(6, 3);
+            this.trainerOSDCheckbox.Name = "trainerOSDCheckbox";
+            this.trainerOSDCheckbox.Size = new System.Drawing.Size(166, 22);
+            this.trainerOSDCheckbox.TabIndex = 38;
+            this.trainerOSDCheckbox.Text = "Show In-Game Display";
+            this.trainerOSDCheckbox.UseVisualStyleBackColor = true;
             // 
             // MainWindow
             // 
@@ -2280,6 +2471,8 @@
             this.panel8.PerformLayout();
             this.collapsiblePanel.ResumeLayout(false);
             this.collapsiblePanel.PerformLayout();
+            this.trainerPanel.ResumeLayout(false);
+            this.trainerPanel.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -2441,5 +2634,18 @@
         private Label rtssStatusLabel;
         private Panel collapsiblePanel;
         private CheckBox minimalOSDCheckbox;
+        private CheckBox trainerOSDCheckbox;
+        private Label trainerTitle;
+        private Panel trainerPanel;
+        private TextBox velocityTextBox;
+        private TextBox positionTextBox;
+        private Panel speedometerPanel;
+        private CheckBox speedometerCheckbox;
+        private Label trainerRadioLabel;
+        private RadioButton velocityRadioVertical;
+        private RadioButton velocityRadioTotal;
+        private RadioButton velocityRadioNone;
+        private CheckBox speedometerPrecisionCheckbox;
+        private TextBox altPositionTextbox;
     }
 }

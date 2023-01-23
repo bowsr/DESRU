@@ -26,18 +26,23 @@ namespace DESpeedrunUtil.Memory {
                 0.488f, 0.456f, 0.424f, 0.392f, 0.36f, 0.328f, 0.296f, 0.264f, 
                 0.232f, 0.2f, 0.168f, 0.136f, 0.104f, 0.072f, 0.04f, 0.01f };
 
+        private readonly int[] VEL_OFFSETS_CURRENT = new int[4] { 0x1510, 0x5C0, 0x1D0, 0x3F40 };
+        private readonly int[] VEL_OFFSETS_OLD = new int[4] { 0x1510, 0x598, 0x1D0, 0x3F40 };
+
         public static List<KnownOffsets> OffsetList = new(), ScannedOffsetList = new();
         KnownOffsets _currentOffsets;
 
         DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _skipIntroDP, _aliasingDP, _unDelayDP, _continueDP,
                     _row1DP, _row6DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
-                    _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP;
+                    _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP,
+                    _velocityDP, _positionDP, _rotationDP;
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _skipIntroPtr, _aliasingPtr, _unDelayPtr, _continuePtr,
                _row1Ptr, _row6Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
-               _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr;
+               _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr,
+               _velocityPtr, _positionPtr, _rotationPtr;
 
         Process _game, _trainer;
         HotkeyHandler _hotkeys;
@@ -60,6 +65,10 @@ namespace DESpeedrunUtil.Memory {
         bool _windowFocused = false, _dynTimer = false;
         long _focusedTime, _dynTime;
 
+        float _velocityX = 0f, _velocityY = 0f, _velocityZ = 0f, _velocityHorizontal = 0f, _velocityTotal = 0f,
+              _positionX = 0f, _positionY = 0f, _positionZ = 0f,
+              _yaw = 0f, _pitch = 0f;
+
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
             _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
             _trainer = null;
@@ -72,7 +81,6 @@ namespace DESpeedrunUtil.Memory {
                 return;
             }
             Version = TranslateModuleSize();
-            _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
 
             MemoryTimer = new Timer();
             MemoryTimer.Interval = Program.TimerInterval;
@@ -80,7 +88,7 @@ namespace DESpeedrunUtil.Memory {
 
             _restartCheatsTimer = new System.Timers.Timer(2500);
             _restartCheatsTimer.Elapsed += (sender, e) => { RestartTick(); };
-            _restartCheatsTimer.Start();
+            //_restartCheatsTimer.Start();
 
             Reset = false;
             Initialize();
@@ -89,9 +97,10 @@ namespace DESpeedrunUtil.Memory {
 
 
         private void MemoryTick() {
-            if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
+            //if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
 
             DerefPointers();
+            if(_osdFlagCheats) ReadTrainerValues();
 
             // com_skipIntroVideo
             if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr)) 
@@ -109,10 +118,12 @@ namespace DESpeedrunUtil.Memory {
             if(_continuePtr != IntPtr.Zero && _game.ReadValue<bool>(_continuePtr) != _autoContinue) 
                 _game.WriteBytes(_continuePtr, new byte[1] { Convert.ToByte(_autoContinue) });
 
+            _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
+            _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
+
             if(!_trainerFlag) {
                 if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
                 if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
-                _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
                 _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
                 if(_row2 == "1.0 (Release)") _row2 = "Release";
                 if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
@@ -142,6 +153,29 @@ namespace DESpeedrunUtil.Memory {
                     }
                 }
                 if(_metricsPtr != IntPtr.Zero) SetMetrics((byte) ((_minimalOSD) ? 1 : 2));
+                ModifyMetricRows();
+            }else {
+                string velocity = string.Format("vel: {0:0.00}", _velocityTotal),
+                       position = string.Format("x: {0:0.00} y: {1:0.00} z: {2:0.00}", _positionX, _positionY, _positionZ),
+                       hzVelocity = string.Format("h: {0:0.00} v: {1:0.00}", _velocityHorizontal, _velocityZ),
+                       yaw = string.Format("yaw: {0:0.0}", _yaw),
+                       pitch = string.Format("pitch: {0:0.0}", _pitch);
+
+                _row2 = velocity;
+                _gpuN = position;
+                if(_cpuPtr != IntPtr.Zero) {
+                    _cpu  = hzVelocity;
+                }else {
+                    _row3 = hzVelocity;
+                    _cpu = "";
+                }
+                if(_row6Ptr != IntPtr.Zero) {
+                    _row8 = yaw;
+                    _row9 = pitch;
+                }else {
+                    _row6 = yaw;
+                    _row7 = pitch;
+                }
                 ModifyMetricRows();
             }
 
@@ -212,6 +246,21 @@ namespace DESpeedrunUtil.Memory {
                     Log.Warning("CheatEngine process found running.");
                 }
             }
+        }
+
+        private void ReadTrainerValues() {
+            _positionX = _game.ReadValue<float>(_positionPtr);
+            _positionY = _game.ReadValue<float>(_positionPtr + 4);
+            _positionZ = _game.ReadValue<float>(_positionPtr + 8);
+
+            _velocityX = _game.ReadValue<float>(_velocityPtr);
+            _velocityY = _game.ReadValue<float>(_velocityPtr + 4);
+            _velocityZ = _game.ReadValue<float>(_velocityPtr + 8);
+            _velocityHorizontal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY));
+            _velocityTotal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
+
+            _pitch = (360f + _game.ReadValue<float>(_rotationPtr)) % 360f;
+            _yaw = (360f + _game.ReadValue<float>(_rotationPtr + 4)) % 360f;
         }
 
         private void ModifyMetricRows() {
@@ -389,6 +438,9 @@ namespace DESpeedrunUtil.Memory {
                 case "minimal":
                     _minimalOSD = flag;
                     break;
+                case "trainer":
+                    _trainerFlag = flag;
+                    break;
             }
         }
 
@@ -467,6 +519,10 @@ namespace DESpeedrunUtil.Memory {
         }
         public void SetMinRes(float min) => _minRes = min;
         public float GetMinRes() => _minRes;
+
+        public float[] GetPlayerPosition() => new float[5] { _positionX, _positionY, _positionZ, _yaw, _pitch };
+        public float[] GetPlayerVelocity() => new float[5] { _velocityX, _velocityY, _velocityZ, _velocityHorizontal, _velocityTotal };
+
         /// <summary>
         /// Reads the current value of rs_enable from memory
         /// </summary>
@@ -527,6 +583,10 @@ namespace DESpeedrunUtil.Memory {
                 _resScalesDP?.DerefOffsets(_game, out _resScalesPtr);
                 _raiseMSDP?.DerefOffsets(_game, out _raiseMSPtr);
                 _dropMSDP?.DerefOffsets(_game, out _dropMSPtr);
+
+                _velocityDP?.DerefOffsets(_game, out _velocityPtr);
+                _positionDP?.DerefOffsets(_game, out _positionPtr);
+                _rotationDP?.DerefOffsets(_game, out _rotationPtr);
             }catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
                 return;
@@ -611,6 +671,15 @@ namespace DESpeedrunUtil.Memory {
             _raiseMSDP = CreateDP(_currentOffsets.RaiseMS);
             _dropMSDP = CreateDP(_currentOffsets.DropMS);
             if(Version == "1.0 (Release)") _rampJumpDP = CreateDP(0x6126430);
+            
+            if(int.TryParse(Version[0..1], out int versionMajor)) {
+                _velocityDP = CreateDP(_currentOffsets.Velocity, versionMajor < 3 ? VEL_OFFSETS_OLD : VEL_OFFSETS_CURRENT);
+            }else {
+                _velocityDP = CreateDP(_currentOffsets.Velocity, VEL_OFFSETS_OLD);
+            }
+
+            _positionDP = CreateDP(_currentOffsets.Position);
+            _rotationDP = CreateDP(_currentOffsets.Rotation);
         }
 
         private static DeepPointer? CreateDP(int baseOffset, params int[] offsets) => baseOffset != 0 ? new("DOOMEternalx64vk.exe", baseOffset, offsets) : null;

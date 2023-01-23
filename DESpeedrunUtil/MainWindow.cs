@@ -12,7 +12,6 @@ using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
-using System.Configuration;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
@@ -27,6 +26,9 @@ namespace DESpeedrunUtil {
         private const string PATH_PROFILE_DIR = @"\782330\remote\PROFILE";
         private const string PATH_PROFILE_FILE = @"\profile.bin";
         private const string PATH_FPSKEYS_JSON = @".\fpskeys.json";
+        private const string TEXTBOX_POSITION_TEXT = "Position\r\nx: {0:0.00}\r\ny: {1:0.00}\r\nz: {2:0.00}\r\nyaw: {3:0.0}\r\npitch: {4:0.0}";
+        private const string TEXTBOX_VELOCITY_TEXT = "Velocity\r\nx: {0:0.00}\r\ny: {1:0.00}\r\nz: {2:0.00}\r\nhorizontal: {3:0.0}\r\ntotal: {4:0.0}";
+        private const string TEXTBOX_ALT_TEXT_POS = "{0:0.00} {1:0.00} {2:0.00} | {3:0.0} {4:0.0}";
 
         private const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
         private const int WINDOW_HEIGHT_DEFAULT = 805;
@@ -37,7 +39,7 @@ namespace DESpeedrunUtil {
         private const int WINDOW_EXTRAWIDTH = 12;
 
         private PrivateFontCollection _fonts = new();
-        public static Font EternalUIRegular, EternalUIBold, EternalLogoBold, EternalBattleBold;
+        public static Font EternalUIRegular, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalLogoBold, EternalBattleBold;
 
 
         Process? _gameProcess;
@@ -70,6 +72,7 @@ namespace DESpeedrunUtil {
         List<Process> _openProcesses;
 
         DESRUShadowLabel _moreHotkeysLabel;
+        Speedometer _speedometer;
 
         bool _smallDisplay = false;
 
@@ -203,7 +206,16 @@ namespace DESpeedrunUtil {
                 unlockResButton.Text = "Game Not Running";
 
                 enableMaxFPSCheckbox.Enabled = true;
+
+                HideTrainerControls();
             }
+
+            speedometerPrecisionCheckbox.Visible = speedometerCheckbox.Checked;
+            trainerRadioLabel.Visible = speedometerCheckbox.Checked;
+            velocityRadioNone.Visible = speedometerCheckbox.Checked;
+            velocityRadioTotal.Visible = speedometerCheckbox.Checked;
+            velocityRadioVertical.Visible = speedometerCheckbox.Checked;
+
             if(!_fwRestart) firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
             firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
 
@@ -274,6 +286,7 @@ namespace DESpeedrunUtil {
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
             _memory.SetFlag(_enableMacro && _macro.HasKeyBound(), "macro");
             _memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
+            _memory.SetFlag(trainerOSDCheckbox.Checked, "trainer");
 
             enableMaxFPSCheckbox.Enabled = !v;
             if(!v) {
@@ -314,6 +327,31 @@ namespace DESpeedrunUtil {
             if(_displayPattern && ((DateTime.Now.Ticks - _scrollDisplayTime) / 10000) >= 2000) {
                 _displayPattern = false;
                 _memory.SetScrollPatternString(string.Empty);
+            }
+            
+            /** Trainer **/
+            if(_memory.GetFlag("cheats")) {
+                float[] pos = _memory.GetPlayerPosition(),
+                        vel = _memory.GetPlayerVelocity();
+
+                if(!speedometerCheckbox.Checked) {
+                    positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, pos[0], pos[1], pos[2], pos[3], pos[4]);
+                    velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
+
+                    ToggleTrainerControls(true);
+                }else {
+                    ToggleTrainerControls(false);
+
+                    altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, pos[0], pos[1], pos[2], pos[3], pos[4]);
+
+                    _speedometer.VerticalVelocity = vel[2];
+                    _speedometer.HorizontalVelocity = vel[3];
+                    _speedometer.TotalVelocity = vel[4];
+                    _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
+                    _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
+                    _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
+                    _speedometer.Refresh();
+                }
             }
         }
 
@@ -942,6 +980,13 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.RTSSPath = _rtssExecutable;
             Properties.Settings.Default.LaunchRTSS = launchRTSSCheckbox.Checked;
             Properties.Settings.Default.MinimalOSD = minimalOSDCheckbox.Checked;
+            Properties.Settings.Default.TrainerOSD = trainerOSDCheckbox.Checked;
+            Properties.Settings.Default.ShowSpeedometer = speedometerCheckbox.Checked;
+            Properties.Settings.Default.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
+            int radio = 1;
+            if(velocityRadioNone.Checked) radio = 0;
+            if(velocityRadioVertical.Checked) radio = 2;
+            Properties.Settings.Default.SecondaryVelocity = radio;
             if(WindowState == FormWindowState.Normal) Properties.Settings.Default.Location = Location;
             else if(WindowState == FormWindowState.Minimized) Properties.Settings.Default.Location = RestoreBounds.Location;
             var dirs = "";
@@ -956,6 +1001,8 @@ namespace DESpeedrunUtil {
                 switch(ff.Name) {
                     case "Eternal UI 2":
                         EternalUIRegular = new(ff, 11.25f, FontStyle.Regular, GraphicsUnit.Point);
+                        EternalUIRegular20 = new(ff, 20f, FontStyle.Regular, GraphicsUnit.Point);
+                        EternalUIRegular32 = new(ff, 32f, FontStyle.Regular, GraphicsUnit.Point);
                         EternalUIBold = new(ff, 11.25f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                     case "Eternal Battle":
@@ -984,6 +1031,19 @@ namespace DESpeedrunUtil {
                 }
                 if(c.Controls.Count > 0) CollectHotkeyAndLimitFields(c);
             }
+        }
+
+        private void ToggleTrainerControls(bool state) {
+            positionTextBox.Visible = state;
+            velocityTextBox.Visible = state;
+            _speedometer.Visible = !state;
+            altPositionTextbox.Visible = !state;
+        }
+        private void HideTrainerControls() {
+            positionTextBox.Visible = false;
+            velocityTextBox.Visible = false;
+            _speedometer.Visible = false;
+            altPositionTextbox.Visible = false;
         }
 
         private void ModifyWindowForSmallDisplays() {
@@ -1083,6 +1143,9 @@ namespace DESpeedrunUtil {
             targetFPSInput.Font = EternalUIRegular;
             percentLabel.Font = EternalUIRegular;
             targetFPSLabel.Font = EternalUIRegular;
+            trainerOSDCheckbox.Font = EternalUIRegular;
+            positionTextBox.Font = EternalUIRegular;
+            velocityTextBox.Font = EternalUIRegular;
 
             label1.Font = EternalUIRegular;
             label2.Font = EternalUIRegular;
@@ -1141,6 +1204,7 @@ namespace DESpeedrunUtil {
             optionsTitle.Font = EternalLogoBold;
             resTitle.Font = EternalLogoBold;
             infoPanelTitle.Font = EternalLogoBold;
+            trainerTitle.Font = EternalLogoBold;
 
             // Eternal Battle Bold 20.25point
             windowTitle.Font = EternalBattleBold;
@@ -1160,6 +1224,14 @@ namespace DESpeedrunUtil {
             if(this.Left < display.WorkingArea.Left) this.Left = display.WorkingArea.Left + 1;
         }
 
+        protected override CreateParams CreateParams {
+            get {
+                CreateParams handleParam = base.CreateParams;
+                handleParam.ExStyle |= 0x02000000;
+                return handleParam;
+            }
+        }
+
         #region COMPONENTS
         public class DESRUShadowLabel: Label {
             public DESRUShadowLabel(Font font, string text, Point loc, Color color, Color back) {
@@ -1176,6 +1248,81 @@ namespace DESpeedrunUtil {
                 e.Graphics.DrawString(Text, Font, new SolidBrush(Color.Black), 2, 2);
                 e.Graphics.DrawString(Text, Font, new SolidBrush(ForeColor), 0, 0);
             }
+        }
+        public class Speedometer: Panel {
+
+            private static readonly Color EMPTY = Color.FromArgb(45, 45, 45);
+            private static readonly Color GREEN = Color.FromArgb(255, 15, 115, 0);
+            private static readonly Color ORANGE = Color.FromArgb(255, 200, 136, 0);
+            private static readonly Color RED = Color.FromArgb(255, 141, 0, 0);
+
+            private const string TEXT_FORMAT = "{0:0.0} M/S";
+            private const string TEXT_FORMAT_PRECISION = "{0:0.00} M/S";
+
+            private const double BHOP_SPEEDCAP = 38.5;
+
+            public float HorizontalVelocity { get; set; } = 0f;
+            public float VerticalVelocity { get; set; } = 0f;
+            public float TotalVelocity { get; set; } = 0f;
+
+            public Font AltFont { get; set; }
+
+            public bool ShowVerticalVelocity { get; set; } = false;
+            public bool IncreasedPrecision { get; set; } = false;
+            public bool HideSecondaryVelocity { get; set; } = false;
+
+            public Speedometer(Font font, Font alt, Point loc, Size size, Color textColor, Color backColor) {
+                this.Font = font;
+                AltFont = alt;
+                this.Location = loc;
+                this.Size = size;
+                this.ForeColor = textColor;
+                this.BackColor = backColor;
+                SetStyle(ControlStyles.UserPaint | ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
+            }
+            protected override void OnPaint(PaintEventArgs e) {
+                base.OnPaint(e);
+
+                string hVelText = FormatVelocity(HorizontalVelocity);
+                string visualizerText = FormatVelocity((ShowVerticalVelocity) ? VerticalVelocity : TotalVelocity);
+                var sizePercent = 1.0;
+                var colorPercent = 0.0;
+                if(!ShowVerticalVelocity) {
+                    sizePercent = TotalVelocity >= BHOP_SPEEDCAP ? 1 : TotalVelocity / BHOP_SPEEDCAP;
+                    colorPercent = TotalVelocity >= (BHOP_SPEEDCAP * 1.5) ? 1 : TotalVelocity / (BHOP_SPEEDCAP * 1.5);
+                }
+                if(!HideSecondaryVelocity) {
+                    e.Graphics.FillRectangle(new SolidBrush(GradientPick(colorPercent, GREEN, ORANGE, RED)), new Rectangle(8, this.Size.Height - 36, (int) (175 * sizePercent), 36));
+
+                    // Total/Vertical Velocity
+                    e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(Color.Black), 15, this.Size.Height - 33);
+                    e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(this.ForeColor), 13, this.Size.Height - 35);
+                }
+
+                // Horizontal Velocity
+                e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(Color.Black), 2, this.Size.Height - 80);
+                e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(this.ForeColor), 0, this.Size.Height - 82);
+            }
+
+            private static Color GradientPick(double percent, Color start, Color middle, Color end) {
+                if(percent <= 0.5) {
+                    if(percent == 0) return EMPTY;
+                    return GREEN;
+                }else if(percent > 0.5 && percent <= 0.75) {
+                    return ColorInterp(start, middle, (percent - 0.5) / 0.25);
+                }else {
+                    return ColorInterp(middle, end, (percent - 0.75) / 0.25);
+                }
+            }
+
+            private string FormatVelocity(float velocity) => string.Format((IncreasedPrecision) ? TEXT_FORMAT_PRECISION : TEXT_FORMAT, velocity);
+
+            private static Color ColorInterp(Color start, Color end, double percent) => Color.FromArgb(LinearInterpolate(start.A, end.A, percent),
+                LinearInterpolate(start.R, end.R, percent),
+                LinearInterpolate(start.G, end.G, percent),
+                LinearInterpolate(start.B, end.B, percent));
+
+            private static byte LinearInterpolate(int start, int end, double percent) => (byte) (start + (int) Math.Round(percent * (end - start)));
         }
         #endregion
     }
