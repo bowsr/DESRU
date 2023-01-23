@@ -2237,6 +2237,7 @@
             // 
             this.trainerPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.trainerPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.trainerPanel.Controls.Add(this.altPositionTextbox);
             this.trainerPanel.Controls.Add(this.trainerRadioLabel);
             this.trainerPanel.Controls.Add(this.velocityRadioVertical);
             this.trainerPanel.Controls.Add(this.velocityRadioTotal);
@@ -2251,6 +2252,20 @@
             this.trainerPanel.Name = "trainerPanel";
             this.trainerPanel.Size = new System.Drawing.Size(304, 173);
             this.trainerPanel.TabIndex = 31;
+            // 
+            // altPositionTextbox
+            // 
+            this.altPositionTextbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
+            this.altPositionTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.altPositionTextbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.altPositionTextbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.altPositionTextbox.Location = new System.Drawing.Point(6, 77);
+            this.altPositionTextbox.Multiline = true;
+            this.altPositionTextbox.Name = "altPositionTextbox";
+            this.altPositionTextbox.Size = new System.Drawing.Size(293, 19);
+            this.altPositionTextbox.TabIndex = 52;
+            this.altPositionTextbox.Text = "x: {0:0.00} y: {1:0.00} z: {2:0.00}";
+            this.altPositionTextbox.WordWrap = false;
             // 
             // trainerRadioLabel
             // 
@@ -2630,5 +2645,6 @@
         private RadioButton velocityRadioTotal;
         private RadioButton velocityRadioNone;
         private CheckBox speedometerPrecisionCheckbox;
+        private TextBox altPositionTextbox;
     }
 }

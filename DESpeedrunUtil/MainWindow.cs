@@ -28,6 +28,7 @@ namespace DESpeedrunUtil {
         private const string PATH_FPSKEYS_JSON = @".\fpskeys.json";
         private const string TEXTBOX_POSITION_TEXT = "Position\r\nx: {0:0.00}\r\ny: {1:0.00}\r\nz: {2:0.00}\r\nyaw: {3:0.0}\r\npitch: {4:0.0}";
         private const string TEXTBOX_VELOCITY_TEXT = "Velocity\r\nx: {0:0.00}\r\ny: {1:0.00}\r\nz: {2:0.00}\r\nhorizontal: {3:0.0}\r\ntotal: {4:0.0}";
+        private const string TEXTBOX_ALT_TEXT_POS = "{0:0.00} {1:0.00} {2:0.00} | {3:0.0} {4:0.0}";
 
         private const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
         private const int WINDOW_HEIGHT_DEFAULT = 805;
@@ -336,6 +337,7 @@ namespace DESpeedrunUtil {
                     velocityRadioNone.Visible = false;
                     velocityRadioTotal.Visible = false;
                     velocityRadioVertical.Visible = false;
+                    altPositionTextbox.Visible = false;
                 }else {
                     positionTextBox.Visible = false;
                     velocityTextBox.Visible = false;
@@ -345,6 +347,9 @@ namespace DESpeedrunUtil {
                     velocityRadioNone.Visible = true;
                     velocityRadioTotal.Visible = true;
                     velocityRadioVertical.Visible = true;
+                    altPositionTextbox.Visible = true;
+
+                    altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, pos[0], pos[1], pos[2], pos[3], pos[4]);
 
                     _speedometer.VerticalVelocity = vel[2];
                     _speedometer.HorizontalVelocity = vel[3];
