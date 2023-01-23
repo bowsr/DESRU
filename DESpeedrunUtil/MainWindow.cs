@@ -1181,6 +1181,14 @@ namespace DESpeedrunUtil {
             if(this.Left < display.WorkingArea.Left) this.Left = display.WorkingArea.Left + 1;
         }
 
+        protected override CreateParams CreateParams {
+            get {
+                CreateParams handleParam = base.CreateParams;
+                handleParam.ExStyle |= 0x02000000;
+                return handleParam;
+            }
+        }
+
         #region COMPONENTS
         public class DESRUShadowLabel: Label {
             public DESRUShadowLabel(Font font, string text, Point loc, Color color, Color back) {
