@@ -41,7 +41,11 @@ namespace DESpeedrunUtil {
                         "hkMacroDown" => 0,
                         "hkMacroUp" => 1,
                         "hkResToggle" => 2,
-                        _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 3 : -1,
+                        "hkResToggle0" => 3,
+                        "hkResToggle1" => 4,
+                        "hkResToggle2" => 5,
+                        "hkResToggle3" => 6,
+                        _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 7 : -1,
                     };
                 }catch(FormatException f) {
                     Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
@@ -72,7 +76,11 @@ namespace DESpeedrunUtil {
                     "hkMacroDown" => 0,
                     "hkMacroUp" => 1,
                     "hkResToggle" => 2,
-                    _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 3 : -1,
+                    "hkResToggle0" => 3,
+                    "hkResToggle1" => 4,
+                    "hkResToggle2" => 5,
+                    "hkResToggle3" => 6,
+                    _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 7 : -1,
                 };
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macro, _hotkeys);
             }
@@ -170,14 +178,43 @@ namespace DESpeedrunUtil {
                 _memory.SetMinRes(resPercent / 100f);
             }
         }
+        private void ResToggle_KeyUp(object sender, KeyEventArgs e) {
+            var text = ((TextBox) sender).Text;
+            string tag = (string) ((Control) sender).Tag;
+
+            if(!int.TryParse(text, out int resPercent)) resPercent = -1;
+
+            if(resPercent > 100) resPercent = 100;
+            if(resPercent != -1) {
+                if(resPercent == 0) resPercent = 1;
+                ((TextBox) sender).Text = resPercent.ToString();
+            }else {
+                ((TextBox) sender).Text = "";
+            }
+
+            switch(tag) {
+                case "resToggle0":
+                    _resPercent0 = resPercent;
+                    break;
+                case "resToggle1":
+                    _resPercent1 = resPercent;
+                    break;
+                case "resToggle2":
+                    _resPercent2 = resPercent;
+                    break;
+                case "resToggle3":
+                    _resPercent3 = resPercent;
+                    break;
+            }
+        }
         private void TargetFPS_KeyUp(object sender, KeyEventArgs e) {
             var text = ((TextBox) sender).Text;
 
             if(!int.TryParse(text, out int target)) target = 1000;
 
-            if(target < 60) target = 60;
+            if(target < 1) target = 60;
             if(target > 1000) target = 1000;
-            _targetFPS = target;
+            _targetFPS = target >= 60 ? target : 60;
             ((TextBox) sender).Text = target.ToString();
         }
         #endregion
@@ -410,7 +447,7 @@ namespace DESpeedrunUtil {
             if(File.Exists(@".\scannedOffsets.json")) MemoryHandler.ScannedOffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(File.ReadAllText(@".\scannedOffsets.json"));
 
             InitializeFonts();
-            _moreHotkeysLabel = new DESRUShadowLabel(moreHotkeysTitle.Font, "MORE FPS HOTKEYS", moreHotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK);
+            _moreHotkeysLabel = new DESRUShadowLabel(moreHotkeysTitle.Font, "EXTRA HOTKEYS", moreHotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK);
             _moreHotkeysLabel.Visible = false;
             _speedometer = new Speedometer(EternalUIRegular32, EternalUIRegular20, speedometerPanel.Location, speedometerPanel.Size, COLOR_TEXT_FORE, COLOR_PANEL_BACK);
             _speedometer.Visible = false;
@@ -432,7 +469,9 @@ namespace DESpeedrunUtil {
             var fpsJson = "";
             if(File.Exists(PATH_FPSKEYS_JSON)) fpsJson = File.ReadAllText(PATH_FPSKEYS_JSON);
             _macro = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
-            _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, fpsJson, this);
+            _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, (Keys) Properties.Settings.Default.ResToggleKey0,
+                (Keys) Properties.Settings.Default.ResToggleKey1, (Keys) Properties.Settings.Default.ResToggleKey2,
+                (Keys) Properties.Settings.Default.ResToggleKey3, fpsJson, this);
             _fpsDefault = Properties.Settings.Default.DefaultFPSCap;
             autorunMacroCheckbox.Checked = Properties.Settings.Default.MacroEnabled;
             _enableMacro = Properties.Settings.Default.MacroEnabled;
@@ -453,6 +492,10 @@ namespace DESpeedrunUtil {
             trainerOSDCheckbox.Checked = Properties.Settings.Default.TrainerOSD;
             speedometerCheckbox.Checked = Properties.Settings.Default.ShowSpeedometer;
             speedometerPrecisionCheckbox.Checked = Properties.Settings.Default.IncreasedPrecision;
+            _resPercent0 = Properties.Settings.Default.ResTogglePercent0;
+            _resPercent1 = Properties.Settings.Default.ResTogglePercent1;
+            _resPercent2 = Properties.Settings.Default.ResTogglePercent2;
+            _resPercent3 = Properties.Settings.Default.ResTogglePercent3;
             switch(Properties.Settings.Default.SecondaryVelocity) {
                 case 0:
                     velocityRadioNone.Checked = true;

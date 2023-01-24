@@ -370,5 +370,101 @@ namespace DESpeedrunUtil.Properties {
                 this["SecondaryVelocity"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ResToggleKey0 {
+            get {
+                return ((int)(this["ResToggleKey0"]));
+            }
+            set {
+                this["ResToggleKey0"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ResToggleKey1 {
+            get {
+                return ((int)(this["ResToggleKey1"]));
+            }
+            set {
+                this["ResToggleKey1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ResToggleKey2 {
+            get {
+                return ((int)(this["ResToggleKey2"]));
+            }
+            set {
+                this["ResToggleKey2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
+        public int ResToggleKey3 {
+            get {
+                return ((int)(this["ResToggleKey3"]));
+            }
+            set {
+                this["ResToggleKey3"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int ResTogglePercent0 {
+            get {
+                return ((int)(this["ResTogglePercent0"]));
+            }
+            set {
+                this["ResTogglePercent0"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int ResTogglePercent1 {
+            get {
+                return ((int)(this["ResTogglePercent1"]));
+            }
+            set {
+                this["ResTogglePercent1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int ResTogglePercent2 {
+            get {
+                return ((int)(this["ResTogglePercent2"]));
+            }
+            set {
+                this["ResTogglePercent2"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("-1")]
+        public int ResTogglePercent3 {
+            get {
+                return ((int)(this["ResTogglePercent3"]));
+            }
+            set {
+                this["ResTogglePercent3"] = value;
+            }
+        }
     }
 }

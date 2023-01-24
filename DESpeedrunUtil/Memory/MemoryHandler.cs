@@ -198,7 +198,7 @@ namespace DESpeedrunUtil.Memory {
                                 _unlockResFlag = false;
                                 _windowFocused = false;
                                 _resUnlocked = true;
-                                _hotkeys.ToggleResScaleKey(true);
+                                _hotkeys.ToggleResScaleKeys(true);
                             }
                         }
                     }
@@ -374,7 +374,7 @@ namespace DESpeedrunUtil.Memory {
         public void ToggleDynamicScaling() {
             if(_dynamicResPtr == IntPtr.Zero) return;
             if(ReadDynamicRes()) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
-            else _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
+            else EnableDynamicScaling(_targetFPS);
         }
         private static byte[] FloatToBytes(float f) {
             byte[] output = new byte[4];

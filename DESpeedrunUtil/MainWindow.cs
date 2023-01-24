@@ -58,7 +58,8 @@ namespace DESpeedrunUtil {
         bool _enableMacro = true, _startingMacro = false;
 
         HotkeyHandler _hotkeys;
-        int _fpsDefault, _minResPercent, _targetFPS;
+        int _fpsDefault, _minResPercent, _targetFPS,
+            _resPercent0, _resPercent1, _resPercent2, _resPercent3;
 
         MemoryHandler? _memory;
 
@@ -400,7 +401,7 @@ namespace DESpeedrunUtil {
                 }
                 var ms = _memory.ReadRaiseMillis();
                 if(ms > 0 && ms < 16) {
-                    var rs = "Enabled (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
+                    var rs = ((int) (_memory.GetMinRes() * 100)) + "% (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
                     resScaleStatus.Text = (_memory.ReadDynamicRes()) ? rs : "Disabled";
                     toolTip7500.SetToolTip(resScaleStatus, null);
                 }else {
@@ -491,6 +492,10 @@ namespace DESpeedrunUtil {
                     "hkMacroDown" => _macro.GetHotkey(true),
                     "hkMacroUp" => _macro.GetHotkey(false),
                     "hkResToggle" => _hotkeys.ResScaleHotkey,
+                    "hkResToggle0" => _hotkeys.ResToggleHotkey0,
+                    "hkResToggle1" => _hotkeys.ResToggleHotkey1,
+                    "hkResToggle2" => _hotkeys.ResToggleHotkey2,
+                    "hkResToggle3" => _hotkeys.ResToggleHotkey3,
                     _ => _hotkeys.FPSHotkeys.GetKeyFromID(int.TryParse(tag.Replace("hkFps", ""), out int id) ? id : -1),
                 };
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
@@ -503,6 +508,10 @@ namespace DESpeedrunUtil {
                 t.Text = (limit != -1) ? limit.ToString() : "";
             }
             minResInput.Text = _minResPercent.ToString();
+            resPercent0.Text = _resPercent0 != -1 ? _resPercent0.ToString() : string.Empty;
+            resPercent1.Text = _resPercent1 != -1 ? _resPercent1.ToString() : string.Empty;
+            resPercent2.Text = _resPercent2 != -1 ? _resPercent2.ToString() : string.Empty;
+            resPercent3.Text = _resPercent3 != -1 ? _resPercent3.ToString() : string.Empty;
             targetFPSInput.Text = _targetFPS.ToString();
         }
 
@@ -550,9 +559,29 @@ namespace DESpeedrunUtil {
             _memory.SetMaxHz((current != fps) ? fps : (enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
         }
 
-        public void ToggleResScaling() {
+        public void ToggleDynamicResScaling() {
             if(Hooked) {
                 _memory.ToggleDynamicScaling();
+            }
+        }
+
+        public void ToggleResScaling(int id) {
+            var percent = id switch {
+                0 => _resPercent0 / 100f,
+                1 => _resPercent1 / 100f,
+                2 => _resPercent2 / 100f,
+                3 => _resPercent3 / 100f,
+                _ => -1
+            };
+            if(!Hooked || percent == -1) return;
+            targetFPSInput.Text = _targetFPS.ToString();
+            float current = _memory.GetMinRes();
+            _memory.SetMinRes(percent);
+            if(percent != current) {
+                _memory.SetMinRes(percent);
+                if(!_memory.ReadDynamicRes()) _memory.ToggleDynamicScaling();
+            }else {
+                _memory.SetMinRes(_minResPercent / 100f);
             }
         }
 
@@ -901,7 +930,7 @@ namespace DESpeedrunUtil {
             }
             if(enableHotkeysCheckbox.Checked) {
                 _hotkeys.EnableHotkeys();
-                _hotkeys.ToggleResScaleKey(false);
+                _hotkeys.ToggleResScaleKeys(false);
             }
             SetGameInfoByModuleSize();
             try {
@@ -983,6 +1012,14 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.TrainerOSD = trainerOSDCheckbox.Checked;
             Properties.Settings.Default.ShowSpeedometer = speedometerCheckbox.Checked;
             Properties.Settings.Default.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
+            Properties.Settings.Default.ResToggleKey0 = (int) _hotkeys.ResToggleHotkey0;
+            Properties.Settings.Default.ResToggleKey1 = (int) _hotkeys.ResToggleHotkey1;
+            Properties.Settings.Default.ResToggleKey2 = (int) _hotkeys.ResToggleHotkey2;
+            Properties.Settings.Default.ResToggleKey3 = (int) _hotkeys.ResToggleHotkey3;
+            Properties.Settings.Default.ResTogglePercent0 = _resPercent0;
+            Properties.Settings.Default.ResTogglePercent1 = _resPercent1;
+            Properties.Settings.Default.ResTogglePercent2 = _resPercent2;
+            Properties.Settings.Default.ResTogglePercent3 = _resPercent3;
             int radio = 1;
             if(velocityRadioNone.Checked) radio = 0;
             if(velocityRadioVertical.Checked) radio = 2;

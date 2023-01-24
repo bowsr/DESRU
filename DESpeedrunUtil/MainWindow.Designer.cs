@@ -117,6 +117,26 @@
             this.discordButton = new System.Windows.Forms.Button();
             this.desruVersionLabel = new System.Windows.Forms.Label();
             this.extraFPSHotkeysPanel = new System.Windows.Forms.Panel();
+            this.resToggleLabel3 = new System.Windows.Forms.Label();
+            this.resToggleLabel2 = new System.Windows.Forms.Label();
+            this.resHotkeyField3 = new System.Windows.Forms.Label();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.resPercent2 = new System.Windows.Forms.TextBox();
+            this.label24 = new System.Windows.Forms.Label();
+            this.resHotkeyField2 = new System.Windows.Forms.Label();
+            this.panel18 = new System.Windows.Forms.Panel();
+            this.resPercent3 = new System.Windows.Forms.TextBox();
+            this.label29 = new System.Windows.Forms.Label();
+            this.resToggleLabel1 = new System.Windows.Forms.Label();
+            this.resToggleLabel0 = new System.Windows.Forms.Label();
+            this.resHotkeyField1 = new System.Windows.Forms.Label();
+            this.panel19 = new System.Windows.Forms.Panel();
+            this.resPercent0 = new System.Windows.Forms.TextBox();
+            this.label34 = new System.Windows.Forms.Label();
+            this.resHotkeyField0 = new System.Windows.Forms.Label();
+            this.panel20 = new System.Windows.Forms.Panel();
+            this.resPercent1 = new System.Windows.Forms.TextBox();
+            this.label36 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.hotkeyField15 = new System.Windows.Forms.Label();
@@ -205,6 +225,10 @@
             this.targetFPSPanel.SuspendLayout();
             this.minResPanel.SuspendLayout();
             this.extraFPSHotkeysPanel.SuspendLayout();
+            this.panel5.SuspendLayout();
+            this.panel18.SuspendLayout();
+            this.panel19.SuspendLayout();
+            this.panel20.SuspendLayout();
             this.panel12.SuspendLayout();
             this.panel13.SuspendLayout();
             this.panel14.SuspendLayout();
@@ -650,7 +674,7 @@
             this.showMoreKeysButton.Name = "showMoreKeysButton";
             this.showMoreKeysButton.Size = new System.Drawing.Size(296, 28);
             this.showMoreKeysButton.TabIndex = 34;
-            this.showMoreKeysButton.Text = "Show More FPS Hotkeys";
+            this.showMoreKeysButton.Text = "Show More Hotkeys";
             this.showMoreKeysButton.UseVisualStyleBackColor = false;
             this.showMoreKeysButton.Click += new System.EventHandler(this.MoreKeysButton_Click);
             // 
@@ -1230,7 +1254,7 @@
             this.targetFPSInput.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.targetFPSInput.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.targetFPSInput.Location = new System.Drawing.Point(-1, 3);
-            this.targetFPSInput.MaxLength = 3;
+            this.targetFPSInput.MaxLength = 4;
             this.targetFPSInput.Name = "targetFPSInput";
             this.targetFPSInput.Size = new System.Drawing.Size(43, 20);
             this.targetFPSInput.TabIndex = 14;
@@ -1400,6 +1424,22 @@
             // 
             this.extraFPSHotkeysPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.extraFPSHotkeysPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.extraFPSHotkeysPanel.Controls.Add(this.resToggleLabel3);
+            this.extraFPSHotkeysPanel.Controls.Add(this.resToggleLabel2);
+            this.extraFPSHotkeysPanel.Controls.Add(this.resHotkeyField3);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel5);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label24);
+            this.extraFPSHotkeysPanel.Controls.Add(this.resHotkeyField2);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel18);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label29);
+            this.extraFPSHotkeysPanel.Controls.Add(this.resToggleLabel1);
+            this.extraFPSHotkeysPanel.Controls.Add(this.resToggleLabel0);
+            this.extraFPSHotkeysPanel.Controls.Add(this.resHotkeyField1);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel19);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label34);
+            this.extraFPSHotkeysPanel.Controls.Add(this.resHotkeyField0);
+            this.extraFPSHotkeysPanel.Controls.Add(this.panel20);
+            this.extraFPSHotkeysPanel.Controls.Add(this.label36);
             this.extraFPSHotkeysPanel.Controls.Add(this.label4);
             this.extraFPSHotkeysPanel.Controls.Add(this.label6);
             this.extraFPSHotkeysPanel.Controls.Add(this.hotkeyField15);
@@ -1450,9 +1490,257 @@
             this.extraFPSHotkeysPanel.Controls.Add(this.label15);
             this.extraFPSHotkeysPanel.Location = new System.Drawing.Point(5, 787);
             this.extraFPSHotkeysPanel.Name = "extraFPSHotkeysPanel";
-            this.extraFPSHotkeysPanel.Size = new System.Drawing.Size(615, 183);
+            this.extraFPSHotkeysPanel.Size = new System.Drawing.Size(615, 241);
             this.extraFPSHotkeysPanel.TabIndex = 35;
             this.extraFPSHotkeysPanel.Visible = false;
+            // 
+            // resToggleLabel3
+            // 
+            this.resToggleLabel3.AutoSize = true;
+            this.resToggleLabel3.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resToggleLabel3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resToggleLabel3.Location = new System.Drawing.Point(337, 212);
+            this.resToggleLabel3.Name = "resToggleLabel3";
+            this.resToggleLabel3.Size = new System.Drawing.Size(97, 18);
+            this.resToggleLabel3.TabIndex = 77;
+            this.resToggleLabel3.Text = "Res. Scale #4";
+            // 
+            // resToggleLabel2
+            // 
+            this.resToggleLabel2.AutoSize = true;
+            this.resToggleLabel2.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resToggleLabel2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resToggleLabel2.Location = new System.Drawing.Point(337, 183);
+            this.resToggleLabel2.Name = "resToggleLabel2";
+            this.resToggleLabel2.Size = new System.Drawing.Size(97, 18);
+            this.resToggleLabel2.TabIndex = 75;
+            this.resToggleLabel2.Text = "Res. Scale #3";
+            // 
+            // resHotkeyField3
+            // 
+            this.resHotkeyField3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.resHotkeyField3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.resHotkeyField3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resHotkeyField3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resHotkeyField3.Location = new System.Drawing.Point(437, 208);
+            this.resHotkeyField3.Name = "resHotkeyField3";
+            this.resHotkeyField3.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.resHotkeyField3.Size = new System.Drawing.Size(95, 26);
+            this.resHotkeyField3.TabIndex = 76;
+            this.resHotkeyField3.Tag = "hkResToggle3";
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel5.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel5.Controls.Add(this.resPercent2);
+            this.panel5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel5.Location = new System.Drawing.Point(538, 179);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(34, 26);
+            this.panel5.TabIndex = 80;
+            // 
+            // resPercent2
+            // 
+            this.resPercent2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.resPercent2.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.resPercent2.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resPercent2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resPercent2.Location = new System.Drawing.Point(-4, 3);
+            this.resPercent2.MaxLength = 3;
+            this.resPercent2.Name = "resPercent2";
+            this.resPercent2.Size = new System.Drawing.Size(34, 20);
+            this.resPercent2.TabIndex = 14;
+            this.resPercent2.Tag = "resToggle2";
+            this.resPercent2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.resPercent2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
+            this.resPercent2.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ResToggle_KeyUp);
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label24.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label24.Location = new System.Drawing.Point(575, 183);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(21, 18);
+            this.label24.TabIndex = 78;
+            this.label24.Text = "%";
+            // 
+            // resHotkeyField2
+            // 
+            this.resHotkeyField2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.resHotkeyField2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.resHotkeyField2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resHotkeyField2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resHotkeyField2.Location = new System.Drawing.Point(437, 179);
+            this.resHotkeyField2.Name = "resHotkeyField2";
+            this.resHotkeyField2.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.resHotkeyField2.Size = new System.Drawing.Size(95, 26);
+            this.resHotkeyField2.TabIndex = 74;
+            this.resHotkeyField2.Tag = "hkResToggle2";
+            // 
+            // panel18
+            // 
+            this.panel18.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel18.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel18.Controls.Add(this.resPercent3);
+            this.panel18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel18.Location = new System.Drawing.Point(538, 208);
+            this.panel18.Name = "panel18";
+            this.panel18.Size = new System.Drawing.Size(34, 26);
+            this.panel18.TabIndex = 81;
+            // 
+            // resPercent3
+            // 
+            this.resPercent3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.resPercent3.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.resPercent3.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resPercent3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resPercent3.Location = new System.Drawing.Point(-4, 3);
+            this.resPercent3.MaxLength = 3;
+            this.resPercent3.Name = "resPercent3";
+            this.resPercent3.Size = new System.Drawing.Size(34, 20);
+            this.resPercent3.TabIndex = 14;
+            this.resPercent3.Tag = "resToggle3";
+            this.resPercent3.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.resPercent3.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
+            this.resPercent3.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ResToggle_KeyUp);
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label29.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label29.Location = new System.Drawing.Point(575, 212);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(21, 18);
+            this.label29.TabIndex = 79;
+            this.label29.Text = "%";
+            // 
+            // resToggleLabel1
+            // 
+            this.resToggleLabel1.AutoSize = true;
+            this.resToggleLabel1.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resToggleLabel1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resToggleLabel1.Location = new System.Drawing.Point(26, 212);
+            this.resToggleLabel1.Name = "resToggleLabel1";
+            this.resToggleLabel1.Size = new System.Drawing.Size(97, 18);
+            this.resToggleLabel1.TabIndex = 69;
+            this.resToggleLabel1.Text = "Res. Scale #2";
+            // 
+            // resToggleLabel0
+            // 
+            this.resToggleLabel0.AutoSize = true;
+            this.resToggleLabel0.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resToggleLabel0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resToggleLabel0.Location = new System.Drawing.Point(26, 183);
+            this.resToggleLabel0.Name = "resToggleLabel0";
+            this.resToggleLabel0.Size = new System.Drawing.Size(97, 18);
+            this.resToggleLabel0.TabIndex = 67;
+            this.resToggleLabel0.Text = "Res. Scale #1";
+            // 
+            // resHotkeyField1
+            // 
+            this.resHotkeyField1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.resHotkeyField1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.resHotkeyField1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resHotkeyField1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resHotkeyField1.Location = new System.Drawing.Point(126, 208);
+            this.resHotkeyField1.Name = "resHotkeyField1";
+            this.resHotkeyField1.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.resHotkeyField1.Size = new System.Drawing.Size(95, 26);
+            this.resHotkeyField1.TabIndex = 68;
+            this.resHotkeyField1.Tag = "hkResToggle1";
+            // 
+            // panel19
+            // 
+            this.panel19.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel19.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel19.Controls.Add(this.resPercent0);
+            this.panel19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel19.Location = new System.Drawing.Point(227, 179);
+            this.panel19.Name = "panel19";
+            this.panel19.Size = new System.Drawing.Size(34, 26);
+            this.panel19.TabIndex = 72;
+            // 
+            // resPercent0
+            // 
+            this.resPercent0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.resPercent0.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.resPercent0.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resPercent0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resPercent0.Location = new System.Drawing.Point(-4, 3);
+            this.resPercent0.MaxLength = 3;
+            this.resPercent0.Name = "resPercent0";
+            this.resPercent0.Size = new System.Drawing.Size(34, 20);
+            this.resPercent0.TabIndex = 14;
+            this.resPercent0.Tag = "resToggle0";
+            this.resPercent0.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.resPercent0.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
+            this.resPercent0.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ResToggle_KeyUp);
+            // 
+            // label34
+            // 
+            this.label34.AutoSize = true;
+            this.label34.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label34.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label34.Location = new System.Drawing.Point(264, 183);
+            this.label34.Name = "label34";
+            this.label34.Size = new System.Drawing.Size(21, 18);
+            this.label34.TabIndex = 70;
+            this.label34.Text = "%";
+            // 
+            // resHotkeyField0
+            // 
+            this.resHotkeyField0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.resHotkeyField0.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.resHotkeyField0.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resHotkeyField0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resHotkeyField0.Location = new System.Drawing.Point(126, 179);
+            this.resHotkeyField0.Name = "resHotkeyField0";
+            this.resHotkeyField0.Padding = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.resHotkeyField0.Size = new System.Drawing.Size(95, 26);
+            this.resHotkeyField0.TabIndex = 66;
+            this.resHotkeyField0.Tag = "hkResToggle0";
+            // 
+            // panel20
+            // 
+            this.panel20.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.panel20.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel20.Controls.Add(this.resPercent1);
+            this.panel20.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.panel20.Location = new System.Drawing.Point(227, 208);
+            this.panel20.Name = "panel20";
+            this.panel20.Size = new System.Drawing.Size(34, 26);
+            this.panel20.TabIndex = 73;
+            // 
+            // resPercent1
+            // 
+            this.resPercent1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.resPercent1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.resPercent1.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.resPercent1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.resPercent1.Location = new System.Drawing.Point(-4, 3);
+            this.resPercent1.MaxLength = 3;
+            this.resPercent1.Name = "resPercent1";
+            this.resPercent1.Size = new System.Drawing.Size(34, 20);
+            this.resPercent1.TabIndex = 14;
+            this.resPercent1.Tag = "resToggle1";
+            this.resPercent1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.resPercent1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Input_KeyPressNumericOnly);
+            this.resPercent1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.ResToggle_KeyUp);
+            // 
+            // label36
+            // 
+            this.label36.AutoSize = true;
+            this.label36.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.label36.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.label36.Location = new System.Drawing.Point(264, 212);
+            this.label36.Name = "label36";
+            this.label36.Size = new System.Drawing.Size(21, 18);
+            this.label36.TabIndex = 71;
+            this.label36.Text = "%";
             // 
             // label4
             // 
@@ -2179,11 +2467,11 @@
             this.moreHotkeysTitle.AutoSize = true;
             this.moreHotkeysTitle.Font = new System.Drawing.Font("Eternal Logo", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.moreHotkeysTitle.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.moreHotkeysTitle.Location = new System.Drawing.Point(180, 763);
+            this.moreHotkeysTitle.Location = new System.Drawing.Point(203, 763);
             this.moreHotkeysTitle.Name = "moreHotkeysTitle";
-            this.moreHotkeysTitle.Size = new System.Drawing.Size(286, 21);
+            this.moreHotkeysTitle.Size = new System.Drawing.Size(238, 21);
             this.moreHotkeysTitle.TabIndex = 39;
-            this.moreHotkeysTitle.Text = "MORE FPS HOTKEYS";
+            this.moreHotkeysTitle.Text = "EXTRA HOTKEYS";
             this.moreHotkeysTitle.Visible = false;
             // 
             // toolTip7500
@@ -2217,7 +2505,7 @@
             this.collapsiblePanel.Controls.Add(this.infoPanelTitle);
             this.collapsiblePanel.Location = new System.Drawing.Point(6, 43);
             this.collapsiblePanel.Name = "collapsiblePanel";
-            this.collapsiblePanel.Size = new System.Drawing.Size(644, 982);
+            this.collapsiblePanel.Size = new System.Drawing.Size(644, 1050);
             this.collapsiblePanel.TabIndex = 40;
             this.collapsiblePanel.MouseMove += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseMove);
             this.collapsiblePanel.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DragWindow_MouseUp);
@@ -2402,7 +2690,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(651, 1067);
+            this.ClientSize = new System.Drawing.Size(651, 1105);
             this.ControlBox = false;
             this.Controls.Add(this.collapsiblePanel);
             this.Controls.Add(this.titleSeparator);
@@ -2445,6 +2733,14 @@
             this.minResPanel.PerformLayout();
             this.extraFPSHotkeysPanel.ResumeLayout(false);
             this.extraFPSHotkeysPanel.PerformLayout();
+            this.panel5.ResumeLayout(false);
+            this.panel5.PerformLayout();
+            this.panel18.ResumeLayout(false);
+            this.panel18.PerformLayout();
+            this.panel19.ResumeLayout(false);
+            this.panel19.PerformLayout();
+            this.panel20.ResumeLayout(false);
+            this.panel20.PerformLayout();
             this.panel12.ResumeLayout(false);
             this.panel12.PerformLayout();
             this.panel13.ResumeLayout(false);
@@ -2647,5 +2943,25 @@
         private RadioButton velocityRadioNone;
         private CheckBox speedometerPrecisionCheckbox;
         private TextBox altPositionTextbox;
+        private Label resToggleLabel3;
+        private Label resToggleLabel2;
+        private Label resHotkeyField3;
+        private Panel panel5;
+        private TextBox resPercent2;
+        private Label label24;
+        private Label resHotkeyField2;
+        private Panel panel18;
+        private TextBox resPercent3;
+        private Label label29;
+        private Label resToggleLabel1;
+        private Label resToggleLabel0;
+        private Label resHotkeyField1;
+        private Panel panel19;
+        private TextBox resPercent0;
+        private Label label34;
+        private Label resHotkeyField0;
+        private Panel panel20;
+        private TextBox resPercent1;
+        private Label label36;
     }
 }
