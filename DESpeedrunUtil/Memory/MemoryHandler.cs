@@ -5,29 +5,12 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
 using Timer = System.Windows.Forms.Timer;
+using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
-
-        private const int OFFSET_ROW2 = 0x8;
-        private const int OFFSET_ROW3 = 0x58;
-        private const int OFFSET_ROW4 = 0x70;
-        private const int OFFSET_ROW5 = 0x78;
-        private const int OFFSET_ROW6 = 0x98;
-        private const int OFFSET_ROW7 = 0x10;
-        private const int OFFSET_ROW8 = 0x30;
-        private const int OFFSET_ROW9 = 0x40;
-
-        private readonly float[] ONEPERCENT_RES_SCALES = new float[32] 
-                { 1.0f, 0.968f, 0.936f, 0.904f, 0.872f, 0.84f, 0.808f, 0.776f, 
-                0.744f, 0.712f, 0.68f, 0.648f, 0.616f, 0.584f, 0.552f, 0.52f, 
-                0.488f, 0.456f, 0.424f, 0.392f, 0.36f, 0.328f, 0.296f, 0.264f, 
-                0.232f, 0.2f, 0.168f, 0.136f, 0.104f, 0.072f, 0.04f, 0.01f };
-
-        private readonly int[] VEL_OFFSETS_CURRENT = new int[4] { 0x1510, 0x5C0, 0x1D0, 0x3F40 };
-        private readonly int[] VEL_OFFSETS_OLD = new int[4] { 0x1510, 0x598, 0x1D0, 0x3F40 };
 
         public static List<KnownOffsets> OffsetList = new(), ScannedOffsetList = new();
         KnownOffsets _currentOffsets;

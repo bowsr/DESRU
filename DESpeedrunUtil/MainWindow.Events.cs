@@ -6,6 +6,7 @@ using Linearstar.Windows.RawInput;
 using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
+using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
 

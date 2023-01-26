@@ -10,33 +10,12 @@ using System.Diagnostics;
 using System.Drawing.Text;
 using System.Text.RegularExpressions;
 using Timer = System.Windows.Forms.Timer;
+using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
-        private readonly Color COLOR_FORM_BACK = Color.FromArgb(35, 35, 35);
-        private readonly Color COLOR_PANEL_BACK = Color.FromArgb(45, 45, 45);
-        private readonly Color COLOR_TEXT_BACK = Color.FromArgb(70, 70, 70);
-        private readonly Color COLOR_TEXT_FORE = Color.FromArgb(230, 230, 230);
-
-        private readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
-
-        private const string WINDOW_TITLE = "DOOM ETERNAL SPEEDRUN UTILITY";
-        private const string PATH_PROFILE_DIR = @"\782330\remote\PROFILE";
-        private const string PATH_PROFILE_FILE = @"\profile.bin";
-        private const string PATH_FPSKEYS_JSON = @".\fpskeys.json";
-        private const string TEXTBOX_POSITION_TEXT = "Position\r\nx: {0:0.00}\r\ny: {1:0.00}\r\nz: {2:0.00}\r\nyaw: {3:0.0}\r\npitch: {4:0.0}";
-        private const string TEXTBOX_VELOCITY_TEXT = "Velocity\r\nx: {0:0.00}\r\ny: {1:0.00}\r\nz: {2:0.00}\r\nhorizontal: {3:0.0}\r\ntotal: {4:0.0}";
-        private const string TEXTBOX_ALT_TEXT_POS = "{0:0.00} {1:0.00} {2:0.00} | {3:0.0} {4:0.0}";
-
-        private const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
-        private const int WINDOW_HEIGHT_DEFAULT = 805;
-        private const int WINDOW_WIDTH_DEFAULT = 653;
-        private const int PANEL_HEIGHT_DEFAULT = 760;
-        private const int WINDOW_EXTRAHEIGHT_MOREKEYS = 218; // Amount to add/subtract when showing/hiding extra fps hotkeys
-        private const int PANEL_EXTRAHEIGHT_MOREKEYS = 222;
-        private const int WINDOW_EXTRAWIDTH = 12;
 
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalLogoBold, EternalBattleBold;
