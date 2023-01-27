@@ -305,6 +305,16 @@ namespace DESpeedrunUtil {
         private void MinimalOSD_CheckChanged(object sender, EventArgs e) {
             if(Hooked) _memory.SetFlag(((CheckBox) sender).Checked, "minimal");
         }
+        private void DisableOSD_CheckChanged(object sender, EventArgs e) {
+            var check = ((CheckBox) sender).Checked;
+            if(Hooked) _memory.DisableOSD = check;
+            minimalOSDCheckbox.Visible = !check;
+            if(check && !_justLaunched) {
+                System.Media.SystemSounds.Asterisk.Play();
+                MessageBox.Show("Speedruns submitted to the leaderboards will not be valid if the DESRU On-Screen Display is not visible in-game.\n\n" +
+                    "If you plan on submitting, make sure you disable this option before starting your runs.", "Disabling On-Screen Display");
+            }
+        }
         #endregion
 
         #region Buttons
@@ -497,6 +507,7 @@ namespace DESpeedrunUtil {
             _resPercent1 = Properties.Settings.Default.ResTogglePercent1;
             _resPercent2 = Properties.Settings.Default.ResTogglePercent2;
             _resPercent3 = Properties.Settings.Default.ResTogglePercent3;
+            disableOSDCheckbox.Checked = Properties.Settings.Default.DisableOSD;
             switch(Properties.Settings.Default.SecondaryVelocity) {
                 case 0:
                     velocityRadioNone.Checked = true;

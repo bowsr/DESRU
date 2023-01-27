@@ -31,13 +31,15 @@ namespace DESpeedrunUtil.Memory {
         HotkeyHandler _hotkeys;
         public Timer MemoryTimer { get; init; }
         public bool Reset { get; init; }
+        public bool FirstRun { get; set; } = true;
+        public bool DisableOSD { get; set; } = false;
         System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
         public string Version { get; init; }
 
         bool _osdFlagCheats = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
              _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
-             _trainerFlag = false, _scheduleDynamic = false, _osdFlagLimiter = true,
+             _trainerFlag = false, _externalTrainerFlag = false, _scheduleDynamic = false, _osdFlagLimiter = true,
              _antiAliasing = true, _unDelay = true, _autoContinue = false,
              _minimalOSD = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
@@ -45,7 +47,7 @@ namespace DESpeedrunUtil.Memory {
         int _fpsLimit = 250, _targetFPS = 1000;
         float _minRes = 0.01f;
 
-        bool _windowFocused = false, _dynTimer = false;
+        bool _windowFocused = false, _dynTimer = false, _osdReset = false;
         long _focusedTime, _dynTime;
 
         float _velocityX = 0f, _velocityY = 0f, _velocityZ = 0f, _velocityHorizontal = 0f, _velocityTotal = 0f,
@@ -71,7 +73,7 @@ namespace DESpeedrunUtil.Memory {
 
             _restartCheatsTimer = new System.Timers.Timer(2500);
             _restartCheatsTimer.Elapsed += (sender, e) => { RestartTick(); };
-            //_restartCheatsTimer.Start();
+            _restartCheatsTimer.Start();
 
             Reset = false;
             Initialize();
@@ -102,64 +104,90 @@ namespace DESpeedrunUtil.Memory {
                 _game.WriteBytes(_continuePtr, new byte[1] { Convert.ToByte(_autoContinue) });
 
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
-            _row1 = "%i FPS" + ((_osdFlagOutOfDate) ? "*" : "");
+            _row1 = METRICS_FPS_TEXT + ((_osdFlagOutOfDate) ? "*" : "");
 
-            if(!_trainerFlag) {
-                if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
-                if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
-                _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
-                if(_row2 == "1.0 (Release)") _row2 = "Release";
-                if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
-                    _row2 += " (" + (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
-                }
-                var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : "";
-                if(_minimalOSD) {
-                    var row2Mod = (_scrollString != string.Empty) ? "[" + _scrollString + "]" : cheats;
-                    _row1 += " ";
-                    _row2 = _row2.Replace("(", "");
-                    if(!_osdFlagOutOfDate) {
-                        _row1 += "(";
-                    }else {
-                        _row2 = "(" + _row2;
-                    }
-                    if(row2Mod != string.Empty) {
-                        _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : row2Mod[0]);
-                        _row2 = _row1.Contains('*') ? row2Mod : row2Mod[1..];
-                    }
+            if(DisableOSD && !_osdReset) {
+                _row1 = METRICS_FPS_TEXT;
+                _row2 = METRICS_FRAMETIME_TEXT;
+                _row3 = METRICS_RESOLUTION_TEXT;
+                if(_row6Ptr == IntPtr.Zero) {
+                    _row4 = METRICS_HDR_TEXT;
+                    _row5 = METRICS_VULKAN_TEXT;
+                    _row6 = METRICS_VRAM_TEXT;
+                    //_row7 = METRICS_DRIVER_TEXT;
                 }else {
-                    if(_cpuPtr == IntPtr.Zero) {
-                        _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
+                    _row4 = METRICS_RAYTRACING_TEXT;
+                    _row5 = METRICS_HDR_TEXT;
+                    _row6 = METRICS_DLSS_TEXT;
+                    _row7 = METRICS_VULKAN_TEXT;
+                    _row8 = METRICS_VRAM_TEXT;
+                    //_row9 = METRICS_DRIVER_TEXT;
+                }
+                ModifyMetricRows();
+                _osdReset = true;
+            }
+
+            if(!_externalTrainerFlag && !DisableOSD) {
+                if(!_trainerFlag) {
+                    if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
+                    if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
+                    _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
+                    if(_row2 == "1.0 (Release)") _row2 = "Release";
+                    if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
+                        _row2 += " (" + (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
+                    }
+                    var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : "";
+                    if(_minimalOSD) {
+                        var row2Mod = (_scrollString != string.Empty) ? "[" + _scrollString + "]" : cheats;
+                        _row1 += " ";
+                        _row2 = _row2.Replace("(", "");
+                        if(!_osdFlagOutOfDate) {
+                            _row1 += "(";
+                        } else {
+                            _row2 = "(" + _row2;
+                        }
+                        if(row2Mod != string.Empty) {
+                            _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : row2Mod[0]);
+                            _row2 = _row1.Contains('*') ? row2Mod : row2Mod[1..];
+                        }
+                    }else {
+                        if(_cpuPtr == IntPtr.Zero) {
+                            _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
+                            _cpu = "";
+                        }else {
+                            _cpu = (_scrollString != string.Empty) ? _scrollString : cheats;
+                            _row3 = "";
+                        }
+                    }
+                    if(_metricsPtr != IntPtr.Zero) SetMetrics((byte) (_minimalOSD ? 1 : 2));
+                    ModifyMetricRows();
+                    _osdReset = false;
+                }else {
+                    string velocity = string.Format("vel: {0:0.00}", _velocityTotal),
+                           position = string.Format("x: {0:0.00} y: {1:0.00} z: {2:0.00}", _positionX, _positionY, _positionZ),
+                           hzVelocity = string.Format("h: {0:0.00} v: {1:0.00}", _velocityHorizontal, _velocityZ),
+                           yaw = string.Format("yaw: {0:0.0}", _yaw),
+                           pitch = string.Format("pitch: {0:0.0}", _pitch);
+
+                    _row2 = velocity;
+                    _gpuN = position;
+                    if(_cpuPtr != IntPtr.Zero) {
+                        _cpu = hzVelocity;
+                    }else {
+                        _row3 = hzVelocity;
                         _cpu = "";
-                    }else {
-                        _cpu = (_scrollString != string.Empty) ? _scrollString : cheats;
-                        _row3 = "";
                     }
+                    if(_row6Ptr != IntPtr.Zero) {
+                        _row8 = yaw;
+                        _row9 = pitch;
+                    }else {
+                        _row6 = yaw;
+                        _row7 = pitch;
+                    }
+                    if(_metricsPtr != IntPtr.Zero) SetMetrics(2);
+                    ModifyMetricRows();
+                    _osdReset = false;
                 }
-                if(_metricsPtr != IntPtr.Zero) SetMetrics((byte) ((_minimalOSD) ? 1 : 2));
-                ModifyMetricRows();
-            }else {
-                string velocity = string.Format("vel: {0:0.00}", _velocityTotal),
-                       position = string.Format("x: {0:0.00} y: {1:0.00} z: {2:0.00}", _positionX, _positionY, _positionZ),
-                       hzVelocity = string.Format("h: {0:0.00} v: {1:0.00}", _velocityHorizontal, _velocityZ),
-                       yaw = string.Format("yaw: {0:0.0}", _yaw),
-                       pitch = string.Format("pitch: {0:0.0}", _pitch);
-
-                _row2 = velocity;
-                _gpuN = position;
-                if(_cpuPtr != IntPtr.Zero) {
-                    _cpu  = hzVelocity;
-                }else {
-                    _row3 = hzVelocity;
-                    _cpu = "";
-                }
-                if(_row6Ptr != IntPtr.Zero) {
-                    _row8 = yaw;
-                    _row9 = pitch;
-                }else {
-                    _row6 = yaw;
-                    _row7 = pitch;
-                }
-                ModifyMetricRows();
             }
 
             if(_minResPtr != IntPtr.Zero && ReadyToUnlockRes()) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
@@ -210,16 +238,16 @@ namespace DESpeedrunUtil.Memory {
                 if(trainers.Count > 0) {
                     _trainer = trainers[0];
                     if(!_osdFlagCheats) SetFlag(true, "restart");
-                    _trainerFlag = true;
+                    _externalTrainerFlag = true;
                     Log.Information("Trainer process found running.");
                 }else {
                     _trainer = null;
-                    _trainerFlag = false;
+                    _externalTrainerFlag = false;
                 }
             }else {
                 if(_trainer.HasExited) {
                     _trainer = null;
-                    _trainerFlag = false;
+                    _externalTrainerFlag = false;
                 }
             }
             if(!_osdFlagRestartGame) {

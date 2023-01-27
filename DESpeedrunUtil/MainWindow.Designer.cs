@@ -68,6 +68,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.disableOSDCheckbox = new System.Windows.Forms.CheckBox();
             this.minimalOSDCheckbox = new System.Windows.Forms.CheckBox();
             this.launchRTSSCheckbox = new System.Windows.Forms.CheckBox();
             this.cvarLabel = new System.Windows.Forms.Label();
@@ -554,7 +555,7 @@
             this.defaultFPSLabel.AutoSize = true;
             this.defaultFPSLabel.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.defaultFPSLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.defaultFPSLabel.Location = new System.Drawing.Point(197, 67);
+            this.defaultFPSLabel.Location = new System.Drawing.Point(197, 88);
             this.defaultFPSLabel.Name = "defaultFPSLabel";
             this.defaultFPSLabel.Size = new System.Drawing.Size(64, 18);
             this.defaultFPSLabel.TabIndex = 20;
@@ -794,6 +795,7 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel2.Controls.Add(this.disableOSDCheckbox);
             this.panel2.Controls.Add(this.minimalOSDCheckbox);
             this.panel2.Controls.Add(this.launchRTSSCheckbox);
             this.panel2.Controls.Add(this.cvarLabel);
@@ -814,12 +816,25 @@
             this.panel2.Size = new System.Drawing.Size(304, 275);
             this.panel2.TabIndex = 31;
             // 
+            // disableOSDCheckbox
+            // 
+            this.disableOSDCheckbox.AutoSize = true;
+            this.disableOSDCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.disableOSDCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.disableOSDCheckbox.Location = new System.Drawing.Point(6, 45);
+            this.disableOSDCheckbox.Name = "disableOSDCheckbox";
+            this.disableOSDCheckbox.Size = new System.Drawing.Size(195, 22);
+            this.disableOSDCheckbox.TabIndex = 38;
+            this.disableOSDCheckbox.Text = "Disable On-Screen Display";
+            this.disableOSDCheckbox.UseVisualStyleBackColor = true;
+            this.disableOSDCheckbox.CheckedChanged += new System.EventHandler(this.DisableOSD_CheckChanged);
+            // 
             // minimalOSDCheckbox
             // 
             this.minimalOSDCheckbox.AutoSize = true;
             this.minimalOSDCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.minimalOSDCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.minimalOSDCheckbox.Location = new System.Drawing.Point(6, 45);
+            this.minimalOSDCheckbox.Location = new System.Drawing.Point(22, 66);
             this.minimalOSDCheckbox.Name = "minimalOSDCheckbox";
             this.minimalOSDCheckbox.Size = new System.Drawing.Size(197, 22);
             this.minimalOSDCheckbox.TabIndex = 37;
@@ -832,7 +847,7 @@
             this.launchRTSSCheckbox.AutoSize = true;
             this.launchRTSSCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.launchRTSSCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.launchRTSSCheckbox.Location = new System.Drawing.Point(22, 84);
+            this.launchRTSSCheckbox.Location = new System.Drawing.Point(22, 105);
             this.launchRTSSCheckbox.Name = "launchRTSSCheckbox";
             this.launchRTSSCheckbox.Size = new System.Drawing.Size(190, 22);
             this.launchRTSSCheckbox.TabIndex = 36;
@@ -898,7 +913,7 @@
             this.enableMaxFPSCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
             this.enableMaxFPSCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.enableMaxFPSCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.enableMaxFPSCheckbox.Location = new System.Drawing.Point(6, 66);
+            this.enableMaxFPSCheckbox.Location = new System.Drawing.Point(6, 87);
             this.enableMaxFPSCheckbox.Name = "enableMaxFPSCheckbox";
             this.enableMaxFPSCheckbox.Size = new System.Drawing.Size(163, 22);
             this.enableMaxFPSCheckbox.TabIndex = 30;
@@ -912,7 +927,7 @@
             this.panel3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panel3.Controls.Add(this.defaultFPS);
             this.panel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.panel3.Location = new System.Drawing.Point(264, 63);
+            this.panel3.Location = new System.Drawing.Point(264, 84);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(34, 26);
             this.panel3.TabIndex = 29;
@@ -2963,5 +2978,6 @@
         private Panel panel20;
         private TextBox resPercent1;
         private Label label36;
+        private CheckBox disableOSDCheckbox;
     }
 }
