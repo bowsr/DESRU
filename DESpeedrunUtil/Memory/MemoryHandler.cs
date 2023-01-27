@@ -83,10 +83,10 @@ namespace DESpeedrunUtil.Memory {
 
 
         private void MemoryTick() {
-            //if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
+            if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
 
             DerefPointers();
-            TrainerSupported = _velocityPtr != IntPtr.Zero;
+            TrainerSupported = _positionPtr != IntPtr.Zero;
             if(_osdFlagCheats && TrainerSupported) ReadTrainerValues();
 
             // com_skipIntroVideo
