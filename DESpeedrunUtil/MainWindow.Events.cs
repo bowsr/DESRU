@@ -475,7 +475,8 @@ namespace DESpeedrunUtil {
             collapsiblePanel.Controls.Add(new DESRUShadowLabel(resTitle.Font, "RESOLUTION SCALING", resTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
             collapsiblePanel.Controls.Add(new DESRUShadowLabel(trainerTitle.Font, "TRAINER", trainerTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
             collapsiblePanel.Controls.Add(_moreHotkeysLabel);
-            
+
+            minimalOSDCheckbox.Visible = true;
 
             // User Settings
             var fpsJson = "";
@@ -508,7 +509,6 @@ namespace DESpeedrunUtil {
             _resPercent1 = Properties.Settings.Default.ResTogglePercent1;
             _resPercent2 = Properties.Settings.Default.ResTogglePercent2;
             _resPercent3 = Properties.Settings.Default.ResTogglePercent3;
-            enableOSDCheckbox.Checked = Properties.Settings.Default.EnableOSD;
             switch(Properties.Settings.Default.SecondaryVelocity) {
                 case 0:
                     velocityRadioNone.Checked = true;

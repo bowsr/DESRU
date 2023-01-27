@@ -466,17 +466,5 @@ namespace DESpeedrunUtil.Properties {
                 this["ResTogglePercent3"] = value;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool EnableOSD {
-            get {
-                return ((bool)(this["EnableOSD"]));
-            }
-            set {
-                this["EnableOSD"] = value;
-            }
-        }
     }
 }

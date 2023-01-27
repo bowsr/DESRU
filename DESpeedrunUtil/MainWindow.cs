@@ -1018,7 +1018,6 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.ResTogglePercent1 = _resPercent1;
             Properties.Settings.Default.ResTogglePercent2 = _resPercent2;
             Properties.Settings.Default.ResTogglePercent3 = _resPercent3;
-            Properties.Settings.Default.EnableOSD = enableOSDCheckbox.Checked;
             int radio = 1;
             if(velocityRadioNone.Checked) radio = 0;
             if(velocityRadioVertical.Checked) radio = 2;
