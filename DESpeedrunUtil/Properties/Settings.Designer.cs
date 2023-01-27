@@ -470,12 +470,12 @@ namespace DESpeedrunUtil.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool DisableOSD {
+        public bool EnableOSD {
             get {
-                return ((bool)(this["DisableOSD"]));
+                return ((bool)(this["EnableOSD"]));
             }
             set {
-                this["DisableOSD"] = value;
+                this["EnableOSD"] = value;
             }
         }
     }

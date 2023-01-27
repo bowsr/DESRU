@@ -68,7 +68,7 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.replaceProfileCheckbox = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.disableOSDCheckbox = new System.Windows.Forms.CheckBox();
+            this.enableOSDCheckbox = new System.Windows.Forms.CheckBox();
             this.minimalOSDCheckbox = new System.Windows.Forms.CheckBox();
             this.launchRTSSCheckbox = new System.Windows.Forms.CheckBox();
             this.cvarLabel = new System.Windows.Forms.Label();
@@ -795,7 +795,7 @@
             // 
             this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
             this.panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panel2.Controls.Add(this.disableOSDCheckbox);
+            this.panel2.Controls.Add(this.enableOSDCheckbox);
             this.panel2.Controls.Add(this.minimalOSDCheckbox);
             this.panel2.Controls.Add(this.launchRTSSCheckbox);
             this.panel2.Controls.Add(this.cvarLabel);
@@ -818,16 +818,18 @@
             // 
             // disableOSDCheckbox
             // 
-            this.disableOSDCheckbox.AutoSize = true;
-            this.disableOSDCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.disableOSDCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.disableOSDCheckbox.Location = new System.Drawing.Point(6, 45);
-            this.disableOSDCheckbox.Name = "disableOSDCheckbox";
-            this.disableOSDCheckbox.Size = new System.Drawing.Size(195, 22);
-            this.disableOSDCheckbox.TabIndex = 38;
-            this.disableOSDCheckbox.Text = "Disable On-Screen Display";
-            this.disableOSDCheckbox.UseVisualStyleBackColor = true;
-            this.disableOSDCheckbox.CheckedChanged += new System.EventHandler(this.DisableOSD_CheckChanged);
+            this.enableOSDCheckbox.AutoSize = true;
+            this.enableOSDCheckbox.Checked = true;
+            this.enableOSDCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.enableOSDCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.enableOSDCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.enableOSDCheckbox.Location = new System.Drawing.Point(6, 45);
+            this.enableOSDCheckbox.Name = "disableOSDCheckbox";
+            this.enableOSDCheckbox.Size = new System.Drawing.Size(191, 22);
+            this.enableOSDCheckbox.TabIndex = 38;
+            this.enableOSDCheckbox.Text = "Enable On-Screen Display";
+            this.enableOSDCheckbox.UseVisualStyleBackColor = true;
+            this.enableOSDCheckbox.CheckedChanged += new System.EventHandler(this.DisableOSD_CheckChanged);
             // 
             // minimalOSDCheckbox
             // 
@@ -2978,6 +2980,6 @@
         private Panel panel20;
         private TextBox resPercent1;
         private Label label36;
-        private CheckBox disableOSDCheckbox;
+        private CheckBox enableOSDCheckbox;
     }
 }

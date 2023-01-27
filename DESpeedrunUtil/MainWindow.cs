@@ -941,7 +941,7 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
             _memory.FirstRun = _firstRun;
-            _memory.DisableOSD = disableOSDCheckbox.Checked;
+            _memory.EnableOSD = enableOSDCheckbox.Checked;
             _memory.SetFlag(!_memory.Version.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
             _memory.SetFlag(minimalOSDCheckbox.Checked, "minimal");
             if(_memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
@@ -1017,7 +1017,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.ResTogglePercent1 = _resPercent1;
             Properties.Settings.Default.ResTogglePercent2 = _resPercent2;
             Properties.Settings.Default.ResTogglePercent3 = _resPercent3;
-            Properties.Settings.Default.DisableOSD = disableOSDCheckbox.Checked;
+            Properties.Settings.Default.EnableOSD = enableOSDCheckbox.Checked;
             int radio = 1;
             if(velocityRadioNone.Checked) radio = 0;
             if(velocityRadioVertical.Checked) radio = 2;

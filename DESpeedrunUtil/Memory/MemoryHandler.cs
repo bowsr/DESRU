@@ -33,7 +33,7 @@ namespace DESpeedrunUtil.Memory {
         public bool Reset { get; init; }
         public bool TrainerSupported { get; private set; } = true;
         public bool FirstRun { get; set; } = true;
-        public bool DisableOSD { get; set; } = false;
+        public bool EnableOSD { get; set; } = false;
         System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
         public string Version { get; init; }
@@ -108,7 +108,7 @@ namespace DESpeedrunUtil.Memory {
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
             _row1 = METRICS_FPS_TEXT + ((_osdFlagOutOfDate) ? "*" : "");
 
-            if(DisableOSD && !_osdReset) {
+            if(!EnableOSD && !_osdReset) {
                 _row1 = METRICS_FPS_TEXT;
                 _row2 = METRICS_FRAMETIME_TEXT;
                 _row3 = METRICS_RESOLUTION_TEXT;
@@ -129,7 +129,7 @@ namespace DESpeedrunUtil.Memory {
                 _osdReset = true;
             }
 
-            if(!_externalTrainerFlag && !DisableOSD) {
+            if(!_externalTrainerFlag && EnableOSD) {
                 if(!_trainerFlag || !_osdFlagCheats) {
                     if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
                     if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
