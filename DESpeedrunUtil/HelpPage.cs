@@ -48,7 +48,7 @@ namespace DESpeedrunUtil {
                 _ => ""
             };
 
-            helpTextbox.ScrollBars = tag == "option" ? ScrollBars.Vertical : ScrollBars.None;
+            helpTextbox.ScrollBars = (tag == "option" || tag == "trainer") ? ScrollBars.Vertical : ScrollBars.None;
 
             helpPageVersionImage.Visible = tag == "ver";
             helpPageOSDImage.Visible = tag == "osd";

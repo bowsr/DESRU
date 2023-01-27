@@ -241,7 +241,10 @@ If the bar is green, your total velocity is at or below the speedcap, with the s
 If your total velocity exceeds the bhop speedcap, the bar will change color depending on how high above the speedcap you are. Starts at green, turns to orange, then eventually red. This color roughly indicates how much delay there will be before you can bhop after landing.
 
 If you wish to capture this speedometer with OBS, a Color Key filter is recommended.
-Set the Key Color Type to "Custom Color", with a color #2d2d2d. Set both the Similarity and Smoothness to the minimum value of 1, and you should be good to go.</value>
+Set the Key Color Type to "Custom Color", with a color #2d2d2d. Set both the Similarity and Smoothness to the minimum value of 1, and you should be good to go.
+
+Also, unlike the standalone Trainer by Micrologist, this Trainer does not have an option to save and load positions.
+If you wish to teleport, bind a key in the in-game console to "getviewpos" and then another to "setviewpos last". Press the "getviewpos" key to save your location, then press the "setviewpos last" key to teleport back.</value>
   </data>
   <data name="HelpPage_VersionChanger" xml:space="preserve">
     <value>To the right of the resolution scaling section are some options to change the version of DOOM Eternal you have currently loaded.
