@@ -1181,6 +1181,26 @@ namespace DESpeedrunUtil {
             trainerOSDCheckbox.Font = EternalUIRegular;
             positionTextBox.Font = EternalUIRegular;
             velocityTextBox.Font = EternalUIRegular;
+            resToggleLabel0.Font = EternalUIRegular;
+            resToggleLabel1.Font = EternalUIRegular;
+            resToggleLabel2.Font = EternalUIRegular;
+            resToggleLabel3.Font = EternalUIRegular;
+            resPercent0.Font = EternalUIRegular;
+            resPercent1.Font = EternalUIRegular;
+            resPercent2.Font = EternalUIRegular;
+            resPercent3.Font = EternalUIRegular;
+            resHotkeyField0.Font = EternalUIRegular;
+            resHotkeyField1.Font = EternalUIRegular;
+            resHotkeyField2.Font = EternalUIRegular;
+            resHotkeyField3.Font = EternalUIRegular;
+            enableOSDCheckbox.Font = EternalUIRegular;
+            trainerRadioLabel.Font = EternalUIRegular;
+            velocityRadioNone.Font = EternalUIRegular;
+            velocityRadioTotal.Font = EternalUIRegular;
+            velocityRadioVertical.Font = EternalUIRegular;
+            speedometerCheckbox.Font = EternalUIRegular;
+            speedometerPrecisionCheckbox.Font = EternalUIRegular;
+            altPositionTextbox.Font = EternalUIRegular;
 
             label1.Font = EternalUIRegular;
             label2.Font = EternalUIRegular;
@@ -1206,6 +1226,10 @@ namespace DESpeedrunUtil {
             label27.Font = EternalUIRegular;
             label28.Font = EternalUIRegular;
             label30.Font = EternalUIRegular;
+            label34.Font = EternalUIRegular;
+            label36.Font = EternalUIRegular;
+            label24.Font = EternalUIRegular;
+            label29.Font = EternalUIRegular;
 
             // Eternal UI 2 Bold 11.25point
             versionChangedLabel.Font = EternalUIBold;
