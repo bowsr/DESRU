@@ -37,8 +37,8 @@
         internal const int WINDOW_HEIGHT_DEFAULT = 805;
         internal const int WINDOW_WIDTH_DEFAULT = 653;
         internal const int PANEL_HEIGHT_DEFAULT = 760;
-        internal const int WINDOW_EXTRAHEIGHT_MOREKEYS = 218; // Amount to add/subtract when showing/hiding extra fps hotkeys
-        internal const int PANEL_EXTRAHEIGHT_MOREKEYS = 222;
+        internal const int WINDOW_EXTRAHEIGHT_MOREKEYS = 271; // Amount to add/subtract when showing/hiding extra fps hotkeys
+        internal const int PANEL_EXTRAHEIGHT_MOREKEYS = 269;
         internal const int WINDOW_EXTRAWIDTH = 12;
 
         internal const int OFFSET_ROW2 = 0x8;

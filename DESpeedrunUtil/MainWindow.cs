@@ -1083,7 +1083,7 @@ namespace DESpeedrunUtil {
 
         private void ModifyWindowForSmallDisplays() {
             Screen screen = Screen.FromHandle(this.Handle);
-            if(screen.WorkingArea.Height < WINDOW_HEIGHT_DEFAULT + WINDOW_EXTRAHEIGHT_MOREKEYS + 2) {
+            if((screen.WorkingArea.Height < this.Height + 2 && !extraFPSHotkeysPanel.Visible) || (screen.WorkingArea.Height < WINDOW_HEIGHT_DEFAULT + WINDOW_EXTRAHEIGHT_MOREKEYS + 2 && extraFPSHotkeysPanel.Visible)) {
                 this.Height = screen.WorkingArea.Height - 100;
                 this.Width = WINDOW_WIDTH_DEFAULT;
                 collapsiblePanel.Height = PANEL_HEIGHT_DEFAULT - (WINDOW_HEIGHT_DEFAULT - this.Height) - 5;

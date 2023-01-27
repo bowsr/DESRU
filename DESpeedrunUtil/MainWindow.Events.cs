@@ -435,16 +435,17 @@ namespace DESpeedrunUtil {
                 }
                 extraFPSHotkeysPanel.Visible = false;
                 _moreHotkeysLabel.Visible = false;
-                showMoreKeysButton.Text = "Show More FPS Hotkeys";
-            } else {
+                showMoreKeysButton.Text = "Show More Hotkeys";
+            }else {
                 if(!_smallDisplay) {
                     this.Height += WINDOW_EXTRAHEIGHT_MOREKEYS;
                     collapsiblePanel.Height += PANEL_EXTRAHEIGHT_MOREKEYS;
                 }
                 extraFPSHotkeysPanel.Visible = true;
                 _moreHotkeysLabel.Visible = true;
-                showMoreKeysButton.Text = "Hide Extra FPS Hotkeys";
+                showMoreKeysButton.Text = "Hide Extra Hotkeys";
             }
+            ModifyWindowForSmallDisplays();
         }
         #endregion
 

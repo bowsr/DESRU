@@ -816,7 +816,7 @@
             this.panel2.Size = new System.Drawing.Size(304, 275);
             this.panel2.TabIndex = 31;
             // 
-            // disableOSDCheckbox
+            // enableOSDCheckbox
             // 
             this.enableOSDCheckbox.AutoSize = true;
             this.enableOSDCheckbox.Checked = true;
@@ -824,7 +824,7 @@
             this.enableOSDCheckbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.enableOSDCheckbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
             this.enableOSDCheckbox.Location = new System.Drawing.Point(6, 45);
-            this.enableOSDCheckbox.Name = "disableOSDCheckbox";
+            this.enableOSDCheckbox.Name = "enableOSDCheckbox";
             this.enableOSDCheckbox.Size = new System.Drawing.Size(191, 22);
             this.enableOSDCheckbox.TabIndex = 38;
             this.enableOSDCheckbox.Text = "Enable On-Screen Display";
