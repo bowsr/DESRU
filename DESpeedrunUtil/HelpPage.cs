@@ -15,6 +15,7 @@ namespace DESpeedrunUtil {
                 helpTabButton4,
                 helpTabButton5,
                 helpTabButton6,
+                helpTabButton7,
             };
 
             SetFonts();
