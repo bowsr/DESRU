@@ -572,6 +572,7 @@ namespace DESpeedrunUtil {
             targetFPSInput.Text = _targetFPS.ToString();
             float current = _memory.GetMinRes();
             _memory.SetMinRes(percent);
+            _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
             if(percent != current) {
                 _memory.SetMinRes(percent);
                 if(!_memory.ReadDynamicRes()) _memory.ToggleDynamicScaling();
