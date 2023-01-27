@@ -38,6 +38,7 @@
             this.helpPageOSDImage = new System.Windows.Forms.PictureBox();
             this.blankPanel = new System.Windows.Forms.Panel();
             this.titleText = new System.Windows.Forms.TextBox();
+            this.helpTabButton7 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.helpPageVersionImage)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.helpPageOSDImage)).BeginInit();
@@ -170,7 +171,7 @@
             this.helpTabButton5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.helpTabButton5.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.helpTabButton5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton5.Location = new System.Drawing.Point(12, 320);
+            this.helpTabButton5.Location = new System.Drawing.Point(12, 359);
             this.helpTabButton5.Name = "helpTabButton5";
             this.helpTabButton5.Size = new System.Drawing.Size(204, 33);
             this.helpTabButton5.TabIndex = 16;
@@ -186,7 +187,7 @@
             this.helpTabButton6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.helpTabButton6.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.helpTabButton6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton6.Location = new System.Drawing.Point(12, 359);
+            this.helpTabButton6.Location = new System.Drawing.Point(12, 398);
             this.helpTabButton6.Name = "helpTabButton6";
             this.helpTabButton6.Size = new System.Drawing.Size(204, 33);
             this.helpTabButton6.TabIndex = 17;
@@ -244,12 +245,29 @@
             this.titleText.Text = resources.GetString("titleText.Text");
             this.titleText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // helpTabButton7
+            // 
+            this.helpTabButton7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
+            this.helpTabButton7.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
+            this.helpTabButton7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.helpTabButton7.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.helpTabButton7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
+            this.helpTabButton7.Location = new System.Drawing.Point(12, 320);
+            this.helpTabButton7.Name = "helpTabButton7";
+            this.helpTabButton7.Size = new System.Drawing.Size(204, 33);
+            this.helpTabButton7.TabIndex = 18;
+            this.helpTabButton7.Tag = "trainer";
+            this.helpTabButton7.Text = "Trainer";
+            this.helpTabButton7.UseVisualStyleBackColor = false;
+            this.helpTabButton7.Click += new System.EventHandler(this.TabButton_Click);
+            // 
             // HelpPage
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
             this.ClientSize = new System.Drawing.Size(784, 761);
+            this.Controls.Add(this.helpTabButton7);
             this.Controls.Add(this.titleText);
             this.Controls.Add(this.blankPanel);
             this.Controls.Add(this.helpTabButton6);
@@ -293,5 +311,6 @@
         private PictureBox helpPageOSDImage;
         private Panel blankPanel;
         private TextBox titleText;
+        private Button helpTabButton7;
     }
 }

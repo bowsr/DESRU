@@ -44,8 +44,11 @@ namespace DESpeedrunUtil {
                 "option" => Properties.Resources.HelpPage_Options,
                 "info" => Properties.Resources.HelpPage_InfoPanel,
                 "osd" => Properties.Resources.HelpPage_OSD,
+                "trainer" => Properties.Resources.HelpPage_Trainer,
                 _ => ""
             };
+
+            helpTextbox.ScrollBars = tag == "option" ? ScrollBars.Vertical : ScrollBars.None;
 
             helpPageVersionImage.Visible = tag == "ver";
             helpPageOSDImage.Visible = tag == "osd";

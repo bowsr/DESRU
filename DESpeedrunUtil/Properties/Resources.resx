@@ -149,7 +149,8 @@ Most keys can be bound, with notable exceptions being the ESCAPE and Tilde keys,
 For the FPS Hotkey actions, you can also specify what FPS limit you want to toggle with that key. This limit can be anywhere from 1 FPS to 250 FPS.
 Every hotkey can also be used to toggle back to your set max FPS by pressing it again.
 
-If you need more FPS Hotkeys than the three shown, you can click the button at the bottom of this section labeled "Show More FPS Hotkeys." This will expand the window at the bottom, revealing 12 more bindable FPS limit toggles.
+If you need more Hotkeys, you can click the button at the bottom of this section labeled "Show More Hotkeys." This will expand the window at the bottom, revealing 12 more bindable FPS limit toggles, as well as some Resolution Scaling Hotkeys.
+These Res. Scale Hotkeys will change the minimum resolution percentage to your desired value. Pressing the same key again will change it back to the default value set in the Resolution Scaling section of DESRU.
 
 
 Like the macro, hotkeys will be disabled when DOOM Eternal is not in focus.</value>
@@ -177,6 +178,7 @@ Normally console commands are not allowed, but these are some of the very few ex
 
 You can enable/disable the macro and hotkeys from here, instead of removing binds.
 You can specify your desired maximum FPS that DOOM Eternal will run at.
+You can toggle the On-Screen Display here, but make sure it is enabled during speedruns, otherwise your run won't be valid for leaderboard submission. If the OSD takes too much space on your screen, you can enable the Minimal OSD option so the info is shown on a single line.
 You can also disable the max FPS limiter here. Hotkeys will still work, and you will need to limit your FPS to 250 or lower through external means, like through RTSS or NVIDIA Control Panel.
 
 Under the CVAR section, you'll find three checkboxes which will toggle various in-game variables.
@@ -221,6 +223,25 @@ In order to unlock your resolution scaling, when DOOM Eternal is open you'll nee
 After scaling is unlocked, you can also set your own minimum scale. You can also automatically enable dynamic scaling with any FPS target up to 1000, though keep in mind that this change won't be shown in the settings menu.
 
 The Res. Scale Hotkey in the Keybinds section will toggle dynamic scaling on and off.</value>
+  </data>
+  <data name="HelpPage_Trainer" xml:space="preserve">
+    <value>DESRU also includes a Trainer that'll read and display the slayer's position and velocity.
+
+In order to use the Trainer, you must have cheats enabled first.
+
+Your position and velocity will be displayed in DESRU, but you can also enable an option to show this info in-game, in place of the normal DESRU OSD.
+
+There is also an optional visual speedometer included that you can use, and can even capture separately to show in recordings.
+The top number of this speedometer is your horizontal velocity.
+The bottom number will show your total velocity by default, but can be changed to show vertical velocity, or hidden all together.
+
+If total velocity is shown, the background of that number will scale and change color depending on the current speed.
+This size and color indicates the difference between the total velocity and the bhop speedcap of 38.5 m/s.
+If the bar is green, your total velocity is at or below the speedcap, with the size of the bar scaling based on that percentage.
+If your total velocity exceeds the bhop speedcap, the bar will change color depending on how high above the speedcap you are. Starts at green, turns to orange, then eventually red. This color roughly indicates how much delay there will be before you can bhop after landing.
+
+If you wish to capture this speedometer with OBS, a Color Key filter is recommended.
+Set the Key Color Type to "Custom Color", with a color #2d2d2d. Set both the Similarity and Smoothness to the minimum value of 1, and you should be good to go.</value>
   </data>
   <data name="HelpPage_VersionChanger" xml:space="preserve">
     <value>To the right of the resolution scaling section are some options to change the version of DOOM Eternal you have currently loaded.

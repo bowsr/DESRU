@@ -120,9 +120,7 @@ namespace DESpeedrunUtil.Properties {
         ///
         ///You can enable/disable the macro and hotkeys from here, instead of removing binds.
         ///You can specify your desired maximum FPS that DOOM Eternal will run at.
-        ///You can also disable the max FPS limiter here. Hotkeys will still work, and you will need to limit your FPS to 250 or lower through external means, like through RTSS or NVIDIA Control Panel.
-        ///
-        ///Under the CVAR section, you&apos;ll find three checkboxes which will to [rest of string was truncated]&quot;;.
+        ///You can toggle the On-Screen Display here, but make sure it is enabled during speedruns, otherwise your run won&apos;t be valid for leaderboard submission. If the OSD takes too much space on your screen, you can enable the Minimal OSD option so the info is shown on [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string HelpPage_Options {
             get {
@@ -156,6 +154,23 @@ namespace DESpeedrunUtil.Properties {
         internal static string HelpPage_ResScaling {
             get {
                 return ResourceManager.GetString("HelpPage_ResScaling", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to DESRU also includes a Trainer that&apos;ll read and display the slayer&apos;s position and velocity.
+        ///
+        ///In order to use the Trainer, you must have cheats enabled first.
+        ///
+        ///Your position and velocity will be displayed in DESRU, but you can also enable an option to show this info in-game, in place of the normal DESRU OSD.
+        ///
+        ///There is also an optional visual speedometer included that you can use, and can even capture separately to show in recordings.
+        ///The top number of this speedometer is your horizontal velocity.
+        ///The  [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string HelpPage_Trainer {
+            get {
+                return ResourceManager.GetString("HelpPage_Trainer", resourceCulture);
             }
         }
         
