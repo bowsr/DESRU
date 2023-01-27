@@ -31,6 +31,7 @@ namespace DESpeedrunUtil.Memory {
         HotkeyHandler _hotkeys;
         public Timer MemoryTimer { get; init; }
         public bool Reset { get; init; }
+        public bool TrainerSupported { get; private set; } = true;
         public bool FirstRun { get; set; } = true;
         public bool DisableOSD { get; set; } = false;
         System.Timers.Timer _restartCheatsTimer;
@@ -85,7 +86,8 @@ namespace DESpeedrunUtil.Memory {
             //if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
 
             DerefPointers();
-            if(_osdFlagCheats) ReadTrainerValues();
+            TrainerSupported = _velocityPtr != IntPtr.Zero;
+            if(_osdFlagCheats && TrainerSupported) ReadTrainerValues();
 
             // com_skipIntroVideo
             if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr)) 
@@ -128,7 +130,7 @@ namespace DESpeedrunUtil.Memory {
             }
 
             if(!_externalTrainerFlag && !DisableOSD) {
-                if(!_trainerFlag) {
+                if(!_trainerFlag || !_osdFlagCheats) {
                     if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
                     if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
                     _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");

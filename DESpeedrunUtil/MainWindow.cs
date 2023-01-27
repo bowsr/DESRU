@@ -311,27 +311,43 @@ namespace DESpeedrunUtil {
             
             /** Trainer **/
             if(_memory.GetFlag("cheats")) {
-                float[] pos = _memory.GetPlayerPosition(),
-                        vel = _memory.GetPlayerVelocity();
+                if(_memory.TrainerSupported) {
+                    float[] pos = _memory.GetPlayerPosition(),
+                            vel = _memory.GetPlayerVelocity();
 
-                if(!speedometerCheckbox.Checked) {
-                    positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, pos[0], pos[1], pos[2], pos[3], pos[4]);
-                    velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
+                    if(!speedometerCheckbox.Checked) {
+                        positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, pos[0], pos[1], pos[2], pos[3], pos[4]);
+                        velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
 
-                    ToggleTrainerControls(true);
+                        ToggleTrainerControls(true);
+                    }else {
+                        ToggleTrainerControls(false);
+
+                        altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, pos[0], pos[1], pos[2], pos[3], pos[4]);
+
+                        _speedometer.VerticalVelocity = vel[2];
+                        _speedometer.HorizontalVelocity = vel[3];
+                        _speedometer.TotalVelocity = vel[4];
+                        _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
+                        _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
+                        _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
+                        _speedometer.Refresh();
+                    }
                 }else {
-                    ToggleTrainerControls(false);
+                    positionTextBox.Visible = false;
+                    velocityTextBox.Visible = false;
+                    _speedometer.Visible = false;
 
-                    altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, pos[0], pos[1], pos[2], pos[3], pos[4]);
-
-                    _speedometer.VerticalVelocity = vel[2];
-                    _speedometer.HorizontalVelocity = vel[3];
-                    _speedometer.TotalVelocity = vel[4];
-                    _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
-                    _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
-                    _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
-                    _speedometer.Refresh();
+                    altPositionTextbox.Text = TRAINER_UNSUPPORTED_WARNING;
+                    altPositionTextbox.Visible = true;
                 }
+            }else {
+                positionTextBox.Visible = false;
+                velocityTextBox.Visible = false;
+                _speedometer.Visible = false;
+
+                altPositionTextbox.Text = TRAINER_NOCHEATS_WARNING;
+                altPositionTextbox.Visible = true;
             }
         }
 
