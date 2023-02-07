@@ -138,7 +138,12 @@ namespace DESpeedrunUtil.Memory {
                     if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
                         _row2 += " (" + (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
                     }
-                    var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : "";
+                    var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : string.Empty;
+                    var scaling = string.Empty;
+                    if(ReadDynamicRes() || ReadForceRes() != 0f) {
+                        scaling = string.Format("{0:0.00}x", _minRes);
+                        scaling += ReadDynamicRes() ? " [D]" : " [S]";
+                    }
                     if(_minimalOSD) {
                         var row2Mod = (_scrollString != string.Empty) ? "[" + _scrollString + "]" : cheats;
                         _row1 += " ";
@@ -152,7 +157,11 @@ namespace DESpeedrunUtil.Memory {
                             _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : row2Mod[0]);
                             _row2 = _row1.Contains('*') ? row2Mod : row2Mod[1..];
                         }
+                        if(scaling != string.Empty) {
+                            _row2 = _row2.Replace(")", " [" + scaling.Replace("[", "") + ")");
+                        }
                     }else {
+                        if(cheats == string.Empty) cheats = scaling;
                         if(_cpuPtr == IntPtr.Zero) {
                             _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
                             _cpu = "";
@@ -543,6 +552,14 @@ namespace DESpeedrunUtil.Memory {
         public bool ReadDynamicRes() {
             if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
             return false;
+        }
+        /// <summary>
+        /// Reads the current value of rs_forceResolution from memory
+        /// </summary>
+        /// <returns><see langword="float"/> value of rs_forceResolution</returns>
+        public float ReadForceRes() {
+            // TODO
+            return 0f;
         }
         /// <summary>
         /// Reads the current value of com_adaptiveTickMaxHz from memory
