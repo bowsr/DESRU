@@ -575,10 +575,10 @@ namespace DESpeedrunUtil {
             _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
             if(percent != current) {
                 _memory.SetMinRes(percent);
-                if(!_memory.ReadDynamicRes()) _memory.ToggleDynamicScaling();
             }else {
-                _memory.SetMinRes(_minResPercent / 100f);
+                if(_memory.ReadDynamicRes()) _memory.SetMinRes(_minResPercent / 100f);
             }
+            if(!_memory.ReadDynamicRes()) _memory.ToggleDynamicScaling();
         }
 
         // Adds a MouseDown event to every control in the form, recursively.
