@@ -409,7 +409,7 @@ namespace DESpeedrunUtil.Memory {
         private void SetResScales() {
             if(!Version.Contains("6.66 Rev 2") && _minRes >= 0.5f) return; // No need to change res scales since 50% is the default minimum in game
             float[] scales = ONEPERCENT_RES_SCALES;
-            if(Version.Contains("6.66 Rev 2")) {
+            if(Version.Contains("6.66 Rev 2") && _minRes >= 0.02f) {
                 // rs_minimumResolutionScale does not exist on 6.66 Rev 2. It is dynamically inferred based off the 128 byte set of res scale values.
                 // Because of this, we cannot set the min res scale directly, so a new set of res scale values must be generated,
                 //   based off of the desired minimum resolution set by the user.
