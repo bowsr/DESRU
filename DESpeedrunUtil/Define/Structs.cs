@@ -54,6 +54,8 @@
             public int Position { get; init; }
             public int Rotation { get; init; }
 
+            public int ForceRes { get; init; }
+
             public KnownOffsets(string v, int r1, int r6, int res) {
                 Version = v;
                 Row1 = r1;
@@ -75,6 +77,7 @@
                 Velocity = 0;
                 Position = 0;
                 Rotation = 0;
+                ForceRes = 0;
             }
         }
     }
