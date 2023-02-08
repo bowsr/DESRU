@@ -20,7 +20,8 @@
     "Velocity": 86288936,
     "Position": 106089440,
     "Rotation": 113748888,
-    "ForceRes": 106052692
+    "ForceRes": 106052692,
+    "CurrentScaling": 106046372
   },
   {
     "Version": "6.66 Rev 2",
@@ -43,7 +44,8 @@
     "Velocity": 85528488,
     "Position": 105327712,
     "Rotation": 112988312,
-    "ForceRes": 105290964
+    "ForceRes": 105290964,
+    "CurrentScaling": 105284644
   },
   {
     "Version": "6.4",
@@ -66,7 +68,8 @@
     "Velocity": 83537832,
     "Position": 103401376,
     "Rotation": 111044856,
-    "ForceRes": 103364628
+    "ForceRes": 103364628,
+    "CurrentScaling": 103358084
   },
   {
     "Version": "6.3",
@@ -89,7 +92,8 @@
     "Velocity": 83537832,
     "Position": 103401376,
     "Rotation": 111044856,
-    "ForceRes": 103364628
+    "ForceRes": 103364628,
+    "CurrentScaling": 103358084
   },
   {
     "Version": "5.1",
@@ -112,7 +116,8 @@
     "Velocity": 82457688,
     "Position": 99330400,
     "Rotation": 107003960,
-    "ForceRes": 99290756
+    "ForceRes": 99290756,
+    "CurrentScaling": 99283988
   },
   {
     "Version": "5.0",
@@ -135,7 +140,8 @@
     "Velocity": 82457688,
     "Position": 99330400,
     "Rotation": 107003960,
-    "ForceRes": 99290756
+    "ForceRes": 99290756,
+    "CurrentScaling": 99283988
   },
   {
     "Version": "4.1",
@@ -158,7 +164,8 @@
     "Velocity": 85428984,
     "Position": 106291920,
     "Rotation": 109144648,
-    "ForceRes": 102466036
+    "ForceRes": 102466036,
+    "CurrentScaling": 102459268
   },
   {
     "Version": "3.1",
@@ -181,7 +188,8 @@
     "Velocity": 85871576,
     "Position": 106434896,
     "Rotation": 109029208,
-    "ForceRes": 102737620
+    "ForceRes": 102737620,
+    "CurrentScaling": 102731236
   },
   {
     "Version": "1.1",
@@ -204,7 +212,8 @@
     "Velocity": 80143112,
     "Position": 100048976,
     "Rotation": 102364280,
-    "ForceRes": 96353300
+    "ForceRes": 96353300,
+    "CurrentScaling": 96328644
   },
   {
     "Version": "1.0 (Release)",
@@ -227,6 +236,7 @@
     "Velocity": 80202248,
     "Position": 100108224,
     "Rotation": 102418216,
-    "ForceRes": 96412628
+    "ForceRes": 96412628,
+    "CurrentScaling": 96387716
   }
 ]

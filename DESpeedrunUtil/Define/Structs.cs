@@ -55,6 +55,7 @@
             public int Rotation { get; init; }
 
             public int ForceRes { get; init; }
+            public int CurrentScaling { get; init; }
 
             public KnownOffsets(string v, int r1, int r6, int res) {
                 Version = v;
@@ -78,6 +79,7 @@
                 Position = 0;
                 Rotation = 0;
                 ForceRes = 0;
+                CurrentScaling = 0;
             }
         }
     }
