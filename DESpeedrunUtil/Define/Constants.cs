@@ -52,6 +52,11 @@
         
         internal static readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
+        internal static readonly float[] DEFAULT_RES_SCALES = new float[32]
+                { 1.0f, 0.99f, 0.98f, 0.97f, 0.96f, 0.95f, 0.94f, 0.93f,
+                0.92f, 0.91f, 0.9f, 0.89f, 0.88f, 0.86f, 0.84f, 0.82f,
+                0.8f, 0.78f, 0.76f, 0.74f, 0.72f, 0.7f, 0.68f, 0.66f,
+                0.64f, 0.62f, 0.6f, 0.58f, 0.56f, 0.54f, 0.52f, 0.5f };
         internal static readonly float[] ONEPERCENT_RES_SCALES = new float[32]
                 { 1.0f, 0.968f, 0.936f, 0.904f, 0.872f, 0.84f, 0.808f, 0.776f,
                 0.744f, 0.712f, 0.68f, 0.648f, 0.616f, 0.584f, 0.552f, 0.52f,
