@@ -556,6 +556,7 @@ namespace DESpeedrunUtil {
 
         public void ToggleDynamicResScaling() {
             if(Hooked) {
+                _memory.SetTargetFPS(_targetFPS);
                 _memory.ToggleDynamicScaling();
             }
         }

@@ -398,6 +398,7 @@ namespace DESpeedrunUtil.Memory {
             if(ReadDynamicRes()) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
             else EnableDynamicScaling(_targetFPS);
         }
+        public void SetTargetFPS(int target) => _targetFPS = target;
         private static byte[] FloatToBytes(float f) {
             byte[] output = new byte[4];
             float[] fArray = new float[1] { f };
@@ -406,9 +407,9 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void SetResScales() {
-            if(Version != "6.66 Rev 2" && _minRes >= 0.5f) return; // No need to change res scales since 50% is the default minimum in game
+            if(!Version.Contains("6.66 Rev 2") && _minRes >= 0.5f) return; // No need to change res scales since 50% is the default minimum in game
             float[] scales = ONEPERCENT_RES_SCALES;
-            if(Version == "6.66 Rev 2") {
+            if(Version.Contains("6.66 Rev 2")) {
                 // rs_minimumResolutionScale does not exist on 6.66 Rev 2. It is dynamically inferred based off the 128 byte set of res scale values.
                 // Because of this, we cannot set the min res scale directly, so a new set of res scale values must be generated,
                 //   based off of the desired minimum resolution set by the user.
@@ -516,7 +517,7 @@ namespace DESpeedrunUtil.Memory {
         /// <param name="targetFPS">Target FPS for dynamic scaling</param>
         public void ScheduleResUnlock(bool auto, int targetFPS) {
             if(Version.Contains("Unknown")) return;
-            if(_resUnlocked && Version != "6.66 Rev 2") {
+            if(_resUnlocked && !Version.Contains("6.66 Rev 2")) {
                 if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
                 return;
             }
