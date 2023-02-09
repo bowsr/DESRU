@@ -396,7 +396,7 @@ namespace DESpeedrunUtil {
                 }
                 var ms = _memory.ReadRaiseMillis();
                 if(ms > 0 && ms < 16) {
-                    var rs = ((int) (_memory.GetMinRes() * 100)) + "% (" + ((int) (1000 / (ms / 0.95f))) + "FPS)";
+                    var rs = ((int) (_memory.CurrentResScaling * 100)) + "% (" + (_memory.GetTargetFPS()) + "FPS)";
                     resScaleStatus.Text = (_memory.ReadDynamicRes()) ? rs : "Disabled";
                     toolTip7500.SetToolTip(resScaleStatus, null);
                 }else {

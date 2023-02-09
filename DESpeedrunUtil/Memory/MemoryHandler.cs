@@ -18,13 +18,13 @@ namespace DESpeedrunUtil.Memory {
         DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _skipIntroDP, _aliasingDP, _unDelayDP, _continueDP,
                     _row1DP, _row6DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
-                    _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP,
+                    _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP, _forceResDP, _currentResScaleDP,
                     _velocityDP, _positionDP, _rotationDP;
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _skipIntroPtr, _aliasingPtr, _unDelayPtr, _continuePtr,
                _row1Ptr, _row6Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
-               _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr,
+               _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr, _forceResPtr, _currentResScalePtr,
                _velocityPtr, _positionPtr, _rotationPtr;
 
         Process _game, _trainer;
@@ -37,6 +37,7 @@ namespace DESpeedrunUtil.Memory {
         System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
         public string Version { get; init; }
+        public float CurrentResScaling { get; private set; } = 0f;
 
         bool _osdFlagCheats = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
              _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
@@ -54,6 +55,8 @@ namespace DESpeedrunUtil.Memory {
         float _velocityX = 0f, _velocityY = 0f, _velocityZ = 0f, _velocityHorizontal = 0f, _velocityTotal = 0f,
               _positionX = 0f, _positionY = 0f, _positionZ = 0f,
               _yaw = 0f, _pitch = 0f;
+
+        float[] _currentResScales;
 
         public MemoryHandler(Process game, HotkeyHandler hotkeys) {
             _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
@@ -88,6 +91,9 @@ namespace DESpeedrunUtil.Memory {
             DerefPointers();
             TrainerSupported = _positionPtr != IntPtr.Zero;
             if(_osdFlagCheats && TrainerSupported) ReadTrainerValues();
+
+            // Read current resolution scaling percentage
+            if(_currentResScalePtr != IntPtr.Zero) CurrentResScaling = _game.ReadValue<float>(_currentResScalePtr);
 
             // com_skipIntroVideo
             if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr)) 
@@ -140,9 +146,8 @@ namespace DESpeedrunUtil.Memory {
                     }
                     var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : string.Empty;
                     var scaling = string.Empty;
-                    if(ReadDynamicRes() || ReadForceRes() != 0f) {
-                        scaling = string.Format("{0:0.00}x", _minRes);
-                        scaling += ReadDynamicRes() ? " [D]" : " [S]";
+                    if(CurrentResScaling < 1f) {
+                        scaling = string.Format("{0:0.00}x [{1}]", CurrentResScaling, ReadDynamicRes() ? GetTargetFPS() : "S");
                     }
                     if(_minimalOSD) {
                         var row2Mod = (_scrollString != string.Empty) ? "[" + _scrollString + "]" : cheats;
@@ -419,6 +424,7 @@ namespace DESpeedrunUtil.Memory {
                     scales[i] = (1.0f - (((1.0f - min) / 31) * i));
                 }
             }
+            _currentResScales = scales;
             byte[] resBytes = new byte[32 * 4];
             Buffer.BlockCopy(scales, 0, resBytes, 0, resBytes.Length);
             if(_resScalesPtr != IntPtr.Zero) {
@@ -557,9 +563,9 @@ namespace DESpeedrunUtil.Memory {
         /// <summary>
         /// Reads the current value of rs_forceResolution from memory
         /// </summary>
-        /// <returns><see langword="float"/> value of rs_forceResolution</returns>
+        /// <returns><see cref="float"/> value of rs_forceResolution</returns>
         public float ReadForceRes() {
-            // TODO
+            if(_forceResPtr != IntPtr.Zero) return _game.ReadValue<float>(_forceResPtr);
             return 0f;
         }
         /// <summary>
@@ -586,6 +592,15 @@ namespace DESpeedrunUtil.Memory {
         public float ReadRaiseMillis() {
             if(_raiseMSPtr != IntPtr.Zero) return _game.ReadValue<float>(_raiseMSPtr);
             return -1f;
+        }
+        /// <summary>
+        /// Fetches the current dynamic resolution scaling target framerate
+        /// </summary>
+        /// <returns>An <see cref="int"/> representing the target framerate</returns>
+        public int GetTargetFPS() {
+            var ms = ReadRaiseMillis();
+            if(ms < 0f) return -1;
+            return (int) (1000 / (ms / 0.95f));
         }
 
         /// <summary>
@@ -614,6 +629,8 @@ namespace DESpeedrunUtil.Memory {
                 _resScalesDP?.DerefOffsets(_game, out _resScalesPtr);
                 _raiseMSDP?.DerefOffsets(_game, out _raiseMSPtr);
                 _dropMSDP?.DerefOffsets(_game, out _dropMSPtr);
+                _forceResDP?.DerefOffsets(_game, out _forceResPtr);
+                _currentResScaleDP?.DerefOffsets(_game, out _currentResScalePtr);
 
                 _velocityDP?.DerefOffsets(_game, out _velocityPtr);
                 _positionDP?.DerefOffsets(_game, out _positionPtr);
@@ -701,6 +718,8 @@ namespace DESpeedrunUtil.Memory {
             _dynamicResDP = CreateDP(_currentOffsets.DynamicRes);
             _raiseMSDP = CreateDP(_currentOffsets.RaiseMS);
             _dropMSDP = CreateDP(_currentOffsets.DropMS);
+            _forceResDP = CreateDP(_currentOffsets.ForceRes);
+            _currentResScaleDP = CreateDP(_currentOffsets.CurrentScaling);
             if(Version == "1.0 (Release)") _rampJumpDP = CreateDP(0x6126430);
             
             if(int.TryParse(Version[0..1], out int versionMajor)) {
