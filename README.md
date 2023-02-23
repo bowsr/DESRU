@@ -2,7 +2,7 @@
 ![DESRU Icon](https://user-images.githubusercontent.com/26034933/191414580-21e0c691-cf32-43c3-b45a-a48bc0b234b6.png)  
 DESRU is an all-in-one utility program designed to make your DOOM Eternal speedrunning experience a lot smoother.
 
-You are **required** to use this program during your speedruns if you are running on Windows.
+You are **required** to use this program during your speedruns if you are running on a Windows PC.
 
 ## Features
 - [Freescroll Emulation Macro](https://github.com/henyK/doom-eternal-macro)
@@ -19,20 +19,30 @@ You are **required** to use this program during your speedruns if you are runnin
       **NOTE**: These will not be shown in DESRU, but the duplicate hotkey check will take them into account
   - You can also change your macro bindings directly from DESRU. No need to open the `bindings.txt` file and figure out which keycode to add
 - Resolution Scaling Unlocker
-  - By default, DOOM Eternal only allows its dynamic resolution scaling to drop down to a minimum of 50% of your current resolution.
+  - By default, DOOM Eternal only allows its resolution scaling to drop down to a minimum of 50% of your current resolution.
   - If you use this unlocker, you can set this minimum all the way down to 1% if you'd like
-  - You can also automatically enable dynamic scaling and set its target FPS through DESRU
-    - The Res. Scale Toggle hotkey will change the minimum resolution between 100% and the value you input in DESRU
+  - You can also automatically enable static or dynamic scaling and even set the dynamic scaling target FPS through DESRU
+    - The Res. Scale Toggle hotkey will toggle resolution scaling, using the method you selected
+    - The Res. Scale hotkeys in the extra hotkey section will change the current minimum between the default and the hotkey's value
+  - NOTE: Static scaling cannot go lower than roughly 10%, no matter what value is set. This is a limitation with how the game's scaler works.
 - Version Changing
   - If you have multiple installations of DOOM Eternal (due to downpatching), you can set up their folder structure in a way that DESRU will detect them and allow you to quickly switch between them
     - The required folder name for an extra installation is `DOOMEternal <version>`. Replace `<version>` with the version of that installation
       - Valid version names can be found in the included `validVersions.txt` file
-- Firewall rule creation/deletion
+- Firewall rule toggling
   - DOOM Eternal automatically downloads a server-side balance update on launch
   - This can affect the campaign, so speedruns **require** a firewall rule to block this
 - [meath00k](https://github.com/brongo/m3337ho0o0ok)
   - meath00k is bundled with DESRU
   - Use the Cheats button to install/uninstall meath00k to enable the use of cheat protected commands, along with adding features like noclip/notarget/entitySpawning
+- Trainer
+  - DESRU will read and display the slayer's position, rotation, and velocity  
+    *note: the position shown is the position of the camera*
+    - You can enable a speedometer which can be captured by recording software like OBS. [Example OBS Filter](https://cdn.discordapp.com/attachments/1014057314510196776/1068588673504923649/image.png)
+  - You must have cheats **_enabled_** to use this Trainer
+  - This trainer does *not* include an option to teleport. If you wish to do so, bind a key to each of the commands listed below  
+  `getviewpos`  
+  `setviewpos last`
 
 All this, and more, can be read about in the HELP page of DESRU.
 
