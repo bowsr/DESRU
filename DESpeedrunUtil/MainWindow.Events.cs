@@ -354,7 +354,9 @@ namespace DESpeedrunUtil {
                 Directory.Move(_gameDirectory, _gameDirectory + " " + current);
             } catch(IOException ioe) {
                 Log.Error(ioe, "Failed to change game versions.");
-                MessageBox.Show("Failed to swap game versions. If this problem persists, you may need to restart your system to fix it.", "Failed to Swap Versions");
+                MessageBox.Show("Failed to swap game versions.\n" +
+                    "If this problem persists, you may need to restart your system to fix it.\n" +
+                    "If you currently cannot restart your system, you can still manually rename the folders to swap versions.", "Failed to Swap Versions");
                 return;
             }
             Directory.Move(_gameDirectory + " " + desired, _gameDirectory);
