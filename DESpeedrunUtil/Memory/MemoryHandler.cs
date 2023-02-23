@@ -218,14 +218,14 @@ namespace DESpeedrunUtil.Memory {
                         if(!CheckIfGameIsFocused()) {
                             _windowFocused = false;
                         }else {
-                            if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 2500) {
+                            if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 2750) {
                                 UnlockResScale(_targetFPS);
-                                SendKeys.Send("%(~)");
                                 SendKeys.Send("%(~)");
                                 _unlockResFlag = false;
                                 _windowFocused = false;
                                 _resUnlocked = true;
                                 _hotkeys.ToggleResScaleKeys(true);
+                                SendKeys.Send("%(~)");
                             }
                         }
                     }
@@ -236,7 +236,7 @@ namespace DESpeedrunUtil.Memory {
                     _dynTime = DateTime.Now.Ticks;
                     _dynTimer = true;
                 }
-                if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 2500) {
+                if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 2750) {
                     EnableDynamicScaling(_targetFPS);
                     _scheduleDynamic = false;
                     _dynTimer = false;
