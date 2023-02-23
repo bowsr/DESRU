@@ -191,6 +191,7 @@ namespace DESpeedrunUtil {
             }
 
             speedometerPrecisionCheckbox.Visible = speedometerCheckbox.Checked;
+            rightAlignCheckbox.Visible = speedometerCheckbox.Checked;
             trainerRadioLabel.Visible = speedometerCheckbox.Checked;
             velocityRadioNone.Visible = speedometerCheckbox.Checked;
             velocityRadioTotal.Visible = speedometerCheckbox.Checked;
@@ -331,6 +332,7 @@ namespace DESpeedrunUtil {
                         _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
                         _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
                         _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
+                        _speedometer.RightAlignText = rightAlignCheckbox.Checked;
                         _speedometer.Refresh();
                     }
                 } else {
@@ -1021,6 +1023,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.ResTogglePercent2 = _resPercent2;
             Properties.Settings.Default.ResTogglePercent3 = _resPercent3;
             Properties.Settings.Default.UseDynamicScaling = dynScalingRadioButton.Checked;
+            Properties.Settings.Default.RightAlignSpeedometer = rightAlignCheckbox.Checked;
             int radio = 1;
             if(velocityRadioNone.Checked) radio = 0;
             if(velocityRadioVertical.Checked) radio = 2;
@@ -1077,12 +1080,14 @@ namespace DESpeedrunUtil {
             velocityTextBox.Visible = state;
             _speedometer.Visible = !state;
             altPositionTextbox.Visible = !state;
+            rightAlignCheckbox.Visible = !state;
         }
         private void HideTrainerControls() {
             positionTextBox.Visible = false;
             velocityTextBox.Visible = false;
             _speedometer.Visible = false;
             altPositionTextbox.Visible = false;
+            rightAlignCheckbox.Visible = false;
         }
 
         private void ModifyWindowForSmallDisplays() {
@@ -1205,6 +1210,9 @@ namespace DESpeedrunUtil {
             speedometerCheckbox.Font = EternalUIRegular;
             speedometerPrecisionCheckbox.Font = EternalUIRegular;
             altPositionTextbox.Font = EternalUIRegular;
+            rightAlignCheckbox.Font = EternalUIRegular;
+            staticScalingRadioButton.Font = EternalUIRegular;
+            dynScalingRadioButton.Font = EternalUIRegular;
 
             label1.Font = EternalUIRegular;
             label2.Font = EternalUIRegular;
@@ -1319,6 +1327,8 @@ namespace DESpeedrunUtil {
             private static readonly Color ORANGE = Color.FromArgb(255, 200, 136, 0);
             private static readonly Color RED = Color.FromArgb(255, 141, 0, 0);
 
+            private static readonly StringFormat FORMAT_RIGHT_ALIGN = new() { Alignment = StringAlignment.Far };
+
             private const string TEXT_FORMAT = "{0:0.0} M/S";
             private const string TEXT_FORMAT_PRECISION = "{0:0.00} M/S";
 
@@ -1328,11 +1338,13 @@ namespace DESpeedrunUtil {
             public float VerticalVelocity { get; set; } = 0f;
             public float TotalVelocity { get; set; } = 0f;
 
-            public Font AltFont { get; set; }
+            public Font AltFont { get; init; }
 
             public bool ShowVerticalVelocity { get; set; } = false;
             public bool IncreasedPrecision { get; set; } = false;
             public bool HideSecondaryVelocity { get; set; } = false;
+
+            public bool RightAlignText { get; set; } = false;
 
             public Speedometer(Font font, Font alt, Point loc, Size size, Color textColor, Color backColor) {
                 this.Font = font;
@@ -1355,16 +1367,32 @@ namespace DESpeedrunUtil {
                     colorPercent = TotalVelocity >= (BHOP_SPEEDCAP * 1.5) ? 1 : TotalVelocity / (BHOP_SPEEDCAP * 1.5);
                 }
                 if(!HideSecondaryVelocity) {
-                    e.Graphics.FillRectangle(new SolidBrush(GradientPick(colorPercent, GREEN, ORANGE, RED)), new Rectangle(8, this.Size.Height - 36, (int) (175 * sizePercent), 36));
-
                     // Total/Vertical Velocity
-                    e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(Color.Black), 15, this.Size.Height - 33);
-                    e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(this.ForeColor), 13, this.Size.Height - 35);
+                    if(RightAlignText) {
+                        e.Graphics.FillRectangle(new SolidBrush(GradientPick(colorPercent, GREEN, ORANGE, RED)), new Rectangle(111 + (175 - ((int) (175 * sizePercent))), this.Size.Height - 36, (int) (175 * sizePercent), 36));
+
+                        Rectangle visShadow = new(15, this.Size.Height - 33, 267, 26),
+                                    visText = new(13, this.Size.Height - 35, 267, 26);
+                        e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(Color.Black), visShadow, FORMAT_RIGHT_ALIGN);
+                        e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(this.ForeColor), visText, FORMAT_RIGHT_ALIGN);
+                    } else {
+                        e.Graphics.FillRectangle(new SolidBrush(GradientPick(colorPercent, GREEN, ORANGE, RED)), new Rectangle(8, this.Size.Height - 36, (int) (175 * sizePercent), 36));
+
+                        e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(Color.Black), 15, this.Size.Height - 33);
+                        e.Graphics.DrawString(visualizerText, AltFont, new SolidBrush(this.ForeColor), 13, this.Size.Height - 35);
+                    }
                 }
 
                 // Horizontal Velocity
-                e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(Color.Black), 2, this.Size.Height - 80);
-                e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(this.ForeColor), 0, this.Size.Height - 82);
+                if(RightAlignText) {
+                    Rectangle mainShadow = new(2, this.Size.Height - 80, 294, 40),
+                                mainText = new(0, this.Size.Height - 82, 294, 40);
+                    e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(Color.Black), mainShadow, FORMAT_RIGHT_ALIGN);
+                    e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(this.ForeColor), mainText, FORMAT_RIGHT_ALIGN);
+                } else {
+                    e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(Color.Black), 2, this.Size.Height - 80);
+                    e.Graphics.DrawString(hVelText, this.Font, new SolidBrush(this.ForeColor), 0, this.Size.Height - 82);
+                }
             }
 
             private static Color GradientPick(double percent, Color start, Color middle, Color end) {

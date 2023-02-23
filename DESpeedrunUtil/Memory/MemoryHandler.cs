@@ -167,7 +167,7 @@ namespace DESpeedrunUtil.Memory {
                             _row2 = _row2.Replace(")", " [" + scaling.Replace("[", "") + ")");
                         }
                     }else {
-                        /*if(cheats == string.Empty) */cheats = scaling;
+                        if(cheats == string.Empty) cheats = scaling;
                         if(_cpuPtr == IntPtr.Zero) {
                             _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
                             _cpu = "";

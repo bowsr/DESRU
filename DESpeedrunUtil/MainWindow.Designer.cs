@@ -205,6 +205,7 @@
             collapsiblePanel = new Panel();
             trainerTitle = new Label();
             trainerPanel = new Panel();
+            rightAlignCheckbox = new CheckBox();
             altPositionTextbox = new TextBox();
             trainerRadioLabel = new Label();
             velocityRadioVertical = new RadioButton();
@@ -2574,6 +2575,7 @@
             // 
             trainerPanel.BackColor = Color.FromArgb(  45,   45,   45);
             trainerPanel.BorderStyle = BorderStyle.FixedSingle;
+            trainerPanel.Controls.Add(rightAlignCheckbox);
             trainerPanel.Controls.Add(altPositionTextbox);
             trainerPanel.Controls.Add(trainerRadioLabel);
             trainerPanel.Controls.Add(velocityRadioVertical);
@@ -2590,13 +2592,26 @@
             trainerPanel.Size = new Size(304, 179);
             trainerPanel.TabIndex = 31;
             // 
+            // rightAlignCheckbox
+            // 
+            rightAlignCheckbox.AutoSize = true;
+            rightAlignCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            rightAlignCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
+            rightAlignCheckbox.Location = new Point(22, 60);
+            rightAlignCheckbox.Name = "rightAlignCheckbox";
+            rightAlignCheckbox.Size = new Size(145, 22);
+            rightAlignCheckbox.TabIndex = 53;
+            rightAlignCheckbox.Text = "Align to Right Side";
+            rightAlignCheckbox.UseVisualStyleBackColor = true;
+            rightAlignCheckbox.Visible = false;
+            // 
             // altPositionTextbox
             // 
             altPositionTextbox.BackColor = Color.FromArgb(  45,   45,   45);
             altPositionTextbox.BorderStyle = BorderStyle.None;
             altPositionTextbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             altPositionTextbox.ForeColor = Color.FromArgb(  230,   230,   230);
-            altPositionTextbox.Location = new Point(6, 77);
+            altPositionTextbox.Location = new Point(6, 80);
             altPositionTextbox.Multiline = true;
             altPositionTextbox.Name = "altPositionTextbox";
             altPositionTextbox.Size = new Size(293, 19);
@@ -3012,5 +3027,6 @@
         private CheckBox enableOSDCheckbox;
         private RadioButton dynScalingRadioButton;
         private RadioButton staticScalingRadioButton;
+        private CheckBox rightAlignCheckbox;
     }
 }
