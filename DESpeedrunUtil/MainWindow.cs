@@ -396,8 +396,10 @@ namespace DESpeedrunUtil {
                 }
                 var ms = _memory.ReadRaiseMillis();
                 if(ms > 0 && ms < 16) {
-                    var rs = ((int) (_memory.CurrentResScaling * 100)) + "% (" + (_memory.ReadDynamicRes() ? _memory.GetTargetFPS() + "FPS)" : "Static)");
-                    resScaleStatus.Text = (_memory.ReadDynamicRes() || _memory.ReadForceRes() > 0f) ? rs : "Disabled";
+                    var rs = string.Format("{0:0.00}% (" + (_memory.ReadDynamicRes() ? _memory.GetTargetFPS() + "FPS)" : "Static)"), _memory.CurrentResScaling);
+                    if(rs.StartsWith("0.0")) rs = rs[3..];
+                    else if(rs.StartsWith("0.")) rs = rs[2..];
+                    resScaleStatus.Text = (_memory.ReadDynamicRes() || _memory.ReadForceRes() > 0f) ? rs.Replace(".", "") : "Disabled";
                     toolTip7500.SetToolTip(resScaleStatus, null);
                 } else {
                     if(v.Contains("Unknown")) {
