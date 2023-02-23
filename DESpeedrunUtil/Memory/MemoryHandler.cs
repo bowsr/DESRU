@@ -446,7 +446,6 @@ namespace DESpeedrunUtil.Memory {
             if(UseDynamicScaling) EnableDynamicScaling(_targetFPS);
             else EnableStaticScaling();
         }
-        public void SetTargetFPS(int target) => _targetFPS = target;
         private static byte[] FloatToBytes(float f) {
             byte[] output = new byte[4];
             float[] fArray = new float[1] { f };
@@ -530,15 +529,6 @@ namespace DESpeedrunUtil.Memory {
             }
         }
 
-        public bool GetCVAR(string cvarName) {
-            return cvarName switch {
-                "antialiasing" => _antiAliasing,
-                "undelay" => _unDelay,
-                "autocontinue" => _autoContinue,
-                _ => false
-            };
-        }
-
         /// <summary>
         /// Retrieves the state of a specified flag
         /// </summary>
@@ -619,14 +609,6 @@ namespace DESpeedrunUtil.Memory {
             int cap = -1;
             if(CanCapFPS()) _game.ReadValue(_maxHzPtr, out cap);
             return cap;
-        }
-        /// <summary>
-        /// Reads the curreent value of rs_minimumResolution from memory
-        /// </summary>
-        /// <returns>A <see cref="float"/> representing minimum resolution scale. <c>-1f</c> if it cannot be read from memory</returns>
-        public float ReadMinRes() {
-            if(_minResPtr != IntPtr.Zero) return _game.ReadValue<float>(_minResPtr);
-            return -1f;
         }
         /// <summary>
         /// Reads the current value of rs_raiseMilliseconds from memory
