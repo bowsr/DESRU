@@ -109,7 +109,7 @@ namespace DESpeedrunUtil {
                         if(mData == 120 || mData == -120) {
                             RIMouseScroll?.Invoke(this, new MouseWheelEventArgs(mData == -120));
                         }
-                    }else {
+                    } else {
                         var rawButton = mouse.Mouse.Buttons;
                         MouseButtons button;
                         bool down;
@@ -138,13 +138,13 @@ namespace DESpeedrunUtil {
                                 var mea = new MouseEventArgs(button, 1, 0, 0, 0);
                                 if(down) {
                                     RIMouseDown?.Invoke(this, mea);
-                                }else {
+                                } else {
                                     RIMouseUp?.Invoke(this, mea);
                                 }
                             }
                         }
                     }
-                }else if(data is RawInputKeyboardData keyboard) {
+                } else if(data is RawInputKeyboardData keyboard) {
                     var key = (Keys) keyboard.Keyboard.VirutalKey;
                     var flags = keyboard.Keyboard.Flags;
                     bool up = flags == UP || flags == RUP;
@@ -163,7 +163,7 @@ namespace DESpeedrunUtil {
                         var kea = new KeyEventArgs(key);
                         if(!up) {
                             RIKeyDown?.Invoke(this, kea);
-                        }else {
+                        } else {
                             RIKeyUp?.Invoke(this, kea);
                         }
                     }
@@ -209,7 +209,7 @@ namespace DESpeedrunUtil {
             if(!Hooked) {
                 try {
                     Hooked = Hook();
-                }catch(Exception e) {
+                } catch(Exception e) {
                     Log.Error(e, "An error occured when attempting to hook into the game.");
                     return;
                 }
@@ -233,7 +233,7 @@ namespace DESpeedrunUtil {
                     if(!_memory.GetFlag("unlockscheduled")) {
                         if(!_gameInFocus) {
                             _hotkeys.DisableHotkeys();
-                        }else {
+                        } else {
                             _hotkeys.EnableHotkeys();
                         }
                     }
@@ -241,7 +241,7 @@ namespace DESpeedrunUtil {
                 if(!_gameInFocus) {
                     _macro.Stop(true);
                     _startingMacro = false;
-                }else {
+                } else {
                     if(_enableMacro) {
                         if(_openProcesses.FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
                             _macro.Restart();
@@ -250,12 +250,12 @@ namespace DESpeedrunUtil {
                         if(!_macro.IsRunning && !_startingMacro) {
                             _macro.Start();
                             _startingMacro = true;
-                        }else if(_macro.IsRunning && _startingMacro) {
+                        } else if(_macro.IsRunning && _startingMacro) {
                             _startingMacro = false;
                         }
                     }
                 }
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Error(e, "Failed to check if DOOM Eternal was in focus.");
             }
 
@@ -281,11 +281,11 @@ namespace DESpeedrunUtil {
                     unlockResButton.Enabled = false;
                     unlockResButton.Text = "Unlock in Progress";
                 }
-            }else {
+            } else {
                 unlockResButton.Enabled = false;
                 unlockResButton.Text = "Version Unsupported";
             }
-            
+
             /** Scroll Pattern Tracking **/
             if(_trackScroll) {
                 var delta = DateTime.Now.Ticks - _scrollTime;
@@ -295,7 +295,7 @@ namespace DESpeedrunUtil {
                         _trackScroll = false;
                         var avg = _scrollPattern.Average() / 10000f;
                         display = _scrollPattern.ScrollCount + " (" + ((avg > 0f) ? avg.ToString("0.0") + "ms" : "-") + ")";
-                    }else {
+                    } else {
                         display = _storedDisplay;
                         _directionChanged = false;
                     }
@@ -308,7 +308,7 @@ namespace DESpeedrunUtil {
                 _displayPattern = false;
                 _memory.SetScrollPatternString(string.Empty);
             }
-            
+
             /** Trainer **/
             if(_memory.GetFlag("cheats")) {
                 if(_memory.TrainerSupported) {
@@ -320,7 +320,7 @@ namespace DESpeedrunUtil {
                         velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
 
                         ToggleTrainerControls(true);
-                    }else {
+                    } else {
                         ToggleTrainerControls(false);
 
                         altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, pos[0], pos[1], pos[2], pos[3], pos[4]);
@@ -333,7 +333,7 @@ namespace DESpeedrunUtil {
                         _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
                         _speedometer.Refresh();
                     }
-                }else {
+                } else {
                     positionTextBox.Visible = false;
                     velocityTextBox.Visible = false;
                     _speedometer.Visible = false;
@@ -341,7 +341,7 @@ namespace DESpeedrunUtil {
                     altPositionTextbox.Text = TRAINER_UNSUPPORTED_WARNING;
                     altPositionTextbox.Visible = true;
                 }
-            }else {
+            } else {
                 positionTextBox.Visible = false;
                 velocityTextBox.Visible = false;
                 _speedometer.Visible = false;
@@ -362,10 +362,10 @@ namespace DESpeedrunUtil {
             try {
                 if(Hooked && !_gameProcess.MainModule.FileName.Contains("WindowsApps")) {
                     _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameProcess.MainModule.FileName, false);
-                }else {
+                } else {
                     _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
                 }
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Error(e, "Failed to check if firewall rule exists.");
             }
 
@@ -380,7 +380,7 @@ namespace DESpeedrunUtil {
                 gameStatus.Text = v;
                 if(v == "1.0 (Release)") {
                     slopeboostStatus.Text = (_memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
-                }else {
+                } else {
                     slopeboostStatus.Text = "N/A";
                 }
                 if(hz == -1) {
@@ -389,27 +389,27 @@ namespace DESpeedrunUtil {
                     toolTip7500.SetToolTip(currentFPSCap, "This version of DOOM Eternal is not fully supported by DESRU.\n" +
                         "You will need to cap your FPS to 250 through another method, like RTSS or the NVIDIA Control Panel.\n" +
                         "Please contact bowsr in the MDSR Discord with the version of the game you're playing, and what platform you're playing on (Steam, Gamepass).");
-                }else {
+                } else {
                     currentFPSCap.ForeColor = COLOR_TEXT_FORE;
                     currentFPSCap.Text = hz.ToString();
                     toolTip7500.SetToolTip(currentFPSCap, null);
                 }
                 var ms = _memory.ReadRaiseMillis();
                 if(ms > 0 && ms < 16) {
-                    var rs = ((int) (_memory.CurrentResScaling * 100)) + "% (" + (_memory.GetTargetFPS()) + "FPS)";
-                    resScaleStatus.Text = (_memory.ReadDynamicRes()) ? rs : "Disabled";
+                    var rs = ((int) (_memory.CurrentResScaling * 100)) + "% (" + (_memory.ReadDynamicRes() ? _memory.GetTargetFPS() + "FPS)" : "Static)");
+                    resScaleStatus.Text = (_memory.ReadDynamicRes() || _memory.ReadForceRes() > 0f) ? rs : "Disabled";
                     toolTip7500.SetToolTip(resScaleStatus, null);
-                }else {
+                } else {
                     if(v.Contains("Unknown")) {
                         resScaleStatus.Text = "UNSUPPORTED";
                         toolTip7500.SetToolTip(resScaleStatus, "This version of DOOM Eternal is not fully supported by DESRU.\n" +
                             "Please contact bowsr in the MDSR Discord with the version of the game you're playing, and what platform you're playing on (Steam, Gamepass).");
-                    }else {
+                    } else {
                         resScaleStatus.Text = "N/A";
                         toolTip7500.SetToolTip(resScaleStatus, null);
                     }
                 }
-            }else {
+            } else {
                 slopeboostStatus.Text = "-";
                 currentFPSCap.Text = "-";
                 currentFPSCap.ForeColor = COLOR_TEXT_FORE;
@@ -424,16 +424,16 @@ namespace DESpeedrunUtil {
                 if(_memory.GetFlag("cheats")) {
                     cheatsStatus.Text = "Enabled";
                     cheatsStatus.ForeColor = Color.Red;
-                }else {
+                } else {
                     cheatsStatus.Text = "Disabled";
                     cheatsStatus.ForeColor = COLOR_TEXT_FORE;
                 }
                 if(_reshadeExists) {
                     reshadeStatus.Text = "Enabled";
-                }else {
+                } else {
                     reshadeStatus.Text = "Disabled";
                 }
-            }else {
+            } else {
                 cheatsStatus.Text = "-";
                 cheatsStatus.ForeColor = COLOR_TEXT_FORE;
                 reshadeStatus.Text = "-";
@@ -443,7 +443,7 @@ namespace DESpeedrunUtil {
         private bool CheckIfGameIsInFocus() {
             try {
                 return _gameProcess.MainWindowHandle == GetForegroundWindow();
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Error(e, "An error occured when checking if the game is in focus.");
                 throw new Exception("Could not check if game window was in focus.");
             }
@@ -536,7 +536,7 @@ namespace DESpeedrunUtil {
                 try {
                     string s = File.ReadAllText(_gameDirectory + "\\gameVersion.txt").Trim();
                     return s[(s.IndexOf('=') + 1)..];
-                }catch(Exception e) {
+                } catch(Exception e) {
                     Log.Error(e, "An error occured when trying to read gameVersion.txt. Directory: {Directory}", _gameDirectory);
 
                 }
@@ -554,14 +554,13 @@ namespace DESpeedrunUtil {
             _memory.SetMaxHz((current != fps) ? fps : (enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
         }
 
-        public void ToggleDynamicResScaling() {
+        public void ToggleResScaling() {
             if(Hooked) {
-                _memory.SetTargetFPS(_targetFPS);
-                _memory.ToggleDynamicScaling();
+                _memory.ToggleResolutionScaling();
             }
         }
 
-        public void ToggleResScaling(int id) {
+        public void ChangeResScale(int id) {
             var percent = id switch {
                 0 => _resPercent0 / 100f,
                 1 => _resPercent1 / 100f,
@@ -572,14 +571,13 @@ namespace DESpeedrunUtil {
             if(!Hooked || percent == -1) return;
             targetFPSInput.Text = _targetFPS.ToString();
             float current = _memory.GetMinRes();
-            _memory.SetMinRes(percent);
-            _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
             if(percent != current) {
                 _memory.SetMinRes(percent);
-            }else {
-                if(_memory.ReadDynamicRes()) _memory.SetMinRes(_minResPercent / 100f);
+            } else {
+                if(_memory.ReadDynamicRes() || _memory.ReadForceRes() > 0f) _memory.SetMinRes(_minResPercent / 100f);
             }
-            if(!_memory.ReadDynamicRes()) _memory.ToggleDynamicScaling();
+            _memory.ScheduleResUnlock(false, _targetFPS);
+            _memory.EnableResolutionScaling();
         }
 
         // Adds a MouseDown event to every control in the form, recursively.
@@ -611,7 +609,7 @@ namespace DESpeedrunUtil {
                 try {
                     steamPath = subKey.GetValue("InstallPath").ToString();
                     _steamInstallation = steamPath;
-                }catch(Exception e) {
+                } catch(Exception e) {
                     Log.Error(e, "Couldn't find a Steam installation!");
 
                     using GameDirectoryDialog gameSelection = new();
@@ -620,14 +618,14 @@ namespace DESpeedrunUtil {
                         _steamDirectory = _gameDirectory.Remove(_gameDirectory.IndexOf("\\DOOMEternal"));
                         Log.Information("User manually selected their game directory.");
                         DetectAllGameVersions();
-                    }else {
+                    } else {
                         this.Close();
                     }
                     return;
                 }
 
                 vdfLocation = steamPath + @"\steamapps\libraryfolders.vdf";
-            }else {
+            } else {
                 Log.Information("Game directory loaded from user settings. Directory: {GameDirectory}", _gameDirectory);
             }
             Log.Information("Found Steam Installation.");
@@ -664,13 +662,13 @@ namespace DESpeedrunUtil {
                 if(File.Exists(gpDir + "\\DOOMEternalx64vk.exe")) {
                     _gameDirectory = gpDir;
                     Log.Information("Found Gamepass installation.");
-                }else {
+                } else {
                     Log.Error("Couldn't find the game installation!");
                     using GameDirectoryDialog gameSelection = new();
                     if(gameSelection.ShowDialog() == DialogResult.OK) {
                         _gameDirectory = gameSelection.FileName.Remove(gameSelection.FileName.IndexOf("\\DOOMEternalx64vk.exe"));
                         Log.Information("User manually selected their game directory.");
-                    }else {
+                    } else {
                         Log.CloseAndFlush();
                         this.Close();
                     }
@@ -713,7 +711,7 @@ namespace DESpeedrunUtil {
                         string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
                         string v = txt[(txt.IndexOf('=') + 1)..];
                         if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
-                    }catch(Exception e) {
+                    } catch(Exception e) {
                         Log.Error(e, "An error occured when trying to read gameVersion.txt. Directory: {Directory}", dir);
                         continue;
                     }
@@ -728,7 +726,7 @@ namespace DESpeedrunUtil {
                 using RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\Steam");
                 try {
                     _steamInstallation = key.GetValue("InstallPath").ToString();
-                }catch(Exception e) {
+                } catch(Exception e) {
                     Log.Error(e, "Encountered an error when attempting to detect Steam's installation location.");
                     return;
                 }
@@ -751,7 +749,7 @@ namespace DESpeedrunUtil {
                 _steamID3 = id3s[0];
                 Log.Information("DE saves folder detected. steamID3: {ID3}", _steamID3);
                 return;
-            }else if(id3s.Count > 1) {
+            } else if(id3s.Count > 1) {
                 Log.Warning("Multiple Steam userdata folders with DOOMEternal data detected. Prompting user to select the correct profile.");
                 id3s.Sort();
                 UserdataDialog dialog = new(id3s);
@@ -759,7 +757,7 @@ namespace DESpeedrunUtil {
                 if(result == DialogResult.OK) {
                     _steamID3 = dialog.ID3;
                     Log.Information("User selected steamID3: {ID3}", _steamID3);
-                }else {
+                } else {
                     Log.CloseAndFlush();
                     this.Close();
                 }
@@ -802,7 +800,7 @@ namespace DESpeedrunUtil {
                     if(rs) Log.Information("ReShade is installed and is running over DOOMEternal.");
                     else Log.Information("ReShade is not running over DOOMEternal.");
                     return rs;
-                }catch(Exception e) {
+                } catch(Exception e) {
                     Log.Error(e, "An error occured when checking ReShade files. Assuming ReShade is running over DOOMEternal.");
                     return true;
                 }
@@ -841,7 +839,7 @@ namespace DESpeedrunUtil {
                         }
                         meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
                     });
-                }else {
+                } else {
                     if(_mhScheduleRemoval == true && _mhExists) {
                         UninstallMeathook();
                         _mhScheduleRemoval = false;
@@ -855,14 +853,14 @@ namespace DESpeedrunUtil {
             try {
                 File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
                 Log.Information("meath00k uninstalled.");
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
             }
 
             foreach(string v in _gameVersions) {
                 try {
                     File.Delete(_gameDirectory + " " + v + "\\XINPUT1_3.dll");
-                }catch(Exception e) {
+                } catch(Exception e) {
                     Log.Error(e, "An error occured when attempting to uninstall meath00k. v: {Version}", v);
                     continue;
                 }
@@ -870,7 +868,7 @@ namespace DESpeedrunUtil {
             foreach(string dir in _extraGameDirectories) {
                 try {
                     File.Delete(dir + "\\XINPUT1_3.dll");
-                }catch(Exception e) {
+                } catch(Exception e) {
                     Log.Error(e, "An error occured when attempting to uninstall meath00k from directory: {Directory}", dir);
                     continue;
                 }
@@ -907,7 +905,7 @@ namespace DESpeedrunUtil {
 
             try {
                 _memory = new MemoryHandler(_gameProcess, _hotkeys);
-            }catch(ArgumentNullException ex) {
+            } catch(ArgumentNullException ex) {
                 Log.Error(ex, "An error occured when attempting to hook into the game.");
                 _gameProcess = null;
                 _memory = null;
@@ -932,7 +930,7 @@ namespace DESpeedrunUtil {
             SetGameInfoByModuleSize();
             try {
                 versionDropDownSelector.SelectedItem = GetCurrentVersion();
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Error(e, "An error occured when attempting to change the version selector's index.");
             }
             versionDropDownSelector.Enabled = false;
@@ -944,15 +942,16 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
             _memory.FirstRun = _firstRun;
             _memory.EnableOSD = enableOSDCheckbox.Checked;
+            _memory.UseDynamicScaling = dynScalingRadioButton.Checked;
             _memory.SetFlag(!_memory.Version.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
             _memory.SetFlag(minimalOSDCheckbox.Checked, "minimal");
             if(_memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
             _memory.SetMinRes(_minResPercent / 100f);
             if(unlockOnStartupCheckbox.Checked) {
-                _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
+                _memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
                 _hotkeys.DisableHotkeys();
-            }else {
-                if(autoDynamicCheckbox.Checked) _memory.ScheduleDynamicScaling(_targetFPS);
+            } else {
+                if(autoScalingCheckbox.Checked) _memory.ScheduleResolutionScaling(_targetFPS);
             }
             _memory.SetMaxHz((enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
 
@@ -994,7 +993,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.HotkeysEnabled = enableHotkeysCheckbox.Checked;
             Properties.Settings.Default.GameLocation = _gameDirectory;
             Properties.Settings.Default.StartupUnlock = unlockOnStartupCheckbox.Checked;
-            Properties.Settings.Default.AutoDynamic = autoDynamicCheckbox.Checked;
+            Properties.Settings.Default.AutoDynamic = autoScalingCheckbox.Checked;
             Properties.Settings.Default.MinResPercent = _minResPercent;
             Properties.Settings.Default.TargetFPSScaling = _targetFPS;
             Properties.Settings.Default.SteamInstallation = _steamInstallation;
@@ -1019,6 +1018,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.ResTogglePercent1 = _resPercent1;
             Properties.Settings.Default.ResTogglePercent2 = _resPercent2;
             Properties.Settings.Default.ResTogglePercent3 = _resPercent3;
+            Properties.Settings.Default.UseDynamicScaling = dynScalingRadioButton.Checked;
             int radio = 1;
             if(velocityRadioNone.Checked) radio = 0;
             if(velocityRadioVertical.Checked) radio = 2;
@@ -1029,6 +1029,7 @@ namespace DESpeedrunUtil {
             foreach(string d in _extraGameDirectories) dirs += d + "|";
             Properties.Settings.Default.ExtraGameDirectories = dirs;
             Properties.Settings.Default.Save();
+            Log.Information("Saved user settings");
         }
 
         private void InitializeFonts() {
@@ -1059,7 +1060,7 @@ namespace DESpeedrunUtil {
                     if(tag.StartsWith("hk")) {
                         c.Click += new EventHandler(HotkeyAssignment_FieldSelected);
                         _hotkeyFields.Add((Label) c);
-                    }else if(tag.StartsWith("fpscap")) {
+                    } else if(tag.StartsWith("fpscap")) {
                         c.KeyPress += new KeyPressEventHandler(Input_KeyPressNumericOnly);
                         c.KeyUp += new KeyEventHandler(FPSInput_KeyUp);
                         _fpsLimitFields.Add((TextBox) c);
@@ -1089,7 +1090,7 @@ namespace DESpeedrunUtil {
                 this.Width = WINDOW_WIDTH_DEFAULT;
                 collapsiblePanel.Height = PANEL_HEIGHT_DEFAULT - (WINDOW_HEIGHT_DEFAULT - this.Height) - 5;
                 _smallDisplay = true;
-            }else {
+            } else {
                 this.Height = (!extraFPSHotkeysPanel.Visible) ? WINDOW_HEIGHT_DEFAULT : WINDOW_HEIGHT_DEFAULT + WINDOW_EXTRAHEIGHT_MOREKEYS;
                 this.Width = WINDOW_WIDTH_DEFAULT - WINDOW_EXTRAWIDTH;
                 collapsiblePanel.Height = (!extraFPSHotkeysPanel.Visible) ? PANEL_HEIGHT_DEFAULT : PANEL_HEIGHT_DEFAULT + PANEL_EXTRAHEIGHT_MOREKEYS;
@@ -1124,7 +1125,7 @@ namespace DESpeedrunUtil {
 
             /** Resolution Scaling **/
             toolTip7500.SetToolTip(unlockOnStartupCheckbox, "Unlock Resolution Scaling when the game is launched");
-            toolTip7500.SetToolTip(autoDynamicCheckbox, "Automatically enable Dynamic Res. Scaling");
+            toolTip7500.SetToolTip(autoScalingCheckbox, "Automatically enable Dynamic Res. Scaling");
             toolTip7500.SetToolTip(minResInput, "Minimum resolution scale allowed when dynamic scaling is enabled\n" +
                 "Value must be in the range 1-100");
             toolTip7500.SetToolTip(targetFPSInput, "Target FPS for Dynamic Resolution Scaling\n" +
@@ -1171,7 +1172,7 @@ namespace DESpeedrunUtil {
             rtssStatus.Font = EternalUIRegular;
             hotkeyStatus.Font = EternalUIRegular;
             unlockOnStartupCheckbox.Font = EternalUIRegular;
-            autoDynamicCheckbox.Font = EternalUIRegular;
+            autoScalingCheckbox.Font = EternalUIRegular;
             replaceProfileCheckbox.Font = EternalUIRegular;
             minResLabel.Font = EternalUIRegular;
             dynamicTargetLabel.Font = EternalUIRegular;
@@ -1368,9 +1369,9 @@ namespace DESpeedrunUtil {
                 if(percent <= 0.5) {
                     if(percent == 0) return EMPTY;
                     return GREEN;
-                }else if(percent > 0.5 && percent <= 0.75) {
+                } else if(percent > 0.5 && percent <= 0.75) {
                     return ColorInterp(start, middle, (percent - 0.5) / 0.25);
-                }else {
+                } else {
                     return ColorInterp(middle, end, (percent - 0.75) / 0.25);
                 }
             }

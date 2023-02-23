@@ -38,10 +38,11 @@ namespace DESpeedrunUtil.Memory {
         int _moduleSize;
         public string Version { get; init; }
         public float CurrentResScaling { get; private set; } = 0f;
+        public bool UseDynamicScaling { get; set; } = true;
 
         bool _osdFlagCheats = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
-             _unlockResFlag = false, _autoDynamic = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
-             _trainerFlag = false, _externalTrainerFlag = false, _scheduleDynamic = false, _osdFlagLimiter = true,
+             _unlockResFlag = false, _autoScaling = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
+             _trainerFlag = false, _externalTrainerFlag = false, _scheduleScaling = false, _osdFlagLimiter = true,
              _antiAliasing = true, _unDelay = true, _autoContinue = false,
              _minimalOSD = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
@@ -146,7 +147,7 @@ namespace DESpeedrunUtil.Memory {
                     }
                     var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : string.Empty;
                     var scaling = string.Empty;
-                    if(CurrentResScaling < 1f) {
+                    if(ReadDynamicRes() || ReadForceRes() > 0f) {
                         scaling = string.Format("{0:0.00}x [{1}]", CurrentResScaling, ReadDynamicRes() ? GetTargetFPS() : "S");
                     }
                     if(_minimalOSD) {
@@ -155,7 +156,7 @@ namespace DESpeedrunUtil.Memory {
                         _row2 = _row2.Replace("(", "");
                         if(!_osdFlagOutOfDate) {
                             _row1 += "(";
-                        } else {
+                        }else {
                             _row2 = "(" + _row2;
                         }
                         if(row2Mod != string.Empty) {
@@ -166,7 +167,7 @@ namespace DESpeedrunUtil.Memory {
                             _row2 = _row2.Replace(")", " [" + scaling.Replace("[", "") + ")");
                         }
                     }else {
-                        if(cheats == string.Empty) cheats = scaling;
+                        /*if(cheats == string.Empty) */cheats = scaling;
                         if(_cpuPtr == IntPtr.Zero) {
                             _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
                             _cpu = "";
@@ -219,7 +220,7 @@ namespace DESpeedrunUtil.Memory {
                             _windowFocused = false;
                         }else {
                             if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 2750) {
-                                UnlockResScale(_targetFPS);
+                                UnlockResScale();
                                 SendKeys.Send("%(~)");
                                 _unlockResFlag = false;
                                 _windowFocused = false;
@@ -231,14 +232,14 @@ namespace DESpeedrunUtil.Memory {
                     }
                 }
             }
-            if(_scheduleDynamic && ReadyToUnlockRes()) {
+            if(_scheduleScaling && ReadyToUnlockRes()) {
                 if(!_dynTimer) {
                     _dynTime = DateTime.Now.Ticks;
                     _dynTimer = true;
                 }
                 if(_dynTimer && ((DateTime.Now.Ticks - _dynTime) / 10000) >= 2750) {
-                    EnableDynamicScaling(_targetFPS);
-                    _scheduleDynamic = false;
+                    EnableResolutionScaling();
+                    _scheduleScaling = false;
                     _dynTimer = false;
                 }
             }
@@ -369,39 +370,79 @@ namespace DESpeedrunUtil.Memory {
             _game.WriteBytes(_metricsPtr, new byte[] { val });
         }
 
-        private void UnlockResScale(int targetFPS) {
+        private void UnlockResScale() {
             SetResScales();
             if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
-            if(_autoDynamic) {
-                EnableDynamicScaling(targetFPS);
-                _autoDynamic = false;
+            if(_autoScaling) {
+                EnableResolutionScaling();
+                _autoScaling = false;
             }
         }
         /// <summary>
         /// Schedules dynamic scaling to be turned on when the game is loaded
         /// </summary>
         /// <param name="targetFPS">FPS Target the scaling will try to hit</param>
-        public void ScheduleDynamicScaling(int targetFPS) {
+        public void ScheduleResolutionScaling(int targetFPS) {
             if(Version.Contains("Unknown")) return;
             _targetFPS = targetFPS;
-            _scheduleDynamic = true;
+            _scheduleScaling = true;
         }
         /// <summary>
-        /// Enables dynamic resolution scaling with a specified target FPS
+        /// Enables dynamic resolution scaling with a specified target FPS.<br/>
+        /// Also disables static scaling
         /// </summary>
         /// <param name="targetFPS">FPS Target the scaling will try to hit</param>
         public void EnableDynamicScaling(int targetFPS) {
+            DisableStaticScaling();
             if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
             if(_raiseMSPtr != IntPtr.Zero) _game.WriteBytes(_raiseMSPtr, FloatToBytes((1000f / targetFPS) * 0.95f));
             if(_dropMSPtr != IntPtr.Zero) _game.WriteBytes(_dropMSPtr, FloatToBytes((1000f / targetFPS) * 0.99f));
+        }
+        /// <summary>
+        /// Disables dynamic resolution scaling
+        /// </summary>
+        public void DisableDynamicScaling() {
+            if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
+        }
+        /// <summary>
+        /// Enables static resolution scaling.<br/>
+        /// Also disables dynamic scaling
+        /// </summary>
+        public void EnableStaticScaling() {
+            DisableDynamicScaling();
+            // rs_forceResolution takes the set value and sets the res scaling to the corresponding item of the scales array (compared to the default array)
+            //  So since 0.5f is the smallest value in the default array, 0.5f and anything below it will select the final value of the array, which is the lowest scaling value
+            //  Other values will take the next highest corresponding value. e.g. 0.55f would select 0.56f normally, which is the 29th value of the array, so the 29th value of the new array is selected
+            // Because DESRU generates a new array depending on what minimum res scale value the user selected, the forced res will be set to 0.5f to keep that min value selected
+            float scale = Version.Contains("6.66 Rev 2") ? 0.5f : _minRes;
+            if(_forceResPtr != IntPtr.Zero) _game.WriteValue(_forceResPtr, scale);
+        }
+        /// <summary>
+        /// Disables static resolution scaling
+        /// </summary>
+        public void DisableStaticScaling() {
+            if(_forceResPtr != IntPtr.Zero) _game.WriteValue(_forceResPtr, 0f);
         }
         /// <summary>
         /// Toggles Dynamic Resolution Scaling
         /// </summary>
         public void ToggleDynamicScaling() {
             if(_dynamicResPtr == IntPtr.Zero) return;
-            if(ReadDynamicRes()) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
+            if(ReadDynamicRes()) DisableDynamicScaling();
             else EnableDynamicScaling(_targetFPS);
+        }
+        public void ToggleStaticScaling() {
+            if(_forceResPtr == IntPtr.Zero) return;
+            if(ReadForceRes() > 0f) DisableStaticScaling();
+            else EnableStaticScaling();
+        }
+        public void ToggleResolutionScaling() {
+            if(UseDynamicScaling) ToggleDynamicScaling();
+            else ToggleStaticScaling();
+        }
+        public void EnableResolutionScaling() {
+            if(UseDynamicScaling) EnableDynamicScaling(_targetFPS);
+            else EnableStaticScaling();
         }
         public void SetTargetFPS(int target) => _targetFPS = target;
         private static byte[] FloatToBytes(float f) {
@@ -519,17 +560,17 @@ namespace DESpeedrunUtil.Memory {
         /// <summary>
         /// Schedules the resolution scaling unlock for the next time the game is in focus
         /// </summary>
-        /// <param name="auto">Enable dynamic scaling at the same time</param>
+        /// <param name="auto">Enable scaling at the same time</param>
         /// <param name="targetFPS">Target FPS for dynamic scaling</param>
         public void ScheduleResUnlock(bool auto, int targetFPS) {
             if(Version.Contains("Unknown")) return;
+            _targetFPS = targetFPS;
             if(_resUnlocked && !Version.Contains("6.66 Rev 2")) {
                 if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
                 return;
             }
             _unlockResFlag = true;
-            _autoDynamic = auto;
-            _targetFPS = targetFPS;
+            _autoScaling = auto;
         }
 
         /// <summary>

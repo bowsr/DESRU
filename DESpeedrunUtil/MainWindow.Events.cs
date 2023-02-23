@@ -48,7 +48,7 @@ namespace DESpeedrunUtil {
                         "hkResToggle3" => 6,
                         _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 7 : -1,
                     };
-                }catch(FormatException f) {
+                } catch(FormatException f) {
                     Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
                 }
                 if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macro, _hotkeys);
@@ -151,7 +151,7 @@ namespace DESpeedrunUtil {
             if(p != -1) {
                 if(p == 0) p = 1;
                 ((TextBox) sender).Text = p.ToString();
-            }else {
+            } else {
                 ((TextBox) sender).Text = "";
             }
 
@@ -189,7 +189,7 @@ namespace DESpeedrunUtil {
             if(resPercent != -1) {
                 if(resPercent == 0) resPercent = 1;
                 ((TextBox) sender).Text = resPercent.ToString();
-            }else {
+            } else {
                 ((TextBox) sender).Text = "";
             }
 
@@ -226,7 +226,7 @@ namespace DESpeedrunUtil {
             bool val = ((CheckBox) sender).Checked;
             if(val) {
                 if(Hooked) _hotkeys.EnableHotkeys();
-            }else {
+            } else {
                 _hotkeys.DisableHotkeys();
             }
         }
@@ -247,7 +247,7 @@ namespace DESpeedrunUtil {
                 MessageBox.Show("Disabling this option means you MUST limit your framerate to 250 or lower through external means.\n\n" +
                     "Common options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, etc.\n\n" +
                     "If you use a 3rd party program like RTSS, ensure that it is running at all times during your run.", "External FPS Limit Required");
-            }else {
+            } else {
                 Log.Information("Max FPS Limiter enabled.");
                 if(Hooked) {
                     _memory.SetMaxHz(_fpsDefault);
@@ -279,7 +279,7 @@ namespace DESpeedrunUtil {
                             if(dialog.ShowDialog() == DialogResult.OK) {
                                 Debug.WriteLine(dialog.FileName);
                                 path = dialog.FileName;
-                            }else {
+                            } else {
                                 checkbox.Checked = false;
                                 return;
                             }
@@ -315,6 +315,12 @@ namespace DESpeedrunUtil {
                     "If you plan on submitting, make sure you disable this option before starting your runs.", "Disabling On-Screen Display");
             }
         }
+        private void ScalingMethod_CheckChanged(object sender, EventArgs e) {
+            if(Hooked) {
+                _memory.UseDynamicScaling = dynScalingRadioButton.Checked;
+                if(_memory.ReadDynamicRes() || _memory.ReadForceRes() > 0f) _memory.EnableResolutionScaling();
+            }
+        }
         #endregion
 
         #region Buttons
@@ -323,7 +329,7 @@ namespace DESpeedrunUtil {
             new HelpPage().Show();
         }
         private void UnlockRes_Click(object sender, EventArgs e) {
-            if(Hooked) _memory.ScheduleResUnlock(autoDynamicCheckbox.Checked, _targetFPS);
+            if(Hooked) _memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
         }
         private void RefreshVersions_Click(object sender, EventArgs e) {
             if(_steamDirectory != string.Empty) DetectAllGameVersions();
@@ -345,8 +351,8 @@ namespace DESpeedrunUtil {
             if(current == desired) return;
             if(Directory.Exists(_steamDirectory + "\\DOOMEternal " + current)) return; // Eventually add a popup saying there's a folder conflict
             try {
-            Directory.Move(_gameDirectory, _gameDirectory + " " + current);
-            }catch(IOException ioe) {
+                Directory.Move(_gameDirectory, _gameDirectory + " " + current);
+            } catch(IOException ioe) {
                 Log.Error(ioe, "Failed to change game versions.");
                 MessageBox.Show("Failed to swap game versions. If this problem persists, you may need to restart your system to fix it.", "Failed to Swap Versions");
                 return;
@@ -359,17 +365,17 @@ namespace DESpeedrunUtil {
                     if(desired == "3.1") {
                         File.Move(dir + PATH_PROFILE_FILE, dir + "\\main.bin");
                         if(File.Exists(dir + "\\3.1.bin")) File.Move(dir + "\\3.1.bin", dir + PATH_PROFILE_FILE);
-                    }else {
+                    } else {
                         if(current == "3.1") {
                             if(File.Exists(dir + "\\main.bin")) {
                                 if(File.Exists(dir + PATH_PROFILE_FILE)) File.Move(dir + PATH_PROFILE_FILE, dir + "\\3.1.bin");
                                 File.Move(dir + "\\main.bin", dir + PATH_PROFILE_FILE);
-                            }else {
+                            } else {
                                 File.Copy(dir + PATH_PROFILE_FILE, dir + "\\3.1.bin");
                             }
                         }
                     }
-                }catch(Exception ex) {
+                } catch(Exception ex) {
                     Log.Error(ex, "An error occured when attempting to change profile.bin files.");
                 }
             }
@@ -391,7 +397,7 @@ namespace DESpeedrunUtil {
                     _memory.SetFlag(_fwRuleExists, "firewall");
                 }
                 firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
-            }else {
+            } else {
                 if(!FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false))
                     FirewallHandler.CreateFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", 0);
                 for(int i = 0; i < _extraGameDirectories.Count; i++) {
@@ -411,12 +417,12 @@ namespace DESpeedrunUtil {
             if(_mhExists) {
                 _mhScheduleRemoval = true;
                 Log.Information("meath00k scheduled for removal.");
-            }else {
+            } else {
                 File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + "\\XINPUT1_3.dll");
                 foreach(string v in _gameVersions) {
                     try {
                         File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + " " + v + "\\XINPUT1_3.dll");
-                    }catch(Exception ex) {
+                    } catch(Exception ex) {
                         Log.Error(ex, "An error occured when attempting to install meath00k. v: {Version}", v);
                         continue;
                     }
@@ -424,7 +430,7 @@ namespace DESpeedrunUtil {
                 foreach(string dir in _extraGameDirectories) {
                     try {
                         File.Copy(@".\meath00k\XINPUT1_3.dll", dir + "\\XINPUT1_3.dll");
-                    }catch(Exception ex) {
+                    } catch(Exception ex) {
                         Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", dir);
                         continue;
                     }
@@ -442,7 +448,7 @@ namespace DESpeedrunUtil {
                 extraFPSHotkeysPanel.Visible = false;
                 _moreHotkeysLabel.Visible = false;
                 showMoreKeysButton.Text = "Show More Hotkeys";
-            }else {
+            } else {
                 if(!_smallDisplay) {
                     this.Height += WINDOW_EXTRAHEIGHT_MOREKEYS;
                     collapsiblePanel.Height += PANEL_EXTRAHEIGHT_MOREKEYS;
@@ -497,7 +503,7 @@ namespace DESpeedrunUtil {
             enableHotkeysCheckbox.Checked = Properties.Settings.Default.HotkeysEnabled;
             _gameDirectory = Properties.Settings.Default.GameLocation;
             unlockOnStartupCheckbox.Checked = Properties.Settings.Default.StartupUnlock;
-            autoDynamicCheckbox.Checked = Properties.Settings.Default.AutoDynamic;
+            autoScalingCheckbox.Checked = Properties.Settings.Default.AutoDynamic;
             _minResPercent = Properties.Settings.Default.MinResPercent;
             _targetFPS = Properties.Settings.Default.TargetFPSScaling;
             _steamInstallation = Properties.Settings.Default.SteamInstallation;
@@ -515,6 +521,7 @@ namespace DESpeedrunUtil {
             _resPercent1 = Properties.Settings.Default.ResTogglePercent1;
             _resPercent2 = Properties.Settings.Default.ResTogglePercent2;
             _resPercent3 = Properties.Settings.Default.ResTogglePercent3;
+            dynScalingRadioButton.Checked = Properties.Settings.Default.UseDynamicScaling;
             switch(Properties.Settings.Default.SecondaryVelocity) {
                 case 0:
                     velocityRadioNone.Checked = true;
@@ -553,7 +560,7 @@ namespace DESpeedrunUtil {
             Log.Information("Loaded user settings");
 
             AddMouseIntercepts(this);
-            
+
             SearchForSteamGameDir();
             if(_steamInstallation != "n/a") SearchForGameSaves();
             _formTimer.Start();

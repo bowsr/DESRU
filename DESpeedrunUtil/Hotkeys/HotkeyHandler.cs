@@ -122,17 +122,17 @@ namespace DESpeedrunUtil.Hotkeys {
                 return;
             }
             if(e.KeyCode == ResScaleHotkey && _resScaleKeyEnabled) {
-                _parent.ToggleDynamicResScaling();
+                _parent.ToggleResScaling();
             }else if(FPSHotkeys.ContainsKey(e.KeyCode)) {
                 _parent.ToggleFPSCap(FPSHotkeys.GetLimitFromKey(e.KeyCode));
             }else if(e.KeyCode == ResToggleHotkey0 && _resScaleKeyEnabled) {
-                _parent.ToggleResScaling(0);
+                _parent.ChangeResScale(0);
             }else if(e.KeyCode == ResToggleHotkey1 && _resScaleKeyEnabled) {
-                _parent.ToggleResScaling(1);
+                _parent.ChangeResScale(1);
             }else if(e.KeyCode == ResToggleHotkey2 && _resScaleKeyEnabled) {
-                _parent.ToggleResScaling(2);
+                _parent.ChangeResScale(2);
             }else if(e.KeyCode == ResToggleHotkey3 && _resScaleKeyEnabled) {
-                _parent.ToggleResScaling(3);
+                _parent.ChangeResScale(3);
             }
             e.Handled = true;
         }
@@ -147,17 +147,17 @@ namespace DESpeedrunUtil.Hotkeys {
             var key = ConvertMouseButton(e.Button);
             if(key == Keys.None || !Enabled) return;
             if(key == ResScaleHotkey && _resScaleKeyEnabled) {
-                _parent.ToggleDynamicResScaling();
+                _parent.ToggleResScaling();
             }else if(FPSHotkeys.ContainsKey(key)) {
                 _parent.ToggleFPSCap(FPSHotkeys.GetLimitFromKey(key));
             }else if(key == ResToggleHotkey0 && _resScaleKeyEnabled) {
-                _parent.ToggleResScaling(0);
+                _parent.ChangeResScale(0);
             }else if(key == ResToggleHotkey1 && _resScaleKeyEnabled) {
-                _parent.ToggleResScaling(1);
+                _parent.ChangeResScale(1);
             }else if(key == ResToggleHotkey2 && _resScaleKeyEnabled) {
-                _parent.ToggleResScaling(2);
+                _parent.ChangeResScale(2);
             }else if(key == ResToggleHotkey3 && _resScaleKeyEnabled) {
-                _parent.ToggleResScaling(3);
+                _parent.ChangeResScale(3);
             }
         }
         private void Hook_MouseUp(object sender, MouseEventArgs e) {
