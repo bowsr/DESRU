@@ -198,7 +198,7 @@ namespace DESpeedrunUtil {
             velocityRadioVertical.Visible = speedometerCheckbox.Checked;
 
             if(!_fwRestart) firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
-            firewallToggleButton.Text = _fwRuleExists ? "Remove Firewall Rule" : "Create Firewall Rule";
+            firewallToggleButton.Text = _fwRuleExists ? "Disable Firewall Rule" : "Enable Firewall Rule";
 
             CheckForMeathook();
             MeathookRemoval();
@@ -1118,7 +1118,7 @@ namespace DESpeedrunUtil {
                 "This option does nothing if you have DLSS enabled in the game settings");
             toolTip7500.SetToolTip(unDelayCheckbox, "Disables the delay before you're allowed to quit out of an Ultra-Nightmare run");
             toolTip7500.SetToolTip(autoContinueCheckbox, "Enabling this will remove the need to press a button to continue to the game from a loading screen");
-            toolTip7500.SetToolTip(firewallToggleButton, "Create/Delete a firewall rule blocking DOOM Eternal's connection\n" +
+            toolTip7500.SetToolTip(firewallToggleButton, "Toggle a firewall rule blocking DOOM Eternal's connection\n" +
                 "This prevents server side balance updates from being downloaded\n" +
                 "Required to be enabled for Leaderboard Runs");
             toolTip7500.SetToolTip(meathookToggleButton, "Add/Remove meath00k from your current DOOM Eternal installation\n" +
