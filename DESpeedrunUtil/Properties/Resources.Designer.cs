@@ -147,9 +147,9 @@ namespace DESpeedrunUtil.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Under the Keybinds section, you&apos;ll find some options for unlocking the resolution scaling in DOOM Eternal.
         ///
-        ///By default, DOOM Eternal only allows the dynamic resolution scaling to scale down to a minimum of 50% of your selected resolution. DESRU can unlock this, allowing a minimum scale of as low as 1%.
+        ///By default, DOOM Eternal only allows the resolution scaling to scale down to a minimum of 50% of your selected resolution. DESRU can unlock this, allowing a minimum scale of as low as 1%.
         ///
-        ///In order to unlock your resolution scaling, when DOOM Eternal is open you&apos;ll need to click the Unlock button, or have the &quot;Unlock on Startup&quot; checkbox checked when starting the game. After a few seconds  [rest of string was truncated]&quot;;.
+        ///In order to unlock your resolution scaling, when DOOM Eternal is open you&apos;ll need to click the Unlock button, or have the &quot;Unlock on Startup&quot; checkbox checked when starting the game. After a few seconds of the g [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string HelpPage_ResScaling {
             get {

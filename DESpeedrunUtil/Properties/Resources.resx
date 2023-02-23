@@ -211,18 +211,23 @@ L - Max FPS Limiter Disabled
 Finally, under the version, "CHEATS ENABLED" will show if meath00k is detected. If you see "RESTART GAME" here at any point, you need to restart DOOM Eternal in order for runs to be legal. DESRU must be running first before DOOM Eternal is launched, and if the trainer is ever detected, you'll need to restart your game for that, too.
 
 On the same line, you'll also see some numbers pop up sometimes. This is your scroll pattern.
-The numbers show how many times you scrolled your mouse wheel in a single scroll, and the average time between each input.</value>
+The numbers show how many times you scrolled your mouse wheel in a single scroll, and the average time between each input.
+
+If you are using any resolution scaling (not DLSS), the current scale and method will show on this line as well.</value>
   </data>
   <data name="HelpPage_ResScaling" xml:space="preserve">
     <value>Under the Keybinds section, you'll find some options for unlocking the resolution scaling in DOOM Eternal.
 
-By default, DOOM Eternal only allows the dynamic resolution scaling to scale down to a minimum of 50% of your selected resolution. DESRU can unlock this, allowing a minimum scale of as low as 1%.
+By default, DOOM Eternal only allows the resolution scaling to scale down to a minimum of 50% of your selected resolution. DESRU can unlock this, allowing a minimum scale of as low as 1%.
 
 In order to unlock your resolution scaling, when DOOM Eternal is open you'll need to click the Unlock button, or have the "Unlock on Startup" checkbox checked when starting the game. After a few seconds of the game being in focus, DESRU will automatically set DOOM Eternal to windowed mode, then back to fullscreen. This is to ensure the unlock takes effect.
 
-After scaling is unlocked, you can also set your own minimum scale. You can also automatically enable dynamic scaling with any FPS target up to 1000, though keep in mind that this change won't be shown in the settings menu.
+After scaling is unlocked, you can also set your own minimum scale. You can also automatically enable static scaling or dynamic scaling with any FPS target up to 1000, though keep in mind that this change won't be shown in the settings menu.
 
-The Res. Scale Hotkey in the Keybinds section will toggle dynamic scaling on and off.</value>
+The Res. Scale Toggle hotkey in the Keybinds section will toggle scaling on and off.
+The Res. Scale #X hotkeys will change the current minimum scaling value.
+
+NOTE: If you are using static scaling, resolution scaling cannot go under roughly 10%, even if you set it to something lower. This is a limitation with how the game's scaler works.</value>
   </data>
   <data name="HelpPage_Trainer" xml:space="preserve">
     <value>DESRU also includes a Trainer that'll read and display the slayer's position and velocity.
