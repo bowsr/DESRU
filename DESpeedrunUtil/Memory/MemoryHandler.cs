@@ -159,12 +159,14 @@ namespace DESpeedrunUtil.Memory {
                         }else {
                             _row2 = "(" + _row2;
                         }
+                        if(!_row2.Contains(')')) _row2 += ")";
                         if(row2Mod != string.Empty) {
                             _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : row2Mod[0]);
                             _row2 = _row1.Contains('*') ? row2Mod : row2Mod[1..];
-                        }
-                        if(scaling != string.Empty) {
-                            _row2 = _row2.Replace(")", " [" + scaling.Replace("[", "") + ")");
+                        } else {
+                            if(scaling != string.Empty) {
+                                _row2 = _row2.Replace(")", " [" + scaling.Replace("[", "") + ")");
+                            }
                         }
                     }else {
                         if(cheats == string.Empty) cheats = scaling;
