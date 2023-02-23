@@ -151,7 +151,7 @@ namespace DESpeedrunUtil {
             if(p != -1) {
                 if(p == 0) p = 1;
                 ((TextBox) sender).Text = p.ToString();
-            } else {
+            }else {
                 ((TextBox) sender).Text = "";
             }
 
@@ -344,7 +344,13 @@ namespace DESpeedrunUtil {
             }
             if(current == desired) return;
             if(Directory.Exists(_steamDirectory + "\\DOOMEternal " + current)) return; // Eventually add a popup saying there's a folder conflict
+            try {
             Directory.Move(_gameDirectory, _gameDirectory + " " + current);
+            }catch(IOException ioe) {
+                Log.Error(ioe, "Failed to change game versions.");
+                MessageBox.Show("Failed to swap game versions. If this problem persists, you may need to restart your system to fix it.", "Failed to Swap Versions");
+                return;
+            }
             Directory.Move(_gameDirectory + " " + desired, _gameDirectory);
             Log.Information("Game Version changed to [{Version}]", desired);
             if(_steamID3 != string.Empty && replaceProfileCheckbox.Checked) {
