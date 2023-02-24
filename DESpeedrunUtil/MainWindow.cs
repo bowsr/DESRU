@@ -1276,6 +1276,7 @@ namespace DESpeedrunUtil {
             resTitle.Font = EternalLogoBold;
             infoPanelTitle.Font = EternalLogoBold;
             trainerTitle.Font = EternalLogoBold;
+            moreHotkeysTitle.Font = EternalLogoBold;
 
             // Eternal Battle Bold 20.25point
             windowTitle.Font = EternalBattleBold;
