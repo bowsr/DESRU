@@ -222,13 +222,13 @@ namespace DESpeedrunUtil.Memory {
                             _windowFocused = false;
                         }else {
                             if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 2750) {
-                                UnlockResScale();
-                                SendKeys.Send("%(~)");
+                                var unlocked = UnlockResScale();
+                                if(unlocked) SendKeys.Send("%(~)");
                                 _unlockResFlag = false;
                                 _windowFocused = false;
-                                _resUnlocked = true;
+                                _resUnlocked = unlocked;
                                 _hotkeys.ToggleResScaleKeys(true);
-                                SendKeys.Send("%(~)");
+                                if(unlocked) SendKeys.Send("%(~)");
                             }
                         }
                     }
@@ -372,13 +372,14 @@ namespace DESpeedrunUtil.Memory {
             _game.WriteBytes(_metricsPtr, new byte[] { val });
         }
 
-        private void UnlockResScale() {
-            SetResScales();
+        private bool UnlockResScale() {
+            var result = SetResScales();
             if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
             if(_autoScaling) {
                 EnableResolutionScaling();
                 _autoScaling = false;
             }
+            return result;
         }
         /// <summary>
         /// Schedules dynamic scaling to be turned on when the game is loaded
@@ -453,8 +454,8 @@ namespace DESpeedrunUtil.Memory {
             return output;
         }
 
-        private void SetResScales() {
-            if(!Version.Contains("6.66 Rev 2") && _minRes >= 0.5f) return; // No need to change res scales since 50% is the default minimum in game
+        private bool SetResScales() {
+            if(!Version.Contains("6.66 Rev 2") && _minRes >= 0.5f) return false; // No need to change res scales since 50% is the default minimum in game
             float[] scales = ONEPERCENT_RES_SCALES;
             if(Version.Contains("6.66 Rev 2") && _minRes >= 0.02f) {
                 // rs_minimumResolutionScale does not exist on 6.66 Rev 2. It is dynamically inferred based off the 128 byte set of res scale values.
@@ -473,6 +474,7 @@ namespace DESpeedrunUtil.Memory {
                 _game.VirtualProtect(_resScalesPtr, 32 * 4, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_resScalesPtr, resBytes);
             }
+            return true;
         }
 
         /// <summary>
