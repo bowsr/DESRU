@@ -524,7 +524,10 @@ namespace DESpeedrunUtil {
             _resPercent1 = Properties.Settings.Default.ResTogglePercent1;
             _resPercent2 = Properties.Settings.Default.ResTogglePercent2;
             _resPercent3 = Properties.Settings.Default.ResTogglePercent3;
-            dynScalingRadioButton.Checked = Properties.Settings.Default.UseDynamicScaling;
+            if(Properties.Settings.Default.UseDynamicScaling)
+                dynScalingRadioButton.Checked = true;
+            else
+                staticScalingRadioButton.Checked = true;
             rightAlignCheckbox.Checked = Properties.Settings.Default.RightAlignSpeedometer;
             switch(Properties.Settings.Default.SecondaryVelocity) {
                 case 0:
