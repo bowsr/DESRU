@@ -604,6 +604,7 @@ namespace DESpeedrunUtil {
         private void SearchForSteamGameDir() {
             List<string> steamLibraryDrives = new();
             var vdfLocation = "";
+            if(!File.Exists(_gameDirectory + "\\DOOMEternalx64vk.exe")) _gameDirectory = string.Empty;
             if(_gameDirectory == string.Empty) {
                 string steamPath;
                 RegistryKey key = Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\Valve\\");
@@ -625,6 +626,7 @@ namespace DESpeedrunUtil {
                     } else {
                         this.Close();
                     }
+                    gameSelection.Dispose();
                     return;
                 }
 
