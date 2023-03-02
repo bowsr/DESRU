@@ -940,7 +940,13 @@ namespace DESpeedrunUtil {
             versionDropDownSelector.Enabled = false;
             _memory.SetFlag(_fwRuleExists, "firewall");
             var gamePath = _gameProcess.MainModule.FileName;
-            _memory.SetFlag(CheckForMeathookInPath(gamePath[..gamePath.LastIndexOf('\\')]), "cheats");
+            var gameDir = gamePath[..gamePath.LastIndexOf('\\')];
+            bool cheats = CheckForMeathookInPath(gameDir);
+            foreach(ProcessModule module in _gameProcess.Modules) {
+                if(module.ModuleName.ToLower().Contains("xinput1_3.dll") && module.FileName.ToLower().Contains(gameDir.ToLower()))
+                    cheats = true;
+            }
+            _memory.SetFlag(cheats, "cheats");
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
