@@ -582,8 +582,8 @@ namespace DESpeedrunUtil.Memory {
         public void SetMinRes(float min) => _minRes = min;
         public float GetMinRes() => _minRes;
 
-        public float[] GetPlayerPosition() => new float[5] { _positionX, _positionY, _positionZ, _yaw, _pitch };
-        public float[] GetPlayerVelocity() => new float[5] { _velocityX, _velocityY, _velocityZ, _velocityHorizontal, _velocityTotal };
+        public (float, float, float, float, float) GetPlayerPosition() => (_positionX, _positionY, _positionZ, _yaw, _pitch);
+        public (float, float, float, float, float) GetPlayerVelocity() => (_velocityX, _velocityY, _velocityZ, _velocityHorizontal, _velocityTotal);
 
         /// <summary>
         /// Reads the current value of rs_enable from memory

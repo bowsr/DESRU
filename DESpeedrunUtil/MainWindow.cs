@@ -13,6 +13,7 @@ using Timer = System.Windows.Forms.Timer;
 using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
+using System.Runtime.CompilerServices;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
@@ -315,22 +316,22 @@ namespace DESpeedrunUtil {
             /** Trainer **/
             if(_memory.GetFlag("cheats")) {
                 if(_memory.TrainerSupported) {
-                    float[] pos = _memory.GetPlayerPosition(),
-                            vel = _memory.GetPlayerVelocity();
+                    var (posX, posY, posZ, yaw, pitch) = _memory.GetPlayerPosition();
+                    var (velX, velY, velZ, hVel, totalVel) = _memory.GetPlayerVelocity();
 
                     if(!speedometerCheckbox.Checked) {
-                        positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, pos[0], pos[1], pos[2], pos[3], pos[4]);
-                        velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, vel[0], vel[1], vel[2], vel[3], vel[4]);
+                        positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, posX, posY, posZ, yaw, pitch);
+                        velocityTextBox.Text = string.Format(TEXTBOX_VELOCITY_TEXT, velX, velY, velZ, hVel, totalVel);
 
                         ToggleTrainerControls(true);
                     } else {
                         ToggleTrainerControls(false);
 
-                        altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, pos[0], pos[1], pos[2], pos[3], pos[4]);
+                        altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, posX, posY, posZ, yaw, pitch);
 
-                        _speedometer.VerticalVelocity = vel[2];
-                        _speedometer.HorizontalVelocity = vel[3];
-                        _speedometer.TotalVelocity = vel[4];
+                        _speedometer.VerticalVelocity = velZ;
+                        _speedometer.HorizontalVelocity = hVel;
+                        _speedometer.TotalVelocity = totalVel;
                         _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
                         _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
                         _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
