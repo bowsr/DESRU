@@ -27,7 +27,7 @@ namespace DESpeedrunUtil {
             currentDomain.UnhandledException += new UnhandledExceptionEventHandler(CrashHandler);
 
             ApplicationConfiguration.Initialize();
-            
+
             var logCfg = new LoggerConfiguration().WriteTo.File(@".\logs\desru_.log", rollingInterval: RollingInterval.Day);
             bool verbose = false, timer = false;
             uint interval = 0;
@@ -50,10 +50,10 @@ namespace DESpeedrunUtil {
                     }
                 }
             }
-            
+
             if(verbose) {
                 Log.Logger = logCfg.MinimumLevel.Verbose().CreateLogger();
-            }else {
+            } else {
                 Log.Logger = logCfg.MinimumLevel.Debug().CreateLogger();
             }
             Log.Information("----- DESRU Session Started -----");
@@ -71,11 +71,11 @@ namespace DESpeedrunUtil {
             if(timer) {
                 if(interval == 0) {
                     Log.Warning("-t Parameter value must be a valid positive integer");
-                }else {
+                } else {
                     if(interval < 16) {
                         interval = 16;
                         Log.Warning("-t Parameter value must not be lower than 16");
-                    }else if(interval > 500) {
+                    } else if(interval > 500) {
                         interval = 500;
                         Log.Warning("-t Parameter value must not exceed 500");
                     }
@@ -128,7 +128,7 @@ namespace DESpeedrunUtil {
                     Log.Information("Initiated update for version {Version}", _latestVersion);
                     CloseLogger();
                     return;
-                }else if(result == DialogResult.Cancel) {
+                } else if(result == DialogResult.Cancel) {
                     Properties.Settings.Default.DetectedUpdate = _latestVersion;
                     Properties.Settings.Default.Save();
                     CloseLogger();
@@ -153,9 +153,9 @@ namespace DESpeedrunUtil {
 
             try {
                 Application.Run(new MainWindow());
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Fatal(e, "A fatal error has occured.");
-            }finally {
+            } finally {
                 RawInputDevice.UnregisterDevice(HidUsageAndPage.Keyboard);
                 RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);
                 CloseLogger();
@@ -180,7 +180,7 @@ namespace DESpeedrunUtil {
                 WebClient client = new();
                 client.Headers.Add("User-Agent", "Nothing");
                 json = client.DownloadString("https://api.github.com/repos/bowsr/DESRU/releases");
-            }catch(WebException we) {
+            } catch(WebException we) {
                 Log.Error(we, "An error occured when attempting to retrieve app releases." +
                     "Make sure this program has the ability to connect to the internet.");
                 _checkFailed = true;
@@ -193,7 +193,7 @@ namespace DESpeedrunUtil {
                 Version latest = new(_latestVersion);
                 Version current = new(APP_VERSION);
                 return latest.CompareTo(current) > 0;
-            }else {
+            } else {
                 Log.Warning("No releases were found when checking for updates.");
                 return false;
             }
@@ -208,7 +208,7 @@ namespace DESpeedrunUtil {
                 Log.Error("meath00k does not exist. Aborting program.");
                 return false;
             }
-            if(!File.Exists(@".\fonts\EternalBattleBold.ttf") || !File.Exists(@".\fonts\EternalLogo.ttf") || 
+            if(!File.Exists(@".\fonts\EternalBattleBold.ttf") || !File.Exists(@".\fonts\EternalLogo.ttf") ||
                 !File.Exists(@".\fonts\EternalUi2Bold.ttf") || !File.Exists(@".\fonts\EternalUi2Regular.ttf")) {
                 Log.Error("One or more fonts are missing. Aborting program.");
                 return false;

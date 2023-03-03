@@ -22,7 +22,7 @@ namespace DESpeedrunUtil {
                 if(folder.EndsWith(@"DOOMEternal\DOOMEternalx64vk.exe")) {
                     confirmButton.Enabled = true;
                     errorLabel.ForeColor = Color.FromKnownColor(KnownColor.Control);
-                }else {
+                } else {
                     confirmButton.Enabled = false;
                     errorLabel.ForeColor = Color.LightCoral;
                 }

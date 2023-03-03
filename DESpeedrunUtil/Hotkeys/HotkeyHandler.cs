@@ -126,15 +126,15 @@ namespace DESpeedrunUtil.Hotkeys {
             }
             if(e.KeyCode == ResScaleHotkey && _resScaleKeyEnabled) {
                 MainWindow.Instance.ToggleResScaling();
-            }else if(FPSHotkeys.ContainsKey(e.KeyCode)) {
+            } else if(FPSHotkeys.ContainsKey(e.KeyCode)) {
                 MainWindow.Instance.ToggleFPSCap(FPSHotkeys.GetLimitFromKey(e.KeyCode));
-            }else if(e.KeyCode == ResToggleHotkey0 && _resScaleKeyEnabled) {
+            } else if(e.KeyCode == ResToggleHotkey0 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(0);
-            }else if(e.KeyCode == ResToggleHotkey1 && _resScaleKeyEnabled) {
+            } else if(e.KeyCode == ResToggleHotkey1 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(1);
-            }else if(e.KeyCode == ResToggleHotkey2 && _resScaleKeyEnabled) {
+            } else if(e.KeyCode == ResToggleHotkey2 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(2);
-            }else if(e.KeyCode == ResToggleHotkey3 && _resScaleKeyEnabled) {
+            } else if(e.KeyCode == ResToggleHotkey3 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(3);
             }
             e.Handled = true;
@@ -151,15 +151,15 @@ namespace DESpeedrunUtil.Hotkeys {
             if(key == Keys.None || !Enabled) return;
             if(key == ResScaleHotkey && _resScaleKeyEnabled) {
                 MainWindow.Instance.ToggleResScaling();
-            }else if(FPSHotkeys.ContainsKey(key)) {
+            } else if(FPSHotkeys.ContainsKey(key)) {
                 MainWindow.Instance.ToggleFPSCap(FPSHotkeys.GetLimitFromKey(key));
-            }else if(key == ResToggleHotkey0 && _resScaleKeyEnabled) {
+            } else if(key == ResToggleHotkey0 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(0);
-            }else if(key == ResToggleHotkey1 && _resScaleKeyEnabled) {
+            } else if(key == ResToggleHotkey1 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(1);
-            }else if(key == ResToggleHotkey2 && _resScaleKeyEnabled) {
+            } else if(key == ResToggleHotkey2 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(2);
-            }else if(key == ResToggleHotkey3 && _resScaleKeyEnabled) {
+            } else if(key == ResToggleHotkey3 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(3);
             }
         }
@@ -190,16 +190,16 @@ namespace DESpeedrunUtil.Hotkeys {
                 Keys oldKey;
                 if(type < 2) {
                     oldKey = FreescrollMacro.Instance.GetHotkey(type == 0);
-                }else if(type == 2) {
+                } else if(type == 2) {
                     oldKey = Instance.ResScaleHotkey;
-                }else if(type > 2 && type <= 6) {
+                } else if(type > 2 && type <= 6) {
                     oldKey = type switch {
                         3 => Instance.ResToggleHotkey0,
                         4 => Instance.ResToggleHotkey0,
                         5 => Instance.ResToggleHotkey0,
                         6 => Instance.ResToggleHotkey0
                     };
-                }else {
+                } else {
                     oldKey = Instance.FPSHotkeys.GetKeyFromID(fpstype);
                 }
                 for(int i = 0; i <= maxkeys; i++) {
@@ -211,13 +211,13 @@ namespace DESpeedrunUtil.Hotkeys {
                             FreescrollMacro.Instance.ChangeHotkey(oldKey, down);
                             break;
                         }
-                    }else if(i == 2) {
+                    } else if(i == 2) {
                         if(key == Instance.ResScaleHotkey) {
                             Log.Information("Duplicate of ResScaleHotkey. Swapping {Key0} with {Key1}", oldKey, key);
                             Instance.ChangeResScaleHotkey(oldKey);
                             break;
                         }
-                    }else if(i > 2 && i <= 6) {
+                    } else if(i > 2 && i <= 6) {
                         bool dupe = i switch {
                             3 => key == Instance.ResToggleHotkey0,
                             4 => key == Instance.ResToggleHotkey1,
@@ -228,7 +228,7 @@ namespace DESpeedrunUtil.Hotkeys {
                             Log.Information("Duplicate of ResToggleHotkey {ID}. Swapping {Key0} with {Key1}", i - 3, oldKey, key);
                             Instance.ChangeResToggleHotkey(oldKey, i - 3);
                         }
-                    }else {
+                    } else {
                         if(key == Instance.FPSHotkeys.GetKeyFromID(i - 7)) {
                             Log.Information("Duplicate of FPSHotkey {ID}. Swapping {Key0} with {Key1}", i - 7, oldKey, key);
                             Instance.FPSHotkeys.ChangeKey(i - 7, oldKey);
@@ -241,13 +241,13 @@ namespace DESpeedrunUtil.Hotkeys {
             if(type < 2) {
                 FreescrollMacro.Instance.ChangeHotkey(key, type == 0);
                 Log.Information("Macro " + ((type == 0) ? "Down" : "Up") + "scroll Key changed to {Key}", key);
-            }else if(type == 2) {
+            } else if(type == 2) {
                 Instance.ChangeResScaleHotkey(key);
                 Log.Information("ResScale Hotkey changed to {Key}", key);
-            }else if(type > 2 && type <= 6) {
+            } else if(type > 2 && type <= 6) {
                 Instance.ChangeResToggleHotkey(key, type - 3);
                 Log.Information("ResToggle Hotkey {ID} changed to {Key}", type - 3, key);
-            }else {
+            } else {
                 Instance.FPSHotkeys.ChangeKey(fpstype, key);
                 Log.Information("FPSHotkey {FPSKey} changed to {Key}", fpstype, key);
             }
@@ -364,12 +364,12 @@ namespace DESpeedrunUtil.Hotkeys {
                         if(lim > 250) {
                             lim = 250;
                             _keys[i] = new FPSKey(key, lim);
-                        }else if(lim <= 0) {
+                        } else if(lim <= 0) {
                             lim = -1;
                             _keys[i] = new FPSKey(key, lim);
-                        }else continue;
+                        } else continue;
                     }
-                }else {
+                } else {
                     Log.Information("FPS Hotkey settings did not exist. Generating default list.");
                     _keys = new();
                     for(int i = 0; i < DEFAULT_KEYS; i++) {
@@ -400,7 +400,7 @@ namespace DESpeedrunUtil.Hotkeys {
                     var fpskey = _keys[id];
                     fps = fpskey.Limit;
                     return fpskey.Key;
-                }catch(KeyNotFoundException e) {
+                } catch(KeyNotFoundException e) {
                     Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
                     if(id >= 0) _keys.Add(id, new FPSKey());
                     fps = -1;
@@ -415,7 +415,7 @@ namespace DESpeedrunUtil.Hotkeys {
             public Keys GetKeyFromID(int id) {
                 try {
                     return _keys[id].Key;
-                }catch(KeyNotFoundException e) {
+                } catch(KeyNotFoundException e) {
                     Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
                     if(id >= 0) _keys.Add(id, new FPSKey());
                     return Keys.None;
@@ -429,7 +429,7 @@ namespace DESpeedrunUtil.Hotkeys {
             public int GetLimitFromID(int id) {
                 try {
                     return _keys[id].Limit;
-                }catch(KeyNotFoundException e) {
+                } catch(KeyNotFoundException e) {
                     Log.Error(e, "There is no FPSKey associated with ID: {ID}. Generating new entry.", id);
                     if(id >= 0) _keys.Add(id, new FPSKey());
                     return -1;

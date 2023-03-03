@@ -5,7 +5,7 @@
         internal static readonly Color COLOR_PANEL_BACK = Color.FromArgb(45, 45, 45);
         internal static readonly Color COLOR_TEXT_BACK = Color.FromArgb(70, 70, 70);
         internal static readonly Color COLOR_TEXT_FORE = Color.FromArgb(230, 230, 230);
-        
+
         internal const string WINDOW_TITLE = "DOOM ETERNAL SPEEDRUN UTILITY";
         internal const string PATH_PROFILE_DIR = @"\782330\remote\PROFILE";
         internal const string PATH_PROFILE_FILE = @"\profile.bin";
@@ -49,7 +49,7 @@
         internal const int OFFSET_ROW7 = 0x10;
         internal const int OFFSET_ROW8 = 0x30;
         internal const int OFFSET_ROW9 = 0x40;
-        
+
         internal static readonly Keys[] INVALID_KEYS = { Keys.Oemtilde, Keys.LButton, Keys.RButton };
 
         internal static readonly float[] DEFAULT_RES_SCALES = new float[32]

@@ -4,10 +4,10 @@ using Serilog;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
-using Timer = System.Windows.Forms.Timer;
 using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
+using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Memory {
     internal class MemoryHandler {
@@ -63,7 +63,7 @@ namespace DESpeedrunUtil.Memory {
             _trainer = null;
             try {
                 _moduleSize = _game.MainModule.ModuleMemorySize;
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Error(e, "An error occured when retrieving the game's moduleSize");
                 Reset = true;
                 return;
@@ -95,19 +95,19 @@ namespace DESpeedrunUtil.Memory {
             if(_currentResScalePtr != IntPtr.Zero) CurrentResScaling = _game.ReadValue<float>(_currentResScalePtr);
 
             // com_skipIntroVideo
-            if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr)) 
+            if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr))
                 _game.WriteBytes(_skipIntroPtr, new byte[1] { 1 });
 
             // r_antialiasing
-            if(_aliasingPtr != IntPtr.Zero && _game.ReadValue<byte>(_aliasingPtr) < 2 && _game.ReadValue<bool>(_aliasingPtr) != _antiAliasing) 
+            if(_aliasingPtr != IntPtr.Zero && _game.ReadValue<byte>(_aliasingPtr) < 2 && _game.ReadValue<bool>(_aliasingPtr) != _antiAliasing)
                 _game.WriteBytes(_aliasingPtr, new byte[1] { Convert.ToByte(_antiAliasing) });
 
             // pauseMenu_delayUNPrompt
-            if(_unDelayPtr != IntPtr.Zero && _game.ReadValue<bool>(_unDelayPtr) != _unDelay) 
+            if(_unDelayPtr != IntPtr.Zero && _game.ReadValue<bool>(_unDelayPtr) != _unDelay)
                 _game.WriteBytes(_unDelayPtr, new byte[1] { Convert.ToByte(_unDelay) });
 
             // com_skipKeyPressOnLoadScreens
-            if(_continuePtr != IntPtr.Zero && _game.ReadValue<bool>(_continuePtr) != _autoContinue) 
+            if(_continuePtr != IntPtr.Zero && _game.ReadValue<bool>(_continuePtr) != _autoContinue)
                 _game.WriteBytes(_continuePtr, new byte[1] { Convert.ToByte(_autoContinue) });
 
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
@@ -122,7 +122,7 @@ namespace DESpeedrunUtil.Memory {
                     _row5 = METRICS_VULKAN_TEXT;
                     _row6 = METRICS_VRAM_TEXT;
                     //_row7 = METRICS_DRIVER_TEXT;
-                }else {
+                } else {
                     _row4 = METRICS_RAYTRACING_TEXT;
                     _row5 = METRICS_HDR_TEXT;
                     _row6 = METRICS_DLSS_TEXT;
@@ -154,7 +154,7 @@ namespace DESpeedrunUtil.Memory {
                         _row2 = _row2.Replace("(", "");
                         if(!_osdFlagOutOfDate) {
                             _row1 += "(";
-                        }else {
+                        } else {
                             _row2 = "(" + _row2;
                         }
                         if(!_row2.Contains(')')) _row2 += ")";
@@ -166,12 +166,12 @@ namespace DESpeedrunUtil.Memory {
                                 _row2 = _row2.Replace(")", " [" + scaling.Replace("[", "") + ")");
                             }
                         }
-                    }else {
+                    } else {
                         if(cheats == string.Empty) cheats = scaling;
                         if(_cpuPtr == IntPtr.Zero) {
                             _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
                             _cpu = "";
-                        }else {
+                        } else {
                             _cpu = (_scrollString != string.Empty) ? _scrollString : cheats;
                             _row3 = "";
                         }
@@ -179,7 +179,7 @@ namespace DESpeedrunUtil.Memory {
                     if(_metricsPtr != IntPtr.Zero) SetMetrics((byte) (_minimalOSD ? 1 : 2));
                     ModifyMetricRows();
                     _osdReset = false;
-                }else {
+                } else {
                     string velocity = string.Format("vel: {0:0.00}", _velocityTotal),
                            position = string.Format("x: {0:0.00} y: {1:0.00} z: {2:0.00}", _positionX, _positionY, _positionZ),
                            hzVelocity = string.Format("h: {0:0.00} v: {1:0.00}", _velocityHorizontal, _velocityZ),
@@ -190,14 +190,14 @@ namespace DESpeedrunUtil.Memory {
                     _gpuN = position;
                     if(_cpuPtr != IntPtr.Zero) {
                         _cpu = hzVelocity;
-                    }else {
+                    } else {
                         _row3 = hzVelocity;
                         _cpu = "";
                     }
                     if(_row6Ptr != IntPtr.Zero) {
                         _row8 = yaw;
                         _row9 = pitch;
-                    }else {
+                    } else {
                         _row6 = yaw;
                         _row7 = pitch;
                     }
@@ -218,7 +218,7 @@ namespace DESpeedrunUtil.Memory {
                     if(_windowFocused) {
                         if(!CheckIfGameIsFocused()) {
                             _windowFocused = false;
-                        }else {
+                        } else {
                             if(((DateTime.Now.Ticks - _focusedTime) / 10000) >= 2750) {
                                 var unlocked = UnlockResScale();
                                 if(unlocked) SendKeys.Send("%(~)");
@@ -257,11 +257,11 @@ namespace DESpeedrunUtil.Memory {
                     if(!_osdFlagCheats) SetFlag(true, "restart");
                     _externalTrainerFlag = true;
                     Log.Information("Trainer process found running.");
-                }else {
+                } else {
                     _trainer = null;
                     _externalTrainerFlag = false;
                 }
-            }else {
+            } else {
                 if(_trainer.HasExited) {
                     _trainer = null;
                     _externalTrainerFlag = false;
@@ -322,7 +322,7 @@ namespace DESpeedrunUtil.Memory {
         private bool CheckIfGameIsFocused() {
             try {
                 return _game.MainWindowHandle == GetForegroundWindow();
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Error(e, "An error occured when checking if the game was in focus.");
                 return false;
             }
@@ -357,7 +357,7 @@ namespace DESpeedrunUtil.Memory {
                 _row2 = _row1.Contains('*') ? _row3 : _row3[1..];
                 _game.WriteBytes(_row1Ptr, ToByteArray(_row1, 20));
                 _game.WriteBytes(_row1Ptr + OFFSET_ROW2, ToByteArray(_row2, 18));
-            }else {
+            } else {
                 if(_cpuPtr == IntPtr.Zero)
                     _game.WriteBytes(_row1Ptr + OFFSET_ROW3, ToByteArray(_row3, 19));
                 else
@@ -660,7 +660,7 @@ namespace DESpeedrunUtil.Memory {
                 _velocityDP?.DerefOffsets(_game, out _velocityPtr);
                 _positionDP?.DerefOffsets(_game, out _positionPtr);
                 _rotationDP?.DerefOffsets(_game, out _rotationPtr);
-            }catch(Win32Exception e) {
+            } catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
                 return;
             }
@@ -746,10 +746,10 @@ namespace DESpeedrunUtil.Memory {
             _forceResDP = CreateDP(_currentOffsets.ForceRes);
             _currentResScaleDP = CreateDP(_currentOffsets.CurrentScaling);
             if(Version == "1.0 (Release)") _rampJumpDP = CreateDP(0x6126430);
-            
+
             if(int.TryParse(Version[0..1], out int versionMajor)) {
                 _velocityDP = CreateDP(_currentOffsets.Velocity, versionMajor < 3 ? VEL_OFFSETS_OLD : VEL_OFFSETS_CURRENT);
-            }else {
+            } else {
                 _velocityDP = CreateDP(_currentOffsets.Velocity, VEL_OFFSETS_OLD);
             }
 
@@ -763,7 +763,7 @@ namespace DESpeedrunUtil.Memory {
             const string SIGSCAN_FPS = "2569204650530000252E32666D7300004672616D65203A202575";
             // DLSS does not show up if you don't have a capable gpu (NVIDIA RTX) BUT it still exists in memory in the exact same spot.
             const string SIGSCAN_DLSS = "444C5353203A2025730000000000000056756C6B616E202573";
-            const string SIGSCAN_RES_SCALES = 
+            const string SIGSCAN_RES_SCALES =
             "0000803FA4707D3F48E17A3FEC51783F8FC2753F3333733FD7A3703F7B146E3F" +
             "1F856B3FC3F5683F6666663F0AD7633FAE47613FF6285C3F3D0A573F85EB513F" +
             "CDCC4C3F14AE473F5C8F423FA4703D3FEC51383F3333333F7B142E3FC3F5283F" +
@@ -789,7 +789,7 @@ namespace DESpeedrunUtil.Memory {
                     Log.Information("Found DLSS string.");
                     r6 = dlss;
                 }
-            }else {
+            } else {
                 Log.Error("Could not find the perf metrics rows in memory. Is this even DOOM Eternal?");
                 return;
             }

@@ -1,5 +1,4 @@
 ﻿using Serilog;
-using System.ComponentModel;
 using System.Diagnostics;
 using static DESpeedrunUtil.Define.Constants;
 using Timer = System.Windows.Forms.Timer;
@@ -62,7 +61,7 @@ namespace DESpeedrunUtil.Macro {
             TerminateUnmanagedMacros(); // One final check before running our own macro instance
             try {
                 _macroProcess = Process.Start(MACRO_START_INFO);
-            }catch(Exception e) {
+            } catch(Exception e) {
                 Log.Error(e, "Failed to start Freescroll Macro.");
                 return;
             }
@@ -76,17 +75,17 @@ namespace DESpeedrunUtil.Macro {
                     MessageBox.Show("The version of the macro currently installed does not match what is expected.\n" +
                         "Please redownload and reinstall DESRU to make sure your files are up to date.", "Macro Executable Mismatch");
                 }
-            }catch(NullReferenceException e) {
+            } catch(NullReferenceException e) {
                 Log.Error(e, "Macro process was somehow null when checking module size.");
-            }catch(ArgumentNullException n) {
+            } catch(ArgumentNullException n) {
                 Log.Error(n, "Macro process is null. Aborting module size check.");
-            }finally {
+            } finally {
                 if(_macroProcess == null) {
                     Restart();
-                }else {
+                } else {
                     if(_macroProcess.HasExited) {
                         Restart();
-                    }else {
+                    } else {
                         IsRunning = true;
                         Log.Verbose("Freescroll Macro is running.");
                     }
@@ -143,7 +142,7 @@ namespace DESpeedrunUtil.Macro {
         public bool CheckModuleSize() {
             if(_macroProcess == null) {
                 throw new ArgumentNullException("Macro Process is currently null.");
-            }else {
+            } else {
                 if(_macroProcess.HasExited || _macroProcess.MainModule == null) throw new ArgumentNullException("Macro Process may have crashed or exited.");
             }
             return _macroProcess.MainModule.ModuleMemorySize == 49152;

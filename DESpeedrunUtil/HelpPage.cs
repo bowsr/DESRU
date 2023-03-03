@@ -60,7 +60,7 @@ namespace DESpeedrunUtil {
         }
 
         private void HelpPage_Load(object sender, EventArgs e) {
-            foreach(Button b in _buttons) 
+            foreach(Button b in _buttons)
                 b.Enabled = true;
             blankPanel.Visible = true;
             this.Location = new Point(

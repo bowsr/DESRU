@@ -38,7 +38,7 @@ namespace Updater {
                 var v = new Version(ver);
                 if(v.Major == 1 && v.Minor >= 0 && v.Build >= 0 && v.Revision == -1)
                     return v;
-            }catch(Exception) { }
+            } catch(Exception) { }
             return EMPTY_VERSION;
         }
 

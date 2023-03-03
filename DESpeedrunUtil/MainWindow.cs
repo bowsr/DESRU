@@ -9,11 +9,10 @@ using Serilog;
 using System.Diagnostics;
 using System.Drawing.Text;
 using System.Text.RegularExpressions;
-using Timer = System.Windows.Forms.Timer;
 using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
-using System.Runtime.CompilerServices;
+using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {

@@ -64,10 +64,10 @@ namespace Updater {
                     await response.Content.CopyToAsync(fs);
                     updateProgressBar.Style = ProgressBarStyle.Continuous;
                     backgroundWorker.RunWorkerAsync();
-                }else {
+                } else {
                     progressLabel.Text = "Update Failed to Download";
                 }
-            }catch(Exception) {
+            } catch(Exception) {
                 progressLabel.Text = "An error occurred when attempting to download update";
             }
         }
@@ -92,7 +92,7 @@ namespace Updater {
                 _installedFiles++;
                 backgroundWorker.ReportProgress((_installedFiles * 100) / _totalFiles);
             }
-            
+
         }
 
         private int CountFiles(string path) {
