@@ -51,7 +51,7 @@ namespace DESpeedrunUtil {
                 } catch(FormatException f) {
                     Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
                 }
-                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macro, _hotkeys);
+                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type);
             }
             UpdateHotkeyAndInputFields();
             e.Handled = true;
@@ -83,7 +83,7 @@ namespace DESpeedrunUtil {
                     "hkResToggle3" => 6,
                     _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 7 : -1,
                 };
-                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type, _macro, _hotkeys);
+                if(type != -1) HotkeyHandler.ChangeHotkeys(pressedKey, type);
             }
             UpdateHotkeyAndInputFields();
         }
@@ -160,7 +160,7 @@ namespace DESpeedrunUtil {
                     _fpsDefault = p;
                     break;
                 default:
-                    _hotkeys.FPSHotkeys.ChangeLimit(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1, p);
+                    HotkeyHandler.Instance.FPSHotkeys.ChangeLimit(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1, p);
                     break;
             }
         }
@@ -225,9 +225,9 @@ namespace DESpeedrunUtil {
         private void EnableHotkeys_CheckChanged(object sender, EventArgs e) {
             bool val = ((CheckBox) sender).Checked;
             if(val) {
-                if(Hooked) _hotkeys.EnableHotkeys();
+                if(Hooked) HotkeyHandler.Instance.EnableHotkeys();
             } else {
-                _hotkeys.DisableHotkeys();
+                HotkeyHandler.Instance.DisableHotkeys();
             }
         }
         private void AutoDynamic_CheckChanged(object sender, EventArgs e) {
@@ -496,10 +496,10 @@ namespace DESpeedrunUtil {
             // User Settings
             var fpsJson = "";
             if(File.Exists(PATH_FPSKEYS_JSON)) fpsJson = File.ReadAllText(PATH_FPSKEYS_JSON);
-            _macro = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
-            _hotkeys = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, (Keys) Properties.Settings.Default.ResToggleKey0,
+            _ = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
+            _ = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, (Keys) Properties.Settings.Default.ResToggleKey0,
                 (Keys) Properties.Settings.Default.ResToggleKey1, (Keys) Properties.Settings.Default.ResToggleKey2,
-                (Keys) Properties.Settings.Default.ResToggleKey3, fpsJson, this);
+                (Keys) Properties.Settings.Default.ResToggleKey3, fpsJson);
             _fpsDefault = Properties.Settings.Default.DefaultFPSCap;
             autorunMacroCheckbox.Checked = Properties.Settings.Default.MacroEnabled;
             _enableMacro = Properties.Settings.Default.MacroEnabled;
@@ -587,12 +587,12 @@ namespace DESpeedrunUtil {
             // User Settings
             SaveSettings();
 
-            File.WriteAllText(PATH_FPSKEYS_JSON, _hotkeys.FPSHotkeys.SerializeIntoJSON());
+            File.WriteAllText(PATH_FPSKEYS_JSON, HotkeyHandler.Instance.FPSHotkeys.SerializeIntoJSON());
 
             Log.Information("User settings saved");
 
-            _hotkeys.DisableHotkeys();
-            _macro.Stop(false);
+            HotkeyHandler.Instance.DisableHotkeys();
+            FreescrollMacro.Instance.Stop(false);
             _memory?.ClosingDESRU();
 
             RawInputDevice.UnregisterDevice(HidUsageAndPage.Keyboard);

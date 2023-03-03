@@ -7,6 +7,8 @@ using Timer = System.Windows.Forms.Timer;
 namespace DESpeedrunUtil.Macro {
     internal class FreescrollMacro {
 
+        public static FreescrollMacro Instance { get; private set; }
+
         private readonly ProcessStartInfo MACRO_START_INFO;
         private Process _macroProcess = null;
 
@@ -33,6 +35,9 @@ namespace DESpeedrunUtil.Macro {
             _downScrollKey = downScroll;
             _upScrollKey = upScroll;
             CreateBindingsFile();
+
+            Instance = this;
+
             Log.Information("Initialized FreescrollMacro");
         }
 

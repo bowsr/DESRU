@@ -17,6 +17,8 @@ using static DESpeedrunUtil.Interop.DLLImports;
 namespace DESpeedrunUtil {
     public partial class MainWindow: Form {
 
+        public static MainWindow Instance { get; private set; }
+
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalLogoBold, EternalBattleBold;
 
@@ -33,10 +35,8 @@ namespace DESpeedrunUtil {
         bool _mhExists = false, _mhScheduleRemoval = false, _mhDoRemovalTask = false;
         bool _reshadeExists = false;
 
-        FreescrollMacro _macro;
         bool _enableMacro = true, _startingMacro = false;
 
-        HotkeyHandler _hotkeys;
         int _fpsDefault, _minResPercent, _targetFPS,
             _resPercent0, _resPercent1, _resPercent2, _resPercent3;
 
@@ -90,6 +90,8 @@ namespace DESpeedrunUtil {
 
             SetToolTips();
             RemoveTabStop(this);
+
+            Instance = this;
         }
 
         /// <summary>
@@ -134,7 +136,7 @@ namespace DESpeedrunUtil {
                                 return;
                         }
                         if(button != MouseButtons.None) {
-                            if(_hotkeys.HookedHotkeys.Contains(HotkeyHandler.ConvertMouseButton(button))) {
+                            if(HotkeyHandler.Instance.HookedHotkeys.Contains(HotkeyHandler.ConvertMouseButton(button))) {
                                 var mea = new MouseEventArgs(button, 1, 0, 0, 0);
                                 if(down) {
                                     RIMouseDown?.Invoke(this, mea);
@@ -159,7 +161,7 @@ namespace DESpeedrunUtil {
                             key = HotkeyHandler.ModKeySelector(1);
                             break;
                     }
-                    if(_hotkeys.HookedHotkeys.Contains(key)) {
+                    if(HotkeyHandler.Instance.HookedHotkeys.Contains(key)) {
                         var kea = new KeyEventArgs(key);
                         if(!up) {
                             RIKeyDown?.Invoke(this, kea);
@@ -176,7 +178,7 @@ namespace DESpeedrunUtil {
         private void UpdateTick() {
             if(_gameProcess == null || _gameProcess.HasExited) {
                 Hooked = false;
-                _hotkeys.DisableHotkeys();
+                HotkeyHandler.Instance.DisableHotkeys();
                 _gameProcess = null;
                 if(_memory != null) _memory.MemoryTimer.Stop();
                 _memory = null;
@@ -221,7 +223,7 @@ namespace DESpeedrunUtil {
             }
             if(!Hooked) {
                 if(_gameDirectory.ToLower().Contains("steam")) versionDropDownSelector.Enabled = true;
-                _macro.Stop(true);
+                FreescrollMacro.Instance.Stop(true);
                 _fwRestart = false;
                 meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
                 return;
@@ -233,25 +235,25 @@ namespace DESpeedrunUtil {
                 if(enableHotkeysCheckbox.Checked) {
                     if(!_memory.GetFlag("unlockscheduled")) {
                         if(!_gameInFocus) {
-                            _hotkeys.DisableHotkeys();
+                            HotkeyHandler.Instance.DisableHotkeys();
                         } else {
-                            _hotkeys.EnableHotkeys();
+                            HotkeyHandler.Instance.EnableHotkeys();
                         }
                     }
                 }
                 if(!_gameInFocus) {
-                    _macro.Stop(true);
+                    FreescrollMacro.Instance.Stop(true);
                     _startingMacro = false;
                 } else {
                     if(_enableMacro) {
                         if(_openProcesses.FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
-                            _macro.Restart();
+                            FreescrollMacro.Instance.Restart();
                             _openProcesses.Clear();
                         }
-                        if(!_macro.IsRunning && !_startingMacro) {
-                            _macro.Start();
+                        if(!FreescrollMacro.Instance.IsRunning && !_startingMacro) {
+                            FreescrollMacro.Instance.Start();
                             _startingMacro = true;
-                        } else if(_macro.IsRunning && _startingMacro) {
+                        } else if(FreescrollMacro.Instance.IsRunning && _startingMacro) {
                             _startingMacro = false;
                         }
                     }
@@ -260,12 +262,12 @@ namespace DESpeedrunUtil {
                 Log.Error(e, "Failed to check if DOOM Eternal was in focus.");
             }
 
-            if(!_enableMacro) _macro.Stop(true);
+            if(!_enableMacro) FreescrollMacro.Instance.Stop(true);
 
             /** Memory Flags **/
             var v = _memory.Version.Contains("Unknown");
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
-            _memory.SetFlag(_enableMacro && _macro.HasKeyBound(), "macro");
+            _memory.SetFlag(_enableMacro && FreescrollMacro.Instance.HasKeyBound(), "macro");
             _memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
             _memory.SetFlag(trainerOSDCheckbox.Checked, "trainer");
 
@@ -371,9 +373,9 @@ namespace DESpeedrunUtil {
                 Log.Error(e, "Failed to check if firewall rule exists.");
             }
 
-            macroStatus.Text = (_macro.IsRunning) ? "Running" : "Stopped";
-            macroStatus.ForeColor = (_macro.IsRunning) ? Color.Lime : COLOR_TEXT_FORE;
-            hotkeyStatus.Text = (_hotkeys.Enabled) ? "Enabled" : "Disabled";
+            macroStatus.Text = (FreescrollMacro.Instance.IsRunning) ? "Running" : "Stopped";
+            macroStatus.ForeColor = (FreescrollMacro.Instance.IsRunning) ? Color.Lime : COLOR_TEXT_FORE;
+            hotkeyStatus.Text = (HotkeyHandler.Instance.Enabled) ? "Enabled" : "Disabled";
             rtssStatus.Text = (_openProcesses.FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count > 0) ? "Running" : "Closed";
 
             if(_memory != null) {
@@ -488,14 +490,14 @@ namespace DESpeedrunUtil {
             foreach(Label l in _hotkeyFields) {
                 string tag = (string) l.Tag;
                 Keys key = tag switch {
-                    "hkMacroDown" => _macro.GetHotkey(true),
-                    "hkMacroUp" => _macro.GetHotkey(false),
-                    "hkResToggle" => _hotkeys.ResScaleHotkey,
-                    "hkResToggle0" => _hotkeys.ResToggleHotkey0,
-                    "hkResToggle1" => _hotkeys.ResToggleHotkey1,
-                    "hkResToggle2" => _hotkeys.ResToggleHotkey2,
-                    "hkResToggle3" => _hotkeys.ResToggleHotkey3,
-                    _ => _hotkeys.FPSHotkeys.GetKeyFromID(int.TryParse(tag.Replace("hkFps", ""), out int id) ? id : -1),
+                    "hkMacroDown" => FreescrollMacro.Instance.GetHotkey(true),
+                    "hkMacroUp" => FreescrollMacro.Instance.GetHotkey(false),
+                    "hkResToggle" => HotkeyHandler.Instance.ResScaleHotkey,
+                    "hkResToggle0" => HotkeyHandler.Instance.ResToggleHotkey0,
+                    "hkResToggle1" => HotkeyHandler.Instance.ResToggleHotkey1,
+                    "hkResToggle2" => HotkeyHandler.Instance.ResToggleHotkey2,
+                    "hkResToggle3" => HotkeyHandler.Instance.ResToggleHotkey3,
+                    _ => HotkeyHandler.Instance.FPSHotkeys.GetKeyFromID(int.TryParse(tag.Replace("hkFps", ""), out int id) ? id : -1),
                 };
                 l.Text = HotkeyHandler.TranslateKeyNames(key);
                 l.ForeColor = COLOR_TEXT_FORE;
@@ -503,7 +505,7 @@ namespace DESpeedrunUtil {
             }
             foreach(TextBox t in _fpsLimitFields) {
                 string tag = (string) t.Tag;
-                int limit = _hotkeys.FPSHotkeys.GetLimitFromID(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1);
+                int limit = HotkeyHandler.Instance.FPSHotkeys.GetLimitFromID(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1);
                 t.Text = (limit != -1) ? limit.ToString() : "";
             }
             minResInput.Text = _minResPercent.ToString();
@@ -910,7 +912,7 @@ namespace DESpeedrunUtil {
             _reshadeExists = CheckForReShade();
 
             try {
-                _memory = new MemoryHandler(_gameProcess, _hotkeys);
+                _memory = new MemoryHandler(_gameProcess, HotkeyHandler.Instance);
             } catch(ArgumentNullException ex) {
                 Log.Error(ex, "An error occured when attempting to hook into the game.");
                 _gameProcess = null;
@@ -930,8 +932,8 @@ namespace DESpeedrunUtil {
                 return false;
             }
             if(enableHotkeysCheckbox.Checked) {
-                _hotkeys.EnableHotkeys();
-                _hotkeys.ToggleResScaleKeys(false);
+                HotkeyHandler.Instance.EnableHotkeys();
+                HotkeyHandler.Instance.ToggleResScaleKeys(false);
             }
             SetGameInfoByModuleSize();
             try {
@@ -961,7 +963,7 @@ namespace DESpeedrunUtil {
             _memory.SetMinRes(_minResPercent / 100f);
             if(unlockOnStartupCheckbox.Checked) {
                 _memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
-                _hotkeys.DisableHotkeys();
+                HotkeyHandler.Instance.DisableHotkeys();
             } else {
                 if(autoScalingCheckbox.Checked) _memory.ScheduleResolutionScaling(_targetFPS);
             }
@@ -992,14 +994,14 @@ namespace DESpeedrunUtil {
                 }
             }
 
-            if(!_memory.CanCapFPS()) _hotkeys.DisableHotkeys();
+            if(!_memory.CanCapFPS()) HotkeyHandler.Instance.DisableHotkeys();
         }
 
         private void LaunchRTSS() => Process.Start(new ProcessStartInfo(_rtssExecutable) { WorkingDirectory = _rtssExecutable[.._rtssExecutable.LastIndexOf('\\')] });
 
         private void SaveSettings() {
-            Properties.Settings.Default.DownScrollKey = (int) _macro.GetHotkey(true);
-            Properties.Settings.Default.UpScrollKey = (int) _macro.GetHotkey(false);
+            Properties.Settings.Default.DownScrollKey = (int) FreescrollMacro.Instance.GetHotkey(true);
+            Properties.Settings.Default.UpScrollKey = (int) FreescrollMacro.Instance.GetHotkey(false);
             Properties.Settings.Default.DefaultFPSCap = _fpsDefault;
             Properties.Settings.Default.MacroEnabled = autorunMacroCheckbox.Checked;
             Properties.Settings.Default.HotkeysEnabled = enableHotkeysCheckbox.Checked;
@@ -1011,7 +1013,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.SteamInstallation = _steamInstallation;
             Properties.Settings.Default.SteamID3 = _steamID3;
             Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
-            Properties.Settings.Default.ResScaleKey = (int) _hotkeys.ResScaleHotkey;
+            Properties.Settings.Default.ResScaleKey = (int) HotkeyHandler.Instance.ResScaleHotkey;
             Properties.Settings.Default.EnableMaxFPSLimit = enableMaxFPSCheckbox.Checked;
             Properties.Settings.Default.AntiAliasing = !antiAliasingCheckbox.Checked;
             Properties.Settings.Default.UNDelay = !unDelayCheckbox.Checked;
@@ -1022,10 +1024,10 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.TrainerOSD = trainerOSDCheckbox.Checked;
             Properties.Settings.Default.ShowSpeedometer = speedometerCheckbox.Checked;
             Properties.Settings.Default.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
-            Properties.Settings.Default.ResToggleKey0 = (int) _hotkeys.ResToggleHotkey0;
-            Properties.Settings.Default.ResToggleKey1 = (int) _hotkeys.ResToggleHotkey1;
-            Properties.Settings.Default.ResToggleKey2 = (int) _hotkeys.ResToggleHotkey2;
-            Properties.Settings.Default.ResToggleKey3 = (int) _hotkeys.ResToggleHotkey3;
+            Properties.Settings.Default.ResToggleKey0 = (int) HotkeyHandler.Instance.ResToggleHotkey0;
+            Properties.Settings.Default.ResToggleKey1 = (int) HotkeyHandler.Instance.ResToggleHotkey1;
+            Properties.Settings.Default.ResToggleKey2 = (int) HotkeyHandler.Instance.ResToggleHotkey2;
+            Properties.Settings.Default.ResToggleKey3 = (int) HotkeyHandler.Instance.ResToggleHotkey3;
             Properties.Settings.Default.ResTogglePercent0 = _resPercent0;
             Properties.Settings.Default.ResTogglePercent1 = _resPercent1;
             Properties.Settings.Default.ResTogglePercent2 = _resPercent2;
