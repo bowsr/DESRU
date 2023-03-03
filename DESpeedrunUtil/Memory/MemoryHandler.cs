@@ -50,13 +50,12 @@ namespace DESpeedrunUtil.Memory {
         float _minRes = 0.01f;
 
         bool _windowFocused = false, _dynTimer = false, _osdReset = false;
-        long _focusedTime, _dynTime;
+        long _focusedTime, _dynTime, _scalingTime;
+        float _prevScaling = 0f;
 
         float _velocityX = 0f, _velocityY = 0f, _velocityZ = 0f, _velocityHorizontal = 0f, _velocityTotal = 0f,
               _positionX = 0f, _positionY = 0f, _positionZ = 0f,
               _yaw = 0f, _pitch = 0f;
-
-        float[] _currentResScales;
 
         public MemoryHandler(Process game) {
             _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
@@ -69,6 +68,7 @@ namespace DESpeedrunUtil.Memory {
                 return;
             }
             Version = TranslateModuleSize();
+            _scalingTime = DateTime.Now.Ticks;
 
             MemoryTimer = new Timer();
             MemoryTimer.Interval = Program.TimerInterval;
@@ -93,6 +93,10 @@ namespace DESpeedrunUtil.Memory {
 
             // Read current resolution scaling percentage
             if(_currentResScalePtr != IntPtr.Zero) CurrentResScaling = _game.ReadValue<float>(_currentResScalePtr);
+            if(CurrentResScaling != _prevScaling) {
+                _prevScaling = CurrentResScaling;
+                _scalingTime = DateTime.Now.Ticks;
+            }
 
             // com_skipIntroVideo
             if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr))
@@ -145,8 +149,12 @@ namespace DESpeedrunUtil.Memory {
                     }
                     var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : string.Empty;
                     var scaling = string.Empty;
-                    if(ReadDynamicRes() || ReadForceRes() > 0f) {
-                        scaling = string.Format("{0:0.00}x [{1}]", CurrentResScaling, ReadDynamicRes() ? GetTargetFPS() : "S");
+                    if(((DateTime.Now.Ticks - _scalingTime) / 10000) <= 3000) {
+                        if(ReadDynamicRes() || ReadForceRes() > 0f) {
+                            scaling = string.Format("{0:0.00}x [{1}]", CurrentResScaling, ReadDynamicRes() ? GetTargetFPS() : "S");
+                        } else {
+                            scaling = "rs-off";
+                        }
                     }
                     if(_minimalOSD) {
                         var row2Mod = (_scrollString != string.Empty) ? "[" + _scrollString + "]" : cheats;
@@ -465,7 +473,6 @@ namespace DESpeedrunUtil.Memory {
                     scales[i] = (1.0f - (((1.0f - min) / 31) * i));
                 }
             }
-            _currentResScales = scales;
             byte[] resBytes = new byte[32 * 4];
             Buffer.BlockCopy(scales, 0, resBytes, 0, resBytes.Length);
             if(_resScalesPtr != IntPtr.Zero) {
