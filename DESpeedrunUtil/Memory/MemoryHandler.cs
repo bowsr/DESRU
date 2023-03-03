@@ -28,7 +28,6 @@ namespace DESpeedrunUtil.Memory {
                _velocityPtr, _positionPtr, _rotationPtr;
 
         Process _game, _trainer;
-        HotkeyHandler _hotkeys;
         public Timer MemoryTimer { get; init; }
         public bool Reset { get; init; }
         public bool TrainerSupported { get; private set; } = true;
@@ -59,10 +58,9 @@ namespace DESpeedrunUtil.Memory {
 
         float[] _currentResScales;
 
-        public MemoryHandler(Process game, HotkeyHandler hotkeys) {
+        public MemoryHandler(Process game) {
             _game = game ?? throw new ArgumentNullException(nameof(game), "Game process is null. How?");
             _trainer = null;
-            _hotkeys = hotkeys;
             try {
                 _moduleSize = _game.MainModule.ModuleMemorySize;
             }catch(Exception e) {
@@ -227,7 +225,7 @@ namespace DESpeedrunUtil.Memory {
                                 _unlockResFlag = false;
                                 _windowFocused = false;
                                 _resUnlocked = unlocked;
-                                _hotkeys.ToggleResScaleKeys(true);
+                                HotkeyHandler.Instance.ToggleResScaleKeys(true);
                                 if(unlocked) SendKeys.Send("%(~)");
                             }
                         }

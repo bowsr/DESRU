@@ -912,7 +912,7 @@ namespace DESpeedrunUtil {
             _reshadeExists = CheckForReShade();
 
             try {
-                _memory = new MemoryHandler(_gameProcess, HotkeyHandler.Instance);
+                _memory = new MemoryHandler(_gameProcess);
             } catch(ArgumentNullException ex) {
                 Log.Error(ex, "An error occured when attempting to hook into the game.");
                 _gameProcess = null;
