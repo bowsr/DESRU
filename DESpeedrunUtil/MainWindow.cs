@@ -887,6 +887,7 @@ namespace DESpeedrunUtil {
         private bool Hook() {
             List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalx64vk"));
             if(procList.Count == 0) {
+                _gameProcess?.Dispose();
                 _gameProcess = null;
                 _duplicateProcesses = false;
                 _firstRun = false;
@@ -896,6 +897,23 @@ namespace DESpeedrunUtil {
                 if(!_duplicateProcesses) {
                     _duplicateProcesses = true;
                     Log.Error("Multiple DOOM Eternal processes detected!");
+                    for(int i = 0; i < procList.Count; i++) {
+                        var proc = procList[i];
+                        Log.Information("procList[{Index}]:", i);
+                        Log.Information(" * Name = {Name}", proc.ProcessName);
+                        Log.Information(" * HasExited = {HasExited}", proc.HasExited);
+                        try {
+                            Log.Information(" * Path = {Path}", proc.MainModule?.FileName);
+                            Log.Information(" * MainModuleMemorySize = {MainModuleSize}", proc.MainModule?.ModuleMemorySize);
+                            Log.Information(" * {ModuleCount} Loaded Modules:", proc.Modules.Count);
+                            for(int j = 1; j <= proc.Modules.Count; j++) {
+                                Log.Information(" * {Index}) {ModuleName}", j, proc.Modules[j - 1].ModuleName);
+                            }
+                        } catch(Exception e) {
+                            Log.Error("Failed to log procList[" + i + "] modules.", e);
+                        }
+                        Log.Information(" ================================ ");
+                    }
                     System.Media.SystemSounds.Asterisk.Play();
                     MessageBox.Show(this, "Multiple instances of DOOM Eternal have been detected.\n" +
                     "Close them or restart your system to clear them out.", "Multiple DOOMEternalx64vk.exe Instances Detected");
@@ -903,6 +921,9 @@ namespace DESpeedrunUtil {
                 _gameProcess = null;
                 return false;
             }
+
+            _duplicateProcesses = false;
+
             _gameProcess = procList[0];
             changeVersionButton.Enabled = false;
 
