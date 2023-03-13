@@ -24,6 +24,8 @@ namespace DESpeedrunUtil {
 
 
         Process? _gameProcess;
+        List<int> _ghostProcIDs = new();
+        List<int> _ghostIDsChecked = new();
         public bool Hooked = false;
         bool _duplicateProcesses = false, _firstRun = true, _justLaunched = true;
         bool _gameInFocus = false;
@@ -176,21 +178,7 @@ namespace DESpeedrunUtil {
 
         // Main timer method that runs this utility's logic.
         private void UpdateTick() {
-            if(_gameProcess == null || _gameProcess.HasExited) {
-                Hooked = false;
-                HotkeyHandler.Instance.DisableHotkeys();
-                _gameProcess = null;
-                if(_memory != null) _memory.MemoryTimer.Stop();
-                _memory = null;
-                _gameInFocus = false;
-
-                unlockResButton.Enabled = false;
-                unlockResButton.Text = "Game Not Running";
-
-                enableMaxFPSCheckbox.Enabled = true;
-
-                HideTrainerControls();
-            }
+            if(_gameProcess == null || _gameProcess.HasExited) DisposeGameProcess();
 
             speedometerPrecisionCheckbox.Visible = speedometerCheckbox.Checked;
             rightAlignCheckbox.Visible = speedometerCheckbox.Checked;
@@ -887,19 +875,58 @@ namespace DESpeedrunUtil {
         private bool Hook() {
             List<Process> procList = Process.GetProcesses().ToList().FindAll(x => x.ProcessName.Contains("DOOMEternalx64vk"));
             if(procList.Count == 0) {
-                _gameProcess?.Dispose();
-                _gameProcess = null;
+                DisposeGameProcess();
                 _duplicateProcesses = false;
                 _firstRun = false;
+                _ghostProcIDs.Clear();
+                _ghostIDsChecked.Clear();
                 return false;
             }
-            if(procList.Count > 1) {
+
+            if(procList.Count > 1) Log.Warning("Found {Count} instances of DOOMEternalx64vk", procList.Count);
+
+            // Running through every matched process to check if they're valid
+            bool multipleProcesses = false;
+            foreach(var gameProc in procList) {
+                if(_ghostProcIDs.Contains(gameProc.Id)) {
+                    // Skipping already checked ghost processes to prevent slowdowns and log file size ballooning
+                    if(_ghostIDsChecked.Contains(gameProc.Id)) continue;
+                    Log.Information("Skipping process with id {ID} as it was already checked", gameProc.Id);
+                    _ghostIDsChecked.Add(gameProc.Id);
+                    continue;
+                }
+                if(!gameProc.HasExited) {
+                    try {
+                        // Attempts to check the MainModuleMemorySize if a process is found that hasn't exited
+                        Log.Information("Potential game candidate. id={ID} moduleSize={ModuleSize}", gameProc.Id, gameProc.MainModule?.ModuleMemorySize);
+                    } catch {
+                        // If the ModuleSize check fails, adds process ID to list of ghost processes as it's not a valid process to hook in to
+                        Log.Warning("Failed to check ModuleSize of game process. id={ID}", gameProc.Id);
+                        if(!_ghostProcIDs.Contains(gameProc.Id)) _ghostProcIDs.Add(gameProc.Id);
+                        continue;
+                    }
+                    if(_gameProcess != null) {
+                        // If a valid process was already found, trigger the duplicate process warning telling the user to clear them out
+                        Log.Error("Found multiple valid DOOMEternalx64vk processes! Cannot properly hook into the game");
+                        _gameProcess = null;
+                        multipleProcesses = true;
+                        break;
+                    }
+                    _gameProcess = gameProc;
+                    continue;
+                }
+                Log.Information("DOOMEternalx64vk process has exited. id={ID}", gameProc.Id);
+            }
+
+            // Error catching/logging in the event of multiple valid game processes being detected
+            if(multipleProcesses) {
                 if(!_duplicateProcesses) {
                     _duplicateProcesses = true;
                     Log.Error("Multiple DOOM Eternal processes detected!");
                     for(int i = 0; i < procList.Count; i++) {
                         var proc = procList[i];
                         Log.Information("procList[{Index}]:", i);
+                        Log.Information(" * ID = {ID}", proc.Id);
                         Log.Information(" * Name = {Name}", proc.ProcessName);
                         Log.Information(" * HasExited = {HasExited}", proc.HasExited);
                         try {
@@ -922,13 +949,13 @@ namespace DESpeedrunUtil {
                 return false;
             }
 
-            _duplicateProcesses = false;
-
-            _gameProcess = procList[0];
             changeVersionButton.Enabled = false;
 
-            if(_gameProcess.HasExited || _gameProcess == null) return false;
-            Log.Information("Found a DOOMEternalx64vk.exe process.");
+            if(_gameProcess == null || _gameProcess.HasExited) return false;
+            _duplicateProcesses = false;
+            _ghostProcIDs.Clear();
+            _ghostIDsChecked.Clear();
+            Log.Information("Starting to hook into the DOOMEternalx64vk.exe process.");
 
             _reshadeExists = CheckForReShade();
 
@@ -936,18 +963,21 @@ namespace DESpeedrunUtil {
                 _memory = new MemoryHandler(_gameProcess);
             } catch(ArgumentNullException ex) {
                 Log.Error(ex, "An error occured when attempting to hook into the game.");
+                _gameProcess?.Dispose();
                 _gameProcess = null;
                 _memory = null;
                 return false;
             }
             if(_memory == null) {
                 Log.Error("MemoryHandler was somehow null. Retrying hook.");
+                _gameProcess?.Dispose();
                 _gameProcess = null;
                 _memory = null;
                 return false;
             }
             if(_memory.Reset) {
                 Log.Error("Something went wrong when setting up the MemoryHandler. Retrying hook.");
+                _gameProcess?.Dispose();
                 _gameProcess = null;
                 _memory = null;
                 return false;
@@ -1019,6 +1049,23 @@ namespace DESpeedrunUtil {
         }
 
         private void LaunchRTSS() => Process.Start(new ProcessStartInfo(_rtssExecutable) { WorkingDirectory = _rtssExecutable[.._rtssExecutable.LastIndexOf('\\')] });
+
+        private void DisposeGameProcess() {
+            Hooked = false;
+            HotkeyHandler.Instance.DisableHotkeys();
+            _gameProcess?.Dispose();
+            _gameProcess = null;
+            _memory?.MemoryTimer.Stop();
+            _memory = null;
+            _gameInFocus = false;
+
+            unlockResButton.Enabled = false;
+            unlockResButton.Text = "Game Not Running";
+
+            enableMaxFPSCheckbox.Enabled = true;
+
+            HideTrainerControls();
+        }
 
         private void SaveSettings() {
             Properties.Settings.Default.DownScrollKey = (int) FreescrollMacro.Instance.GetHotkey(true);
