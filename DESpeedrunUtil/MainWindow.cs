@@ -899,9 +899,9 @@ namespace DESpeedrunUtil {
                     try {
                         // Attempts to check the MainModuleMemorySize if a process is found that hasn't exited
                         Log.Information("Potential game candidate. id={ID} moduleSize={ModuleSize}", gameProc.Id, gameProc.MainModule?.ModuleMemorySize);
-                    } catch {
+                    } catch(Exception e) {
                         // If the ModuleSize check fails, adds process ID to list of ghost processes as it's not a valid process to hook in to
-                        Log.Warning("Failed to check ModuleSize of game process. id={ID}", gameProc.Id);
+                        Log.Error(e, "Failed to check ModuleSize of game process. id={ID}", gameProc.Id);
                         if(!_ghostProcIDs.Contains(gameProc.Id)) _ghostProcIDs.Add(gameProc.Id);
                         continue;
                     }
@@ -937,7 +937,7 @@ namespace DESpeedrunUtil {
                                 Log.Information(" * {Index}) {ModuleName}", j, proc.Modules[j - 1].ModuleName);
                             }
                         } catch(Exception e) {
-                            Log.Error("Failed to log procList[" + i + "] modules.", e);
+                            Log.Error(e, "Failed to log procList[" + i + "] modules.", e);
                         }
                         Log.Information(" ================================ ");
                     }
@@ -951,7 +951,10 @@ namespace DESpeedrunUtil {
 
             changeVersionButton.Enabled = false;
 
-            if(_gameProcess == null || _gameProcess.HasExited) return false;
+            if(_gameProcess == null || _gameProcess.HasExited) {
+                if(!_duplicateProcesses) _firstRun = false;
+                return false;
+            }
             _duplicateProcesses = false;
             _ghostProcIDs.Clear();
             _ghostIDsChecked.Clear();
