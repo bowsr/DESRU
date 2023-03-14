@@ -888,13 +888,13 @@ namespace DESpeedrunUtil {
             // Running through every matched process to check if they're valid
             bool multipleProcesses = false;
             foreach(var gameProc in procList) {
-                if(_ghostProcIDs.Contains(gameProc.Id)) {
-                    // Skipping already checked ghost processes to prevent slowdowns and log file size ballooning
-                    if(_ghostIDsChecked.Contains(gameProc.Id)) continue;
-                    Log.Information("Skipping process with id {ID} as it was already checked", gameProc.Id);
-                    _ghostIDsChecked.Add(gameProc.Id);
-                    continue;
-                }
+                //if(_ghostProcIDs.Contains(gameProc.Id)) {
+                //    // Skipping already checked ghost processes to prevent slowdowns and log file size ballooning
+                //    if(_ghostIDsChecked.Contains(gameProc.Id)) continue;
+                //    Log.Information("Skipping process with id {ID} as it was already checked", gameProc.Id);
+                //    _ghostIDsChecked.Add(gameProc.Id);
+                //    continue;
+                //}
                 if(!gameProc.HasExited) {
                     try {
                         // Attempts to check the MainModuleMemorySize if a process is found that hasn't exited
@@ -902,7 +902,7 @@ namespace DESpeedrunUtil {
                     } catch(Exception e) {
                         // If the ModuleSize check fails, adds process ID to list of ghost processes as it's not a valid process to hook in to
                         Log.Error(e, "Failed to check ModuleSize of game process. id={ID}", gameProc.Id);
-                        if(!_ghostProcIDs.Contains(gameProc.Id)) _ghostProcIDs.Add(gameProc.Id);
+                        //if(!_ghostProcIDs.Contains(gameProc.Id)) _ghostProcIDs.Add(gameProc.Id);
                         continue;
                     }
                     if(_gameProcess != null) {
@@ -958,7 +958,7 @@ namespace DESpeedrunUtil {
             _duplicateProcesses = false;
             _ghostProcIDs.Clear();
             _ghostIDsChecked.Clear();
-            Log.Information("Starting to hook into the DOOMEternalx64vk.exe process.");
+            Log.Information("Starting to hook into the DOOMEternalx64vk.exe process. firstRun={FirstRun}", _firstRun);
 
             _reshadeExists = CheckForReShade();
 
