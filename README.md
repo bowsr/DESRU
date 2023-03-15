@@ -2,7 +2,8 @@
 ![DESRU Icon](https://user-images.githubusercontent.com/26034933/191414580-21e0c691-cf32-43c3-b45a-a48bc0b234b6.png)  
 DESRU is an all-in-one utility program designed to make your DOOM Eternal speedrunning experience a lot smoother.
 
-You are **required** to use this program during your speedruns if you are running on a Windows PC.
+You are **required** to use this program during your speedruns if you are running on a Windows PC.  
+[Click this link to download the latest version of DESRU](https://github.com/bowsr/DESRU/releases/latest/download/DESRU.zip).
 
 ## Features
 - [Freescroll Emulation Macro](https://github.com/henyK/doom-eternal-macro)
