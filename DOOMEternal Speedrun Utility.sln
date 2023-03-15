@@ -10,6 +10,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Updater", "Updater\Updater.
 		{E2856A71-82CA-437A-BDE5-949DC94B0AAF} = {E2856A71-82CA-437A-BDE5-949DC94B0AAF}
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EncounterTool", "EncounterTool\EncounterTool.csproj", "{F5229EEB-7F27-4807-923F-DC138D01A17B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,14 @@ Global
 		{AA606B99-8156-4184-B72D-4AF05C18192C}.Release|Any CPU.Build.0 = Release|x64
 		{AA606B99-8156-4184-B72D-4AF05C18192C}.Release|x64.ActiveCfg = Release|x64
 		{AA606B99-8156-4184-B72D-4AF05C18192C}.Release|x64.Build.0 = Release|x64
+		{F5229EEB-7F27-4807-923F-DC138D01A17B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F5229EEB-7F27-4807-923F-DC138D01A17B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F5229EEB-7F27-4807-923F-DC138D01A17B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F5229EEB-7F27-4807-923F-DC138D01A17B}.Debug|x64.Build.0 = Debug|Any CPU
+		{F5229EEB-7F27-4807-923F-DC138D01A17B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F5229EEB-7F27-4807-923F-DC138D01A17B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F5229EEB-7F27-4807-923F-DC138D01A17B}.Release|x64.ActiveCfg = Release|Any CPU
+		{F5229EEB-7F27-4807-923F-DC138D01A17B}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
