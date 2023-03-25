@@ -1168,7 +1168,6 @@ namespace DESpeedrunUtil {
             velocityTextBox.Visible = false;
             _speedometer.Visible = false;
             altPositionTextbox.Visible = false;
-            rightAlignCheckbox.Visible = false;
         }
 
         private void ModifyWindowForSmallDisplays() {
