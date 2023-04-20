@@ -360,7 +360,7 @@ namespace DESpeedrunUtil {
         private void StatusTick() {
             _openProcesses = Process.GetProcesses().ToList();
             var rtss = _openProcesses.FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count > 0;
-            if(!rtss && launchRTSSCheckbox.Visible && launchRTSSCheckbox.Checked) LaunchRTSS();
+            if(!rtss && launchRTSSCheckbox.Enabled && launchRTSSCheckbox.Checked) LaunchRTSS();
 
             // Checking for the Firewall rule can take upwards of 8ms
             // so it was moved out of the main timer and into this one since the interval is longer, for better performance

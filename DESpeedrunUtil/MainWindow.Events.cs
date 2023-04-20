@@ -242,18 +242,19 @@ namespace DESpeedrunUtil {
                     _memory.SetMaxHz(1000);
                     _memory.SetFlag(false, "limiter");
                 }
-                launchRTSSCheckbox.Visible = true;
+                launchRTSSCheckbox.Enabled = true;
                 System.Media.SystemSounds.Asterisk.Play();
                 MessageBox.Show("Disabling this option means you MUST limit your framerate to 250 or lower through external means.\n\n" +
                     "Common options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, etc.\n\n" +
-                    "If you use a 3rd party program like RTSS, ensure that it is running at all times during your run.", "External FPS Limit Required");
+                    "If you use a 3rd party program like RTSS, ensure that it is running at all times during your run.\n" +
+                    "If you use RTSS specifically, DESRU can launch it for you if you enable the \"Launch RTSS with DESRU\" option.", "External FPS Limit Required");
             } else {
                 Log.Information("Max FPS Limiter enabled.");
                 if(Hooked) {
                     _memory.SetMaxHz(_fpsDefault);
                     _memory.SetFlag(true, "limiter");
                 }
-                launchRTSSCheckbox.Visible = false;
+                launchRTSSCheckbox.Enabled = false;
             }
         }
         private void LaunchRTSS_CheckChanged(object sender, EventArgs e) {
@@ -308,11 +309,11 @@ namespace DESpeedrunUtil {
         private void DisableOSD_CheckChanged(object sender, EventArgs e) {
             var check = ((CheckBox) sender).Checked;
             if(Hooked) _memory.EnableOSD = check;
-            minimalOSDCheckbox.Visible = check;
+            minimalOSDCheckbox.Enabled = check;
             if(!check && !_justLaunched) {
                 System.Media.SystemSounds.Asterisk.Play();
                 MessageBox.Show("Speedruns submitted to the leaderboards will not be valid if the DESRU On-Screen Display is not visible in-game.\n\n" +
-                    "If you plan on submitting, make sure you disable this option before starting your runs.", "Disabling On-Screen Display");
+                    "If you plan on submitting, make sure to re-enable this option before starting your runs.", "Disabling On-Screen Display");
             }
         }
         private void ScalingMethod_CheckChanged(object sender, EventArgs e) {
@@ -491,7 +492,7 @@ namespace DESpeedrunUtil {
             collapsiblePanel.Controls.Add(new DESRUShadowLabel(trainerTitle.Font, "TRAINER", trainerTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK));
             collapsiblePanel.Controls.Add(_moreHotkeysLabel);
 
-            minimalOSDCheckbox.Visible = true;
+            minimalOSDCheckbox.Enabled = true;
 
             // User Settings
             var fpsJson = "";
@@ -544,7 +545,7 @@ namespace DESpeedrunUtil {
             }
             _rtssExecutable = Properties.Settings.Default.RTSSPath;
             if(_rtssExecutable == string.Empty) DetectRTSSExecutable();
-            launchRTSSCheckbox.Visible = !Properties.Settings.Default.EnableMaxFPSLimit;
+            launchRTSSCheckbox.Enabled = !Properties.Settings.Default.EnableMaxFPSLimit;
             launchRTSSCheckbox.Checked = Properties.Settings.Default.LaunchRTSS;
             _extraGameDirectories = new List<string>();
             string directories = Properties.Settings.Default.ExtraGameDirectories;

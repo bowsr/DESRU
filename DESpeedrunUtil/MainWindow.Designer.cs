@@ -622,7 +622,7 @@
             meathookRestartLabel.AutoSize = true;
             meathookRestartLabel.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             meathookRestartLabel.ForeColor = Color.FromArgb(  45,   45,   45);
-            meathookRestartLabel.Location = new Point(189, 246);
+            meathookRestartLabel.Location = new Point(189, 247);
             meathookRestartLabel.Name = "meathookRestartLabel";
             meathookRestartLabel.Size = new Size(114, 18);
             meathookRestartLabel.TabIndex = 25;
@@ -633,7 +633,7 @@
             firewallRestartLabel.AutoSize = true;
             firewallRestartLabel.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             firewallRestartLabel.ForeColor = Color.FromArgb(  45,   45,   45);
-            firewallRestartLabel.Location = new Point(189, 212);
+            firewallRestartLabel.Location = new Point(189, 216);
             firewallRestartLabel.Name = "firewallRestartLabel";
             firewallRestartLabel.Size = new Size(114, 18);
             firewallRestartLabel.TabIndex = 26;
@@ -858,7 +858,7 @@
             launchRTSSCheckbox.TabIndex = 36;
             launchRTSSCheckbox.Text = "Launch RTSS with DESRU";
             launchRTSSCheckbox.UseVisualStyleBackColor = true;
-            launchRTSSCheckbox.Visible = false;
+            launchRTSSCheckbox.Enabled = false;
             launchRTSSCheckbox.CheckedChanged += LaunchRTSS_CheckChanged;
             // 
             // cvarLabel
