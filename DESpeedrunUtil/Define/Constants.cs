@@ -30,7 +30,7 @@
         internal const string METRICS_RAYTRACING_TEXT = "RT: %s";
         internal const string METRICS_DLSS_TEXT = "DLSS: %s";
 
-        internal const string TRAINER_NOCHEATS_WARNING = "Cheats must be enabled to use the Trainer";
+        internal const string TRAINER_NOCHEATS_WARNING = "Speedometer is allowed without cheats";
         internal const string TRAINER_UNSUPPORTED_WARNING = "The Trainer is not supported on this version";
 
         internal const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs

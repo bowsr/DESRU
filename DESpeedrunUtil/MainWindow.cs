@@ -301,10 +301,11 @@ namespace DESpeedrunUtil {
             }
 
             /** Trainer **/
+            var (velX, velY, velZ, hVel, totalVel) = _memory.GetPlayerVelocity();
             if(_memory.GetFlag("cheats")) {
+                trainerOSDCheckbox.Enabled = true;
                 if(_memory.TrainerSupported) {
                     var (posX, posY, posZ, yaw, pitch) = _memory.GetPlayerPosition();
-                    var (velX, velY, velZ, hVel, totalVel) = _memory.GetPlayerVelocity();
 
                     if(!speedometerCheckbox.Checked) {
                         positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, posX, posY, posZ, yaw, pitch);
@@ -334,12 +335,24 @@ namespace DESpeedrunUtil {
                     altPositionTextbox.Visible = true;
                 }
             } else {
+                trainerOSDCheckbox.Enabled = false;
                 positionTextBox.Visible = false;
                 velocityTextBox.Visible = false;
-                _speedometer.Visible = false;
+                _speedometer.Visible = speedometerCheckbox.Checked;
 
-                altPositionTextbox.Text = TRAINER_NOCHEATS_WARNING;
+                altPositionTextbox.Text = (_speedometer.Visible) ? string.Empty : TRAINER_NOCHEATS_WARNING;
                 altPositionTextbox.Visible = true;
+
+                if(_speedometer.Visible) {
+                    _speedometer.VerticalVelocity = velZ;
+                    _speedometer.HorizontalVelocity = hVel;
+                    _speedometer.TotalVelocity = totalVel;
+                    _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
+                    _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
+                    _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
+                    _speedometer.RightAlignText = rightAlignCheckbox.Checked;
+                    _speedometer.Refresh();
+                }
             }
         }
 
@@ -1164,6 +1177,7 @@ namespace DESpeedrunUtil {
             rightAlignCheckbox.Visible = !state;
         }
         private void HideTrainerControls() {
+            trainerOSDCheckbox.Enabled = true;
             positionTextBox.Visible = false;
             velocityTextBox.Visible = false;
             _speedometer.Visible = false;

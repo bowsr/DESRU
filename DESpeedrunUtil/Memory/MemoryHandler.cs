@@ -89,7 +89,7 @@ namespace DESpeedrunUtil.Memory {
 
             DerefPointers();
             TrainerSupported = _positionPtr != IntPtr.Zero;
-            if(_osdFlagCheats && TrainerSupported) ReadTrainerValues();
+            if(TrainerSupported) ReadTrainerValues();
 
             // Read current resolution scaling percentage
             if(_currentResScalePtr != IntPtr.Zero) CurrentResScaling = _game.ReadValue<float>(_currentResScalePtr);
@@ -285,15 +285,18 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void ReadTrainerValues() {
-            _positionX = _game.ReadValue<float>(_positionPtr);
-            _positionY = _game.ReadValue<float>(_positionPtr + 4);
-            _positionZ = _game.ReadValue<float>(_positionPtr + 8);
-
             _velocityX = _game.ReadValue<float>(_velocityPtr);
             _velocityY = _game.ReadValue<float>(_velocityPtr + 4);
             _velocityZ = _game.ReadValue<float>(_velocityPtr + 8);
             _velocityHorizontal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY));
             _velocityTotal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
+
+            if(_osdFlagCheats) return;
+            
+            _positionX = _game.ReadValue<float>(_positionPtr);
+            _positionY = _game.ReadValue<float>(_positionPtr + 4);
+            _positionZ = _game.ReadValue<float>(_positionPtr + 8);
+
 
             _pitch = (360f + _game.ReadValue<float>(_rotationPtr)) % 360f;
             _yaw = (360f + _game.ReadValue<float>(_rotationPtr + 4)) % 360f;
