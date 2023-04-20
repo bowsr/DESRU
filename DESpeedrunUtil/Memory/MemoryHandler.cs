@@ -293,7 +293,7 @@ namespace DESpeedrunUtil.Memory {
             _velocityHorizontal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY));
             _velocityTotal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
 
-            if(_osdFlagCheats) return;
+            if(!_osdFlagCheats) return;
             
             _positionX = _game.ReadValue<float>(_positionPtr);
             _positionY = _game.ReadValue<float>(_positionPtr + 4);
