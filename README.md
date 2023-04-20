@@ -9,6 +9,8 @@ You are **required** to use this program during your speedruns if you are runnin
 - [Installation](https://github.com/bowsr/DESRU#installation)
 - [Usage](https://github.com/bowsr/DESRU#usage)
   - [Known Issues](https://github.com/bowsr/DESRU#known-issues)
+    - [Modbot Input Duplication](https://github.com/bowsr/DESRU#modbot-input-duplication)
+  - [Feedback and Questions](https://github.com/bowsr/DESRU#feedback-and-questions)
 
 ## Features
 - [Freescroll Emulation Macro](https://github.com/henyK/doom-eternal-macro)
