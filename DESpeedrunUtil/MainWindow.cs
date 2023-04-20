@@ -318,6 +318,7 @@ namespace DESpeedrunUtil {
                         altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, posX, posY, posZ, yaw, pitch);
 
                         if(!_memory.IsLoadingOrInMenu()) {
+                            _speedometer.Visible = true;
                             _speedometer.VerticalVelocity = velZ;
                             _speedometer.HorizontalVelocity = hVel;
                             _speedometer.TotalVelocity = totalVel;
@@ -326,7 +327,7 @@ namespace DESpeedrunUtil {
                             _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
                             _speedometer.RightAlignText = rightAlignCheckbox.Checked;
                             _speedometer.Refresh();
-                        }
+                        } else _speedometer.Visible = false;
                     }
                 } else {
                     positionTextBox.Visible = false;
