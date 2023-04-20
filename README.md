@@ -2,8 +2,13 @@
 ![DESRU Icon](https://user-images.githubusercontent.com/26034933/191414580-21e0c691-cf32-43c3-b45a-a48bc0b234b6.png)  
 DESRU is an all-in-one utility program designed to make your DOOM Eternal speedrunning experience a lot smoother.
 
-You are **required** to use this program during your speedruns if you are running on a Windows PC.  
-[Click this link to download the latest version of DESRU](https://github.com/bowsr/DESRU/releases/latest/download/DESRU.zip).
+You are **required** to use this program during your speedruns if you are running on a Windows PC.
+
+### Table of Contents
+- [Features](https://github.com/bowsr/DESRU#features)
+- [Installation](https://github.com/bowsr/DESRU#installation)
+- [Usage](https://github.com/bowsr/DESRU#usage)
+  - [Known Issues](https://github.com/bowsr/DESRU#known-issues)
 
 ## Features
 - [Freescroll Emulation Macro](https://github.com/henyK/doom-eternal-macro)
@@ -50,7 +55,7 @@ All this, and more, can be read about in the HELP page of DESRU.
 ## Installation
 .NET 6.0 is ***required*** for the use of this program. Download the ***Desktop x64*** version found [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime).
 
-Once .NET 6.0 is installed, download the latest **DESRU.zip** file from the releases page [here](https://github.com/bowsr/DESRU/releases/latest). Extract ***all files*** from this zip to your desired folder.  
+Once .NET 6.0 is installed, download the latest **DESRU.zip** file from the releases page [here](https://github.com/bowsr/DESRU/releases/latest/download/DESRU.zip). Extract ***all files*** from this zip to your desired folder.  
 When updating, download the latest **DESRU.zip** and extract all files to the same folder, replacing **all of them**.
 
 When you first run DESRU, Windows may show a popup saying the program is unsafe.  
