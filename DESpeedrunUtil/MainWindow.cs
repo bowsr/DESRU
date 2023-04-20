@@ -317,14 +317,16 @@ namespace DESpeedrunUtil {
 
                         altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, posX, posY, posZ, yaw, pitch);
 
-                        _speedometer.VerticalVelocity = velZ;
-                        _speedometer.HorizontalVelocity = hVel;
-                        _speedometer.TotalVelocity = totalVel;
-                        _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
-                        _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
-                        _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
-                        _speedometer.RightAlignText = rightAlignCheckbox.Checked;
-                        _speedometer.Refresh();
+                        if(!_memory.IsLoadingOrInMenu()) {
+                            _speedometer.VerticalVelocity = velZ;
+                            _speedometer.HorizontalVelocity = hVel;
+                            _speedometer.TotalVelocity = totalVel;
+                            _speedometer.ShowVerticalVelocity = velocityRadioVertical.Checked;
+                            _speedometer.IncreasedPrecision = speedometerPrecisionCheckbox.Checked;
+                            _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
+                            _speedometer.RightAlignText = rightAlignCheckbox.Checked;
+                            _speedometer.Refresh();
+                        }
                     }
                 } else {
                     positionTextBox.Visible = false;
@@ -338,9 +340,9 @@ namespace DESpeedrunUtil {
                 trainerOSDCheckbox.Enabled = false;
                 positionTextBox.Visible = false;
                 velocityTextBox.Visible = false;
-                _speedometer.Visible = speedometerCheckbox.Checked;
+                _speedometer.Visible = speedometerCheckbox.Checked && !_memory.IsLoadingOrInMenu();
 
-                altPositionTextbox.Text = (_speedometer.Visible) ? string.Empty : TRAINER_NOCHEATS_WARNING;
+                altPositionTextbox.Text = (speedometerCheckbox.Checked) ? string.Empty : TRAINER_NOCHEATS_WARNING;
                 altPositionTextbox.Visible = true;
 
                 if(_speedometer.Visible) {
