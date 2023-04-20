@@ -19,13 +19,15 @@ namespace DESpeedrunUtil.Memory {
                     _row1DP, _row6DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
                     _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP, _forceResDP, _currentResScaleDP,
-                    _velocityDP, _positionDP, _rotationDP;
+                    _velocityDP, _positionDP, _rotationDP,
+                    _isLoadingDP, _isLoading2DP, _isInGameDP;
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _skipIntroPtr, _aliasingPtr, _unDelayPtr, _continuePtr,
                _row1Ptr, _row6Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
                _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr, _forceResPtr, _currentResScalePtr,
-               _velocityPtr, _positionPtr, _rotationPtr;
+               _velocityPtr, _positionPtr, _rotationPtr,
+               _isLoadingPtr, _isLoading2Ptr, _isInGamePtr;
 
         Process _game, _trainer;
         public Timer MemoryTimer { get; init; }
@@ -639,6 +641,12 @@ namespace DESpeedrunUtil.Memory {
         }
 
         /// <summary>
+        /// Checks if the game is currently loading a level or in the main menu
+        /// </summary>
+        /// <returns><see langword="true"/> if loading or in menu</returns>
+        public bool IsLoadingOrInMenu() => _game.ReadValue<bool>(_isLoadingPtr) || _game.ReadValue<byte>(_isLoading2Ptr) > 0 || !_game.ReadValue<bool>(_isInGamePtr);
+
+        /// <summary>
         /// Dereferences the <see cref="DeepPointer"/> addresses and offsets into an <see cref="IntPtr"/> that can be read from/written to.
         /// </summary>
         public void DerefPointers() {
@@ -670,6 +678,10 @@ namespace DESpeedrunUtil.Memory {
                 _velocityDP?.DerefOffsets(_game, out _velocityPtr);
                 _positionDP?.DerefOffsets(_game, out _positionPtr);
                 _rotationDP?.DerefOffsets(_game, out _rotationPtr);
+
+                _isLoadingDP?.DerefOffsets(_game, out _isLoadingPtr);
+                _isLoading2DP?.DerefOffsets(_game, out _isLoading2Ptr);
+                _isInGameDP?.DerefOffsets(_game, out _isInGamePtr);
             } catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
                 return;
@@ -765,6 +777,10 @@ namespace DESpeedrunUtil.Memory {
 
             _positionDP = CreateDP(_currentOffsets.Position);
             _rotationDP = CreateDP(_currentOffsets.Rotation);
+
+            _isLoadingDP = CreateDP(_currentOffsets.IsLoading);
+            _isLoading2DP = CreateDP(_currentOffsets.IsLoading2);
+            _isInGameDP = CreateDP(_currentOffsets.IsInGame);
         }
 
         private static DeepPointer? CreateDP(int baseOffset, params int[] offsets) => baseOffset != 0 ? new("DOOMEternalx64vk.exe", baseOffset, offsets) : null;

@@ -57,6 +57,10 @@
             public int ForceRes { get; init; }
             public int CurrentScaling { get; init; }
 
+            public int IsLoading { get; init; }
+            public int IsLoading2 { get; init; }
+            public int IsInGame { get; init; }
+
             public KnownOffsets(string v, int r1, int r6, int res) {
                 Version = v;
                 Row1 = r1;
@@ -80,6 +84,9 @@
                 Rotation = 0;
                 ForceRes = 0;
                 CurrentScaling = 0;
+                IsLoading = 0;
+                IsLoading2 = 0;
+                IsInGame = 0;
             }
         }
     }
