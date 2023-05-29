@@ -37,7 +37,7 @@ namespace DESpeedrunUtil.Memory {
         public bool EnableOSD { get; set; } = false;
         System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
-        public string Version { get; init; }
+        public GameVersion Version { get; init; }
         public float CurrentResScaling { get; private set; } = 0f;
         public bool UseDynamicScaling { get; set; } = true;
 
@@ -69,7 +69,7 @@ namespace DESpeedrunUtil.Memory {
                 Reset = true;
                 return;
             }
-            Version = TranslateModuleSize();
+            Version = GameVersion.GetVersionByModuleSize(_moduleSize);
             _scalingTime = DateTime.Now.Ticks;
 
             MemoryTimer = new Timer();
@@ -143,7 +143,7 @@ namespace DESpeedrunUtil.Memory {
             if(!_externalTrainerFlag && EnableOSD) {
                 if(!_trainerFlag || !_osdFlagCheats) {
                     if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
-                    if(Version == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
+                    if(Version.Name == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
                     _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
                     if(_row2 == "1.0 (Release)") _row2 = "Release";
                     if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
@@ -397,7 +397,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <param name="targetFPS">FPS Target the scaling will try to hit</param>
         public void ScheduleResolutionScaling(int targetFPS) {
-            if(Version.Contains("Unknown")) return;
+            if(Version.Name.Contains("Unknown")) return;
             _targetFPS = targetFPS;
             _scheduleScaling = true;
         }
@@ -428,7 +428,7 @@ namespace DESpeedrunUtil.Memory {
             //  So since 0.5f is the smallest value in the default array, 0.5f and anything below it will select the final value of the array, which is the lowest scaling value
             //  Other values will take the next highest corresponding value. e.g. 0.55f would select 0.56f normally, which is the 29th value of the array, so the 29th value of the new array is selected
             // Because DESRU generates a new array depending on what minimum res scale value the user selected, the forced res will be set to 0.5f to keep that min value selected
-            float scale = Version.Contains("6.66 Rev 2") ? 0.5f : _minRes;
+            float scale = Version.Name.Contains("6.66 Rev 2") ? 0.5f : _minRes;
             if(_forceResPtr != IntPtr.Zero) _game.WriteValue(_forceResPtr, scale);
         }
         /// <summary>
@@ -466,9 +466,9 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private bool SetResScales() {
-            if(!Version.Contains("6.66 Rev 2") && _minRes >= 0.5f) return false; // No need to change res scales since 50% is the default minimum in game
+            if(!Version.Name.Contains("6.66 Rev 2") && _minRes >= 0.5f) return false; // No need to change res scales since 50% is the default minimum in game
             float[] scales = ONEPERCENT_RES_SCALES;
-            if(Version.Contains("6.66 Rev 2") && _minRes >= 0.02f) {
+            if(Version.Name.Contains("6.66 Rev 2") && _minRes >= 0.02f) {
                 // rs_minimumResolutionScale does not exist on 6.66 Rev 2. It is dynamically inferred based off the 128 byte set of res scale values.
                 // Because of this, we cannot set the min res scale directly, so a new set of res scale values must be generated,
                 //   based off of the desired minimum resolution set by the user.
@@ -567,9 +567,9 @@ namespace DESpeedrunUtil.Memory {
         /// <param name="auto">Enable scaling at the same time</param>
         /// <param name="targetFPS">Target FPS for dynamic scaling</param>
         public void ScheduleResUnlock(bool auto, int targetFPS) {
-            if(Version.Contains("Unknown")) return;
+            if(Version.Name.Contains("Unknown")) return;
             _targetFPS = targetFPS;
-            if(_resUnlocked && !Version.Contains("6.66 Rev 2")) {
+            if(_resUnlocked && !Version.Name.Contains("6.66 Rev 2")) {
                 if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
                 return;
             }
@@ -767,9 +767,9 @@ namespace DESpeedrunUtil.Memory {
             _dropMSDP = CreateDP(_currentOffsets.DropMS);
             _forceResDP = CreateDP(_currentOffsets.ForceRes);
             _currentResScaleDP = CreateDP(_currentOffsets.CurrentScaling);
-            if(Version == "1.0 (Release)") _rampJumpDP = CreateDP(0x6126430);
+            if(Version.Name == "1.0 (Release)") _rampJumpDP = CreateDP(0x6126430);
 
-            if(int.TryParse(Version[0..1], out int versionMajor)) {
+            if(int.TryParse(Version.Name[0..1], out int versionMajor)) {
                 _velocityDP = CreateDP(_currentOffsets.Velocity, versionMajor < 3 ? VEL_OFFSETS_OLD : VEL_OFFSETS_CURRENT);
             } else {
                 _velocityDP = CreateDP(_currentOffsets.Velocity, VEL_OFFSETS_OLD);
@@ -822,7 +822,7 @@ namespace DESpeedrunUtil.Memory {
             Log.Information("Scanning for resolution scale values.");
             res = scanner.Scan(resTarget);
             if(res != IntPtr.Zero) Log.Information("Found resolution scale values.");
-            KnownOffsets ko = new(Version, GetOffset(r1), GetOffset(r6), GetOffset(res));
+            KnownOffsets ko = new(Version.Name, GetOffset(r1), GetOffset(r6), GetOffset(res));
             ScannedOffsetList.Add(ko);
             _currentOffsets = ko;
 
@@ -831,43 +831,16 @@ namespace DESpeedrunUtil.Memory {
             Log.Information("Added Unknown Version ({ModuleSize}) to known offset list.", _moduleSize);
         }
         private int GetOffset(IntPtr pointer) => (pointer != IntPtr.Zero) ? (int) (pointer.ToInt64() - _game.MainModule.BaseAddress.ToInt64()) : 0;
-        public static bool IsValidVersionString(string version) {
-            return version switch {
-                "1.0 (Release)" => true,
-                "May Patch Steam" => true,
-                "May Hotfix Steam" => true,
-                "1.1" => true,
-                "2.0" => true,
-                "2.1" => true,
-                "3.0" => true,
-                "3.1" => true,
-                "4.0" => true,
-                "4.1" => true,
-                "5.0" => true,
-                "5.1" => true,
-                "6.0" => true,
-                "6.1" => true,
-                "6.2" => true,
-                "6.3" => true,
-                "6.4" => true,
-                "6.66" => true,
-                "6.66 Rev 1" => true,
-                "6.66 Rev 1.1" => true,
-                "6.66 Rev 2" => true,
-                "6.66 Rev 2 (Gamepass)" => true,
-                _ => false,
-            };
-        }
 
         private bool SetCurrentKnownOffsets() {
             foreach(KnownOffsets k in OffsetList) {
-                if(k.Version == Version) {
+                if(k.Version == Version.Name) {
                     _currentOffsets = k;
                     return true;
                 }
             }
             foreach(KnownOffsets k in ScannedOffsetList) {
-                if(k.Version == Version) {
+                if(k.Version == Version.Name) {
                     _currentOffsets = k;
                     Log.Information("Version {Version} is not officially supported. Using previously scanned offsets.", Version);
                     return true;

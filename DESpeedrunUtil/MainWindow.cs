@@ -253,7 +253,7 @@ namespace DESpeedrunUtil {
             if(!_enableMacro) FreescrollMacro.Instance.Stop(true);
 
             /** Memory Flags **/
-            var v = _memory.Version.Contains("Unknown");
+            var v = _memory.Version.Name.Contains("Unknown");
             if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
             _memory.SetFlag(_enableMacro && FreescrollMacro.Instance.HasKeyBound(), "macro");
             _memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
@@ -384,7 +384,7 @@ namespace DESpeedrunUtil {
 
             if(_memory != null) {
                 var hz = _memory.ReadMaxHz();
-                var v = _memory.Version.Replace("(Gamepass)", "(GP)");
+                var v = _memory.Version.Name.Replace("(Gamepass)", "(GP)");
                 gameStatus.Text = v;
                 if(v == "1.0 (Release)") {
                     slopeboostStatus.Text = (_memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
@@ -710,7 +710,7 @@ namespace DESpeedrunUtil {
                     if(!subDir.StartsWith("DOOMEternal ")) continue;
 
                     var ver = subDir[(subDir.IndexOf(' ') + 1)..];
-                    if(MemoryHandler.IsValidVersionString(ver)) File.WriteAllText(dir + "\\gameVersion.txt", "version=" + ver);
+                    if(GameVersion.IsValidVersionString(ver)) File.WriteAllText(dir + "\\gameVersion.txt", "version=" + ver);
                     Log.Information("Found extra game installation; Version: {Version}", ver);
                 }
             }
@@ -722,7 +722,7 @@ namespace DESpeedrunUtil {
                     try {
                         string txt = File.ReadAllText(dir + "\\gameVersion.txt").Trim();
                         string v = txt[(txt.IndexOf('=') + 1)..];
-                        if(MemoryHandler.IsValidVersionString(v)) _gameVersions.Add(v);
+                        if(GameVersion.IsValidVersionString(v)) _gameVersions.Add(v);
                     } catch(Exception e) {
                         Log.Error(e, "An error occured when trying to read gameVersion.txt. Directory: {Directory}", dir);
                         continue;
@@ -1027,7 +1027,7 @@ namespace DESpeedrunUtil {
             _memory.FirstRun = _firstRun;
             _memory.EnableOSD = enableOSDCheckbox.Checked;
             _memory.UseDynamicScaling = dynScalingRadioButton.Checked;
-            _memory.SetFlag(!_memory.Version.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
+            _memory.SetFlag(!_memory.Version.Name.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
             _memory.SetFlag(minimalOSDCheckbox.Checked, "minimal");
             if(_memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
             _memory.SetMinRes(_minResPercent / 100f);
@@ -1050,11 +1050,11 @@ namespace DESpeedrunUtil {
 
         // Sets various game info variables based on the detected module size.
         private void SetGameInfoByModuleSize() {
-            gameStatus.Text = _memory.Version.Replace("(Gamepass)", "(GP)");
+            gameStatus.Text = _memory.Version.Name.Replace("(Gamepass)", "(GP)");
             var gamePath = _gameProcess.MainModule.FileName;
             var dir = gamePath[..gamePath.LastIndexOf('\\')];
             if(gamePath.ToLower().Contains("steam")) {
-                File.WriteAllText(dir + "\\gameVersion.txt", "version=" + _memory.Version);
+                File.WriteAllText(dir + "\\gameVersion.txt", "version=" + _memory.Version.Name);
             }
 
             if(!gamePath.Contains(_gameDirectory)) {
