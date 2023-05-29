@@ -33,6 +33,17 @@
         internal const string TRAINER_NOCHEATS_WARNING = "Speedometer is allowed without cheats";
         internal const string TRAINER_UNSUPPORTED_WARNING = "The Trainer is not supported on this version";
 
+        internal const string BINDS_PATCH6_R = "084C8B07BA01";
+        internal const string BINDS_PATCH6_U = "084C8B07BA00";
+        internal const string BINDS_PATCH5_R = "084C8B03BA01";
+        internal const string BINDS_PATCH5_U = "084C8B03BA00";
+        internal const string BINDS_GLOBAL_R = "084C8B0FBA01";
+        internal const string BINDS_GLOBAL_U = "084C8B0FBA00";
+        internal const string CONSOLE_GLOBAL_R = "084C8B0EBA01";
+        internal const string CONSOLE_GLOBAL_U = "084C8B0EBA00";
+        internal const string LAUNCHPARAMS_GLOBAL_R = "CCCCCCCCCCCCCCCC40534883EC50488B842488000000488B";
+        internal const string LAUNCHPARAMS_GLOBAL_U = "4183C91053EB0390EBF64883EC50488B842488000000488B";
+
         internal const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
         internal const int WINDOW_HEIGHT_DEFAULT = 805;
         internal const int WINDOW_WIDTH_DEFAULT = 653;
