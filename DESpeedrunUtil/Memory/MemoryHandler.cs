@@ -45,9 +45,9 @@ namespace DESpeedrunUtil.Memory {
         public float CurrentResScaling { get; private set; } = 0f;
         public bool UseDynamicScaling { get; set; } = true;
 
-        bool _osdFlagCheats = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
+        bool _osdFlagMeath00k = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
              _unlockResFlag = false, _autoScaling = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
-             _trainerFlag = false, _externalTrainerFlag = false, _scheduleScaling = false, _osdFlagLimiter = true,
+             _trainerFlag = false, _externalTrainerFlag = false, _scheduleScaling = false, _osdFlagLimiter = true, _osdFlagModded = false,
              _antiAliasing = true, _unDelay = true, _autoContinue = false,
              _minimalOSD = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
@@ -151,15 +151,16 @@ namespace DESpeedrunUtil.Memory {
             }
 
             if(!_externalTrainerFlag && EnableOSD) {
-                if(!_trainerFlag || !_osdFlagCheats) {
-                    if(_osdFlagRestartGame) _cheatString = (_osdFlagCheats) ? "CHEATS ENABLED" : "RESTART GAME";
+                if(!_trainerFlag || !_osdFlagMeath00k) {
+                    if(_osdFlagRestartGame) _cheatString = (_osdFlagMeath00k) ? "CHEATS ENABLED" : "RESTART GAME";
                     if(Version.Name == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
                     _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
                     if(_row2 == "1.0 (Release)") _row2 = "Release";
                     if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
                         _row2 += " (" + (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
                     }
-                    var cheats = (_osdFlagCheats || _osdFlagRestartGame) ? _cheatString : string.Empty;
+                    var cheats = (_osdFlagMeath00k || _osdFlagRestartGame) ? _cheatString : string.Empty;
+                    if(cheats == string.Empty && _osdFlagModded) cheats = "MODDED CLIENT";
                     var scaling = string.Empty;
                     if(((DateTime.Now.Ticks - _scalingTime) / 10000) <= 3000) {
                         if(ReadDynamicRes() || ReadForceRes() > 0f) {
@@ -274,7 +275,7 @@ namespace DESpeedrunUtil.Memory {
                 var trainers = processes.FindAll(x => x.ProcessName.Contains("DoomEternalTrainer"));
                 if(trainers.Count > 0) {
                     _trainer = trainers[0];
-                    if(!_osdFlagCheats) SetFlag(true, "restart");
+                    if(!_osdFlagMeath00k) SetFlag(true, "restart");
                     _externalTrainerFlag = true;
                     Log.Information("Trainer process found running.");
                 } else {
@@ -288,7 +289,7 @@ namespace DESpeedrunUtil.Memory {
                 }
             }
             if(!_osdFlagRestartGame) {
-                if(!_osdFlagCheats && processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
+                if(!_osdFlagMeath00k && processes.FindAll(x => x.ProcessName.ToLower().Contains("cheatengine")).Count > 0) {
                     SetFlag(true, "restart");
                     _cheatString = "RESTART GAME";
                     Log.Warning("CheatEngine process found running.");
@@ -303,7 +304,7 @@ namespace DESpeedrunUtil.Memory {
             _velocityHorizontal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY));
             _velocityTotal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
 
-            if(!_osdFlagCheats) return;
+            if(!_osdFlagMeath00k) return;
             
             _positionX = _game.ReadValue<float>(_positionPtr);
             _positionY = _game.ReadValue<float>(_positionPtr + 4);
@@ -504,8 +505,8 @@ namespace DESpeedrunUtil.Memory {
         /// <param name="flagName">Name of the flag being set</param>
         public void SetFlag(bool flag, string flagName) {
             switch(flagName) {
-                case "cheats":
-                    _osdFlagCheats = flag;
+                case "meath00k":
+                    _osdFlagMeath00k = flag;
                     break;
                 case "firewall":
                     _osdFlagFirewall = flag;
@@ -534,6 +535,9 @@ namespace DESpeedrunUtil.Memory {
                 case "trainer":
                     _trainerFlag = flag;
                     break;
+                case "modded":
+                    _osdFlagModded = flag;
+                    break;
             }
         }
 
@@ -558,7 +562,7 @@ namespace DESpeedrunUtil.Memory {
         /// <returns>State of the specified <see langword="bool"/> flag</returns>
         public bool GetFlag(string flagName) {
             return flagName switch {
-                "cheats" => _osdFlagCheats,
+                "meath00k" => _osdFlagMeath00k,
                 "firewall" => _osdFlagFirewall,
                 "limiter" => _osdFlagLimiter,
                 "macro" => _osdFlagMacro,
@@ -568,6 +572,7 @@ namespace DESpeedrunUtil.Memory {
                 "slopeboost" => _osdFlagSlopeboost,
                 "resunlocked" => _resUnlocked,
                 "unlockscheduled" => _unlockResFlag,
+                "modded" => _osdFlagModded,
                 _ => false
             };
         }

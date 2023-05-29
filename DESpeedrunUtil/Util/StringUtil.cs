@@ -9,7 +9,7 @@
         /// <returns>A string array with each value representing a single byte</returns>
         /// <exception cref="ArgumentException"></exception>
         internal static string[] SeparateHexIntoArray(string hex) {
-            if(!IsValidHexString(hex)) throw new ArgumentException(hex + " is not a valid hex string.");
+            if(!IsValidHexString(hex)) throw new ArgumentException("\"" + hex + "\" is not a valid hex string.");
 
             string[] array = new string[hex.Length / 2];
             for(int i = 0; i < hex.Length / 2; i++)

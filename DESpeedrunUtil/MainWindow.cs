@@ -2,6 +2,7 @@ using DESpeedrunUtil.Firewall;
 using DESpeedrunUtil.Hotkeys;
 using DESpeedrunUtil.Macro;
 using DESpeedrunUtil.Memory;
+using DESpeedrunUtil.Util;
 using Linearstar.Windows.RawInput;
 using Linearstar.Windows.RawInput.Native;
 using Microsoft.Win32;
@@ -302,7 +303,7 @@ namespace DESpeedrunUtil {
 
             /** Trainer **/
             var (velX, velY, velZ, hVel, totalVel) = _memory.GetPlayerVelocity();
-            if(_memory.GetFlag("cheats")) {
+            if(_memory.GetFlag("meath00k")) {
                 trainerOSDCheckbox.Enabled = true;
                 if(_memory.TrainerSupported) {
                     var (posX, posY, posZ, yaw, pitch) = _memory.GetPlayerPosition();
@@ -431,7 +432,7 @@ namespace DESpeedrunUtil {
 
             balanceStatus.Text = (_fwRuleExists) ? ((_fwRestart) ? "Allowed*" : "Blocked") : "Allowed";
             if(Hooked) {
-                if(_memory.GetFlag("cheats")) {
+                if(_memory.GetFlag("meath00k")) {
                     cheatsStatus.Text = "Enabled";
                     cheatsStatus.ForeColor = Color.Red;
                 } else {
@@ -832,7 +833,7 @@ namespace DESpeedrunUtil {
         private void MeathookRemoval() {
             if(_mhScheduleRemoval) {
                 if(Hooked) {
-                    if(_memory.GetFlag("cheats")) {
+                    if(_memory.GetFlag("meath00k")) {
                         _mhDoRemovalTask = true;
                         meathookToggleButton.Enabled = false;
                         meathookRestartLabel.ForeColor = COLOR_TEXT_FORE;
@@ -1015,15 +1016,16 @@ namespace DESpeedrunUtil {
             _memory.SetFlag(_fwRuleExists, "firewall");
             var gamePath = _gameProcess.MainModule.FileName;
             var gameDir = gamePath[..gamePath.LastIndexOf('\\')];
-            bool cheats = CheckForMeathookInPath(gameDir);
+            bool meath00k = CheckForMeathookInPath(gameDir);
             foreach(ProcessModule module in _gameProcess.Modules) {
                 if(module.ModuleName.ToLower().Contains("xinput1_3.dll") && module.FileName.ToLower().Contains(gameDir.ToLower()))
-                    cheats = true;
+                    meath00k = true;
             }
-            _memory.SetFlag(cheats, "cheats");
+            _memory.SetFlag(meath00k, "meath00k");
+            _memory.SetFlag(!Checksums.CompareFromFile(gamePath, _memory.Version.MD5), "modded");
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
-            _memory.SetFlag(_firstRun && !_memory.GetFlag("cheats"), "restart");
+            _memory.SetFlag(_firstRun && !_memory.GetFlag("meath00k"), "restart");
             _memory.FirstRun = _firstRun;
             _memory.EnableOSD = enableOSDCheckbox.Checked;
             _memory.UseDynamicScaling = dynScalingRadioButton.Checked;
