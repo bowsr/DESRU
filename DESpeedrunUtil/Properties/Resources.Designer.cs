@@ -71,6 +71,16 @@ namespace DESpeedrunUtil.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        internal static byte[] gameVersions {
+            get {
+                object obj = ResourceManager.GetObject("gameVersions", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The Info Panel will show you the status of DOOM Eternal and DESRU.
         ///
         ///Starting from the top, this panel will show you what version of DOOM Eternal is currently running.

@@ -1,0 +1,112 @@
+[
+  {
+    "Name": "1.0 (Release)",
+    "ModuleSize": 510681088,
+    "MD5": "7ea73e0ee1a2066dc43502930ededced"
+  },
+  {
+    "Name": "May Patch Steam",
+    "ModuleSize": 482037760,
+    "MD5": "f7cc91087e48408ee5703affcc356bee"
+  },
+  {
+    "Name": "May Hotfix Steam",
+    "ModuleSize": 546783232,
+    "MD5": "401bc43fc0d3719285cfb6ccee6b3393"
+  },
+  {
+    "Name": "1.1",
+    "ModuleSize": 492113920,
+    "MD5": "70426fc580f2c064cb618317fd1a9d5e"
+  },
+  {
+    "Name": "2.0",
+    "ModuleSize": 490299392,
+    "MD5": "53b98af0cb0e3ffe9019ac62bad83703"
+  },
+  {
+    "Name": "2.1",
+    "ModuleSize": 505344000,
+    "MD5": "4fd80156710af0b0bd5d8a648e209f9b"
+  },
+  {
+    "Name": "3.0",
+    "ModuleSize": 475557888,
+    "MD5": "c03c73dbd60683e3bf157a362e5da16e"
+  },
+  {
+    "Name": "3.1",
+    "ModuleSize": 504107008,
+    "MD5": "3c770f56d3c148b648ee1d294e288e1c"
+  },
+  {
+    "Name": "4.0",
+    "ModuleSize": 478056448,
+    "MD5": "88da87233f2b02fb5086de9296ea2440"
+  },
+  {
+    "Name": "4.1",
+    "ModuleSize": 472821760,
+    "MD5": "c2b429b2eb398f836dd10d22944b9c76"
+  },
+  {
+    "Name": "5.0",
+    "ModuleSize": 475787264,
+    "MD5": "96556f8b0dfc56111090a6b663969b86"
+  },
+  {
+    "Name": "5.1",
+    "ModuleSize": 459132928,
+    "MD5": "6ae01a116b0683443002f93b7f32ba73"
+  },
+  {
+    "Name": "6.0",
+    "ModuleSize": 481435648,
+    "MD5": "56961731a6d153b133842856ea36edea"
+  },
+  {
+    "Name": "6.1",
+    "ModuleSize": 465915904,
+    "MD5": "7ce1b2029a94b7bfe1ec4bd76b9cf6a1"
+  },
+  {
+    "Name": "6.2",
+    "ModuleSize": 464543744,
+    "MD5": "dd75e40d9dba5a95708a0e4f625a96af"
+  },
+  {
+    "Name": "6.3",
+    "ModuleSize": 483786752,
+    "MD5": "9e9013ae3481e963a5fc3a049a8a1542"
+  },
+  {
+    "Name": "6.4",
+    "ModuleSize": 494395392,
+    "MD5": "8829459d8270a69e78b1797eb8785227"
+  },
+  {
+    "Name": "6.66",
+    "ModuleSize": 508350464,
+    "MD5": "8e4462adcc44dc89287f687939a96af3"
+  },
+  {
+    "Name": "6.66 Rev 1",
+    "ModuleSize": 478367744,
+    "MD5": "c7b3d11cd57e8312cf24c945fc9647ce"
+  },
+  {
+    "Name": "6.66 Rev 1.1",
+    "ModuleSize": 475570176,
+    "MD5": "eeb62f46eddbab27809b82d94f9f4927"
+  },
+  {
+    "Name": "6.66 Rev 2",
+    "ModuleSize": 510251008,
+    "MD5": "b2d372b0a193bd6d7712630850d4bad3"
+  },
+  {
+    "Name": "6.66 Rev 2 (Gamepass)",
+    "ModuleSize": 445820928,
+    "MD5": "c0d3e753d0e53ccd9b47e1617b8de462"
+  }
+]

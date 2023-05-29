@@ -1,3 +1,4 @@
+using DESpeedrunUtil.Memory;
 using Linearstar.Windows.RawInput;
 using Newtonsoft.Json;
 using Serilog;
@@ -150,6 +151,7 @@ namespace DESpeedrunUtil {
             }
 
             if(File.Exists(@".\offsets.json")) File.Delete(@".\offsets.json");
+            GameVersion.Collection = JsonConvert.DeserializeObject<List<GameVersion>>(System.Text.Encoding.UTF8.GetString(Properties.Resources.gameVersions));
 
             try {
                 Application.Run(new MainWindow());
@@ -177,7 +179,7 @@ namespace DESpeedrunUtil {
         private static bool UpdateCheck() {
             string json;
             try {
-                WebClient client = new();
+                using WebClient client = new();
                 client.Headers.Add("User-Agent", "Nothing");
                 json = client.DownloadString("https://api.github.com/repos/bowsr/DESRU/releases");
             } catch(WebException we) {
@@ -221,5 +223,30 @@ namespace DESpeedrunUtil {
             if(procList.Count > 1) return true;
             return false;
         }
+
+        /*private static void InitializeGameVersions() {
+            _ = new GameVersion(510681088, "1.0 (Release)", "7ea73e0ee1a2066dc43502930ededced");
+            _ = new GameVersion(482037760, "May Patch Steam", "f7cc91087e48408ee5703affcc356bee");
+            _ = new GameVersion(546783232, "May Hotfix Steam", "401bc43fc0d3719285cfb6ccee6b3393");
+            _ = new GameVersion(492113920, "1.1", "70426fc580f2c064cb618317fd1a9d5e");
+            _ = new GameVersion(490299392, "2.0", "53b98af0cb0e3ffe9019ac62bad83703");
+            _ = new GameVersion(505344000, "2.1", "4fd80156710af0b0bd5d8a648e209f9b");
+            _ = new GameVersion(475557888, "3.0", "c03c73dbd60683e3bf157a362e5da16e");
+            _ = new GameVersion(504107008, "3.1", "3c770f56d3c148b648ee1d294e288e1c");
+            _ = new GameVersion(478056448, "4.0", "88da87233f2b02fb5086de9296ea2440");
+            _ = new GameVersion(472821760, "4.1", "c2b429b2eb398f836dd10d22944b9c76");
+            _ = new GameVersion(475787264, "5.0", "96556f8b0dfc56111090a6b663969b86");
+            _ = new GameVersion(459132928, "5.1", "6ae01a116b0683443002f93b7f32ba73");
+            _ = new GameVersion(481435648, "6.0", "56961731a6d153b133842856ea36edea");
+            _ = new GameVersion(465915904, "6.1", "7ce1b2029a94b7bfe1ec4bd76b9cf6a1");
+            _ = new GameVersion(464543744, "6.2", "dd75e40d9dba5a95708a0e4f625a96af");
+            _ = new GameVersion(483786752, "6.3", "9e9013ae3481e963a5fc3a049a8a1542");
+            _ = new GameVersion(494395392, "6.4", "8829459d8270a69e78b1797eb8785227");
+            _ = new GameVersion(508350464, "6.66", "8e4462adcc44dc89287f687939a96af3");
+            _ = new GameVersion(478367744, "6.66 Rev 1", "c7b3d11cd57e8312cf24c945fc9647ce");
+            _ = new GameVersion(475570176, "6.66 Rev 1.1", "eeb62f46eddbab27809b82d94f9f4927");
+            _ = new GameVersion(510251008, "6.66 Rev 2", "b2d372b0a193bd6d7712630850d4bad3");
+            _ = new GameVersion(445820928, "6.66 Rev 2 (Gamepass)", "c0d3e753d0e53ccd9b47e1617b8de462");
+        }*/
     }
 }

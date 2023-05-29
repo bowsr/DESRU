@@ -121,6 +121,9 @@
   <data name="DESRU" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\DESRU.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="gameVersions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\gameVersions.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="HelpPage_InfoPanel" xml:space="preserve">
     <value>The Info Panel will show you the status of DOOM Eternal and DESRU.
 

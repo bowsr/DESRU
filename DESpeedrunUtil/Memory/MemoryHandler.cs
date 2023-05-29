@@ -1,4 +1,5 @@
 ﻿using DESpeedrunUtil.Hotkeys;
+using DESpeedrunUtil.Util;
 using Newtonsoft.Json;
 using Serilog;
 using System.ComponentModel;
@@ -20,14 +21,16 @@ namespace DESpeedrunUtil.Memory {
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
                     _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP, _forceResDP, _currentResScaleDP,
                     _velocityDP, _positionDP, _rotationDP,
-                    _isLoadingDP, _isLoading2DP, _isInGameDP;
+                    _isLoadingDP, _isLoading2DP, _isInGameDP,
+                    _cheatsConsoleDP, _cheatsBindsDP;
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _skipIntroPtr, _aliasingPtr, _unDelayPtr, _continuePtr,
                _row1Ptr, _row6Ptr,
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
                _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr, _forceResPtr, _currentResScalePtr,
                _velocityPtr, _positionPtr, _rotationPtr,
-               _isLoadingPtr, _isLoading2Ptr, _isInGamePtr;
+               _isLoadingPtr, _isLoading2Ptr, _isInGamePtr,
+               _cheatsConsolePtr, _cheatsBindsPtr;
 
         Process _game, _trainer;
         public Timer MemoryTimer { get; init; }
@@ -35,6 +38,7 @@ namespace DESpeedrunUtil.Memory {
         public bool TrainerSupported { get; private set; } = true;
         public bool FirstRun { get; set; } = true;
         public bool EnableOSD { get; set; } = false;
+        public bool EnableCheats { get; set; } = false;
         System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
         public GameVersion Version { get; init; }
@@ -92,6 +96,12 @@ namespace DESpeedrunUtil.Memory {
             DerefPointers();
             TrainerSupported = _positionPtr != IntPtr.Zero;
             if(TrainerSupported) ReadTrainerValues();
+
+            if(_cheatsConsolePtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsConsolePtr) != !EnableCheats)
+                _game.WriteBytes(_cheatsConsolePtr, new byte[1] { Convert.ToByte(!EnableCheats) });
+
+            if(_cheatsBindsPtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsBindsPtr) != !EnableCheats)
+                _game.WriteBytes(_cheatsBindsPtr, new byte[1] { Convert.ToByte(!EnableCheats) });
 
             // Read current resolution scaling percentage
             if(_currentResScalePtr != IntPtr.Zero) CurrentResScaling = _game.ReadValue<float>(_currentResScalePtr);
@@ -682,6 +692,9 @@ namespace DESpeedrunUtil.Memory {
                 _isLoadingDP?.DerefOffsets(_game, out _isLoadingPtr);
                 _isLoading2DP?.DerefOffsets(_game, out _isLoading2Ptr);
                 _isInGameDP?.DerefOffsets(_game, out _isInGamePtr);
+
+                _cheatsConsoleDP?.DerefOffsets(_game, out _cheatsConsolePtr);
+                _cheatsBindsDP?.DerefOffsets(_game, out _cheatsBindsPtr);
             } catch(Win32Exception e) {
                 Debug.WriteLine(e.StackTrace);
                 return;
@@ -705,39 +718,9 @@ namespace DESpeedrunUtil.Memory {
             return output;
         }
 
-        /// <summary>
-        /// Translates the game module size into a human readable version string.
-        /// </summary>
-        /// <returns>Returns a <see langword="string"/> representing the game's version.</returns>
-        public string TranslateModuleSize() {
-            return _moduleSize switch {
-                507191296 or 515133440 or 510681088 => "1.0 (Release)",
-                482037760 => "May Patch Steam",
-                546783232 => "May Hotfix Steam",
-                492113920 => "1.1",
-                490299392 => "2.0",
-                505344000 => "2.1",
-                475557888 => "3.0",
-                504107008 => "3.1",
-                478056448 => "4.0",
-                472821760 => "4.1",
-                475787264 => "5.0",
-                459132928 => "5.1",
-                481435648 => "6.0",
-                465915904 => "6.1",
-                464543744 => "6.2",
-                483786752 => "6.3",
-                494395392 => "6.4",
-                508350464 => "6.66",
-                478367744 => "6.66 Rev 1",
-                475570176 => "6.66 Rev 1.1",
-                510251008 => "6.66 Rev 2",
-                445820928 => "6.66 Rev 2 (Gamepass)",
-                _ => "Unknown (" + _moduleSize.ToString() + ")",
-            };
-        }
-
         private void Initialize() {
+            ScanForCheatsPointers();
+
             _row1DP = _row6DP = _gpuVendorDP = _gpuNameDP = _cpuDP = null;
             _metricsDP = _maxHzDP = _rampJumpDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = _skipIntroDP = null;
             _aliasingDP = _unDelayDP = _continueDP = null;
@@ -829,6 +812,47 @@ namespace DESpeedrunUtil.Memory {
             string jsonString = JsonConvert.SerializeObject(ScannedOffsetList, Formatting.Indented);
             File.WriteAllText(@".\scannedOffsets.json", jsonString);
             Log.Information("Added Unknown Version ({ModuleSize}) to known offset list.", _moduleSize);
+        }
+
+        private void ScanForCheatsPointers() {
+            SigScanTarget paramsTargetU  = new(LAUNCHPARAMS_GLOBAL_U),
+                          consoleTargetU = new(CONSOLE_GLOBAL_U),
+                          consoleTargetR = new(CONSOLE_GLOBAL_R),
+                          bindsTargetU,
+                          bindsTargetR;
+
+            if(int.TryParse(Version.Name[0..1], out int versionMajor)) {
+                if(versionMajor >= 6) {
+                    bindsTargetU = new(BINDS_PATCH6_U);
+                    bindsTargetR = new(BINDS_PATCH6_R);
+                } else if(versionMajor == 5) {
+                    bindsTargetU = new(BINDS_PATCH5_U);
+                    bindsTargetR = new(BINDS_PATCH5_R);
+                } else {
+                    bindsTargetU = new(BINDS_GLOBAL_U);
+                    bindsTargetR = new(BINDS_GLOBAL_R);
+                }
+            } else {
+                bindsTargetU = new(BINDS_GLOBAL_U);
+                bindsTargetR = new(BINDS_GLOBAL_R);
+            }
+
+            SignatureScanner scanner = new(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
+
+            var scannedPtr = scanner.Scan(paramsTargetU);
+            if(scannedPtr != IntPtr.Zero) {
+                var cheatsDP = CreateDP(GetOffset(scannedPtr));
+                cheatsDP.DerefOffsets(_game, out IntPtr newPtr);
+                _game.WriteBytes(newPtr, StringUtil.ConvertHexStringToBytes(LAUNCHPARAMS_GLOBAL_R));
+            }
+
+            scannedPtr = scanner.Scan(consoleTargetU);
+            if(scannedPtr == IntPtr.Zero) scannedPtr = scanner.Scan(consoleTargetR);
+            _cheatsConsoleDP = CreateDP(GetOffset(scannedPtr) + 0x5);
+
+            scannedPtr = scanner.Scan(bindsTargetU);
+            if(scannedPtr == IntPtr.Zero) scannedPtr = scanner.Scan(bindsTargetR);
+            _cheatsBindsDP = CreateDP(GetOffset(scannedPtr) + 0x5);
         }
         private int GetOffset(IntPtr pointer) => (pointer != IntPtr.Zero) ? (int) (pointer.ToInt64() - _game.MainModule.BaseAddress.ToInt64()) : 0;
 
