@@ -94,6 +94,9 @@ namespace DESpeedrunUtil.Memory {
             if(!_restartCheatsTimer.Enabled) _restartCheatsTimer.Start();
 
             DerefPointers();
+
+            if(Version.Name == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
+
             TrainerSupported = _positionPtr != IntPtr.Zero;
             if(TrainerSupported) ReadTrainerValues();
 
@@ -151,15 +154,25 @@ namespace DESpeedrunUtil.Memory {
             }
 
             if(!_externalTrainerFlag && EnableOSD) {
-                if(!_trainerFlag || !_osdFlagMeath00k) {
-                    if(_osdFlagRestartGame) _cheatString = (_osdFlagMeath00k) ? "CHEATS ENABLED" : "RESTART GAME";
-                    if(Version.Name == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
-                    _row2 = _currentOffsets.Version.Replace(" Rev ", "r").Replace(" (Gamepass)", "");
-                    if(_row2 == "1.0 (Release)") _row2 = "Release";
+                if(!_trainerFlag || (!_osdFlagMeath00k && !EnableCheats)) {
+                    if(_osdFlagRestartGame) _cheatString = "RESTART GAME";
+                    if(EnableCheats) 
+                        _cheatString = "CHEATS ENABLED";
+                    else if(_osdFlagMeath00k)
+                        _cheatString = "MEATH00K";
+
+                    StringBuilder builderR2 = new(Version.Name.Replace(" Rev ", "r").Replace(" (Gamepass)", ""));
+                    builderR2.Replace("1.0 (Release)", "Release");
                     if(_osdFlagMacro || _osdFlagFirewall || _osdFlagSlopeboost || _osdFlagReshade || !_osdFlagLimiter) {
-                        _row2 += " (" + (_osdFlagMacro ? "M" : "") + (_osdFlagFirewall ? "F" : "") + (_osdFlagReshade ? "R" : "") + (_osdFlagSlopeboost ? "S" : "") + (!_osdFlagLimiter ? "L" : "") + ")";
+                        builderR2.Append(" (");
+                        if(_osdFlagMacro) builderR2.Append('M');
+                        if(_osdFlagFirewall) builderR2.Append('F');
+                        if(_osdFlagReshade) builderR2.Append('R');
+                        if(_osdFlagSlopeboost) builderR2.Append('S');
+                        if(!_osdFlagLimiter) builderR2.Append('L');
+                        builderR2.Append(')');
                     }
-                    var cheats = (_osdFlagMeath00k || _osdFlagRestartGame) ? _cheatString : string.Empty;
+                    var cheats = (_osdFlagMeath00k || EnableCheats || _osdFlagRestartGame) ? _cheatString : string.Empty;
                     if(cheats == string.Empty && _osdFlagModded) cheats = "MODDED CLIENT";
                     var scaling = string.Empty;
                     if(((DateTime.Now.Ticks - _scalingTime) / 10000) <= 3000) {
@@ -170,24 +183,26 @@ namespace DESpeedrunUtil.Memory {
                         }
                     }
                     if(_minimalOSD) {
-                        var row2Mod = (_scrollString != string.Empty) ? "[" + _scrollString + "]" : cheats;
-                        _row1 += " ";
-                        _row2 = _row2.Replace("(", "");
+                        var row2Mod = (_scrollString != string.Empty) ? '[' + _scrollString + ']' : cheats;
+                        _row1 += ' ';
+                        builderR2.Replace("(", "");
                         if(!_osdFlagOutOfDate) {
-                            _row1 += "(";
+                            _row1 += '(';
                         } else {
-                            _row2 = "(" + _row2;
+                            builderR2.Insert(0, '(');
                         }
-                        if(!_row2.Contains(')')) _row2 += ")";
+                        _row2 = builderR2.ToString();
+                        if(!_row2.Contains(')')) _row2 += ')';
                         if(row2Mod != string.Empty) {
-                            _row1 = _row1.Substring(0, 7) + (_row1.Contains('*') ? " " : row2Mod[0]);
+                            _row1 = _row1[..7] + (_row1.Contains('*') ? ' ' : row2Mod[0]);
                             _row2 = _row1.Contains('*') ? row2Mod : row2Mod[1..];
                         } else {
                             if(scaling != string.Empty) {
-                                _row2 = _row2.Replace(")", " [" + scaling.Replace("[", "") + ")");
+                                _row2 = _row2.Replace(")", " [" + scaling.Replace("[", "") + ')');
                             }
                         }
                     } else {
+                        _row2 = builderR2.ToString();
                         if(cheats == string.Empty) cheats = scaling;
                         if(_cpuPtr == IntPtr.Zero) {
                             _row3 = (_scrollString != string.Empty) ? _scrollString : cheats;
