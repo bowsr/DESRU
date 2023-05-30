@@ -473,6 +473,7 @@ namespace DESpeedrunUtil {
         private void MainWindow_Load(object sender, EventArgs e) {
             MemoryHandler.OffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(System.Text.Encoding.UTF8.GetString(Properties.Resources.offsets));
             if(File.Exists(@".\scannedOffsets.json")) MemoryHandler.ScannedOffsetList = JsonConvert.DeserializeObject<List<KnownOffsets>>(File.ReadAllText(@".\scannedOffsets.json"));
+            if(File.Exists(@".\cheatOffsets.json")) MemoryHandler.CheatOffsetList = JsonConvert.DeserializeObject<List<CheatOffsets>>(File.ReadAllText(@".\cheatOffsets.json"));
 
             InitializeFonts();
             _moreHotkeysLabel = new DESRUShadowLabel(moreHotkeysTitle.Font, "EXTRA HOTKEYS", moreHotkeysTitle.Location, COLOR_TEXT_FORE, COLOR_FORM_BACK);

@@ -89,5 +89,20 @@
                 IsInGame = 0;
             }
         }
+
+        internal readonly struct CheatOffsets {
+            public string Version { get; init; }
+            
+            public int Console { get; init; }
+            public int Binds { get; init; }
+            public int LaunchParams { get; init; }
+
+            public CheatOffsets(string v, int c, int b, int p) {
+                Version = v;
+                Console = c;
+                Binds = b;
+                LaunchParams = p;
+            }
+        }
     }
 }

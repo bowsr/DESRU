@@ -16,6 +16,9 @@ namespace DESpeedrunUtil.Memory {
         public static List<KnownOffsets> OffsetList = new(), ScannedOffsetList = new();
         KnownOffsets _currentOffsets;
 
+        public static List<CheatOffsets> CheatOffsetList = new();
+        CheatOffsets _currentCheatOffsets;
+
         DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _skipIntroDP, _aliasingDP, _unDelayDP, _continueDP,
                     _row1DP, _row6DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
@@ -319,12 +322,11 @@ namespace DESpeedrunUtil.Memory {
             _velocityHorizontal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY));
             _velocityTotal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
 
-            if(!_osdFlagMeath00k) return;
+            if(!_osdFlagMeath00k && !EnableCheats) return;
             
             _positionX = _game.ReadValue<float>(_positionPtr);
             _positionY = _game.ReadValue<float>(_positionPtr + 4);
             _positionZ = _game.ReadValue<float>(_positionPtr + 8);
-
 
             _pitch = (360f + _game.ReadValue<float>(_rotationPtr)) % 360f;
             _yaw = (360f + _game.ReadValue<float>(_rotationPtr + 4)) % 360f;
@@ -739,11 +741,22 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void Initialize() {
-            ScanForCheatsPointers();
-
             _row1DP = _row6DP = _gpuVendorDP = _gpuNameDP = _cpuDP = null;
             _metricsDP = _maxHzDP = _rampJumpDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = _skipIntroDP = null;
             _aliasingDP = _unDelayDP = _continueDP = null;
+
+            if(!SetCurrentCheatOffsets()) {
+                ScanForCheatsPointers();
+            }
+
+            // Launch Param Cheats are disabled ASAP to prevent any command/cvar changes coming from the user's set launch parameters
+            var paramDP = CreateDP(_currentCheatOffsets.LaunchParams);
+            paramDP.DerefOffsets(_game, out IntPtr paramPtr);
+            _game.WriteBytes(paramPtr, StringUtil.ConvertHexStringToBytes(LAUNCHPARAMS_GLOBAL_R));
+
+            _cheatsConsoleDP = CreateDP(_currentCheatOffsets.Console);
+            _cheatsBindsDP = CreateDP(_currentCheatOffsets.Binds);
+
             if(!SetCurrentKnownOffsets()) {
                 SigScans();
             }
@@ -836,6 +849,7 @@ namespace DESpeedrunUtil.Memory {
 
         private void ScanForCheatsPointers() {
             SigScanTarget paramsTargetU  = new(LAUNCHPARAMS_GLOBAL_U),
+                          paramsTargetR  = new(LAUNCHPARAMS_GLOBAL_R),
                           consoleTargetU = new(CONSOLE_GLOBAL_U),
                           consoleTargetR = new(CONSOLE_GLOBAL_R),
                           bindsTargetU,
@@ -859,20 +873,27 @@ namespace DESpeedrunUtil.Memory {
 
             SignatureScanner scanner = new(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
 
+            int console, binds, param;
+
             var scannedPtr = scanner.Scan(paramsTargetU);
-            if(scannedPtr != IntPtr.Zero) {
-                var cheatsDP = CreateDP(GetOffset(scannedPtr));
-                cheatsDP.DerefOffsets(_game, out IntPtr newPtr);
-                _game.WriteBytes(newPtr, StringUtil.ConvertHexStringToBytes(LAUNCHPARAMS_GLOBAL_R));
-            }
+            if(scannedPtr == IntPtr.Zero) scannedPtr = scanner.Scan(paramsTargetR);
+            param = GetOffset(scannedPtr);
 
             scannedPtr = scanner.Scan(consoleTargetU);
             if(scannedPtr == IntPtr.Zero) scannedPtr = scanner.Scan(consoleTargetR);
-            _cheatsConsoleDP = CreateDP(GetOffset(scannedPtr) + 0x5);
+            console = GetOffset(scannedPtr) + 0x5;
 
             scannedPtr = scanner.Scan(bindsTargetU);
             if(scannedPtr == IntPtr.Zero) scannedPtr = scanner.Scan(bindsTargetR);
-            _cheatsBindsDP = CreateDP(GetOffset(scannedPtr) + 0x5);
+            binds = GetOffset(scannedPtr) + 0x5;
+
+            CheatOffsets co = new(Version.Name, console, binds, param);
+            CheatOffsetList.Add(co);
+            _currentCheatOffsets = co;
+
+            string jsonString = JsonConvert.SerializeObject(CheatOffsetList, Formatting.Indented);
+            File.WriteAllText(@".\cheatOffsets.json", jsonString);
+            Log.Information("Added Version {Version} ({ModuleSize}) to cheat offset list.", Version.Name, _moduleSize);
         }
         private int GetOffset(IntPtr pointer) => (pointer != IntPtr.Zero) ? (int) (pointer.ToInt64() - _game.MainModule.BaseAddress.ToInt64()) : 0;
 
@@ -886,11 +907,21 @@ namespace DESpeedrunUtil.Memory {
             foreach(KnownOffsets k in ScannedOffsetList) {
                 if(k.Version == Version.Name) {
                     _currentOffsets = k;
-                    Log.Information("Version {Version} is not officially supported. Using previously scanned offsets.", Version);
+                    Log.Information("Version {Version} is not officially supported. Using previously scanned offsets.", Version.Name);
                     return true;
                 }
             }
-            Log.Warning("Offset Lists do not contain {Version}.", Version);
+            Log.Warning("Offset Lists do not contain {Version}.", Version.Name);
+            return false;
+        }
+        private bool SetCurrentCheatOffsets() {
+            foreach(CheatOffsets c in CheatOffsetList) {
+                if(c.Version == Version.Name) {
+                    _currentCheatOffsets = c;
+                    return true;
+                }
+            }
+            Log.Warning("Cheat Offset List does not contain {Version}.", Version.Name);
             return false;
         }
     }
