@@ -1022,7 +1022,11 @@ namespace DESpeedrunUtil {
                     meath00k = true;
             }
             _memory.SetFlag(meath00k, "meath00k");
-            _memory.SetFlag(!Checksums.CompareFromFile(gamePath, _memory.Version.MD5), "modded");
+            var checksum = Checksums.GetMD5ChecksumFromFile(gamePath);
+            if(!Checksums.Compare(checksum, _memory.Version.MD5)) {
+                _memory.SetFlag(true, "modded");
+                Log.Warning("Potentially modified client detected. md5: {Checksum}", checksum);
+            }
             _memory.SetFlag(_reshadeExists, "reshade");
             _memory.SetFlag(Program.UpdateDetected, "outofdate");
             _memory.SetFlag(_firstRun && !_memory.GetFlag("meath00k"), "restart");
