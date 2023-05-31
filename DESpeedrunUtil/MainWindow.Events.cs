@@ -515,13 +515,11 @@ namespace DESpeedrunUtil {
             _steamID3 = Properties.Settings.Default.SteamID3;
             replaceProfileCheckbox.Checked = Properties.Settings.Default.ReplaceProfile;
             enableMaxFPSCheckbox.Checked = Properties.Settings.Default.EnableMaxFPSLimit;
-            antiAliasingCheckbox.Checked = !Properties.Settings.Default.AntiAliasing;
-            unDelayCheckbox.Checked = !Properties.Settings.Default.UNDelay;
-            autoContinueCheckbox.Checked = Properties.Settings.Default.AutoContinue;
             minimalOSDCheckbox.Checked = Properties.Settings.Default.MinimalOSD;
             trainerOSDCheckbox.Checked = Properties.Settings.Default.TrainerOSD;
             speedometerCheckbox.Checked = Properties.Settings.Default.ShowSpeedometer;
             speedometerPrecisionCheckbox.Checked = Properties.Settings.Default.IncreasedPrecision;
+            hideDuringLoadsCheckbox.Checked = Properties.Settings.Default.HideSpeedometerDuringLoads;
             _resPercent0 = Properties.Settings.Default.ResTogglePercent0;
             _resPercent1 = Properties.Settings.Default.ResTogglePercent1;
             _resPercent2 = Properties.Settings.Default.ResTogglePercent2;

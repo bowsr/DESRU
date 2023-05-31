@@ -21,7 +21,7 @@ namespace DESpeedrunUtil {
         public static MainWindow Instance { get; private set; }
 
         private PrivateFontCollection _fonts = new();
-        public static Font EternalUIRegular, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalLogoBold, EternalBattleBold;
+        public static Font EternalUIRegular, EternalUIRegular10, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalLogoBold, EternalBattleBold;
 
 
         Process? _gameProcess;
@@ -303,7 +303,8 @@ namespace DESpeedrunUtil {
 
             /** Trainer **/
             var (velX, velY, velZ, hVel, totalVel) = _memory.GetPlayerVelocity();
-            if(_memory.GetFlag("meath00k")) {
+            bool showDuringLoads = !_memory.IsLoadingOrInMenu() || !hideDuringLoadsCheckbox.Checked;
+            if(_memory.GetFlag("meath00k") || _memory.EnableCheats) {
                 trainerOSDCheckbox.Enabled = true;
                 if(_memory.TrainerSupported) {
                     var (posX, posY, posZ, yaw, pitch) = _memory.GetPlayerPosition();
@@ -318,8 +319,9 @@ namespace DESpeedrunUtil {
 
                         altPositionTextbox.Text = string.Format(TEXTBOX_ALT_TEXT_POS, posX, posY, posZ, yaw, pitch);
 
-                        if(!_memory.IsLoadingOrInMenu()) {
-                            _speedometer.Visible = true;
+                        _speedometer.Visible = showDuringLoads;
+
+                        if(_speedometer.Visible) {
                             _speedometer.VerticalVelocity = velZ;
                             _speedometer.HorizontalVelocity = hVel;
                             _speedometer.TotalVelocity = totalVel;
@@ -328,7 +330,7 @@ namespace DESpeedrunUtil {
                             _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
                             _speedometer.RightAlignText = rightAlignCheckbox.Checked;
                             _speedometer.Refresh();
-                        } else _speedometer.Visible = false;
+                    }
                     }
                 } else {
                     positionTextBox.Visible = false;
@@ -342,7 +344,7 @@ namespace DESpeedrunUtil {
                 trainerOSDCheckbox.Enabled = false;
                 positionTextBox.Visible = false;
                 velocityTextBox.Visible = false;
-                _speedometer.Visible = speedometerCheckbox.Checked && !_memory.IsLoadingOrInMenu();
+                _speedometer.Visible = speedometerCheckbox.Checked && showDuringLoads;
 
                 altPositionTextbox.Text = (speedometerCheckbox.Checked) ? string.Empty : TRAINER_NOCHEATS_WARNING;
                 altPositionTextbox.Visible = true;
@@ -1045,9 +1047,9 @@ namespace DESpeedrunUtil {
             }
             _memory.SetMaxHz((enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
 
-            _memory.SetCVAR(!antiAliasingCheckbox.Checked, "antialiasing");
-            _memory.SetCVAR(!unDelayCheckbox.Checked, "undelay");
-            _memory.SetCVAR(autoContinueCheckbox.Checked, "autocontinue");
+            _memory.SetCVAR(Properties.Settings.Default.AntiAliasing, "antialiasing");
+            _memory.SetCVAR(Properties.Settings.Default.UNDelay, "undelay");
+            _memory.SetCVAR(Properties.Settings.Default.AutoContinue, "autocontinue");
 
             _memory.MemoryTimer.Start();
             _firstRun = false;
@@ -1146,6 +1148,7 @@ namespace DESpeedrunUtil {
                 switch(ff.Name) {
                     case "Eternal UI 2":
                         EternalUIRegular = new(ff, 11.25f, FontStyle.Regular, GraphicsUnit.Point);
+                        EternalUIRegular10 = new(ff, 9.75f, FontStyle.Regular, GraphicsUnit.Point);
                         EternalUIRegular20 = new(ff, 20f, FontStyle.Regular, GraphicsUnit.Point);
                         EternalUIRegular32 = new(ff, 32f, FontStyle.Regular, GraphicsUnit.Point);
                         EternalUIBold = new(ff, 11.25f, FontStyle.Bold, GraphicsUnit.Point);
@@ -1314,6 +1317,7 @@ namespace DESpeedrunUtil {
             speedometerPrecisionCheckbox.Font = EternalUIRegular;
             altPositionTextbox.Font = EternalUIRegular;
             rightAlignCheckbox.Font = EternalUIRegular;
+            hideDuringLoadsCheckbox.Font = EternalUIRegular;
             staticScalingRadioButton.Font = EternalUIRegular;
             dynScalingRadioButton.Font = EternalUIRegular;
 
@@ -1397,6 +1401,17 @@ namespace DESpeedrunUtil {
             Screen display = Screen.FromHandle(this.Handle);
             if(this.Top < display.WorkingArea.Top) this.Top = display.WorkingArea.Top + 1;
             if(this.Left < display.WorkingArea.Left) this.Left = display.WorkingArea.Left + 1;
+        }
+
+        internal void ToggleButtonStates(string button, bool state) {
+            switch(button) {
+                case "help":
+                    helpButton.Enabled = state;
+                    break;
+                case "settings":
+                    settingsButton.Enabled = state;
+                    break;
+            }
         }
 
         protected override CreateParams CreateParams {

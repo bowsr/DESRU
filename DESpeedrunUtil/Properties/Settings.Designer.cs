@@ -490,5 +490,17 @@ namespace DESpeedrunUtil.Properties {
                 this["RightAlignSpeedometer"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool HideSpeedometerDuringLoads {
+            get {
+                return ((bool)(this["HideSpeedometerDuringLoads"]));
+            }
+            set {
+                this["HideSpeedometerDuringLoads"] = value;
+            }
+        }
     }
 }
