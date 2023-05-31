@@ -327,7 +327,13 @@ namespace DESpeedrunUtil {
         #region Buttons
         private void ExitButton_Click(object sender, EventArgs e) => this.Close();
         private void HelpButton_Click(object sender, EventArgs e) {
+            helpButton.Enabled = false;
             new HelpPage().Show();
+        }
+        private void SettingsButton_Click(object sender, EventArgs e) {
+            settingsButton.Enabled = false;
+            SettingsWindow = new SettingsPage(_memory);
+            SettingsWindow.Show();
         }
         private void UnlockRes_Click(object sender, EventArgs e) {
             if(Hooked) _memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
@@ -414,33 +420,17 @@ namespace DESpeedrunUtil {
                 if(Hooked) firewallRestartLabel.ForeColor = COLOR_TEXT_FORE;
             }
         }
-        private void MeathookToggle_Click(object sender, EventArgs e) {
-            // _mhRestart
-            // disable button when removing mh while game is open - "schedule" removal after game stops
-            // if mh isn't installed when game is launched, can freely add/remove mh, but still needs restart to take effect
+        private void CheatsToggle_Click(object sender, EventArgs e) {
+            if(Hooked) {
+                _memory.EnableCheats = true;
+                cheatsToggleButton.Enabled = false;
+                cheatsToggleButton.Text = "Restart Game to Disable Cheats";
+                return;
+            }
             if(_mhExists) {
-                _mhScheduleRemoval = true;
-                Log.Information("meath00k scheduled for removal.");
+                UninstallMeathook();
             } else {
-                File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + "\\XINPUT1_3.dll");
-                foreach(string v in _gameVersions) {
-                    try {
-                        File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + " " + v + "\\XINPUT1_3.dll");
-                    } catch(Exception ex) {
-                        Log.Error(ex, "An error occured when attempting to install meath00k. v: {Version}", v);
-                        continue;
-                    }
-                }
-                foreach(string dir in _extraGameDirectories) {
-                    try {
-                        File.Copy(@".\meath00k\XINPUT1_3.dll", dir + "\\XINPUT1_3.dll");
-                    } catch(Exception ex) {
-                        Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", dir);
-                        continue;
-                    }
-                }
-                if(Hooked) meathookRestartLabel.ForeColor = COLOR_TEXT_FORE;
-                Log.Information("meath00k installed.");
+                InstallMeathook();
             }
         }
         private void MoreKeysButton_Click(object sender, EventArgs e) {

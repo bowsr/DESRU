@@ -53,8 +53,7 @@
             windowTitle = new Label();
             versionTitle = new Label();
             optionsTitle = new Label();
-            meathookToggleButton = new Button();
-            meathookRestartLabel = new Label();
+            cheatsToggleButton = new Button();
             firewallRestartLabel = new Label();
             hotkeyPanel = new Panel();
             showMoreKeysButton = new Button();
@@ -71,10 +70,6 @@
             enableOSDCheckbox = new CheckBox();
             minimalOSDCheckbox = new CheckBox();
             launchRTSSCheckbox = new CheckBox();
-            cvarLabel = new Label();
-            autoContinueCheckbox = new CheckBox();
-            unDelayCheckbox = new CheckBox();
-            antiAliasingCheckbox = new CheckBox();
             enableMaxFPSCheckbox = new CheckBox();
             panel3 = new Panel();
             defaultFPS = new TextBox();
@@ -203,8 +198,10 @@
             moreHotkeysTitle = new Label();
             toolTip7500 = new ToolTip(components);
             collapsiblePanel = new Panel();
+            settingsButton = new Button();
             trainerTitle = new Label();
             trainerPanel = new Panel();
+            hideDuringLoadsCheckbox = new CheckBox();
             rightAlignCheckbox = new CheckBox();
             altPositionTextbox = new TextBox();
             trainerRadioLabel = new Label();
@@ -545,9 +542,9 @@
             firewallToggleButton.FlatStyle = FlatStyle.Flat;
             firewallToggleButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             firewallToggleButton.ForeColor = Color.FromArgb(  230,   230,   230);
-            firewallToggleButton.Location = new Point(3, 211);
+            firewallToggleButton.Location = new Point(3, 147);
             firewallToggleButton.Name = "firewallToggleButton";
-            firewallToggleButton.Size = new Size(186, 28);
+            firewallToggleButton.Size = new Size(296, 28);
             firewallToggleButton.TabIndex = 0;
             firewallToggleButton.Text = "Remove Firewall Rule";
             firewallToggleButton.UseVisualStyleBackColor = false;
@@ -595,49 +592,38 @@
             optionsTitle.AutoSize = true;
             optionsTitle.Font = new Font("Eternal Logo", 14F, FontStyle.Bold, GraphicsUnit.Point);
             optionsTitle.ForeColor = Color.FromArgb(  230,   230,   230);
-            optionsTitle.Location = new Point(5, 452);
+            optionsTitle.Location = new Point(316, 452);
             optionsTitle.Name = "optionsTitle";
             optionsTitle.Size = new Size(129, 21);
             optionsTitle.TabIndex = 23;
             optionsTitle.Text = "OPTIONS";
             optionsTitle.Visible = false;
             // 
-            // meathookToggleButton
+            // cheatsToggleButton
             // 
-            meathookToggleButton.BackColor = Color.FromArgb(  70,   70,   70);
-            meathookToggleButton.FlatAppearance.BorderColor = SystemColors.WindowFrame;
-            meathookToggleButton.FlatStyle = FlatStyle.Flat;
-            meathookToggleButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            meathookToggleButton.ForeColor = Color.FromArgb(  230,   230,   230);
-            meathookToggleButton.Location = new Point(3, 242);
-            meathookToggleButton.Name = "meathookToggleButton";
-            meathookToggleButton.Size = new Size(186, 28);
-            meathookToggleButton.TabIndex = 24;
-            meathookToggleButton.Text = "Disable Cheats";
-            meathookToggleButton.UseVisualStyleBackColor = false;
-            meathookToggleButton.Click += MeathookToggle_Click;
-            // 
-            // meathookRestartLabel
-            // 
-            meathookRestartLabel.AutoSize = true;
-            meathookRestartLabel.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            meathookRestartLabel.ForeColor = Color.FromArgb(  45,   45,   45);
-            meathookRestartLabel.Location = new Point(189, 247);
-            meathookRestartLabel.Name = "meathookRestartLabel";
-            meathookRestartLabel.Size = new Size(114, 18);
-            meathookRestartLabel.TabIndex = 25;
-            meathookRestartLabel.Text = "RESTART GAME";
+            cheatsToggleButton.BackColor = Color.FromArgb(  70,   70,   70);
+            cheatsToggleButton.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            cheatsToggleButton.FlatStyle = FlatStyle.Flat;
+            cheatsToggleButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            cheatsToggleButton.ForeColor = Color.FromArgb(  230,   230,   230);
+            cheatsToggleButton.Location = new Point(3, 178);
+            cheatsToggleButton.Name = "cheatsToggleButton";
+            cheatsToggleButton.Size = new Size(296, 28);
+            cheatsToggleButton.TabIndex = 24;
+            cheatsToggleButton.Text = "Disable Cheats";
+            cheatsToggleButton.UseVisualStyleBackColor = false;
+            cheatsToggleButton.Click += CheatsToggle_Click;
             // 
             // firewallRestartLabel
             // 
             firewallRestartLabel.AutoSize = true;
             firewallRestartLabel.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             firewallRestartLabel.ForeColor = Color.FromArgb(  45,   45,   45);
-            firewallRestartLabel.Location = new Point(189, 216);
+            firewallRestartLabel.Location = new Point(35, 126);
             firewallRestartLabel.Name = "firewallRestartLabel";
-            firewallRestartLabel.Size = new Size(114, 18);
+            firewallRestartLabel.Size = new Size(233, 18);
             firewallRestartLabel.TabIndex = 26;
-            firewallRestartLabel.Text = "RESTART GAME";
+            firewallRestartLabel.Text = "RESTART GAME FOR VALID RUNS";
             // 
             // hotkeyPanel
             // 
@@ -801,22 +787,17 @@
             panel2.Controls.Add(enableOSDCheckbox);
             panel2.Controls.Add(minimalOSDCheckbox);
             panel2.Controls.Add(launchRTSSCheckbox);
-            panel2.Controls.Add(cvarLabel);
-            panel2.Controls.Add(autoContinueCheckbox);
-            panel2.Controls.Add(unDelayCheckbox);
-            panel2.Controls.Add(antiAliasingCheckbox);
             panel2.Controls.Add(enableMaxFPSCheckbox);
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(enableHotkeysCheckbox);
             panel2.Controls.Add(autorunMacroCheckbox);
             panel2.Controls.Add(firewallToggleButton);
-            panel2.Controls.Add(meathookRestartLabel);
             panel2.Controls.Add(defaultFPSLabel);
-            panel2.Controls.Add(meathookToggleButton);
+            panel2.Controls.Add(cheatsToggleButton);
             panel2.Controls.Add(firewallRestartLabel);
-            panel2.Location = new Point(5, 476);
+            panel2.Location = new Point(316, 476);
             panel2.Name = "panel2";
-            panel2.Size = new Size(304, 275);
+            panel2.Size = new Size(304, 211);
             panel2.TabIndex = 31;
             // 
             // enableOSDCheckbox
@@ -850,6 +831,7 @@
             // launchRTSSCheckbox
             // 
             launchRTSSCheckbox.AutoSize = true;
+            launchRTSSCheckbox.Enabled = false;
             launchRTSSCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             launchRTSSCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             launchRTSSCheckbox.Location = new Point(22, 103);
@@ -858,58 +840,7 @@
             launchRTSSCheckbox.TabIndex = 36;
             launchRTSSCheckbox.Text = "Launch RTSS with DESRU";
             launchRTSSCheckbox.UseVisualStyleBackColor = true;
-            launchRTSSCheckbox.Enabled = false;
             launchRTSSCheckbox.CheckedChanged += LaunchRTSS_CheckChanged;
-            // 
-            // cvarLabel
-            // 
-            cvarLabel.AutoSize = true;
-            cvarLabel.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
-            cvarLabel.ForeColor = Color.FromArgb(  230,   230,   230);
-            cvarLabel.Location = new Point(3, 129);
-            cvarLabel.Name = "cvarLabel";
-            cvarLabel.Size = new Size(55, 18);
-            cvarLabel.TabIndex = 35;
-            cvarLabel.Text = "CVARS";
-            // 
-            // autoContinueCheckbox
-            // 
-            autoContinueCheckbox.AutoSize = true;
-            autoContinueCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            autoContinueCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
-            autoContinueCheckbox.Location = new Point(6, 188);
-            autoContinueCheckbox.Name = "autoContinueCheckbox";
-            autoContinueCheckbox.Size = new Size(242, 22);
-            autoContinueCheckbox.TabIndex = 33;
-            autoContinueCheckbox.Text = "Auto Continue in Loading Screens";
-            autoContinueCheckbox.UseVisualStyleBackColor = true;
-            autoContinueCheckbox.CheckedChanged += AutoContinue_CheckChanged;
-            // 
-            // unDelayCheckbox
-            // 
-            unDelayCheckbox.AutoSize = true;
-            unDelayCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            unDelayCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
-            unDelayCheckbox.Location = new Point(6, 167);
-            unDelayCheckbox.Name = "unDelayCheckbox";
-            unDelayCheckbox.Size = new Size(273, 22);
-            unDelayCheckbox.TabIndex = 32;
-            unDelayCheckbox.Text = "Disable Ultra-Nightmare Quitout Delay";
-            unDelayCheckbox.UseVisualStyleBackColor = true;
-            unDelayCheckbox.CheckedChanged += UNDelay_CheckChanged;
-            // 
-            // antiAliasingCheckbox
-            // 
-            antiAliasingCheckbox.AutoSize = true;
-            antiAliasingCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            antiAliasingCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
-            antiAliasingCheckbox.Location = new Point(6, 146);
-            antiAliasingCheckbox.Name = "antiAliasingCheckbox";
-            antiAliasingCheckbox.Size = new Size(158, 22);
-            antiAliasingCheckbox.TabIndex = 31;
-            antiAliasingCheckbox.Text = "Disable Anti-Aliasing";
-            antiAliasingCheckbox.UseVisualStyleBackColor = true;
-            antiAliasingCheckbox.CheckedChanged += AA_CheckChanged;
             // 
             // enableMaxFPSCheckbox
             // 
@@ -1436,7 +1367,7 @@
             downpatcherButton.FlatStyle = FlatStyle.Flat;
             downpatcherButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             downpatcherButton.ForeColor = Color.FromArgb(  230,   230,   230);
-            downpatcherButton.Location = new Point(316, 659);
+            downpatcherButton.Location = new Point(5, 691);
             downpatcherButton.Name = "downpatcherButton";
             downpatcherButton.Size = new Size(304, 28);
             downpatcherButton.TabIndex = 36;
@@ -1451,7 +1382,7 @@
             discordButton.FlatStyle = FlatStyle.Flat;
             discordButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             discordButton.ForeColor = Color.FromArgb(  230,   230,   230);
-            discordButton.Location = new Point(316, 691);
+            discordButton.Location = new Point(5, 723);
             discordButton.Name = "discordButton";
             discordButton.Size = new Size(304, 28);
             discordButton.TabIndex = 37;
@@ -2533,6 +2464,7 @@
             // collapsiblePanel
             // 
             collapsiblePanel.AutoScroll = true;
+            collapsiblePanel.Controls.Add(settingsButton);
             collapsiblePanel.Controls.Add(trainerTitle);
             collapsiblePanel.Controls.Add(trainerPanel);
             collapsiblePanel.Controls.Add(hotkeyPanel);
@@ -2559,12 +2491,27 @@
             collapsiblePanel.MouseMove += DragWindow_MouseMove;
             collapsiblePanel.MouseUp += DragWindow_MouseUp;
             // 
+            // settingsButton
+            // 
+            settingsButton.BackColor = Color.FromArgb(  70,   70,   70);
+            settingsButton.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            settingsButton.FlatStyle = FlatStyle.Flat;
+            settingsButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            settingsButton.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsButton.Location = new Point(316, 691);
+            settingsButton.Name = "settingsButton";
+            settingsButton.Size = new Size(304, 28);
+            settingsButton.TabIndex = 41;
+            settingsButton.Text = "More Settings and CVARS";
+            settingsButton.UseVisualStyleBackColor = false;
+            settingsButton.Click += SettingsButton_Click;
+            // 
             // trainerTitle
             // 
             trainerTitle.AutoSize = true;
             trainerTitle.Font = new Font("Eternal Logo", 14F, FontStyle.Bold, GraphicsUnit.Point);
             trainerTitle.ForeColor = Color.FromArgb(  230,   230,   230);
-            trainerTitle.Location = new Point(316, 452);
+            trainerTitle.Location = new Point(5, 452);
             trainerTitle.Name = "trainerTitle";
             trainerTitle.Size = new Size(128, 21);
             trainerTitle.TabIndex = 40;
@@ -2575,6 +2522,7 @@
             // 
             trainerPanel.BackColor = Color.FromArgb(  45,   45,   45);
             trainerPanel.BorderStyle = BorderStyle.FixedSingle;
+            trainerPanel.Controls.Add(hideDuringLoadsCheckbox);
             trainerPanel.Controls.Add(rightAlignCheckbox);
             trainerPanel.Controls.Add(altPositionTextbox);
             trainerPanel.Controls.Add(trainerRadioLabel);
@@ -2587,17 +2535,32 @@
             trainerPanel.Controls.Add(velocityTextBox);
             trainerPanel.Controls.Add(positionTextBox);
             trainerPanel.Controls.Add(trainerOSDCheckbox);
-            trainerPanel.Location = new Point(316, 476);
+            trainerPanel.Location = new Point(5, 476);
             trainerPanel.Name = "trainerPanel";
-            trainerPanel.Size = new Size(304, 179);
+            trainerPanel.Size = new Size(304, 211);
             trainerPanel.TabIndex = 31;
+            // 
+            // hideDuringLoadsCheckbox
+            // 
+            hideDuringLoadsCheckbox.AutoSize = true;
+            hideDuringLoadsCheckbox.Checked = true;
+            hideDuringLoadsCheckbox.CheckState = CheckState.Checked;
+            hideDuringLoadsCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            hideDuringLoadsCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
+            hideDuringLoadsCheckbox.Location = new Point(22, 84);
+            hideDuringLoadsCheckbox.Name = "hideDuringLoadsCheckbox";
+            hideDuringLoadsCheckbox.Size = new Size(142, 22);
+            hideDuringLoadsCheckbox.TabIndex = 54;
+            hideDuringLoadsCheckbox.Text = "Hide During Loads";
+            hideDuringLoadsCheckbox.UseVisualStyleBackColor = true;
+            hideDuringLoadsCheckbox.Visible = false;
             // 
             // rightAlignCheckbox
             // 
             rightAlignCheckbox.AutoSize = true;
             rightAlignCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             rightAlignCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
-            rightAlignCheckbox.Location = new Point(22, 60);
+            rightAlignCheckbox.Location = new Point(22, 63);
             rightAlignCheckbox.Name = "rightAlignCheckbox";
             rightAlignCheckbox.Size = new Size(145, 22);
             rightAlignCheckbox.TabIndex = 53;
@@ -2611,7 +2574,7 @@
             altPositionTextbox.BorderStyle = BorderStyle.None;
             altPositionTextbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             altPositionTextbox.ForeColor = Color.FromArgb(  230,   230,   230);
-            altPositionTextbox.Location = new Point(6, 80);
+            altPositionTextbox.Location = new Point(6, 111);
             altPositionTextbox.Multiline = true;
             altPositionTextbox.Name = "altPositionTextbox";
             altPositionTextbox.Size = new Size(293, 19);
@@ -2699,7 +2662,7 @@
             // 
             // speedometerPanel
             // 
-            speedometerPanel.Location = new Point(6, 100);
+            speedometerPanel.Location = new Point(6, 131);
             speedometerPanel.Name = "speedometerPanel";
             speedometerPanel.Size = new Size(291, 72);
             speedometerPanel.TabIndex = 42;
@@ -2864,8 +2827,7 @@
         private Label windowTitle;
         private Label versionTitle;
         private Label optionsTitle;
-        private Button meathookToggleButton;
-        private Label meathookRestartLabel;
+        private Button cheatsToggleButton;
         private Label firewallRestartLabel;
         private Panel hotkeyPanel;
         private Panel fpsPanel0;
@@ -2982,10 +2944,6 @@
         private Label moreHotkeysTitle;
         private ToolTip toolTip7500;
         private CheckBox enableMaxFPSCheckbox;
-        private Label cvarLabel;
-        private CheckBox autoContinueCheckbox;
-        private CheckBox unDelayCheckbox;
-        private CheckBox antiAliasingCheckbox;
         private CheckBox launchRTSSCheckbox;
         private Label rtssStatus;
         private Label rtssStatusLabel;
@@ -3028,5 +2986,7 @@
         private RadioButton dynScalingRadioButton;
         private RadioButton staticScalingRadioButton;
         private CheckBox rightAlignCheckbox;
+        private Button settingsButton;
+        private CheckBox hideDuringLoadsCheckbox;
     }
 }

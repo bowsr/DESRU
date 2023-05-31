@@ -17,7 +17,6 @@ namespace DESpeedrunUtil {
                 helpTabButton6,
                 helpTabButton7,
             };
-
             SetFonts();
         }
 
@@ -67,6 +66,10 @@ namespace DESpeedrunUtil {
                 Screen.PrimaryScreen.WorkingArea.Left + (Screen.PrimaryScreen.WorkingArea.Width / 2 - (this.Width / 2)),
                 Screen.PrimaryScreen.WorkingArea.Top + (Screen.PrimaryScreen.WorkingArea.Height / 2) - (this.Height / 2));
             Log.Information("Loaded Help Page");
+        }
+
+        private void HelpPage_FormClosing(object sender, FormClosingEventArgs e) {
+            MainWindow.Instance.ToggleButtonStates("help", true);
         }
     }
 }

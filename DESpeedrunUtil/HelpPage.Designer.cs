@@ -24,276 +24,276 @@
         /// </summary>
         private void InitializeComponent() {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(HelpPage));
-            this.closeButton = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.helpTextbox = new System.Windows.Forms.TextBox();
-            this.helpTabButton0 = new System.Windows.Forms.Button();
-            this.helpTabButton1 = new System.Windows.Forms.Button();
-            this.helpTabButton2 = new System.Windows.Forms.Button();
-            this.helpTabButton3 = new System.Windows.Forms.Button();
-            this.helpTabButton4 = new System.Windows.Forms.Button();
-            this.helpTabButton5 = new System.Windows.Forms.Button();
-            this.helpTabButton6 = new System.Windows.Forms.Button();
-            this.helpPageVersionImage = new System.Windows.Forms.PictureBox();
-            this.helpPageOSDImage = new System.Windows.Forms.PictureBox();
-            this.blankPanel = new System.Windows.Forms.Panel();
-            this.titleText = new System.Windows.Forms.TextBox();
-            this.helpTabButton7 = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.helpPageVersionImage)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.helpPageOSDImage)).BeginInit();
-            this.blankPanel.SuspendLayout();
-            this.SuspendLayout();
+            closeButton = new Button();
+            pictureBox1 = new PictureBox();
+            helpTextbox = new TextBox();
+            helpTabButton0 = new Button();
+            helpTabButton1 = new Button();
+            helpTabButton2 = new Button();
+            helpTabButton3 = new Button();
+            helpTabButton4 = new Button();
+            helpTabButton5 = new Button();
+            helpTabButton6 = new Button();
+            helpPageVersionImage = new PictureBox();
+            helpPageOSDImage = new PictureBox();
+            blankPanel = new Panel();
+            titleText = new TextBox();
+            helpTabButton7 = new Button();
+            ((System.ComponentModel.ISupportInitialize) pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) helpPageVersionImage).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) helpPageOSDImage).BeginInit();
+            blankPanel.SuspendLayout();
+            SuspendLayout();
             // 
             // closeButton
             // 
-            this.closeButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.closeButton.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.closeButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.closeButton.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.closeButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.closeButton.Location = new System.Drawing.Point(650, 721);
-            this.closeButton.Name = "closeButton";
-            this.closeButton.Size = new System.Drawing.Size(122, 28);
-            this.closeButton.TabIndex = 8;
-            this.closeButton.Text = "Close";
-            this.closeButton.UseVisualStyleBackColor = false;
-            this.closeButton.Click += new System.EventHandler(this.CloseButton_Click);
+            closeButton.BackColor = Color.FromArgb(  70,   70,   70);
+            closeButton.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            closeButton.FlatStyle = FlatStyle.Flat;
+            closeButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            closeButton.ForeColor = Color.FromArgb(  230,   230,   230);
+            closeButton.Location = new Point(650, 721);
+            closeButton.Name = "closeButton";
+            closeButton.Size = new Size(122, 28);
+            closeButton.TabIndex = 8;
+            closeButton.Text = "Close";
+            closeButton.UseVisualStyleBackColor = false;
+            closeButton.Click += CloseButton_Click;
             // 
             // pictureBox1
             // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(64, 12);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(100, 100);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 9;
-            this.pictureBox1.TabStop = false;
+            pictureBox1.Image = (Image) resources.GetObject("pictureBox1.Image");
+            pictureBox1.Location = new Point(64, 12);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(100, 100);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 9;
+            pictureBox1.TabStop = false;
             // 
             // helpTextbox
             // 
-            this.helpTextbox.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.helpTextbox.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.helpTextbox.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.helpTextbox.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTextbox.Location = new System.Drawing.Point(3, 3);
-            this.helpTextbox.Multiline = true;
-            this.helpTextbox.Name = "helpTextbox";
-            this.helpTextbox.ReadOnly = true;
-            this.helpTextbox.Size = new System.Drawing.Size(542, 582);
-            this.helpTextbox.TabIndex = 0;
-            this.helpTextbox.TabStop = false;
+            helpTextbox.BackColor = Color.FromArgb(  45,   45,   45);
+            helpTextbox.BorderStyle = BorderStyle.None;
+            helpTextbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            helpTextbox.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTextbox.Location = new Point(3, 3);
+            helpTextbox.Multiline = true;
+            helpTextbox.Name = "helpTextbox";
+            helpTextbox.ReadOnly = true;
+            helpTextbox.Size = new Size(542, 582);
+            helpTextbox.TabIndex = 0;
+            helpTextbox.TabStop = false;
             // 
             // helpTabButton0
             // 
-            this.helpTabButton0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.helpTabButton0.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.helpTabButton0.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpTabButton0.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.helpTabButton0.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton0.Location = new System.Drawing.Point(12, 125);
-            this.helpTabButton0.Name = "helpTabButton0";
-            this.helpTabButton0.Size = new System.Drawing.Size(204, 33);
-            this.helpTabButton0.TabIndex = 11;
-            this.helpTabButton0.Tag = "macro";
-            this.helpTabButton0.Text = "Freescroll Macro";
-            this.helpTabButton0.UseVisualStyleBackColor = false;
-            this.helpTabButton0.Click += new System.EventHandler(this.TabButton_Click);
+            helpTabButton0.BackColor = Color.FromArgb(  70,   70,   70);
+            helpTabButton0.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            helpTabButton0.FlatStyle = FlatStyle.Flat;
+            helpTabButton0.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            helpTabButton0.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTabButton0.Location = new Point(12, 125);
+            helpTabButton0.Name = "helpTabButton0";
+            helpTabButton0.Size = new Size(204, 33);
+            helpTabButton0.TabIndex = 11;
+            helpTabButton0.Tag = "macro";
+            helpTabButton0.Text = "Freescroll Macro";
+            helpTabButton0.UseVisualStyleBackColor = false;
+            helpTabButton0.Click += TabButton_Click;
             // 
             // helpTabButton1
             // 
-            this.helpTabButton1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.helpTabButton1.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.helpTabButton1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpTabButton1.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.helpTabButton1.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton1.Location = new System.Drawing.Point(12, 164);
-            this.helpTabButton1.Name = "helpTabButton1";
-            this.helpTabButton1.Size = new System.Drawing.Size(204, 33);
-            this.helpTabButton1.TabIndex = 12;
-            this.helpTabButton1.Tag = "hk";
-            this.helpTabButton1.Text = "Keybinds";
-            this.helpTabButton1.UseVisualStyleBackColor = false;
-            this.helpTabButton1.Click += new System.EventHandler(this.TabButton_Click);
+            helpTabButton1.BackColor = Color.FromArgb(  70,   70,   70);
+            helpTabButton1.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            helpTabButton1.FlatStyle = FlatStyle.Flat;
+            helpTabButton1.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            helpTabButton1.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTabButton1.Location = new Point(12, 164);
+            helpTabButton1.Name = "helpTabButton1";
+            helpTabButton1.Size = new Size(204, 33);
+            helpTabButton1.TabIndex = 12;
+            helpTabButton1.Tag = "hk";
+            helpTabButton1.Text = "Keybinds";
+            helpTabButton1.UseVisualStyleBackColor = false;
+            helpTabButton1.Click += TabButton_Click;
             // 
             // helpTabButton2
             // 
-            this.helpTabButton2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.helpTabButton2.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.helpTabButton2.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpTabButton2.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.helpTabButton2.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton2.Location = new System.Drawing.Point(12, 203);
-            this.helpTabButton2.Name = "helpTabButton2";
-            this.helpTabButton2.Size = new System.Drawing.Size(204, 33);
-            this.helpTabButton2.TabIndex = 13;
-            this.helpTabButton2.Tag = "res";
-            this.helpTabButton2.Text = "Resolution Scaling";
-            this.helpTabButton2.UseVisualStyleBackColor = false;
-            this.helpTabButton2.Click += new System.EventHandler(this.TabButton_Click);
+            helpTabButton2.BackColor = Color.FromArgb(  70,   70,   70);
+            helpTabButton2.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            helpTabButton2.FlatStyle = FlatStyle.Flat;
+            helpTabButton2.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            helpTabButton2.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTabButton2.Location = new Point(12, 203);
+            helpTabButton2.Name = "helpTabButton2";
+            helpTabButton2.Size = new Size(204, 33);
+            helpTabButton2.TabIndex = 13;
+            helpTabButton2.Tag = "res";
+            helpTabButton2.Text = "Resolution Scaling";
+            helpTabButton2.UseVisualStyleBackColor = false;
+            helpTabButton2.Click += TabButton_Click;
             // 
             // helpTabButton3
             // 
-            this.helpTabButton3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.helpTabButton3.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.helpTabButton3.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpTabButton3.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.helpTabButton3.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton3.Location = new System.Drawing.Point(12, 242);
-            this.helpTabButton3.Name = "helpTabButton3";
-            this.helpTabButton3.Size = new System.Drawing.Size(204, 33);
-            this.helpTabButton3.TabIndex = 14;
-            this.helpTabButton3.Tag = "ver";
-            this.helpTabButton3.Text = "Version Changer";
-            this.helpTabButton3.UseVisualStyleBackColor = false;
-            this.helpTabButton3.Click += new System.EventHandler(this.TabButton_Click);
+            helpTabButton3.BackColor = Color.FromArgb(  70,   70,   70);
+            helpTabButton3.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            helpTabButton3.FlatStyle = FlatStyle.Flat;
+            helpTabButton3.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            helpTabButton3.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTabButton3.Location = new Point(12, 242);
+            helpTabButton3.Name = "helpTabButton3";
+            helpTabButton3.Size = new Size(204, 33);
+            helpTabButton3.TabIndex = 14;
+            helpTabButton3.Tag = "ver";
+            helpTabButton3.Text = "Version Changer";
+            helpTabButton3.UseVisualStyleBackColor = false;
+            helpTabButton3.Click += TabButton_Click;
             // 
             // helpTabButton4
             // 
-            this.helpTabButton4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.helpTabButton4.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.helpTabButton4.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpTabButton4.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.helpTabButton4.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton4.Location = new System.Drawing.Point(12, 281);
-            this.helpTabButton4.Name = "helpTabButton4";
-            this.helpTabButton4.Size = new System.Drawing.Size(204, 33);
-            this.helpTabButton4.TabIndex = 15;
-            this.helpTabButton4.Tag = "option";
-            this.helpTabButton4.Text = "Options";
-            this.helpTabButton4.UseVisualStyleBackColor = false;
-            this.helpTabButton4.Click += new System.EventHandler(this.TabButton_Click);
+            helpTabButton4.BackColor = Color.FromArgb(  70,   70,   70);
+            helpTabButton4.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            helpTabButton4.FlatStyle = FlatStyle.Flat;
+            helpTabButton4.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            helpTabButton4.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTabButton4.Location = new Point(12, 281);
+            helpTabButton4.Name = "helpTabButton4";
+            helpTabButton4.Size = new Size(204, 33);
+            helpTabButton4.TabIndex = 15;
+            helpTabButton4.Tag = "option";
+            helpTabButton4.Text = "Options";
+            helpTabButton4.UseVisualStyleBackColor = false;
+            helpTabButton4.Click += TabButton_Click;
             // 
             // helpTabButton5
             // 
-            this.helpTabButton5.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.helpTabButton5.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.helpTabButton5.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpTabButton5.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.helpTabButton5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton5.Location = new System.Drawing.Point(12, 359);
-            this.helpTabButton5.Name = "helpTabButton5";
-            this.helpTabButton5.Size = new System.Drawing.Size(204, 33);
-            this.helpTabButton5.TabIndex = 16;
-            this.helpTabButton5.Tag = "info";
-            this.helpTabButton5.Text = "Info Panel";
-            this.helpTabButton5.UseVisualStyleBackColor = false;
-            this.helpTabButton5.Click += new System.EventHandler(this.TabButton_Click);
+            helpTabButton5.BackColor = Color.FromArgb(  70,   70,   70);
+            helpTabButton5.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            helpTabButton5.FlatStyle = FlatStyle.Flat;
+            helpTabButton5.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            helpTabButton5.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTabButton5.Location = new Point(12, 359);
+            helpTabButton5.Name = "helpTabButton5";
+            helpTabButton5.Size = new Size(204, 33);
+            helpTabButton5.TabIndex = 16;
+            helpTabButton5.Tag = "info";
+            helpTabButton5.Text = "Info Panel";
+            helpTabButton5.UseVisualStyleBackColor = false;
+            helpTabButton5.Click += TabButton_Click;
             // 
             // helpTabButton6
             // 
-            this.helpTabButton6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.helpTabButton6.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.helpTabButton6.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpTabButton6.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.helpTabButton6.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton6.Location = new System.Drawing.Point(12, 398);
-            this.helpTabButton6.Name = "helpTabButton6";
-            this.helpTabButton6.Size = new System.Drawing.Size(204, 33);
-            this.helpTabButton6.TabIndex = 17;
-            this.helpTabButton6.Tag = "osd";
-            this.helpTabButton6.Text = "On Screen Display";
-            this.helpTabButton6.UseVisualStyleBackColor = false;
-            this.helpTabButton6.Click += new System.EventHandler(this.TabButton_Click);
+            helpTabButton6.BackColor = Color.FromArgb(  70,   70,   70);
+            helpTabButton6.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            helpTabButton6.FlatStyle = FlatStyle.Flat;
+            helpTabButton6.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            helpTabButton6.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTabButton6.Location = new Point(12, 398);
+            helpTabButton6.Name = "helpTabButton6";
+            helpTabButton6.Size = new Size(204, 33);
+            helpTabButton6.TabIndex = 17;
+            helpTabButton6.Tag = "osd";
+            helpTabButton6.Text = "On Screen Display";
+            helpTabButton6.UseVisualStyleBackColor = false;
+            helpTabButton6.Click += TabButton_Click;
             // 
             // helpPageVersionImage
             // 
-            this.helpPageVersionImage.Image = ((System.Drawing.Image)(resources.GetObject("helpPageVersionImage.Image")));
-            this.helpPageVersionImage.Location = new System.Drawing.Point(372, 331);
-            this.helpPageVersionImage.Name = "helpPageVersionImage";
-            this.helpPageVersionImage.Size = new System.Drawing.Size(173, 154);
-            this.helpPageVersionImage.TabIndex = 1;
-            this.helpPageVersionImage.TabStop = false;
-            this.helpPageVersionImage.Visible = false;
+            helpPageVersionImage.Image = (Image) resources.GetObject("helpPageVersionImage.Image");
+            helpPageVersionImage.Location = new Point(372, 331);
+            helpPageVersionImage.Name = "helpPageVersionImage";
+            helpPageVersionImage.Size = new Size(173, 154);
+            helpPageVersionImage.TabIndex = 1;
+            helpPageVersionImage.TabStop = false;
+            helpPageVersionImage.Visible = false;
             // 
             // helpPageOSDImage
             // 
-            this.helpPageOSDImage.Image = ((System.Drawing.Image)(resources.GetObject("helpPageOSDImage.Image")));
-            this.helpPageOSDImage.Location = new System.Drawing.Point(348, 168);
-            this.helpPageOSDImage.Name = "helpPageOSDImage";
-            this.helpPageOSDImage.Size = new System.Drawing.Size(199, 83);
-            this.helpPageOSDImage.TabIndex = 1;
-            this.helpPageOSDImage.TabStop = false;
-            this.helpPageOSDImage.Visible = false;
+            helpPageOSDImage.Image = (Image) resources.GetObject("helpPageOSDImage.Image");
+            helpPageOSDImage.Location = new Point(348, 168);
+            helpPageOSDImage.Name = "helpPageOSDImage";
+            helpPageOSDImage.Size = new Size(199, 83);
+            helpPageOSDImage.TabIndex = 1;
+            helpPageOSDImage.TabStop = false;
+            helpPageOSDImage.Visible = false;
             // 
             // blankPanel
             // 
-            this.blankPanel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(45)))), ((int)(((byte)(45)))), ((int)(((byte)(45)))));
-            this.blankPanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.blankPanel.Controls.Add(this.helpPageOSDImage);
-            this.blankPanel.Controls.Add(this.helpPageVersionImage);
-            this.blankPanel.Controls.Add(this.helpTextbox);
-            this.blankPanel.Location = new System.Drawing.Point(222, 125);
-            this.blankPanel.Name = "blankPanel";
-            this.blankPanel.Size = new System.Drawing.Size(550, 590);
-            this.blankPanel.TabIndex = 11;
-            this.blankPanel.Tag = "blank";
+            blankPanel.BackColor = Color.FromArgb(  45,   45,   45);
+            blankPanel.BorderStyle = BorderStyle.FixedSingle;
+            blankPanel.Controls.Add(helpPageOSDImage);
+            blankPanel.Controls.Add(helpPageVersionImage);
+            blankPanel.Controls.Add(helpTextbox);
+            blankPanel.Location = new Point(222, 125);
+            blankPanel.Name = "blankPanel";
+            blankPanel.Size = new Size(550, 590);
+            blankPanel.TabIndex = 11;
+            blankPanel.Tag = "blank";
             // 
             // titleText
             // 
-            this.titleText.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.titleText.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.titleText.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.titleText.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.titleText.Location = new System.Drawing.Point(226, 12);
-            this.titleText.Multiline = true;
-            this.titleText.Name = "titleText";
-            this.titleText.ReadOnly = true;
-            this.titleText.Size = new System.Drawing.Size(546, 110);
-            this.titleText.TabIndex = 1;
-            this.titleText.TabStop = false;
-            this.titleText.Text = resources.GetString("titleText.Text");
-            this.titleText.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            titleText.BackColor = Color.FromArgb(  35,   35,   35);
+            titleText.BorderStyle = BorderStyle.None;
+            titleText.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            titleText.ForeColor = Color.FromArgb(  230,   230,   230);
+            titleText.Location = new Point(226, 12);
+            titleText.Multiline = true;
+            titleText.Name = "titleText";
+            titleText.ReadOnly = true;
+            titleText.Size = new Size(546, 110);
+            titleText.TabIndex = 1;
+            titleText.TabStop = false;
+            titleText.Text = resources.GetString("titleText.Text");
+            titleText.TextAlign = HorizontalAlignment.Center;
             // 
             // helpTabButton7
             // 
-            this.helpTabButton7.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(70)))), ((int)(((byte)(70)))), ((int)(((byte)(70)))));
-            this.helpTabButton7.FlatAppearance.BorderColor = System.Drawing.SystemColors.WindowFrame;
-            this.helpTabButton7.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.helpTabButton7.Font = new System.Drawing.Font("Eternal UI 2", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.helpTabButton7.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(230)))), ((int)(((byte)(230)))), ((int)(((byte)(230)))));
-            this.helpTabButton7.Location = new System.Drawing.Point(12, 320);
-            this.helpTabButton7.Name = "helpTabButton7";
-            this.helpTabButton7.Size = new System.Drawing.Size(204, 33);
-            this.helpTabButton7.TabIndex = 18;
-            this.helpTabButton7.Tag = "trainer";
-            this.helpTabButton7.Text = "Trainer";
-            this.helpTabButton7.UseVisualStyleBackColor = false;
-            this.helpTabButton7.Click += new System.EventHandler(this.TabButton_Click);
+            helpTabButton7.BackColor = Color.FromArgb(  70,   70,   70);
+            helpTabButton7.FlatAppearance.BorderColor = SystemColors.WindowFrame;
+            helpTabButton7.FlatStyle = FlatStyle.Flat;
+            helpTabButton7.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
+            helpTabButton7.ForeColor = Color.FromArgb(  230,   230,   230);
+            helpTabButton7.Location = new Point(12, 320);
+            helpTabButton7.Name = "helpTabButton7";
+            helpTabButton7.Size = new Size(204, 33);
+            helpTabButton7.TabIndex = 18;
+            helpTabButton7.Tag = "trainer";
+            helpTabButton7.Text = "Trainer";
+            helpTabButton7.UseVisualStyleBackColor = false;
+            helpTabButton7.Click += TabButton_Click;
             // 
             // HelpPage
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(35)))), ((int)(((byte)(35)))), ((int)(((byte)(35)))));
-            this.ClientSize = new System.Drawing.Size(784, 761);
-            this.Controls.Add(this.helpTabButton7);
-            this.Controls.Add(this.titleText);
-            this.Controls.Add(this.blankPanel);
-            this.Controls.Add(this.helpTabButton6);
-            this.Controls.Add(this.helpTabButton5);
-            this.Controls.Add(this.helpTabButton4);
-            this.Controls.Add(this.helpTabButton3);
-            this.Controls.Add(this.helpTabButton2);
-            this.Controls.Add(this.helpTabButton1);
-            this.Controls.Add(this.helpTabButton0);
-            this.Controls.Add(this.pictureBox1);
-            this.Controls.Add(this.closeButton);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "HelpPage";
-            this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            this.Text = "Help and Instructions";
-            this.Load += new System.EventHandler(this.HelpPage_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.helpPageVersionImage)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.helpPageOSDImage)).EndInit();
-            this.blankPanel.ResumeLayout(false);
-            this.blankPanel.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
+            BackColor = Color.FromArgb(  35,   35,   35);
+            ClientSize = new Size(784, 761);
+            Controls.Add(helpTabButton7);
+            Controls.Add(titleText);
+            Controls.Add(blankPanel);
+            Controls.Add(helpTabButton6);
+            Controls.Add(helpTabButton5);
+            Controls.Add(helpTabButton4);
+            Controls.Add(helpTabButton3);
+            Controls.Add(helpTabButton2);
+            Controls.Add(helpTabButton1);
+            Controls.Add(helpTabButton0);
+            Controls.Add(pictureBox1);
+            Controls.Add(closeButton);
+            Icon = (Icon) resources.GetObject("$this.Icon");
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "HelpPage";
+            SizeGripStyle = SizeGripStyle.Hide;
+            Text = "Help and Instructions";
+            FormClosing += HelpPage_FormClosing;
+            Load += HelpPage_Load;
+            ((System.ComponentModel.ISupportInitialize) pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize) helpPageVersionImage).EndInit();
+            ((System.ComponentModel.ISupportInitialize) helpPageOSDImage).EndInit();
+            blankPanel.ResumeLayout(false);
+            blankPanel.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

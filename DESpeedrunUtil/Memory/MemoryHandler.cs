@@ -49,8 +49,9 @@ namespace DESpeedrunUtil.Memory {
         public bool UseDynamicScaling { get; set; } = true;
 
         bool _osdFlagMeath00k = false, _osdFlagMacro = false, _osdFlagFirewall = false, _osdFlagSlopeboost = false, _osdFlagReshade = false,
-             _unlockResFlag = false, _autoScaling = false, _resUnlocked = false, _osdFlagOutOfDate = false, _osdFlagRestartGame = false,
-             _trainerFlag = false, _externalTrainerFlag = false, _scheduleScaling = false, _osdFlagLimiter = true, _osdFlagModded = false,
+             _osdFlagOutOfDate = false, _osdFlagRestartGame = false, _osdFlagLimiter = true, _osdFlagModded = false,
+             _unlockResFlag = false, _autoScaling = false, _resUnlocked = false,
+             _trainerFlag = false, _externalTrainerFlag = false, _scheduleScaling = false,
              _antiAliasing = true, _unDelay = true, _autoContinue = false,
              _minimalOSD = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;

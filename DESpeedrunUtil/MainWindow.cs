@@ -20,8 +20,10 @@ namespace DESpeedrunUtil {
 
         public static MainWindow Instance { get; private set; }
 
+        internal SettingsPage? SettingsWindow;
+
         private PrivateFontCollection _fonts = new();
-        public static Font EternalUIRegular, EternalUIRegular10, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalLogoBold, EternalBattleBold;
+        public static Font EternalUIRegular, EternalUIRegular10, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalUIBold20, EternalLogoBold, EternalBattleBold;
 
 
         Process? _gameProcess;
@@ -35,7 +37,7 @@ namespace DESpeedrunUtil {
         Point _lastLocation;
 
         bool _fwRuleExists = false, _fwRestart = false;
-        bool _mhExists = false, _mhScheduleRemoval = false, _mhDoRemovalTask = false;
+        bool _mhExists = false, _mhInstallation = false;
         bool _reshadeExists = false;
 
         bool _enableMacro = true, _startingMacro = false;
@@ -183,6 +185,7 @@ namespace DESpeedrunUtil {
 
             speedometerPrecisionCheckbox.Visible = speedometerCheckbox.Checked;
             rightAlignCheckbox.Visible = speedometerCheckbox.Checked;
+            hideDuringLoadsCheckbox.Visible = speedometerCheckbox.Checked;
             trainerRadioLabel.Visible = speedometerCheckbox.Checked;
             velocityRadioNone.Visible = speedometerCheckbox.Checked;
             velocityRadioTotal.Visible = speedometerCheckbox.Checked;
@@ -192,11 +195,6 @@ namespace DESpeedrunUtil {
             firewallToggleButton.Text = _fwRuleExists ? "Disable Firewall Rule" : "Enable Firewall Rule";
 
             CheckForMeathook();
-            MeathookRemoval();
-
-            if(!meathookToggleButton.Enabled) {
-                meathookToggleButton.Enabled = !_mhScheduleRemoval && !_mhExists;
-            }
 
             if(!Hooked) {
                 try {
@@ -214,7 +212,10 @@ namespace DESpeedrunUtil {
                 if(_gameDirectory.ToLower().Contains("steam")) versionDropDownSelector.Enabled = true;
                 FreescrollMacro.Instance.Stop(true);
                 _fwRestart = false;
-                meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
+                if(!_mhInstallation) {
+                    cheatsToggleButton.Enabled = true;
+                    cheatsToggleButton.Text = _mhExists ? "Uninstall Meath00k" : "Install Meath00k";
+                }
                 return;
             }
 
@@ -330,7 +331,7 @@ namespace DESpeedrunUtil {
                             _speedometer.HideSecondaryVelocity = velocityRadioNone.Checked;
                             _speedometer.RightAlignText = rightAlignCheckbox.Checked;
                             _speedometer.Refresh();
-                    }
+                        }
                     }
                 } else {
                     positionTextBox.Visible = false;
@@ -435,6 +436,9 @@ namespace DESpeedrunUtil {
             balanceStatus.Text = (_fwRuleExists) ? ((_fwRestart) ? "Allowed*" : "Blocked") : "Allowed";
             if(Hooked) {
                 if(_memory.GetFlag("meath00k")) {
+                    cheatsStatus.Text = "meath00k";
+                    cheatsStatus.ForeColor = Color.Orange;
+                } else if(_memory.EnableCheats) {
                     cheatsStatus.Text = "Enabled";
                     cheatsStatus.ForeColor = Color.Red;
                 } else {
@@ -447,8 +451,13 @@ namespace DESpeedrunUtil {
                     reshadeStatus.Text = "Disabled";
                 }
             } else {
-                cheatsStatus.Text = "-";
-                cheatsStatus.ForeColor = COLOR_TEXT_FORE;
+                if(_mhExists) {
+                    cheatsStatus.Text = "meath00k";
+                    cheatsStatus.ForeColor = Color.Orange;
+                } else {
+                    cheatsStatus.Text = "-";
+                    cheatsStatus.ForeColor = COLOR_TEXT_FORE;
+                }
                 reshadeStatus.Text = "-";
             }
         }
@@ -782,7 +791,6 @@ namespace DESpeedrunUtil {
 
         private bool CheckForMeathook() {
             bool mh = File.Exists(_gameDirectory + "\\XINPUT1_3.dll");
-            meathookToggleButton.Text = mh ? "Disable Cheats" : "Enable Cheats";
             _mhExists = mh;
             return mh;
         }
@@ -832,51 +840,50 @@ namespace DESpeedrunUtil {
             return _rtssExecutable != string.Empty;
         }
 
-        private void MeathookRemoval() {
-            if(_mhScheduleRemoval) {
-                if(Hooked) {
-                    if(_memory.GetFlag("meath00k")) {
-                        _mhDoRemovalTask = true;
-                        meathookToggleButton.Enabled = false;
-                        meathookRestartLabel.ForeColor = COLOR_TEXT_FORE;
-                        return;
-                    }
-                }
-                // Can't remove the DLL while the game is running, so it's scheduled, then deleted after a delay 
-                // once the game is detected as closed.
-                if(_mhDoRemovalTask) {
-                    _mhScheduleRemoval = false;
-                    Task.Run(async delegate {
-                        _mhDoRemovalTask = false;
-                        await Task.Delay(2000);
-                        if(_mhExists) {
-                            UninstallMeathook();
-                        }
-                        meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
-                    });
-                } else {
-                    if(_mhScheduleRemoval == true && _mhExists) {
-                        UninstallMeathook();
-                        _mhScheduleRemoval = false;
-                        meathookRestartLabel.ForeColor = COLOR_PANEL_BACK;
-                    }
+        private void InstallMeathook() {
+            _mhInstallation = true;
+            cheatsToggleButton.Enabled = false;
+            cheatsToggleButton.Text = "Installing...";
+            try {
+                File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + "\\XINPUT1_3.dll");
+            } catch(Exception ex) {
+                Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", _gameDirectory);
+            }
+            foreach(string v in _gameVersions) {
+                try {
+                    File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + " " + v + "\\XINPUT1_3.dll");
+                } catch(Exception ex) {
+                    Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", _gameDirectory + " " + v);
+                    continue;
                 }
             }
+            foreach(string dir in _extraGameDirectories) {
+                try {
+                    File.Copy(@".\meath00k\XINPUT1_3.dll", dir + "\\XINPUT1_3.dll");
+                } catch(Exception ex) {
+                    Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", dir);
+                    continue;
+                }
+            }
+            Log.Information("meath00k installed.");
+            _mhInstallation = false;
         }
 
         private void UninstallMeathook() {
+            _mhInstallation = true;
+            cheatsToggleButton.Enabled = false;
+            cheatsToggleButton.Text = "Uninstalling...";
             try {
                 File.Delete(_gameDirectory + "\\XINPUT1_3.dll");
-                Log.Information("meath00k uninstalled.");
             } catch(Exception e) {
-                Log.Error(e, "An error occurred when attempting to uninstall meath00k.");
+                Log.Error(e, "An error occurred when attempting to uninstall meath00k from directory: {Directory}", _gameDirectory);
             }
 
             foreach(string v in _gameVersions) {
                 try {
                     File.Delete(_gameDirectory + " " + v + "\\XINPUT1_3.dll");
                 } catch(Exception e) {
-                    Log.Error(e, "An error occured when attempting to uninstall meath00k. v: {Version}", v);
+                    Log.Error(e, "An error occured when attempting to uninstall meath00k from directory: {Directory}", _gameDirectory + " " + v);
                     continue;
                 }
             }
@@ -888,6 +895,8 @@ namespace DESpeedrunUtil {
                     continue;
                 }
             }
+            Log.Information("meath00k uninstalled.");
+            _mhInstallation = false;
         }
 
         // Hooks into the DOOMEternalx64vk.exe process, then sets up pointers for memory reading/writing.
@@ -1024,6 +1033,10 @@ namespace DESpeedrunUtil {
                     meath00k = true;
             }
             _memory.SetFlag(meath00k, "meath00k");
+            cheatsToggleButton.Enabled = !meath00k;
+            if(!meath00k) {
+                cheatsToggleButton.Text = "Enable Cheats";
+            }
             var checksum = Checksums.GetMD5ChecksumFromFile(gamePath);
             if(!Checksums.Compare(checksum, _memory.Version.MD5)) {
                 _memory.SetFlag(true, "modded");
@@ -1053,6 +1066,7 @@ namespace DESpeedrunUtil {
 
             _memory.MemoryTimer.Start();
             _firstRun = false;
+            SettingsWindow?.UpdateMemoryHandler(_memory);
             return true;
         }
 
@@ -1110,9 +1124,6 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
             Properties.Settings.Default.ResScaleKey = (int) HotkeyHandler.Instance.ResScaleHotkey;
             Properties.Settings.Default.EnableMaxFPSLimit = enableMaxFPSCheckbox.Checked;
-            Properties.Settings.Default.AntiAliasing = !antiAliasingCheckbox.Checked;
-            Properties.Settings.Default.UNDelay = !unDelayCheckbox.Checked;
-            Properties.Settings.Default.AutoContinue = autoContinueCheckbox.Checked;
             Properties.Settings.Default.RTSSPath = _rtssExecutable;
             Properties.Settings.Default.LaunchRTSS = launchRTSSCheckbox.Checked;
             Properties.Settings.Default.MinimalOSD = minimalOSDCheckbox.Checked;
@@ -1152,6 +1163,7 @@ namespace DESpeedrunUtil {
                         EternalUIRegular20 = new(ff, 20f, FontStyle.Regular, GraphicsUnit.Point);
                         EternalUIRegular32 = new(ff, 32f, FontStyle.Regular, GraphicsUnit.Point);
                         EternalUIBold = new(ff, 11.25f, FontStyle.Bold, GraphicsUnit.Point);
+                        EternalUIBold20 = new(ff, 20f, FontStyle.Bold, GraphicsUnit.Point);
                         break;
                     case "Eternal Battle":
                         EternalBattleBold = new(ff, 20.25f, FontStyle.Bold, GraphicsUnit.Point);
@@ -1220,14 +1232,11 @@ namespace DESpeedrunUtil {
                 "Value must be in the range 1-250");
             toolTip7500.SetToolTip(launchRTSSCheckbox, "Automatically launches RTSS with DESRU\n" +
                 "Will launch RTSS immediately if it isn't open");
-            toolTip7500.SetToolTip(antiAliasingCheckbox, "Sets r_antialiasing to 0\n" +
-                "This option does nothing if you have DLSS enabled in the game settings");
-            toolTip7500.SetToolTip(unDelayCheckbox, "Disables the delay before you're allowed to quit out of an Ultra-Nightmare run");
-            toolTip7500.SetToolTip(autoContinueCheckbox, "Enabling this will remove the need to press a button to continue to the game from a loading screen");
             toolTip7500.SetToolTip(firewallToggleButton, "Toggle a firewall rule blocking DOOM Eternal's connection\n" +
                 "This prevents server side balance updates from being downloaded\n" +
                 "Required to be enabled for Leaderboard Runs");
-            toolTip7500.SetToolTip(meathookToggleButton, "Add/Remove meath00k from your current DOOM Eternal installation\n" +
+            toolTip7500.SetToolTip(cheatsToggleButton, "Enables cheats if the game is running\n" +
+                "Installs or Uninstalls meath00k if the game is closed\n" +
                 "Required to be disabled for Leaderboard Runs");
 
             /** Change Version **/
@@ -1271,9 +1280,6 @@ namespace DESpeedrunUtil {
             minimalOSDCheckbox.Font = EternalUIRegular;
             enableMaxFPSCheckbox.Font = EternalUIRegular;
             launchRTSSCheckbox.Font = EternalUIRegular;
-            antiAliasingCheckbox.Font = EternalUIRegular;
-            unDelayCheckbox.Font = EternalUIRegular;
-            autoContinueCheckbox.Font = EternalUIRegular;
             gameStatus.Font = EternalUIRegular;
             currentFPSCap.Font = EternalUIRegular;
             macroStatus.Font = EternalUIRegular;
@@ -1355,9 +1361,8 @@ namespace DESpeedrunUtil {
             changeVersionButton.Font = EternalUIBold;
             refreshVersionsButton.Font = EternalUIBold;
             firewallToggleButton.Font = EternalUIBold;
-            meathookToggleButton.Font = EternalUIBold;
+            cheatsToggleButton.Font = EternalUIBold;
             firewallRestartLabel.Font = EternalUIBold;
-            meathookRestartLabel.Font = EternalUIBold;
             gameStatusLabel.Font = EternalUIBold;
             fpsCapLabel.Font = EternalUIBold;
             macroStatusLabel.Font = EternalUIBold;
@@ -1374,7 +1379,6 @@ namespace DESpeedrunUtil {
             helpButton.Font = EternalUIBold;
             unlockResButton.Font = EternalUIBold;
             showMoreKeysButton.Font = EternalUIBold;
-            cvarLabel.Font = EternalUIBold;
 
             // Eternal Logo Bold 14point
             hotkeysTitle.Font = EternalLogoBold;
