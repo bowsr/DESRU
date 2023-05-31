@@ -90,7 +90,7 @@ namespace DESpeedrunUtil.Memory {
 
             Reset = false;
             Initialize();
-            Log.Information("Initialized MemoryHandler. Game Version: {Version} [{ModuleSize}]", Version, _moduleSize);
+            Log.Information("Initialized MemoryHandler. Game Version: {Version} [{ModuleSize}]", Version.Name, _moduleSize);
         }
 
 
