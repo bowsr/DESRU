@@ -1380,6 +1380,7 @@ namespace DESpeedrunUtil {
             helpButton.Font = EternalUIBold;
             unlockResButton.Font = EternalUIBold;
             showMoreKeysButton.Font = EternalUIBold;
+            settingsButton.Font = EternalUIBold;
 
             // Eternal Logo Bold 14point
             hotkeysTitle.Font = EternalLogoBold;
