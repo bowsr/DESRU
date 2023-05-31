@@ -23,6 +23,7 @@
         /// the contents of this method with the code editor.
         /// </summary>
         private void InitializeComponent() {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SettingsPage));
             settingsCVARLabel = new Label();
             settingsAACheckbox = new CheckBox();
             settingsUNCheckbox = new CheckBox();
@@ -157,6 +158,7 @@
             Controls.Add(settingsUNCheckbox);
             Controls.Add(settingsAACheckbox);
             Controls.Add(settingsCVARLabel);
+            Icon = (Icon) resources.GetObject("$this.Icon");
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "SettingsPage";

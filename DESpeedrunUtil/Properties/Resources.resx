@@ -184,18 +184,15 @@ You can specify your desired maximum FPS that DOOM Eternal will run at.
 You can toggle the On-Screen Display here, but make sure it is enabled during speedruns, otherwise your run won't be valid for leaderboard submission. If the OSD takes too much space on your screen, you can enable the Minimal OSD option so the info is shown on a single line.
 You can also disable the max FPS limiter here. Hotkeys will still work, and you will need to limit your FPS to 250 or lower through external means, like through RTSS or NVIDIA Control Panel.
 
-Under the CVAR section, you'll find three checkboxes which will toggle various in-game variables.
-The first will toggle anti-aliasing. This can help boost your performance if needed.
-(note: this option does nothing if you have DLSS enabled)
-The second will toggle the forced delay before you're able to quit out of an Ultra-Nightmare run.
-And the third, if enabled, will cause load screens to automatically continue, so you don't need to press any button.
-
 There's also a button to toggle a firewall rule blocking DOOM Eternal from accessing the internet. This is to prevent the download of server side balance patches, which can affect the single player campaign.
 This firewall rule is REQUIRED to exist during speedruns, so make sure the Info Panel shows "Blocked."
 
-The other button will enable cheats, allowing you to use basically any dev console command in game, along with adding other features like noclip/notarget/enemySpawning.
-Clicking this button will place the meath00k mod (XINPUT1_3.dll) in your DOOM Eternal folder. If this is done while the game is running, it will require a restart to take effect.
-This should go without saying, but having cheats enabled is NOT allowed during speedruns.</value>
+The other button will enable cheats, allowing you to use basically any dev console command in game.
+Clicking this button while the game is closed will place the meath00k mod (XINPUT1_3.dll) in your DOOM Eternal folder. This enables cheats on launch, but also adds new commands like noclip, notarget, chrispy, etc.
+This should go without saying, but having cheats enabled is NOT allowed during speedruns.
+
+Under the options panel is a button that will open an extended settings page.
+In this page you will find a few settings that will toggle cvars in-game, which are settings that aren't accessible without using the dev console (which is not allowed during or before runs, with the exception of binding scroll to jump).</value>
   </data>
   <data name="HelpPage_OSD" xml:space="preserve">
     <value>While DESRU is running, the performance metrics display in the top right of DOOM Eternal will be modified to display the state of a few things.
