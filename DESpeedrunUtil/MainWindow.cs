@@ -794,7 +794,7 @@ namespace DESpeedrunUtil {
             _mhExists = mh;
             return mh;
         }
-        private bool CheckForMeathookInPath(string path) => File.Exists(path + "\\XINPUT1_3.dll");
+        private static bool CheckForMeathookInPath(string path) => File.Exists(path + "\\XINPUT1_3.dll");
 
         // Checks if ReShade is both installed for Vulkan and set to run over DOOMEternalx64vk
         private bool CheckForReShade() {
@@ -1140,6 +1140,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.ResTogglePercent3 = _resPercent3;
             Properties.Settings.Default.UseDynamicScaling = dynScalingRadioButton.Checked;
             Properties.Settings.Default.RightAlignSpeedometer = rightAlignCheckbox.Checked;
+            Properties.Settings.Default.HideSpeedometerDuringLoads = hideDuringLoadsCheckbox.Checked;
             int radio = 1;
             if(velocityRadioNone.Checked) radio = 0;
             if(velocityRadioVertical.Checked) radio = 2;
