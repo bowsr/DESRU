@@ -104,11 +104,15 @@ namespace DESpeedrunUtil.Memory {
             TrainerSupported = _positionPtr != IntPtr.Zero;
             if(TrainerSupported) ReadTrainerValues();
 
-            if(_cheatsConsolePtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsConsolePtr) != !EnableCheats)
+            if(_cheatsConsolePtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsConsolePtr) != !EnableCheats) {
+                _game.VirtualProtect(_cheatsConsolePtr, 128, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_cheatsConsolePtr, new byte[1] { Convert.ToByte(!EnableCheats) });
+            }
 
-            if(_cheatsBindsPtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsBindsPtr) != !EnableCheats)
+            if(_cheatsBindsPtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsBindsPtr) != !EnableCheats) {
+                _game.VirtualProtect(_cheatsBindsPtr, 128, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_cheatsBindsPtr, new byte[1] { Convert.ToByte(!EnableCheats) });
+            }
 
             // Read current resolution scaling percentage
             if(_currentResScalePtr != IntPtr.Zero) CurrentResScaling = _game.ReadValue<float>(_currentResScalePtr);
@@ -756,6 +760,7 @@ namespace DESpeedrunUtil.Memory {
             // Launch Param Cheats are disabled ASAP to prevent any command/cvar changes coming from the user's set launch parameters
             var paramDP = CreateDP(_currentCheatOffsets.LaunchParams);
             paramDP.DerefOffsets(_game, out IntPtr paramPtr);
+            _game.VirtualProtect(paramPtr, 1024, MemPageProtect.PAGE_READWRITE);
             _game.WriteBytes(paramPtr, StringUtil.ConvertHexStringToBytes(LAUNCHPARAMS_GLOBAL_R));
 
             _cheatsConsoleDP = CreateDP(_currentCheatOffsets.Console);
