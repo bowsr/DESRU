@@ -181,7 +181,14 @@ namespace DESpeedrunUtil.Memory {
                         builderR2.Append(')');
                     }
                     var cheats = (_osdFlagMeath00k || EnableCheats || _osdFlagRestartGame) ? _cheatString : string.Empty;
-                    if(cheats == string.Empty && _osdFlagModded) cheats = "MODDED CLIENT";
+                    if(_osdFlagModded) {
+                        if(cheats == string.Empty) {
+                            cheats = "MODDED CLIENT";
+                        } else {
+                            if(!_osdFlagRestartGame)
+                                cheats += " (MOD)";
+                        }
+                    }
                     var scaling = string.Empty;
                     if(((DateTime.Now.Ticks - _scalingTime) / 10000) <= 3000) {
                         if(ReadDynamicRes() || ReadForceRes() > 0f) {
@@ -201,6 +208,10 @@ namespace DESpeedrunUtil.Memory {
                             _row1 += '(';
                         } else {
                             builderR2.Insert(0, '(');
+                        }
+                        if(_osdFlagModded) {
+                            builderR2.Replace("CHEATS ENABLED", "CHEATS (MOD)");
+                            builderR2.Replace("MEATH00K", "MEATH00K (MOD)");
                         }
                         _row2 = builderR2.ToString();
                         if(!_row2.Contains(')')) _row2 += ')';
