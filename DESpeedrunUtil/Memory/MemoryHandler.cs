@@ -203,7 +203,7 @@ namespace DESpeedrunUtil.Memory {
                         var row2Mod = (_scrollString != string.Empty) ? '[' + _scrollString + ']' : cheats;
                         _row1 += ' ';
                         builderR2.Replace("(", "");
-                        builderR2.Insert(0, "MOD-");
+                        if(modded) builderR2.Insert(0, "MOD-");
                         if(!_osdFlagOutOfDate) {
                             _row1 += '(';
                         } else {
