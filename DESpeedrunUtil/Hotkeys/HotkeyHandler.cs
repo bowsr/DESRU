@@ -195,9 +195,9 @@ namespace DESpeedrunUtil.Hotkeys {
                 } else if(type > 2 && type <= 6) {
                     oldKey = type switch {
                         3 => Instance.ResToggleHotkey0,
-                        4 => Instance.ResToggleHotkey0,
-                        5 => Instance.ResToggleHotkey0,
-                        6 => Instance.ResToggleHotkey0
+                        4 => Instance.ResToggleHotkey1,
+                        5 => Instance.ResToggleHotkey2,
+                        6 => Instance.ResToggleHotkey3
                     };
                 } else {
                     oldKey = Instance.FPSHotkeys.GetKeyFromID(fpstype);
