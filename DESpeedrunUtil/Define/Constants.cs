@@ -44,7 +44,7 @@
         internal const string LAUNCHPARAMS_GLOBAL_R = "CCCCCCCCCCCCCCCC40534883EC50488B842488000000488B";
         internal const string LAUNCHPARAMS_GLOBAL_U = "4183C91053EB0390EBF64883EC50488B842488000000488B";
 
-        internal const int MAX_SCROLL_DELTA = 100; // Max milliseconds between scroll inputs
+        internal const int MAX_SCROLL_DELTA = 200; // Max milliseconds between scroll inputs
         internal const int WINDOW_HEIGHT_DEFAULT = 805;
         internal const int WINDOW_WIDTH_DEFAULT = 653;
         internal const int PANEL_HEIGHT_DEFAULT = 760;

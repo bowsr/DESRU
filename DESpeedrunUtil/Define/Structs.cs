@@ -3,12 +3,12 @@
 
         internal struct ScrollPattern {
             public int ScrollCount { get; set; }
-            public long DeltaTotal { get; set; }
+            public TimeSpan DeltaTotal { get; set; }
 
-            public long Average() => (ScrollCount > 1) ? DeltaTotal / (ScrollCount - 1) : 0;
+            public double Average() => (ScrollCount > 1) ? (DeltaTotal / (ScrollCount - 1)).TotalMilliseconds : 0;
             public void Reset() {
                 ScrollCount = 0;
-                DeltaTotal = 0;
+                DeltaTotal = TimeSpan.Zero;
             }
         }
 

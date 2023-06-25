@@ -66,7 +66,7 @@ namespace DESpeedrunUtil {
 
         bool _trackScroll = false, _displayPattern = false, _direction = false, _directionChanged = false;
         string _storedDisplay = "";
-        long _scrollTime, _scrollDisplayTime;
+        DateTime _scrollTime, _scrollDisplayTime;
         ScrollPattern _scrollPattern = new();
 
         public MainWindow() {
@@ -281,23 +281,23 @@ namespace DESpeedrunUtil {
 
             /** Scroll Pattern Tracking **/
             if(_trackScroll) {
-                var delta = DateTime.Now.Ticks - _scrollTime;
-                if((delta / 10000) >= MAX_SCROLL_DELTA || _directionChanged) {
+                var delta = DateTime.Now - _scrollTime;
+                if(delta.TotalMilliseconds >= MAX_SCROLL_DELTA || _directionChanged) {
                     string display = "";
                     if(!_directionChanged) {
                         _trackScroll = false;
-                        var avg = _scrollPattern.Average() / 10000f;
-                        display = _scrollPattern.ScrollCount + " (" + ((avg > 0f) ? avg.ToString("0.0") + "ms" : "-") + ")";
+                        var avg = _scrollPattern.Average();
+                        display = _scrollPattern.ScrollCount + " (" + ((avg >= 0.01) ? avg.ToString("0.0") + "ms" : "-") + ")";
                     } else {
                         display = _storedDisplay;
                         _directionChanged = false;
                     }
                     _displayPattern = true;
-                    _scrollDisplayTime = DateTime.Now.Ticks;
+                    _scrollDisplayTime = DateTime.Now;
                     Memory.SetScrollPatternString(display);
                 }
             }
-            if(_displayPattern && ((DateTime.Now.Ticks - _scrollDisplayTime) / 10000) >= 2000) {
+            if(_displayPattern && (DateTime.Now - _scrollDisplayTime).TotalMilliseconds >= 2000) {
                 _displayPattern = false;
                 Memory.SetScrollPatternString(string.Empty);
             }
@@ -476,7 +476,7 @@ namespace DESpeedrunUtil {
         /// </summary>
         /// <param name="dir">Scroll direction. <see langword="true"/> = down</param>
         public void TrackMouseWheel(bool dir) {
-            var now = DateTime.Now.Ticks;
+            var now = DateTime.Now;
             if(!_trackScroll) {
                 _trackScroll = true;
                 _direction = dir;
@@ -489,8 +489,8 @@ namespace DESpeedrunUtil {
                     _directionChanged = true;
                     _scrollTime = now;
                     _direction = dir;
-                    var avg = _scrollPattern.Average() / 10000f;
-                    _storedDisplay = _scrollPattern.ScrollCount + " (" + ((avg > 0f) ? avg.ToString("0.0") + "ms" : "-") + ")";
+                    var avg = _scrollPattern.Average();
+                    _storedDisplay = _scrollPattern.ScrollCount + " (" + ((avg >= 0.01) ? avg.ToString("0.0") + "ms" : "-") + ")";
                     _scrollPattern.Reset();
                 }
                 if(_scrollPattern.ScrollCount > 0) _scrollPattern.DeltaTotal += delta;
