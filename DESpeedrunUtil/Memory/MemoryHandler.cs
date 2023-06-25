@@ -355,11 +355,21 @@ namespace DESpeedrunUtil.Memory {
             }
         }
 
+        /// <summary>
+        /// Task that runs a script to enable cheats, input a command to reset a UN run, then disable cheats.
+        /// <br>Will change how the script is ran depending on what level and cutscene are currently loaded in-game.</br>
+        /// </summary>
         public async Task ResetRunScript() {
+            if(IsLoadingOrInMenu()) return;
+
+            // 3.0 fixed the issue where you couldn't pause the game or open the console during the 
+            //   Hell on Earth intro cutscene.
+            // This detects the game version to determine if the script needs to switch window focus
+            //   to force a pause, which allows the console to be opened.
             var mustPauseGame = int.TryParse(Version.Name[0..1], out int versionMajor) && versionMajor < 3;
             var levelName = ReadLevelName();
             var e1m1_cutscene = false;
-            var cmd = "give armor 5; wait 5; kill";
+            var cmd = "give armor 5; wait 5; kill"; // Brink of Death can activate when using kill, but having at least 5 armor prevents it
 
             if(levelName.Contains("e1m1_intro")) {
                 var cutsceneID = ReadCutsceneID();
@@ -369,6 +379,7 @@ namespace DESpeedrunUtil.Memory {
                 }
             }
 
+            // Keyboard Input Script
             var eventBuilder = Simulate.Events()
                 .WaitUntilResponsive(_game.MainWindowHandle, new TimeSpan(0, 0, 0, 5, 0))
                 .Wait(250)
@@ -382,20 +393,24 @@ namespace DESpeedrunUtil.Memory {
             _resetRunLeftLoad = false;
             _resetRunString = "RUN RESET";
 
+            // Briefly enables cheats if they aren't already to allow the use of the commands
             var cheatsEnabled = EnableCheats || _osdFlagMeath00k;
             if(!cheatsEnabled) {
-                _preventCheatsToggle = true;
+                _preventCheatsToggle = true; // Prevents the Timer from toggling cheats while this script is running
                 _game.WriteBytes(_cheatsConsolePtr, new byte[1] { 0 });
             }
 
+            // Switching window focus to force the game to pause on versions that cannot pause during the intro cutscene
             if(e1m1_cutscene && mustPauseGame) {
                 SetForegroundWindow(MainWindow.Instance.Handle);
                 await Task.Delay(250);
-                SendKeys.Send("%{TAB}");
+                SendKeys.SendWait("%{TAB}");
             }
 
+            // Running the Keyboard Script
             await eventBuilder.Invoke();
 
+            // Disables cheats again
             if(!cheatsEnabled) {
                 _game.WriteBytes(_cheatsConsolePtr, new byte[1] { 1 });
                 _preventCheatsToggle = false;

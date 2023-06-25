@@ -850,14 +850,17 @@ namespace DESpeedrunUtil {
                 Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", _gameDirectory);
             }
             foreach(string v in _gameVersions) {
+                var vDir = _gameDirectory + " " + v;
+                if(!Directory.Exists(vDir)) continue;
                 try {
-                    File.Copy(@".\meath00k\XINPUT1_3.dll", _gameDirectory + " " + v + "\\XINPUT1_3.dll");
+                    File.Copy(@".\meath00k\XINPUT1_3.dll", vDir + "\\XINPUT1_3.dll");
                 } catch(Exception ex) {
-                    Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", _gameDirectory + " " + v);
+                    Log.Error(ex, "An error occured when attempting to install meath00k in directory: {Directory}", vDir);
                     continue;
                 }
             }
             foreach(string dir in _extraGameDirectories) {
+                if(!Directory.Exists(dir)) continue;
                 try {
                     File.Copy(@".\meath00k\XINPUT1_3.dll", dir + "\\XINPUT1_3.dll");
                 } catch(Exception ex) {
@@ -880,14 +883,17 @@ namespace DESpeedrunUtil {
             }
 
             foreach(string v in _gameVersions) {
+                var vDir = _gameDirectory + " " + v;
+                if(!Directory.Exists(vDir)) continue;
                 try {
-                    File.Delete(_gameDirectory + " " + v + "\\XINPUT1_3.dll");
+                    File.Delete(vDir + "\\XINPUT1_3.dll");
                 } catch(Exception e) {
-                    Log.Error(e, "An error occured when attempting to uninstall meath00k from directory: {Directory}", _gameDirectory + " " + v);
+                    Log.Error(e, "An error occured when attempting to uninstall meath00k from directory: {Directory}", vDir);
                     continue;
                 }
             }
             foreach(string dir in _extraGameDirectories) {
+                if(!Directory.Exists(dir)) continue;
                 try {
                     File.Delete(dir + "\\XINPUT1_3.dll");
                 } catch(Exception e) {
