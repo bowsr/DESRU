@@ -46,7 +46,7 @@ namespace DESpeedrunUtil {
                         "hkResToggle1" => 4,
                         "hkResToggle2" => 5,
                         "hkResToggle3" => 6,
-                        _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + 7 : -1,
+                        _ => int.TryParse(tag.Replace("hkFps", ""), out int id) ? id + HotkeyHandler.FPSKEYS_START_ID : -1,
                     };
                 } catch(FormatException f) {
                     Log.Error(f, "Attempted to parse a hotkeyField's tag as an fpskey despite it not being one.");
@@ -176,7 +176,7 @@ namespace DESpeedrunUtil {
             ((TextBox) sender).Text = resPercent.ToString();
 
             if(Hooked) {
-                _memory.SetMinRes(resPercent / 100f);
+                Memory.SetMinRes(resPercent / 100f);
             }
         }
         private void ResToggle_KeyUp(object sender, KeyEventArgs e) {
@@ -232,15 +232,15 @@ namespace DESpeedrunUtil {
         }
         private void AutoDynamic_CheckChanged(object sender, EventArgs e) {
             if(((CheckBox) sender).Checked) {
-                if(Hooked && !_memory.ReadDynamicRes()) _memory.EnableDynamicScaling(_targetFPS);
+                if(Hooked && !Memory.ReadDynamicRes()) Memory.EnableDynamicScaling(_targetFPS);
             }
         }
         private void MaxFPS_CheckChanged(object sender, EventArgs e) {
             if(!((CheckBox) sender).Checked && !_justLaunched) {
                 Log.Warning("Max FPS Limiter disabled.");
                 if(Hooked) {
-                    _memory.SetMaxHz(1000);
-                    _memory.SetFlag(false, "limiter");
+                    Memory.SetMaxHz(1000);
+                    Memory.SetFlag(false, "limiter");
                 }
                 launchRTSSCheckbox.Enabled = true;
                 System.Media.SystemSounds.Asterisk.Play();
@@ -251,8 +251,8 @@ namespace DESpeedrunUtil {
             } else {
                 Log.Information("Max FPS Limiter enabled.");
                 if(Hooked) {
-                    _memory.SetMaxHz(_fpsDefault);
-                    _memory.SetFlag(true, "limiter");
+                    Memory.SetMaxHz(_fpsDefault);
+                    Memory.SetFlag(true, "limiter");
                 }
                 launchRTSSCheckbox.Enabled = false;
             }
@@ -295,20 +295,20 @@ namespace DESpeedrunUtil {
             }
         }
         private void AA_CheckChanged(object sender, EventArgs e) {
-            if(Hooked) _memory.SetCVAR(!((CheckBox) sender).Checked, "antialiasing");
+            if(Hooked) Memory.SetCVAR(!((CheckBox) sender).Checked, "antialiasing");
         }
         private void UNDelay_CheckChanged(object sender, EventArgs e) {
-            if(Hooked) _memory.SetCVAR(!((CheckBox) sender).Checked, "undelay");
+            if(Hooked) Memory.SetCVAR(!((CheckBox) sender).Checked, "undelay");
         }
         private void AutoContinue_CheckChanged(object sender, EventArgs e) {
-            if(Hooked) _memory.SetCVAR(((CheckBox) sender).Checked, "autocontinue");
+            if(Hooked) Memory.SetCVAR(((CheckBox) sender).Checked, "autocontinue");
         }
         private void MinimalOSD_CheckChanged(object sender, EventArgs e) {
-            if(Hooked) _memory.SetFlag(((CheckBox) sender).Checked, "minimal");
+            if(Hooked) Memory.SetFlag(((CheckBox) sender).Checked, "minimal");
         }
         private void DisableOSD_CheckChanged(object sender, EventArgs e) {
             var check = ((CheckBox) sender).Checked;
-            if(Hooked) _memory.EnableOSD = check;
+            if(Hooked) Memory.EnableOSD = check;
             minimalOSDCheckbox.Enabled = check;
             if(!check && !_justLaunched) {
                 System.Media.SystemSounds.Asterisk.Play();
@@ -318,8 +318,8 @@ namespace DESpeedrunUtil {
         }
         private void ScalingMethod_CheckChanged(object sender, EventArgs e) {
             if(Hooked) {
-                _memory.UseDynamicScaling = dynScalingRadioButton.Checked;
-                if(_memory.ReadDynamicRes() || _memory.ReadForceRes() > 0f) _memory.EnableResolutionScaling();
+                Memory.UseDynamicScaling = dynScalingRadioButton.Checked;
+                if(Memory.ReadDynamicRes() || Memory.ReadForceRes() > 0f) Memory.EnableResolutionScaling();
             }
         }
         #endregion
@@ -332,11 +332,11 @@ namespace DESpeedrunUtil {
         }
         private void SettingsButton_Click(object sender, EventArgs e) {
             settingsButton.Enabled = false;
-            SettingsWindow = new SettingsPage(_memory);
+            SettingsWindow = new SettingsPage();
             SettingsWindow.Show();
         }
         private void UnlockRes_Click(object sender, EventArgs e) {
-            if(Hooked) _memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
+            if(Hooked) Memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
         }
         private void RefreshVersions_Click(object sender, EventArgs e) {
             if(_steamDirectory != string.Empty) DetectAllGameVersions();
@@ -404,7 +404,7 @@ namespace DESpeedrunUtil {
                 if(_fwRestart) _fwRestart = false;
                 _fwRuleExists = false;
                 if(Hooked) {
-                    _memory.SetFlag(_fwRuleExists, "firewall");
+                    Memory.SetFlag(_fwRuleExists, "firewall");
                 }
                 firewallRestartLabel.ForeColor = COLOR_PANEL_BACK;
             } else {
@@ -422,7 +422,7 @@ namespace DESpeedrunUtil {
         }
         private void CheatsToggle_Click(object sender, EventArgs e) {
             if(Hooked) {
-                _memory.EnableCheats = true;
+                Memory.EnableCheats = true;
                 cheatsToggleButton.Enabled = false;
                 cheatsToggleButton.Text = "Restart Game to Disable Cheats";
                 return;
@@ -491,7 +491,7 @@ namespace DESpeedrunUtil {
             _ = new FreescrollMacro((Keys) Properties.Settings.Default.DownScrollKey, (Keys) Properties.Settings.Default.UpScrollKey);
             _ = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, (Keys) Properties.Settings.Default.ResToggleKey0,
                 (Keys) Properties.Settings.Default.ResToggleKey1, (Keys) Properties.Settings.Default.ResToggleKey2,
-                (Keys) Properties.Settings.Default.ResToggleKey3, fpsJson);
+                (Keys) Properties.Settings.Default.ResToggleKey3, (Keys) Properties.Settings.Default.ResetRunHotkey, fpsJson);
             _fpsDefault = Properties.Settings.Default.DefaultFPSCap;
             autorunMacroCheckbox.Checked = Properties.Settings.Default.MacroEnabled;
             _enableMacro = Properties.Settings.Default.MacroEnabled;
@@ -583,7 +583,7 @@ namespace DESpeedrunUtil {
 
             HotkeyHandler.Instance.DisableHotkeys();
             FreescrollMacro.Instance.Stop(false);
-            _memory?.ClosingDESRU();
+            Memory?.ClosingDESRU();
 
             RawInputDevice.UnregisterDevice(HidUsageAndPage.Keyboard);
             RawInputDevice.UnregisterDevice(HidUsageAndPage.Mouse);

@@ -1,30 +1,25 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 using System.Text;
 
 #pragma warning disable 1591
 
-namespace DESpeedrunUtil.Memory
-{
+namespace DESpeedrunUtil.Memory {
     using SizeT = UIntPtr;
 
-    public enum MemPageState : uint
-    {
+    public enum MemPageState: uint {
         MEM_COMMIT = 0x1000,
         MEM_RESERVE = 0x2000,
         MEM_FREE = 0x10000,
     }
 
-    public enum MemPageType : uint
-    {
+    public enum MemPageType: uint {
         MEM_PRIVATE = 0x20000,
         MEM_MAPPED = 0x40000,
         MEM_IMAGE = 0x1000000
     }
 
     [Flags]
-    public enum MemPageProtect : uint
-    {
+    public enum MemPageProtect: uint {
         PAGE_NOACCESS = 0x01,
         PAGE_READONLY = 0x02,
         PAGE_READWRITE = 0x04,
@@ -50,8 +45,7 @@ namespace DESpeedrunUtil.Memory
         public MemPageType Type;
     }
 
-    public static class WinAPI
-    {
+    public static class WinAPI {
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
         public static extern bool ReadProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, [Out] byte[] lpBuffer,
@@ -113,8 +107,7 @@ namespace DESpeedrunUtil.Memory
             IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, out IntPtr lpThreadId);
 
         [StructLayout(LayoutKind.Sequential)]
-        public struct MODULEINFO
-        {
+        public struct MODULEINFO {
             public IntPtr lpBaseOfDll;
             public uint SizeOfImage;
             public IntPtr EntryPoint;

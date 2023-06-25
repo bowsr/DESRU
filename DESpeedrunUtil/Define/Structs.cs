@@ -96,7 +96,7 @@
 
         internal readonly struct CheatOffsets {
             public string Version { get; init; }
-            
+
             public int Console { get; init; }
             public int Binds { get; init; }
             public int LaunchParams { get; init; }

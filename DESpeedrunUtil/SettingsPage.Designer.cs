@@ -32,6 +32,11 @@
             settingsUNDescription = new TextBox();
             settingsAutoContinueDescription = new TextBox();
             settingsCloseButton = new Button();
+            titleSeparator = new Panel();
+            settingsHotkeyLabel = new Label();
+            settingsResetRunHotkeyField = new Label();
+            settingsResetBindDescription = new TextBox();
+            settingsResetBindCheckbox = new CheckBox();
             SuspendLayout();
             // 
             // settingsCVARLabel
@@ -57,7 +62,7 @@
             settingsAACheckbox.Tag = "antialiasing";
             settingsAACheckbox.Text = "Disable Anti-Aliasing";
             settingsAACheckbox.UseVisualStyleBackColor = true;
-            settingsAACheckbox.CheckedChanged += Checkbox_CheckedChanged;
+            settingsAACheckbox.CheckedChanged += CVARCheckbox_CheckedChanged;
             // 
             // settingsUNCheckbox
             // 
@@ -71,7 +76,7 @@
             settingsUNCheckbox.Tag = "undelay";
             settingsUNCheckbox.Text = "Disable Ultra-Nightmare Quitout Delay";
             settingsUNCheckbox.UseVisualStyleBackColor = true;
-            settingsUNCheckbox.CheckedChanged += Checkbox_CheckedChanged;
+            settingsUNCheckbox.CheckedChanged += CVARCheckbox_CheckedChanged;
             // 
             // settingsAutoContinueCheckbox
             // 
@@ -85,7 +90,7 @@
             settingsAutoContinueCheckbox.Tag = "autocontinue";
             settingsAutoContinueCheckbox.Text = "Auto Continue in Loading Screens";
             settingsAutoContinueCheckbox.UseVisualStyleBackColor = true;
-            settingsAutoContinueCheckbox.CheckedChanged += Checkbox_CheckedChanged;
+            settingsAutoContinueCheckbox.CheckedChanged += CVARCheckbox_CheckedChanged;
             // 
             // settingsAADescription
             // 
@@ -136,7 +141,7 @@
             settingsCloseButton.FlatStyle = FlatStyle.Flat;
             settingsCloseButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             settingsCloseButton.ForeColor = Color.FromArgb(  230,   230,   230);
-            settingsCloseButton.Location = new Point(232, 220);
+            settingsCloseButton.Location = new Point(232, 507);
             settingsCloseButton.Name = "settingsCloseButton";
             settingsCloseButton.Size = new Size(150, 28);
             settingsCloseButton.TabIndex = 8;
@@ -144,12 +149,78 @@
             settingsCloseButton.UseVisualStyleBackColor = false;
             settingsCloseButton.Click += CloseButton_Click;
             // 
+            // titleSeparator
+            // 
+            titleSeparator.BackColor = Color.FromArgb(  85,   85,   85);
+            titleSeparator.Location = new Point(12, 215);
+            titleSeparator.Name = "titleSeparator";
+            titleSeparator.Size = new Size(370, 2);
+            titleSeparator.TabIndex = 32;
+            // 
+            // settingsHotkeyLabel
+            // 
+            settingsHotkeyLabel.AutoSize = true;
+            settingsHotkeyLabel.Font = new Font("Eternal UI 2", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            settingsHotkeyLabel.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsHotkeyLabel.Location = new Point(12, 226);
+            settingsHotkeyLabel.Name = "settingsHotkeyLabel";
+            settingsHotkeyLabel.Size = new Size(131, 33);
+            settingsHotkeyLabel.TabIndex = 33;
+            settingsHotkeyLabel.Text = "HOTKEYS";
+            // 
+            // settingsResetRunHotkeyField
+            // 
+            settingsResetRunHotkeyField.BackColor = Color.FromArgb(  70,   70,   70);
+            settingsResetRunHotkeyField.BorderStyle = BorderStyle.FixedSingle;
+            settingsResetRunHotkeyField.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsResetRunHotkeyField.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsResetRunHotkeyField.Location = new Point(48, 287);
+            settingsResetRunHotkeyField.Name = "settingsResetRunHotkeyField";
+            settingsResetRunHotkeyField.Padding = new Padding(0, 3, 0, 0);
+            settingsResetRunHotkeyField.Size = new Size(135, 26);
+            settingsResetRunHotkeyField.TabIndex = 34;
+            settingsResetRunHotkeyField.Tag = "hkResetBind";
+            settingsResetRunHotkeyField.Click += HotkeyAssignment_FieldSelected;
+            // 
+            // settingsResetBindDescription
+            // 
+            settingsResetBindDescription.BackColor = Color.FromArgb(  35,   35,   35);
+            settingsResetBindDescription.BorderStyle = BorderStyle.None;
+            settingsResetBindDescription.Font = new Font("Eternal UI 2", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsResetBindDescription.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsResetBindDescription.Location = new Point(48, 319);
+            settingsResetBindDescription.Multiline = true;
+            settingsResetBindDescription.Name = "settingsResetBindDescription";
+            settingsResetBindDescription.ReadOnly = true;
+            settingsResetBindDescription.Size = new Size(315, 182);
+            settingsResetBindDescription.TabIndex = 36;
+            settingsResetBindDescription.Text = resources.GetString("settingsResetBindDescription.Text");
+            // 
+            // settingsResetBindCheckbox
+            // 
+            settingsResetBindCheckbox.AutoSize = true;
+            settingsResetBindCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsResetBindCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsResetBindCheckbox.Location = new Point(27, 262);
+            settingsResetBindCheckbox.Name = "settingsResetBindCheckbox";
+            settingsResetBindCheckbox.Size = new Size(341, 22);
+            settingsResetBindCheckbox.TabIndex = 37;
+            settingsResetBindCheckbox.Tag = "autocontinue";
+            settingsResetBindCheckbox.Text = "Enable Reset Run / Kill Script Hotkey (Double Tap)";
+            settingsResetBindCheckbox.UseVisualStyleBackColor = true;
+            settingsResetBindCheckbox.CheckedChanged += ResetRunCheckbox_CheckChanged;
+            // 
             // SettingsPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(  35,   35,   35);
-            ClientSize = new Size(394, 260);
+            ClientSize = new Size(394, 547);
+            Controls.Add(settingsResetBindCheckbox);
+            Controls.Add(settingsResetBindDescription);
+            Controls.Add(settingsResetRunHotkeyField);
+            Controls.Add(settingsHotkeyLabel);
+            Controls.Add(titleSeparator);
             Controls.Add(settingsCloseButton);
             Controls.Add(settingsAutoContinueDescription);
             Controls.Add(settingsUNDescription);
@@ -167,6 +238,7 @@
             TopMost = true;
             FormClosing += SettingsPage_FormClosing;
             Load += SettingsPage_Load;
+            KeyDown += HotkeyAssignment_KeyDown;
             ResumeLayout(false);
             PerformLayout();
         }
@@ -181,5 +253,10 @@
         private TextBox settingsUNDescription;
         private TextBox settingsAutoContinueDescription;
         private Button settingsCloseButton;
+        private Panel titleSeparator;
+        private Label settingsHotkeyLabel;
+        private Label settingsResetRunHotkeyField;
+        private TextBox settingsResetBindDescription;
+        private CheckBox settingsResetBindCheckbox;
     }
 }

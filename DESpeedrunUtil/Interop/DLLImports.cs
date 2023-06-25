@@ -9,5 +9,8 @@ namespace DESpeedrunUtil.Interop {
         [DllImport("user32.dll")]
         internal static extern ushort GetAsyncKeyState(Keys vKey);
 
+        [DllImport("user32.dll")]
+        internal static extern bool SetForegroundWindow(IntPtr hWnd);
+
     }
 }

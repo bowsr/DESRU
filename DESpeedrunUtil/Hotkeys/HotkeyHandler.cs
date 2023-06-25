@@ -7,9 +7,14 @@ using static DESpeedrunUtil.Interop.DLLImports;
 namespace DESpeedrunUtil.Hotkeys {
     internal class HotkeyHandler {
 
+        public const int FPSKEYS_START_ID = 8;
+        private const int RESETKEY_DOUBLETAP_DURATION_MS = 500;
+
         public static HotkeyHandler Instance { get; private set; }
 
         private bool _resScaleKeyEnabled = false;
+
+        private DateTime _resetRunKeyLastHit = DateTime.Now;
 
         public bool Enabled { get; private set; }
         public Keys ResScaleHotkey { get; private set; } = Keys.None;
@@ -17,6 +22,7 @@ namespace DESpeedrunUtil.Hotkeys {
         public Keys ResToggleHotkey1 { get; private set; } = Keys.None;
         public Keys ResToggleHotkey2 { get; private set; } = Keys.None;
         public Keys ResToggleHotkey3 { get; private set; } = Keys.None;
+        public Keys ResetRunHotkey { get; private set; } = Keys.None;
 
         public List<Keys> HookedHotkeys { get; private set; }
 
@@ -25,12 +31,13 @@ namespace DESpeedrunUtil.Hotkeys {
         /// </summary>
         public FPSHotkeyMap FPSHotkeys { get; init; }
 
-        public HotkeyHandler(Keys res, Keys res0, Keys res1, Keys res2, Keys res3, string fpsJson) {
+        public HotkeyHandler(Keys res, Keys res0, Keys res1, Keys res2, Keys res3, Keys reset, string fpsJson) {
             ResScaleHotkey = res;
             ResToggleHotkey0 = res0;
             ResToggleHotkey1 = res1;
             ResToggleHotkey2 = res2;
             ResToggleHotkey3 = res3;
+            ResetRunHotkey = reset;
             FPSHotkeys = new(fpsJson);
 
             MainWindow.Instance.RIKeyDown += new KeyEventHandler(Hook_KeyDown);
@@ -40,14 +47,7 @@ namespace DESpeedrunUtil.Hotkeys {
             MainWindow.Instance.RIMouseScroll += new EventHandler<MouseWheelEventArgs>(Hook_MouseScroll);
 
             HookedHotkeys = new();
-            if(ResScaleHotkey != Keys.None) HookedHotkeys.Add(ResScaleHotkey);
-            if(ResToggleHotkey0 != Keys.None) HookedHotkeys.Add(ResToggleHotkey0);
-            if(ResToggleHotkey1 != Keys.None) HookedHotkeys.Add(ResToggleHotkey1);
-            if(ResToggleHotkey2 != Keys.None) HookedHotkeys.Add(ResToggleHotkey2);
-            if(ResToggleHotkey3 != Keys.None) HookedHotkeys.Add(ResToggleHotkey3);
-            foreach(FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
-                if(fkey.Key != Keys.None) HookedHotkeys.Add(fkey.Key);
-            }
+            AddHotkeys();
 
             Instance = this;
 
@@ -107,6 +107,7 @@ namespace DESpeedrunUtil.Hotkeys {
                     break;
             }
         }
+        private void ChangeResetRunHotkey(Keys key) => ResetRunHotkey = key;
         private void AddHotkeys() {
             HookedHotkeys.Clear();
             if(ResScaleHotkey != Keys.None) HookedHotkeys.Add(ResScaleHotkey);
@@ -114,6 +115,7 @@ namespace DESpeedrunUtil.Hotkeys {
             if(ResToggleHotkey1 != Keys.None) HookedHotkeys.Add(ResToggleHotkey1);
             if(ResToggleHotkey2 != Keys.None) HookedHotkeys.Add(ResToggleHotkey2);
             if(ResToggleHotkey3 != Keys.None) HookedHotkeys.Add(ResToggleHotkey3);
+            if(ResetRunHotkey != Keys.None) HookedHotkeys.Add(ResetRunHotkey);
             foreach(FPSKey fkey in FPSHotkeys.GetAllFPSKeys()) {
                 if(fkey.Key != Keys.None) HookedHotkeys.Add(fkey.Key);
             }
@@ -136,9 +138,17 @@ namespace DESpeedrunUtil.Hotkeys {
                 MainWindow.Instance.ChangeResScale(2);
             } else if(e.KeyCode == ResToggleHotkey3 && _resScaleKeyEnabled) {
                 MainWindow.Instance.ChangeResScale(3);
+            } else if(e.KeyCode == ResetRunHotkey && Properties.Settings.Default.EnableResetRunHotkey) {
+                var timespan = DateTime.Now - _resetRunKeyLastHit;
+                if(timespan.TotalMilliseconds <= RESETKEY_DOUBLETAP_DURATION_MS) {
+                    _ = MainWindow.Instance.Memory?.ResetRunScript();
+                } else {
+                    _resetRunKeyLastHit = DateTime.Now;
+                }
             }
             e.Handled = true;
         }
+
         private void Hook_KeyUp(object sender, KeyEventArgs e) {
             if(e.KeyCode == Keys.None || !Enabled) {
                 e.Handled = false;
@@ -174,17 +184,16 @@ namespace DESpeedrunUtil.Hotkeys {
         /// </summary>
         /// <param name="key">New Keys value to assign</param>
         /// <param name="type">Which hotkey to change</param>
-        /// <param name="macro"><see cref="FreescrollMacro"/> Instance</param>
-        /// <param name="hotkeys"><see cref="HotkeyHandler"/> Instance</param>
         public static void ChangeHotkeys(Keys key, int type) {
             // Duplicate check
             // If a dupe is found, sets dupe to the old key of the currently changing field
             //   type:  0-1  -> FreescrollMacro (type == 0) DownScrollKey if true, UpScrollKey if false
             //            2  -> Res Scaling Hotkey
-            //   type:  3-6  -> Res Toggle Hotkey
-            //            7+ -> FPSKey (id == type - 7)
-            var fpstype = type - 7;
-            var maxkeys = Instance.FPSHotkeys.Count() + 6;
+            //          3-6  -> Res Toggle Hotkey
+            //            7  -> Reset Run / Kill Hotkey
+            //            8+ -> FPSKey (id == type - FPSKEYS_START_ID)
+            var fpstype = type - FPSKEYS_START_ID;
+            var maxkeys = Instance.FPSHotkeys.Count() + FPSKEYS_START_ID - 1;
             if(key != Keys.None) {
                 if(type < 0 || type > maxkeys) return;
                 Keys oldKey;
@@ -199,6 +208,8 @@ namespace DESpeedrunUtil.Hotkeys {
                         5 => Instance.ResToggleHotkey2,
                         6 => Instance.ResToggleHotkey3
                     };
+                } else if(type == 7) {
+                    oldKey = Instance.ResetRunHotkey;
                 } else {
                     oldKey = Instance.FPSHotkeys.GetKeyFromID(fpstype);
                 }
@@ -227,11 +238,19 @@ namespace DESpeedrunUtil.Hotkeys {
                         if(dupe) {
                             Log.Information("Duplicate of ResToggleHotkey {ID}. Swapping {Key0} with {Key1}", i - 3, oldKey, key);
                             Instance.ChangeResToggleHotkey(oldKey, i - 3);
+                            break;
+                        }
+                    } else if(i == 7) {
+                        if(key == Instance.ResetRunHotkey) {
+                            Log.Information("Duplicate of ResetRunHotkey. Swapping {Key0} with {Key1}", oldKey, key);
+                            Instance.ChangeResetRunHotkey(oldKey);
+                            break;
                         }
                     } else {
-                        if(key == Instance.FPSHotkeys.GetKeyFromID(i - 7)) {
-                            Log.Information("Duplicate of FPSHotkey {ID}. Swapping {Key0} with {Key1}", i - 7, oldKey, key);
-                            Instance.FPSHotkeys.ChangeKey(i - 7, oldKey);
+                        var fpskeyID = i - FPSKEYS_START_ID;
+                        if(key == Instance.FPSHotkeys.GetKeyFromID(fpskeyID)) {
+                            Log.Information("Duplicate of FPSHotkey {ID}. Swapping {Key0} with {Key1}", fpskeyID, oldKey, key);
+                            Instance.FPSHotkeys.ChangeKey(fpskeyID, oldKey);
                             break;
                         }
                     }
@@ -247,6 +266,9 @@ namespace DESpeedrunUtil.Hotkeys {
             } else if(type > 2 && type <= 6) {
                 Instance.ChangeResToggleHotkey(key, type - 3);
                 Log.Information("ResToggle Hotkey {ID} changed to {Key}", type - 3, key);
+            } else if(type == 7) {
+                Instance.ChangeResetRunHotkey(key);
+                Log.Information("ResetRun Hotkey changed to {Key}", key);
             } else {
                 Instance.FPSHotkeys.ChangeKey(fpstype, key);
                 Log.Information("FPSHotkey {FPSKey} changed to {Key}", fpstype, key);

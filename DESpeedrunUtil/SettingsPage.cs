@@ -1,23 +1,61 @@
-﻿using DESpeedrunUtil.Memory;
+﻿using DESpeedrunUtil.Hotkeys;
+using static DESpeedrunUtil.Define.Constants;
+using static DESpeedrunUtil.Interop.DLLImports;
 
 namespace DESpeedrunUtil {
     internal partial class SettingsPage: Form {
 
-        MemoryHandler? _memory;
+        bool _enableEvents = false;
+        bool _hkAssignmentMode = false;
 
-        private bool _enableEvents = false;
+        Label? _selectedHKField;
 
-        public SettingsPage(MemoryHandler? memory) {
+
+        public SettingsPage() {
             InitializeComponent();
-            _memory = memory;
             settingsAACheckbox.Checked = !Properties.Settings.Default.AntiAliasing;
             settingsUNCheckbox.Checked = !Properties.Settings.Default.UNDelay;
             settingsAutoContinueCheckbox.Checked = Properties.Settings.Default.AutoContinue;
+            settingsResetBindCheckbox.Checked = Properties.Settings.Default.EnableResetRunHotkey;
+            UpdateHotkeyFields();
             SetFonts();
             _enableEvents = true;
         }
 
-        private void Checkbox_CheckedChanged(object sender, EventArgs e) {
+        #region EVENTS
+        private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
+            if((GetAsyncKeyState(Keys.LButton) & 0x01) == 1) {
+                _selectedHKField = (Label) sender;
+                _selectedHKField.Text = "Press a key";
+                _selectedHKField.BackColor = Color.WhiteSmoke;
+                _selectedHKField.ForeColor = Color.Black;
+                this.ActiveControl = null;
+
+                _hkAssignmentMode = true;
+            }
+        }
+        private void HotkeyAssignment_KeyDown(object sender, KeyEventArgs e) {
+            if(!_hkAssignmentMode) return;
+            Keys pressedKey;
+
+            if(e.Control) pressedKey = HotkeyHandler.ModKeySelector(0);
+            else if(e.Shift) pressedKey = HotkeyHandler.ModKeySelector(1);
+            else if(e.Alt) pressedKey = HotkeyHandler.ModKeySelector(2);
+            else pressedKey = e.KeyCode;
+            if(pressedKey == Keys.Escape) pressedKey = Keys.None;
+            bool isValid = !INVALID_KEYS.Contains(pressedKey);
+
+            _hkAssignmentMode = false;
+            _selectedHKField = null;
+            if(isValid) {
+                HotkeyHandler.ChangeHotkeys(pressedKey, 7);
+            }
+            MainWindow.Instance.UpdateHotkeyAndInputFields();
+            UpdateHotkeyFields();
+            e.Handled = true;
+        }
+
+        private void CVARCheckbox_CheckedChanged(object sender, EventArgs e) {
             if(!_enableEvents) return;
             var cb = (CheckBox) sender;
             string tag = cb.Tag.ToString();
@@ -26,9 +64,11 @@ namespace DESpeedrunUtil {
                 "autocontinue" => cb.Checked,
                 _ => false
             };
-            _memory?.SetCVAR(state, tag);
+            MainWindow.Instance.Memory?.SetCVAR(state, tag);
             UpdateSettings();
         }
+
+        private void ResetRunCheckbox_CheckChanged(object sender, EventArgs e) => UpdateSettings();
 
         private void CloseButton_Click(object sender, EventArgs e) {
             UpdateSettings();
@@ -43,24 +83,37 @@ namespace DESpeedrunUtil {
             MainWindow.Instance.ToggleButtonStates("settings", true);
             MainWindow.Instance.SettingsWindow = null;
         }
-
-        public void UpdateMemoryHandler(MemoryHandler memory) => _memory = memory;
+        #endregion
 
         private void UpdateSettings() {
             Properties.Settings.Default.AntiAliasing = !settingsAACheckbox.Checked;
             Properties.Settings.Default.UNDelay = !settingsUNCheckbox.Checked;
             Properties.Settings.Default.AutoContinue = settingsAutoContinueCheckbox.Checked;
+            Properties.Settings.Default.EnableResetRunHotkey = settingsResetBindCheckbox.Checked;
+        }
+
+        private void UpdateHotkeyFields() {
+            settingsResetRunHotkeyField.Text = HotkeyHandler.TranslateKeyNames(HotkeyHandler.Instance.ResetRunHotkey);
+            settingsResetRunHotkeyField.ForeColor = COLOR_TEXT_FORE;
+            settingsResetRunHotkeyField.BackColor = COLOR_TEXT_BACK;
         }
 
         private void SetFonts() {
             settingsCVARLabel.Font = MainWindow.EternalUIBold20;
+            settingsHotkeyLabel.Font = MainWindow.EternalUIBold20;
+
             settingsAACheckbox.Font = MainWindow.EternalUIRegular;
             settingsUNCheckbox.Font = MainWindow.EternalUIRegular;
             settingsAutoContinueCheckbox.Font = MainWindow.EternalUIRegular;
+            settingsResetBindCheckbox.Font = MainWindow.EternalUIRegular;
+            settingsResetRunHotkeyField.Font = MainWindow.EternalUIRegular;
+
             settingsCloseButton.Font = MainWindow.EternalUIBold;
+
             settingsAADescription.Font = MainWindow.EternalUIRegular10;
             settingsUNDescription.Font = MainWindow.EternalUIRegular10;
             settingsAutoContinueDescription.Font = MainWindow.EternalUIRegular10;
+            settingsResetBindDescription.Font = MainWindow.EternalUIRegular10;
         }
     }
 }

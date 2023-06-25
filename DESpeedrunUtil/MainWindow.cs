@@ -26,7 +26,7 @@ namespace DESpeedrunUtil {
         public static Font EternalUIRegular, EternalUIRegular10, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalUIBold20, EternalLogoBold, EternalBattleBold;
 
 
-        Process? _gameProcess;
+        internal Process? GameProcess { get; private set; }
         List<int> _ghostProcIDs = new();
         List<int> _ghostIDsChecked = new();
         public bool Hooked = false;
@@ -45,7 +45,7 @@ namespace DESpeedrunUtil {
         int _fpsDefault, _minResPercent, _targetFPS,
             _resPercent0, _resPercent1, _resPercent2, _resPercent3;
 
-        MemoryHandler? _memory;
+        internal MemoryHandler? Memory { get; private set; }
 
         Timer _formTimer, _statusTimer, _settingsTimer;
 
@@ -181,7 +181,7 @@ namespace DESpeedrunUtil {
 
         // Main timer method that runs this utility's logic.
         private void UpdateTick() {
-            if(_gameProcess == null || _gameProcess.HasExited) DisposeGameProcess();
+            if(GameProcess == null || GameProcess.HasExited) DisposeGameProcess();
 
             speedometerPrecisionCheckbox.Visible = speedometerCheckbox.Checked;
             rightAlignCheckbox.Visible = speedometerCheckbox.Checked;
@@ -203,8 +203,8 @@ namespace DESpeedrunUtil {
                     Log.Error(e, "An error occured when attempting to hook into the game.");
                     return;
                 }
-                if(Hooked && _memory == null) {
-                    _gameProcess = null;
+                if(Hooked && Memory == null) {
+                    GameProcess = null;
                     return;
                 }
             }
@@ -223,7 +223,7 @@ namespace DESpeedrunUtil {
             try {
                 _gameInFocus = CheckIfGameIsInFocus();
                 if(enableHotkeysCheckbox.Checked) {
-                    if(!_memory.GetFlag("unlockscheduled")) {
+                    if(!Memory.GetFlag("unlockscheduled")) {
                         if(!_gameInFocus) {
                             HotkeyHandler.Instance.DisableHotkeys();
                         } else {
@@ -255,22 +255,22 @@ namespace DESpeedrunUtil {
             if(!_enableMacro) FreescrollMacro.Instance.Stop(true);
 
             /** Memory Flags **/
-            var v = _memory.Version.Name.Contains("Unknown");
-            if(!_fwRuleExists) _memory.SetFlag(false, "firewall");
-            _memory.SetFlag(_enableMacro && FreescrollMacro.Instance.HasKeyBound(), "macro");
-            _memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
-            _memory.SetFlag(trainerOSDCheckbox.Checked, "trainer");
+            var v = Memory.Version.Name.Contains("Unknown");
+            if(!_fwRuleExists) Memory.SetFlag(false, "firewall");
+            Memory.SetFlag(_enableMacro && FreescrollMacro.Instance.HasKeyBound(), "macro");
+            Memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
+            Memory.SetFlag(trainerOSDCheckbox.Checked, "trainer");
 
             enableMaxFPSCheckbox.Enabled = !v;
             if(!v) {
-                if(_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
+                if(Memory.GetFlag("resunlocked") && !Memory.GetFlag("unlockscheduled")) {
                     unlockResButton.Enabled = true;
                     unlockResButton.Text = "Update Minimum Resolution";
-                } else if(!_memory.GetFlag("resunlocked") && !_memory.GetFlag("unlockscheduled")) {
+                } else if(!Memory.GetFlag("resunlocked") && !Memory.GetFlag("unlockscheduled")) {
                     unlockResButton.Enabled = true;
                     unlockResButton.Text = "Unlock Resolution Scaling";
                 }
-                if(_memory.GetFlag("unlockscheduled")) {
+                if(Memory.GetFlag("unlockscheduled")) {
                     unlockResButton.Enabled = false;
                     unlockResButton.Text = "Unlock in Progress";
                 }
@@ -294,21 +294,21 @@ namespace DESpeedrunUtil {
                     }
                     _displayPattern = true;
                     _scrollDisplayTime = DateTime.Now.Ticks;
-                    _memory.SetScrollPatternString(display);
+                    Memory.SetScrollPatternString(display);
                 }
             }
             if(_displayPattern && ((DateTime.Now.Ticks - _scrollDisplayTime) / 10000) >= 2000) {
                 _displayPattern = false;
-                _memory.SetScrollPatternString(string.Empty);
+                Memory.SetScrollPatternString(string.Empty);
             }
 
             /** Trainer **/
-            var (velX, velY, velZ, hVel, totalVel) = _memory.GetPlayerVelocity();
-            bool showDuringLoads = !_memory.IsLoadingOrInMenu() || !hideDuringLoadsCheckbox.Checked;
-            if(_memory.GetFlag("meath00k") || _memory.EnableCheats) {
+            var (velX, velY, velZ, hVel, totalVel) = Memory.GetPlayerVelocity();
+            bool showDuringLoads = !Memory.IsLoadingOrInMenu() || !hideDuringLoadsCheckbox.Checked;
+            if(Memory.GetFlag("meath00k") || Memory.EnableCheats) {
                 trainerOSDCheckbox.Enabled = true;
-                if(_memory.TrainerSupported) {
-                    var (posX, posY, posZ, yaw, pitch) = _memory.GetPlayerPosition();
+                if(Memory.TrainerSupported) {
+                    var (posX, posY, posZ, yaw, pitch) = Memory.GetPlayerPosition();
 
                     if(!speedometerCheckbox.Checked) {
                         positionTextBox.Text = string.Format(TEXTBOX_POSITION_TEXT, posX, posY, posZ, yaw, pitch);
@@ -372,8 +372,8 @@ namespace DESpeedrunUtil {
             // Checking for the Firewall rule can take upwards of 8ms
             // so it was moved out of the main timer and into this one since the interval is longer, for better performance
             try {
-                if(Hooked && !_gameProcess.MainModule.FileName.Contains("WindowsApps")) {
-                    _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameProcess.MainModule.FileName, false);
+                if(Hooked && !GameProcess.MainModule.FileName.Contains("WindowsApps")) {
+                    _fwRuleExists = FirewallHandler.CheckForFirewallRule(GameProcess.MainModule.FileName, false);
                 } else {
                     _fwRuleExists = FirewallHandler.CheckForFirewallRule(_gameDirectory + "\\DOOMEternalx64vk.exe", false);
                 }
@@ -386,12 +386,12 @@ namespace DESpeedrunUtil {
             hotkeyStatus.Text = (HotkeyHandler.Instance.Enabled) ? "Enabled" : "Disabled";
             rtssStatus.Text = (_openProcesses.FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count > 0) ? "Running" : "Closed";
 
-            if(_memory != null) {
-                var hz = _memory.ReadMaxHz();
-                var v = _memory.Version.Name.Replace("(Gamepass)", "(GP)");
+            if(Memory != null) {
+                var hz = Memory.ReadMaxHz();
+                var v = Memory.Version.Name.Replace("(Gamepass)", "(GP)");
                 gameStatus.Text = v;
                 if(v == "1.0 (Release)") {
-                    slopeboostStatus.Text = (_memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
+                    slopeboostStatus.Text = (Memory.GetFlag("slopeboost")) ? "Disabled" : "Enabled";
                 } else {
                     slopeboostStatus.Text = "N/A";
                 }
@@ -406,12 +406,12 @@ namespace DESpeedrunUtil {
                     currentFPSCap.Text = hz.ToString();
                     toolTip7500.SetToolTip(currentFPSCap, null);
                 }
-                var ms = _memory.ReadRaiseMillis();
+                var ms = Memory.ReadRaiseMillis();
                 if(ms > 0 && ms < 16) {
-                    var rs = string.Format("{0:0.00}% (" + (_memory.ReadDynamicRes() ? _memory.GetTargetFPS() + "FPS)" : "Static)"), _memory.CurrentResScaling);
+                    var rs = string.Format("{0:0.00}% (" + (Memory.ReadDynamicRes() ? Memory.GetTargetFPS() + "FPS)" : "Static)"), Memory.CurrentResScaling);
                     if(rs.StartsWith("0.0")) rs = rs[3..];
                     else if(rs.StartsWith("0.")) rs = rs[2..];
-                    resScaleStatus.Text = (_memory.ReadDynamicRes() || _memory.ReadForceRes() > 0f) ? rs.Replace(".", "") : "Disabled";
+                    resScaleStatus.Text = (Memory.ReadDynamicRes() || Memory.ReadForceRes() > 0f) ? rs.Replace(".", "") : "Disabled";
                     toolTip7500.SetToolTip(resScaleStatus, null);
                 } else {
                     if(v.Contains("Unknown")) {
@@ -435,10 +435,10 @@ namespace DESpeedrunUtil {
 
             balanceStatus.Text = (_fwRuleExists) ? ((_fwRestart) ? "Allowed*" : "Blocked") : "Allowed";
             if(Hooked) {
-                if(_memory.GetFlag("meath00k")) {
+                if(Memory.GetFlag("meath00k")) {
                     cheatsStatus.Text = "meath00k";
                     cheatsStatus.ForeColor = Color.Orange;
-                } else if(_memory.EnableCheats) {
+                } else if(Memory.EnableCheats) {
                     cheatsStatus.Text = "Enabled";
                     cheatsStatus.ForeColor = Color.Red;
                 } else {
@@ -464,7 +464,7 @@ namespace DESpeedrunUtil {
 
         private bool CheckIfGameIsInFocus() {
             try {
-                return _gameProcess.MainWindowHandle == GetForegroundWindow();
+                return GameProcess.MainWindowHandle == GetForegroundWindow();
             } catch(Exception e) {
                 Log.Error(e, "An error occured when checking if the game is in focus.");
                 throw new Exception("Could not check if game window was in focus.");
@@ -572,13 +572,13 @@ namespace DESpeedrunUtil {
         /// <param name="fps">FPS Limit</param>
         public void ToggleFPSCap(int fps) {
             if(!Hooked || fps == -1) return;
-            int current = _memory.ReadMaxHz();
-            _memory.SetMaxHz((current != fps) ? fps : (enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
+            int current = Memory.ReadMaxHz();
+            Memory.SetMaxHz((current != fps) ? fps : (enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
         }
 
         public void ToggleResScaling() {
             if(Hooked) {
-                _memory.ToggleResolutionScaling();
+                Memory.ToggleResolutionScaling();
             }
         }
 
@@ -592,14 +592,14 @@ namespace DESpeedrunUtil {
             };
             if(!Hooked || percent == -1) return;
             targetFPSInput.Text = _targetFPS.ToString();
-            float current = _memory.GetMinRes();
+            float current = Memory.GetMinRes();
             if(percent != current) {
-                _memory.SetMinRes(percent);
+                Memory.SetMinRes(percent);
             } else {
-                if(_memory.ReadDynamicRes() || _memory.ReadForceRes() > 0f) _memory.SetMinRes(_minResPercent / 100f);
+                if(Memory.ReadDynamicRes() || Memory.ReadForceRes() > 0f) Memory.SetMinRes(_minResPercent / 100f);
             }
-            _memory.ScheduleResUnlock(false, _targetFPS);
-            _memory.EnableResolutionScaling();
+            Memory.ScheduleResUnlock(false, _targetFPS);
+            Memory.EnableResolutionScaling();
         }
 
         // Adds a MouseDown event to every control in the form, recursively.
@@ -933,14 +933,14 @@ namespace DESpeedrunUtil {
                         //if(!_ghostProcIDs.Contains(gameProc.Id)) _ghostProcIDs.Add(gameProc.Id);
                         continue;
                     }
-                    if(_gameProcess != null) {
+                    if(GameProcess != null) {
                         // If a valid process was already found, trigger the duplicate process warning telling the user to clear them out
                         Log.Error("Found multiple valid DOOMEternalx64vk processes! Cannot properly hook into the game");
-                        _gameProcess = null;
+                        GameProcess = null;
                         multipleProcesses = true;
                         break;
                     }
-                    _gameProcess = gameProc;
+                    GameProcess = gameProc;
                     continue;
                 }
                 Log.Information("DOOMEternalx64vk process has exited. id={ID}", gameProc.Id);
@@ -973,13 +973,13 @@ namespace DESpeedrunUtil {
                     MessageBox.Show(this, "Multiple instances of DOOM Eternal have been detected.\n" +
                     "Close them or restart your system to clear them out.", "Multiple DOOMEternalx64vk.exe Instances Detected");
                 }
-                _gameProcess = null;
+                GameProcess = null;
                 return false;
             }
 
             changeVersionButton.Enabled = false;
 
-            if(_gameProcess == null || _gameProcess.HasExited) {
+            if(GameProcess == null || GameProcess.HasExited) {
                 if(!_duplicateProcesses) _firstRun = false;
                 return false;
             }
@@ -991,26 +991,26 @@ namespace DESpeedrunUtil {
             _reshadeExists = CheckForReShade();
 
             try {
-                _memory = new MemoryHandler(_gameProcess);
+                Memory = new MemoryHandler(GameProcess);
             } catch(ArgumentNullException ex) {
                 Log.Error(ex, "An error occured when attempting to hook into the game.");
-                _gameProcess?.Dispose();
-                _gameProcess = null;
-                _memory = null;
+                GameProcess?.Dispose();
+                GameProcess = null;
+                Memory = null;
                 return false;
             }
-            if(_memory == null) {
+            if(Memory == null) {
                 Log.Error("MemoryHandler was somehow null. Retrying hook.");
-                _gameProcess?.Dispose();
-                _gameProcess = null;
-                _memory = null;
+                GameProcess?.Dispose();
+                GameProcess = null;
+                Memory = null;
                 return false;
             }
-            if(_memory.Reset) {
+            if(Memory.Reset) {
                 Log.Error("Something went wrong when setting up the MemoryHandler. Retrying hook.");
-                _gameProcess?.Dispose();
-                _gameProcess = null;
-                _memory = null;
+                GameProcess?.Dispose();
+                GameProcess = null;
+                Memory = null;
                 return false;
             }
             if(enableHotkeysCheckbox.Checked) {
@@ -1024,59 +1024,59 @@ namespace DESpeedrunUtil {
                 Log.Error(e, "An error occured when attempting to change the version selector's index.");
             }
             versionDropDownSelector.Enabled = false;
-            _memory.SetFlag(_fwRuleExists, "firewall");
-            var gamePath = _gameProcess.MainModule.FileName;
+            Memory.SetFlag(_fwRuleExists, "firewall");
+            var gamePath = GameProcess.MainModule.FileName;
             var gameDir = gamePath[..gamePath.LastIndexOf('\\')];
             bool meath00k = CheckForMeathookInPath(gameDir);
-            foreach(ProcessModule module in _gameProcess.Modules) {
+            foreach(ProcessModule module in GameProcess.Modules) {
                 if(module.ModuleName.ToLower().Contains("xinput1_3.dll") && module.FileName.ToLower().Contains(gameDir.ToLower()))
                     meath00k = true;
             }
-            _memory.SetFlag(meath00k, "meath00k");
+            Memory.SetFlag(meath00k, "meath00k");
             cheatsToggleButton.Enabled = !meath00k;
             if(!meath00k) {
                 cheatsToggleButton.Text = "Enable Cheats";
             }
             var checksum = Checksums.GetMD5ChecksumFromFile(gamePath);
-            if(!Checksums.Compare(checksum, _memory.Version.MD5)) {
-                _memory.SetFlag(true, "modded");
+            if(!Checksums.Compare(checksum, Memory.Version.MD5)) {
+                Memory.SetFlag(true, "modded");
                 Log.Warning("Potentially modified client detected. md5: {Checksum}", checksum);
             }
-            _memory.SetFlag(_reshadeExists, "reshade");
-            _memory.SetFlag(Program.UpdateDetected, "outofdate");
-            _memory.SetFlag(_firstRun && !_memory.GetFlag("meath00k"), "restart");
-            _memory.FirstRun = _firstRun;
-            _memory.EnableOSD = enableOSDCheckbox.Checked;
-            _memory.UseDynamicScaling = dynScalingRadioButton.Checked;
-            _memory.SetFlag(!_memory.Version.Name.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
-            _memory.SetFlag(minimalOSDCheckbox.Checked, "minimal");
-            if(_memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
-            _memory.SetMinRes(_minResPercent / 100f);
+            Memory.SetFlag(_reshadeExists, "reshade");
+            Memory.SetFlag(Program.UpdateDetected, "outofdate");
+            Memory.SetFlag(_firstRun && !Memory.GetFlag("meath00k"), "restart");
+            Memory.FirstRun = _firstRun;
+            Memory.EnableOSD = enableOSDCheckbox.Checked;
+            Memory.UseDynamicScaling = dynScalingRadioButton.Checked;
+            Memory.SetFlag(!Memory.Version.Name.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
+            Memory.SetFlag(minimalOSDCheckbox.Checked, "minimal");
+            if(Memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
+            Memory.SetMinRes(_minResPercent / 100f);
             if(unlockOnStartupCheckbox.Checked) {
-                _memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
+                Memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
                 HotkeyHandler.Instance.DisableHotkeys();
             } else {
-                if(autoScalingCheckbox.Checked) _memory.ScheduleResolutionScaling(_targetFPS);
+                if(autoScalingCheckbox.Checked) Memory.ScheduleResolutionScaling(_targetFPS);
             }
-            _memory.SetMaxHz((enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
+            Memory.SetMaxHz((enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
 
-            _memory.SetCVAR(Properties.Settings.Default.AntiAliasing, "antialiasing");
-            _memory.SetCVAR(Properties.Settings.Default.UNDelay, "undelay");
-            _memory.SetCVAR(Properties.Settings.Default.AutoContinue, "autocontinue");
+            Memory.SetCVAR(Properties.Settings.Default.AntiAliasing, "antialiasing");
+            Memory.SetCVAR(Properties.Settings.Default.UNDelay, "undelay");
+            Memory.SetCVAR(Properties.Settings.Default.AutoContinue, "autocontinue");
 
-            _memory.MemoryTimer.Start();
+            Memory.MemoryTimer.Start();
             _firstRun = false;
-            SettingsWindow?.UpdateMemoryHandler(_memory);
+
             return true;
         }
 
         // Sets various game info variables based on the detected module size.
         private void SetGameInfoByModuleSize() {
-            gameStatus.Text = _memory.Version.Name.Replace("(Gamepass)", "(GP)");
-            var gamePath = _gameProcess.MainModule.FileName;
+            gameStatus.Text = Memory.Version.Name.Replace("(Gamepass)", "(GP)");
+            var gamePath = GameProcess.MainModule.FileName;
             var dir = gamePath[..gamePath.LastIndexOf('\\')];
             if(gamePath.ToLower().Contains("steam")) {
-                File.WriteAllText(dir + "\\gameVersion.txt", "version=" + _memory.Version.Name);
+                File.WriteAllText(dir + "\\gameVersion.txt", "version=" + Memory.Version.Name);
             }
 
             if(!gamePath.Contains(_gameDirectory)) {
@@ -1086,7 +1086,7 @@ namespace DESpeedrunUtil {
                 }
             }
 
-            if(!_memory.CanCapFPS()) HotkeyHandler.Instance.DisableHotkeys();
+            if(!Memory.CanCapFPS()) HotkeyHandler.Instance.DisableHotkeys();
         }
 
         private void LaunchRTSS() => Process.Start(new ProcessStartInfo(_rtssExecutable) { WorkingDirectory = _rtssExecutable[.._rtssExecutable.LastIndexOf('\\')] });
@@ -1094,10 +1094,10 @@ namespace DESpeedrunUtil {
         private void DisposeGameProcess() {
             Hooked = false;
             HotkeyHandler.Instance.DisableHotkeys();
-            _gameProcess?.Dispose();
-            _gameProcess = null;
-            _memory?.MemoryTimer.Stop();
-            _memory = null;
+            GameProcess?.Dispose();
+            GameProcess = null;
+            Memory?.MemoryTimer.Stop();
+            Memory = null;
             _gameInFocus = false;
 
             unlockResButton.Enabled = false;
@@ -1141,6 +1141,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.UseDynamicScaling = dynScalingRadioButton.Checked;
             Properties.Settings.Default.RightAlignSpeedometer = rightAlignCheckbox.Checked;
             Properties.Settings.Default.HideSpeedometerDuringLoads = hideDuringLoadsCheckbox.Checked;
+            Properties.Settings.Default.ResetRunHotkey = (int) HotkeyHandler.Instance.ResetRunHotkey;
             int radio = 1;
             if(velocityRadioNone.Checked) radio = 0;
             if(velocityRadioVertical.Checked) radio = 2;

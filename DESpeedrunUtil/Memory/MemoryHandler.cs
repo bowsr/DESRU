@@ -5,6 +5,8 @@ using Serilog;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Text;
+using WindowsInput;
+using WindowsInput.Events;
 using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
@@ -55,13 +57,15 @@ namespace DESpeedrunUtil.Memory {
              _antiAliasing = true, _unDelay = true, _autoContinue = false,
              _minimalOSD = false;
         string _row1, _row2, _row3, _row4, _row5, _row6, _row7, _row8, _row9, _cpu, _gpuV, _gpuN;
-        string _cheatString = "CHEATS ENABLED", _scrollString = "";
+        string _cheatString = "CHEATS ENABLED", _scrollString = "", _resetRunString = "";
         int _fpsLimit = 250, _targetFPS = 1000;
         float _minRes = 0.01f;
 
-        bool _windowFocused = false, _dynTimer = false, _osdReset = false;
+        bool _windowFocused = false, _dynTimer = false, _osdReset = false, _preventCheatsToggle = false, _waitForLoad = false, _resetRunLeftLoad = false;
         long _focusedTime, _dynTime, _scalingTime;
         float _prevScaling = 0f;
+
+        DateTime _resetRunLeftLoadTime = DateTime.Now;
 
         float _velocityX = 0f, _velocityY = 0f, _velocityZ = 0f, _velocityHorizontal = 0f, _velocityTotal = 0f,
               _positionX = 0f, _positionY = 0f, _positionZ = 0f,
@@ -106,7 +110,7 @@ namespace DESpeedrunUtil.Memory {
 
             if(_cheatsConsolePtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsConsolePtr) != !EnableCheats) {
                 //_game.VirtualProtect(_cheatsConsolePtr, 128, MemPageProtect.PAGE_READWRITE);
-                _game.WriteBytes(_cheatsConsolePtr, new byte[1] { Convert.ToByte(!EnableCheats) });
+                if(!_preventCheatsToggle) _game.WriteBytes(_cheatsConsolePtr, new byte[1] { Convert.ToByte(!EnableCheats) });
             }
 
             if(_cheatsBindsPtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsBindsPtr) != !EnableCheats) {
@@ -137,6 +141,22 @@ namespace DESpeedrunUtil.Memory {
             if(_continuePtr != IntPtr.Zero && _game.ReadValue<bool>(_continuePtr) != _autoContinue)
                 _game.WriteBytes(_continuePtr, new byte[1] { Convert.ToByte(_autoContinue) });
 
+            if(_waitForLoad && IsLoadingOrInMenu()) _waitForLoad = false;
+            if(_resetRunLeftLoad) {
+                if(ReadCutsceneID() == 1) {
+                    if((DateTime.Now - _resetRunLeftLoadTime).TotalSeconds >= 5) {
+                        _resetRunLeftLoad = false;
+                        _resetRunString = string.Empty;
+                    }
+                } else {
+                    _resetRunLeftLoadTime = DateTime.Now;
+                }
+            }
+            if(!_waitForLoad && !_resetRunLeftLoad && _resetRunString != string.Empty && !IsLoadingOrInMenu()) {
+                _resetRunLeftLoad = true;
+                _resetRunLeftLoadTime = DateTime.Now;
+            }
+
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
             _row1 = METRICS_FPS_TEXT + ((_osdFlagOutOfDate) ? "*" : "");
 
@@ -164,7 +184,7 @@ namespace DESpeedrunUtil.Memory {
             if(!_externalTrainerFlag && EnableOSD) {
                 if(!_trainerFlag || (!_osdFlagMeath00k && !EnableCheats)) {
                     if(_osdFlagRestartGame) _cheatString = "RESTART GAME";
-                    if(EnableCheats) 
+                    if(EnableCheats)
                         _cheatString = "CHEATS ENABLED";
                     else if(_osdFlagMeath00k)
                         _cheatString = "MEATH00K";
@@ -189,6 +209,7 @@ namespace DESpeedrunUtil.Memory {
                                 cheats += " (MOD)";
                         }
                     }
+                    if(_resetRunString != string.Empty) cheats = _resetRunString;
                     var scaling = string.Empty;
                     if(((DateTime.Now.Ticks - _scalingTime) / 10000) <= 3000) {
                         if(ReadDynamicRes() || ReadForceRes() > 0f) {
@@ -334,6 +355,53 @@ namespace DESpeedrunUtil.Memory {
             }
         }
 
+        public async Task ResetRunScript() {
+            var mustPauseGame = int.TryParse(Version.Name[0..1], out int versionMajor) && versionMajor < 3;
+            var levelName = ReadLevelName();
+            var e1m1_cutscene = false;
+            var cmd = "give armor 5; wait 5; kill";
+
+            if(levelName.Contains("e1m1_intro")) {
+                var cutsceneID = ReadCutsceneID();
+                if(cutsceneID != 1 && GetOpeningCutsceneIDs().Contains(cutsceneID)) {
+                    cmd = "RestartMap";
+                    e1m1_cutscene = true;
+                }
+            }
+
+            var eventBuilder = Simulate.Events()
+                .WaitUntilResponsive(_game.MainWindowHandle, new TimeSpan(0, 0, 0, 5, 0))
+                .Wait(250)
+                .ClickChord(KeyCode.RShift, KeyCode.Oem3).Wait(50)
+                .Click(KeyCode.Backspace).Wait(5).Click(KeyCode.Backspace).Wait(10)
+                .Click(cmd).Wait(50)
+                .Click(KeyCode.Return).Wait(50)
+                .Click(KeyCode.Oem3).Wait(100);
+
+            _waitForLoad = true;
+            _resetRunLeftLoad = false;
+            _resetRunString = "RUN RESET";
+
+            var cheatsEnabled = EnableCheats || _osdFlagMeath00k;
+            if(!cheatsEnabled) {
+                _preventCheatsToggle = true;
+                _game.WriteBytes(_cheatsConsolePtr, new byte[1] { 0 });
+            }
+
+            if(e1m1_cutscene && mustPauseGame) {
+                SetForegroundWindow(MainWindow.Instance.Handle);
+                await Task.Delay(250);
+                SendKeys.Send("%{TAB}");
+            }
+
+            await eventBuilder.Invoke();
+
+            if(!cheatsEnabled) {
+                _game.WriteBytes(_cheatsConsolePtr, new byte[1] { 1 });
+                _preventCheatsToggle = false;
+            }
+        }
+
         private void ReadTrainerValues() {
             _velocityX = _game.ReadValue<float>(_velocityPtr);
             _velocityY = _game.ReadValue<float>(_velocityPtr + 4);
@@ -342,7 +410,7 @@ namespace DESpeedrunUtil.Memory {
             _velocityTotal = (float) Math.Sqrt((_velocityX * _velocityX) + (_velocityY * _velocityY) + (_velocityZ * _velocityZ));
 
             if(!_osdFlagMeath00k && !EnableCheats) return;
-            
+
             _positionX = _game.ReadValue<float>(_positionPtr);
             _positionY = _game.ReadValue<float>(_positionPtr + 4);
             _positionZ = _game.ReadValue<float>(_positionPtr + 8);
@@ -893,8 +961,8 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void ScanForCheatsPointers() {
-            SigScanTarget paramsTargetU  = new(LAUNCHPARAMS_GLOBAL_U),
-                          paramsTargetR  = new(LAUNCHPARAMS_GLOBAL_R),
+            SigScanTarget paramsTargetU = new(LAUNCHPARAMS_GLOBAL_U),
+                          paramsTargetR = new(LAUNCHPARAMS_GLOBAL_R),
                           consoleTargetU = new(CONSOLE_GLOBAL_U),
                           consoleTargetR = new(CONSOLE_GLOBAL_R),
                           bindsTargetU,
