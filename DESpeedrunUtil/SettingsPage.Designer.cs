@@ -234,6 +234,7 @@
             MinimizeBox = false;
             Name = "SettingsPage";
             SizeGripStyle = SizeGripStyle.Hide;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "More Settings";
             TopMost = true;
             FormClosing += SettingsPage_FormClosing;

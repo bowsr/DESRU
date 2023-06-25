@@ -328,12 +328,12 @@ namespace DESpeedrunUtil {
         private void ExitButton_Click(object sender, EventArgs e) => this.Close();
         private void HelpButton_Click(object sender, EventArgs e) {
             helpButton.Enabled = false;
-            new HelpPage().Show();
+            new HelpPage().ShowDialog(this);
         }
         private void SettingsButton_Click(object sender, EventArgs e) {
             settingsButton.Enabled = false;
             SettingsWindow = new SettingsPage();
-            SettingsWindow.Show();
+            SettingsWindow.ShowDialog(this);
         }
         private void UnlockRes_Click(object sender, EventArgs e) {
             if(Hooked) Memory.ScheduleResUnlock(autoScalingCheckbox.Checked, _targetFPS);
