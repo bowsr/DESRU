@@ -24,7 +24,9 @@
     "CurrentScaling": 106046372,
     "IsLoading": 86695576,
     "IsLoading2": 111240208,
-    "IsInGame": 110929872
+    "IsInGame": 110929872,
+    "LevelName": 113170720,
+    "CutsceneID": 86283592
   },
   {
     "Version": "6.66 Rev 2",
@@ -51,7 +53,9 @@
     "CurrentScaling": 105284644,
     "IsLoading": 85935128,
     "IsLoading2": 110478480,
-    "IsInGame": 110163728
+    "IsInGame": 110163728,
+    "LevelName": 112410160,
+    "CutsceneID": 85523144
   },
   {
     "Version": "6.4",
@@ -78,7 +82,9 @@
     "CurrentScaling": 103358084,
     "IsLoading": 83944472,
     "IsLoading2": 108551696,
-    "IsInGame": 108241872
+    "IsInGame": 108241872,
+    "LevelName": 110483104,
+    "CutsceneID": 83527080
   },
   {
     "Version": "6.3",
@@ -105,7 +111,9 @@
     "CurrentScaling": 103358084,
     "IsLoading": 83944472,
     "IsLoading2": 108551696,
-    "IsInGame": 108241872
+    "IsInGame": 108241872,
+    "LevelName": 110483104,
+    "CutsceneID": 83527080
   },
   {
     "Version": "6.2",
@@ -132,7 +140,9 @@
     "CurrentScaling": 103358084,
     "IsLoading": 83944472,
     "IsLoading2": 108551696,
-    "IsInGame": 108241872
+    "IsInGame": 108241872,
+    "LevelName": 110483104,
+    "CutsceneID": 83527080
   },
   {
     "Version": "6.1",
@@ -159,7 +169,9 @@
     "CurrentScaling": 0,
     "IsLoading": 83934872,
     "IsLoading2": 108542096,
-    "IsInGame": 108231408
+    "IsInGame": 108231408,
+    "LevelName": 110473504,
+    "CutsceneID": 83522888
   },
   {
     "Version": "6.0",
@@ -186,7 +198,9 @@
     "CurrentScaling": 0,
     "IsLoading": 83934872,
     "IsLoading2": 108542096,
-    "IsInGame": 108231408
+    "IsInGame": 108231408,
+    "LevelName": 110473504,
+    "CutsceneID": 83522888
   },
   {
     "Version": "5.1",
@@ -213,7 +227,9 @@
     "CurrentScaling": 99283988,
     "IsLoading": 82860232,
     "IsLoading2": 104490256,
-    "IsInGame": 104183920
+    "IsInGame": 104183920,
+    "LevelName": 106421728,
+    "CutsceneID": 82452344
   },
   {
     "Version": "5.0",
@@ -240,7 +256,9 @@
     "CurrentScaling": 99283988,
     "IsLoading": 82860232,
     "IsLoading2": 104490256,
-    "IsInGame": 104183920
+    "IsInGame": 104183920,
+    "LevelName": 106421728,
+    "CutsceneID": 82452344
   },
   {
     "Version": "4.1",
@@ -267,7 +285,9 @@
     "CurrentScaling": 102459268,
     "IsLoading": 86048120,
     "IsLoading2": 107681672,
-    "IsInGame": 107371664
+    "IsInGame": 107371664,
+    "LevelName": 108577472,
+    "CutsceneID": 103713232
   },
   {
     "Version": "4.0",
@@ -294,7 +314,9 @@
     "CurrentScaling": 0,
     "IsLoading": 86048120,
     "IsLoading2": 107678600,
-    "IsInGame": 107368592
+    "IsInGame": 107368592,
+    "LevelName": 108574400,
+    "CutsceneID": 103713232
   },
   {
     "Version": "3.1",
@@ -321,7 +343,9 @@
     "CurrentScaling": 102731236,
     "IsLoading": 86490392,
     "IsLoading2": 107568472,
-    "IsInGame": 107249568
+    "IsInGame": 107249568,
+    "LevelName": 108463856,
+    "CutsceneID": 103983264
   },
   {
     "Version": "3.0",
@@ -348,7 +372,9 @@
     "CurrentScaling": 0,
     "IsLoading": 86490264,
     "IsLoading2": 107568344,
-    "IsInGame": 107249440
+    "IsInGame": 107249440,
+    "LevelName": 107606552,
+    "CutsceneID": 106434880
   },
   {
     "Version": "2.1",
@@ -361,7 +387,7 @@
     "MaxHz": 65025264,
     "SkipIntro": 104604112,
     "AA": 99603744,
-    "UNDelay": 0,
+    "UNDelay": 105887840,
     "AutoContinue": 104604368,
     "MinRes": 0,
     "DynamicRes": 100032192,
@@ -375,7 +401,9 @@
     "CurrentScaling": 0,
     "IsLoading": 84430632,
     "IsLoading2": 104616600,
-    "IsInGame": 104306280
+    "IsInGame": 104306280,
+    "LevelName": 104654600,
+    "CutsceneID": 83809476
   },
   {
     "Version": "2.0",
@@ -402,7 +430,9 @@
     "CurrentScaling": 0,
     "IsLoading": 54933144,
     "IsLoading2": 84418216,
-    "IsInGame": 104294248
+    "IsInGame": 104294248,
+    "LevelName": 0,
+    "CutsceneID": 0
   },
   {
     "Version": "1.1",
@@ -429,7 +459,9 @@
     "CurrentScaling": 96328644,
     "IsLoading": 80753624,
     "IsLoading2": 100936512,
-    "IsInGame": 100626136
+    "IsInGame": 100626136,
+    "LevelName": 101827824,
+    "CutsceneID": 80132484
   },
   {
     "Version": "1.0 (Release)",
@@ -456,6 +488,8 @@
     "CurrentScaling": 96387716,
     "IsLoading": 80812760,
     "IsLoading2": 100995648,
-    "IsInGame": 101892568
+    "IsInGame": 101892568,
+    "LevelName": 101886032,
+    "CutsceneID": 80191620
   }
 ]
