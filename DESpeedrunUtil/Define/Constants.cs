@@ -76,5 +76,12 @@
 
         internal static readonly int[] VEL_OFFSETS_CURRENT = new int[4] { 0x1510, 0x5C0, 0x1D0, 0x3F40 };
         internal static readonly int[] VEL_OFFSETS_OLD = new int[4] { 0x1510, 0x598, 0x1D0, 0x3F40 };
+
+        internal static readonly int[] INTRO_CUTSCENE_IDS_BASE = new int[4] { 3266, 3268, 3271, 3285 };
+        internal static readonly int[] INTRO_CUTSCENE_IDS_2_1 = new int[4] { 3263, 3265, 3268, 3282 };
+        internal static readonly int[] INTRO_CUTSCENE_IDS_3_0 = new int[4] { 3264, 3266, 3269, 3283 };
+        internal static readonly int[] INTRO_CUTSCENE_IDS_5_0 = new int[4] { 3263, 3265, 3268, 3282 };
+        internal static readonly int[] INTRO_CUTSCENE_IDS_6_0 = new int[4] { 3228, 3230, 3233, 3247 };
+        internal static readonly int[] INTRO_CUTSCENE_IDS_6_66_R2 = new int[4] { 3229, 3231, 3234, 3248 };
     }
 }

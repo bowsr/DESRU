@@ -24,7 +24,7 @@ namespace DESpeedrunUtil.Memory {
                     _gpuVendorDP, _gpuNameDP, _cpuDP,
                     _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP, _forceResDP, _currentResScaleDP,
                     _velocityDP, _positionDP, _rotationDP,
-                    _isLoadingDP, _isLoading2DP, _isInGameDP,
+                    _isLoadingDP, _isLoading2DP, _isInGameDP, _levelNameDP, _cutsceneIDDP,
                     _cheatsConsoleDP, _cheatsBindsDP;
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _skipIntroPtr, _aliasingPtr, _unDelayPtr, _continuePtr,
@@ -32,7 +32,7 @@ namespace DESpeedrunUtil.Memory {
                _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
                _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr, _forceResPtr, _currentResScalePtr,
                _velocityPtr, _positionPtr, _rotationPtr,
-               _isLoadingPtr, _isLoading2Ptr, _isInGamePtr,
+               _isLoadingPtr, _isLoading2Ptr, _isInGamePtr, _levelNamePtr, _cutsceneIDPtr,
                _cheatsConsolePtr, _cheatsBindsPtr;
 
         Process _game, _trainer;
@@ -682,6 +682,27 @@ namespace DESpeedrunUtil.Memory {
             return -1f;
         }
         /// <summary>
+        /// Reads the current level name from memory
+        /// </summary>
+        /// <returns>A <see cref="string"/> representing the current level name</returns>
+        public string ReadLevelName() {
+            var sb = new StringBuilder(31);
+            if(_levelNamePtr != IntPtr.Zero) {
+                _game.ReadString(_levelNamePtr, sb);
+                return sb.ToString();
+            } else {
+                return string.Empty;
+            }
+        }
+        /// <summary>
+        /// Reads the current cutscene ID from memory
+        /// </summary>
+        /// <returns>The <see cref="int"/> ID of the current cutscene, or 1 if not in a cutscene</returns>
+        public int ReadCutsceneID() {
+            if(_cutsceneIDPtr != IntPtr.Zero) return _game.ReadValue<int>(_cutsceneIDPtr);
+            return -1;
+        }
+        /// <summary>
         /// Fetches the current dynamic resolution scaling target framerate
         /// </summary>
         /// <returns>An <see cref="int"/> representing the target framerate</returns>
@@ -733,6 +754,8 @@ namespace DESpeedrunUtil.Memory {
                 _isLoadingDP?.DerefOffsets(_game, out _isLoadingPtr);
                 _isLoading2DP?.DerefOffsets(_game, out _isLoading2Ptr);
                 _isInGameDP?.DerefOffsets(_game, out _isInGamePtr);
+                _levelNameDP?.DerefOffsets(_game, out _levelNamePtr);
+                _cutsceneIDDP?.DerefOffsets(_game, out _cutsceneIDPtr);
 
                 _cheatsConsoleDP?.DerefOffsets(_game, out _cheatsConsolePtr);
                 _cheatsBindsDP?.DerefOffsets(_game, out _cheatsBindsPtr);
@@ -817,6 +840,8 @@ namespace DESpeedrunUtil.Memory {
             _isLoadingDP = CreateDP(_currentOffsets.IsLoading);
             _isLoading2DP = CreateDP(_currentOffsets.IsLoading2);
             _isInGameDP = CreateDP(_currentOffsets.IsInGame);
+            _levelNameDP = CreateDP(_currentOffsets.LevelName);
+            _cutsceneIDDP = CreateDP(_currentOffsets.CutsceneID);
         }
 
         private static DeepPointer? CreateDP(int baseOffset, params int[] offsets) => baseOffset != 0 ? new("DOOMEternalx64vk.exe", baseOffset, offsets) : null;
@@ -943,6 +968,20 @@ namespace DESpeedrunUtil.Memory {
             }
             Log.Warning("Cheat Offset List does not contain {Version}.", Version.Name);
             return false;
+        }
+
+        private int[] GetOpeningCutsceneIDs() {
+            var arr = new int[4] { 0, 0, 0, 0 };
+
+            if(int.TryParse(Version.Name[0..1], out int versionMajor)) {
+                if(versionMajor < 2) arr = INTRO_CUTSCENE_IDS_BASE;
+                else if(versionMajor == 2) arr = INTRO_CUTSCENE_IDS_2_1;
+                else if(versionMajor == 3 || versionMajor == 4) arr = INTRO_CUTSCENE_IDS_3_0;
+                else if(versionMajor == 5) arr = INTRO_CUTSCENE_IDS_5_0;
+                else if(versionMajor == 6) arr = (Version.Name.Contains("6.66 Rev 2") ? INTRO_CUTSCENE_IDS_6_66_R2 : INTRO_CUTSCENE_IDS_6_0);
+            }
+
+            return arr;
         }
     }
 }
