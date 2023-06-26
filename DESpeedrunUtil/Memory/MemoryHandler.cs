@@ -362,7 +362,7 @@ namespace DESpeedrunUtil.Memory {
         public async Task ResetRunScript() {
             if(IsLoadingOrInMenu()) return;
 
-            // 3.0 fixed the issue where you couldn't pause the game or open the console during the 
+            // 3.0 fixed the issue where you couldn't pause the game or open the console during the
             //   Hell on Earth intro cutscene.
             // This detects the game version to determine if the script needs to switch window focus
             //   to force a pause, which allows the console to be opened.

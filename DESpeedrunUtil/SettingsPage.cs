@@ -10,7 +10,6 @@ namespace DESpeedrunUtil {
 
         Label? _selectedHKField;
 
-
         public SettingsPage() {
             InitializeComponent();
             settingsAACheckbox.Checked = !Properties.Settings.Default.AntiAliasing;

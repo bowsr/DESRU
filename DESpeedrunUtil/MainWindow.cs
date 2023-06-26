@@ -25,7 +25,6 @@ namespace DESpeedrunUtil {
         private PrivateFontCollection _fonts = new();
         public static Font EternalUIRegular, EternalUIRegular10, EternalUIRegular20, EternalUIRegular32, EternalUIBold, EternalUIBold20, EternalLogoBold, EternalBattleBold;
 
-
         internal Process? GameProcess { get; private set; }
         List<int> _ghostProcIDs = new();
         List<int> _ghostIDsChecked = new();
