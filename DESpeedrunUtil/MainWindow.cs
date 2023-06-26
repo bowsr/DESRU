@@ -819,7 +819,9 @@ namespace DESpeedrunUtil {
             }
             if(foundLayer) {
                 try {
-                    var rs = File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").ToLower().Contains(_gameDirectory.ToLower());
+                    var filetext = File.ReadAllText(@"C:\ProgramData\ReShade\ReShadeApps.ini").ToLower();
+                    var rs = filetext.Contains(_gameDirectory.ToLower());
+                    if(GameProcess != null && !rs) rs = filetext.Contains(GameProcess.MainModule.FileName.ToLower());
                     if(rs) Log.Information("ReShade is installed and is running over DOOMEternal.");
                     else Log.Information("ReShade is not running over DOOMEternal.");
                     return rs;
@@ -994,6 +996,7 @@ namespace DESpeedrunUtil {
             _ghostIDsChecked.Clear();
             Log.Information("Starting to hook into the DOOMEternalx64vk.exe process. firstRun={FirstRun}", _firstRun);
 
+            _fwRuleExists = FirewallHandler.CheckForFirewallRule(GameProcess.MainModule.FileName, false);
             _reshadeExists = CheckForReShade();
 
             try {
