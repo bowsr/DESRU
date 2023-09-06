@@ -51,6 +51,7 @@
                 "6.66 Rev 1.1" => true,
                 "6.66 Rev 2" => true,
                 "6.66 Rev 2 (Gamepass)" => true,
+                "6.66 Rev 2.2" => true,
                 _ => false,
             };
         }

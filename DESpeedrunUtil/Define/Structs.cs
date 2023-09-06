@@ -5,7 +5,7 @@
             public int ScrollCount { get; set; }
             public TimeSpan DeltaTotal { get; set; }
 
-            public double Average() => (ScrollCount > 1) ? (DeltaTotal / (ScrollCount - 1)).TotalMilliseconds : 0;
+            public readonly double Average() => (ScrollCount > 1) ? (DeltaTotal / (ScrollCount - 1)).TotalMilliseconds : 0;
             public void Reset() {
                 ScrollCount = 0;
                 DeltaTotal = TimeSpan.Zero;
