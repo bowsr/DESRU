@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="robocopy &quot;$(TargetDir) &quot; &quot;$(SolutionDir)output&quot; /S&#xD;&#xA;del &quot;$(SolutionDir)output\DESRU.zip&quot;&#xD;&#xA;WinRAR.exe a -ibck -ep1 -r &quot;$(SolutionDir)\output\DESRU.zip&quot; &quot;$(SolutionDir)\output\&quot;" IgnoreExitCode="true" />
+    <Exec Command="robocopy &quot;$(TargetDir) &quot; &quot;$(SolutionDir)output&quot; /S&#xD;&#xA;del &quot;$(SolutionDir)output\DESRU.zip&quot;&#xD;&#xA;&quot;C:\Program Files\7-Zip\7z.exe&quot; a -tzip &quot;$(SolutionDir)output\DESRU.zip&quot; &quot;$(SolutionDir)output\*&quot;" IgnoreExitCode="true" />
   </Target>
 
   <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
