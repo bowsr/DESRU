@@ -44,6 +44,7 @@ namespace DESpeedrunUtil.Memory {
         public bool FirstRun { get; set; } = true;
         public bool EnableOSD { get; set; } = false;
         public bool EnableCheats { get; set; } = false;
+        public bool PotentiallyModdedUWP { get; private set; } = false;
         System.Timers.Timer _restartCheatsTimer;
         int _moduleSize;
         public GameVersion Version { get; init; }
@@ -111,11 +112,13 @@ namespace DESpeedrunUtil.Memory {
             if(_cheatsConsolePtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsConsolePtr) != !EnableCheats) {
                 //_game.VirtualProtect(_cheatsConsolePtr, 128, MemPageProtect.PAGE_READWRITE);
                 if(!_preventCheatsToggle) _game.WriteBytes(_cheatsConsolePtr, new byte[1] { Convert.ToByte(!EnableCheats) });
+                PotentiallyModdedUWP = true;
             }
 
             if(_cheatsBindsPtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsBindsPtr) != !EnableCheats) {
                 //_game.VirtualProtect(_cheatsBindsPtr, 128, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_cheatsBindsPtr, new byte[1] { Convert.ToByte(!EnableCheats) });
+                PotentiallyModdedUWP = true;
             }
 
             // Read current resolution scaling percentage

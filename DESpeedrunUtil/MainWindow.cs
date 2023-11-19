@@ -1046,9 +1046,16 @@ namespace DESpeedrunUtil {
                 cheatsToggleButton.Text = "Enable Cheats";
             }
             var checksum = Checksums.GetMD5ChecksumFromFile(gamePath);
-            if(!Checksums.Compare(checksum, Memory.Version.MD5)) {
+            if(checksum != "UWP" && !Checksums.Compare(checksum, Memory.Version.MD5)) {
                 Memory.SetFlag(true, "modded");
                 Log.Warning("Potentially modified client detected. md5: {Checksum}", checksum);
+            }
+            if(checksum == "UWP") {
+                Log.Information("UWP Version of DOOMEternal detected. Unable to get MD5 checksum.");
+                if(Memory.PotentiallyModdedUWP) {
+                    Memory.SetFlag(true, "modded");
+                    Log.Warning("Potentially modified UWP client detected.");
+                }
             }
             Memory.SetFlag(_reshadeExists, "reshade");
             Memory.SetFlag(Program.UpdateDetected, "outofdate");
