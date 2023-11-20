@@ -523,6 +523,7 @@ namespace DESpeedrunUtil {
                 int limit = HotkeyHandler.Instance.FPSHotkeys.GetLimitFromID(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1);
                 t.Text = (limit != -1) ? limit.ToString() : "";
             }
+            defaultFPS.Text = _fpsDefault.ToString();
             minResInput.Text = _minResPercent.ToString();
             resPercent0.Text = _resPercent0 != -1 ? _resPercent0.ToString() : string.Empty;
             resPercent1.Text = _resPercent1 != -1 ? _resPercent1.ToString() : string.Empty;
