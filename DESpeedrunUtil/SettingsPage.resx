@@ -125,15 +125,6 @@ Your run will be rejected if you use this bind during a non-UN run and don't res
 
 Can be used to skip the intro cutscene on the level Hell on Earth, but doing so prevents the acquisition of the Doomblade codex page, which is required for 100% runs to be valid.</value>
   </data>
-  <data name="settingsFontSizeDescription.Text" xml:space="preserve">
-    <value>Changes the size of the On-Screen Display text.
-
-
-
-
-NOTE: The OSD text must still be fully legible in your video, otherwise your run will not be verifiable for the leaderboards.
-This setting also changes the size of the in-game dev console's text.</value>
-  </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>

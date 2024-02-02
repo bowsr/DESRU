@@ -238,7 +238,7 @@
             settingsFontSizeDescription.ReadOnly = true;
             settingsFontSizeDescription.Size = new Size(315, 138);
             settingsFontSizeDescription.TabIndex = 40;
-            settingsFontSizeDescription.Text = resources.GetString("settingsFontSizeDescription.Text");
+            settingsFontSizeDescription.Text = "Changes the size of the On-Screen Display text.\r\n\r\n\r\n\r\n\r\nThis setting also changes the size of the in-game dev console's text.";
             // 
             // settingsFontSizeCheckbox
             // 
