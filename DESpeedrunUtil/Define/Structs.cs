@@ -63,6 +63,8 @@
             public int LevelName { get; init; }
             public int CutsceneID { get; init; }
 
+            public int MetricsFontSize { get; init; }
+
             public KnownOffsets(string v, int r1, int r6, int res) {
                 Version = v;
                 Row1 = r1;
@@ -91,6 +93,7 @@
                 IsInGame = 0;
                 LevelName = 0;
                 CutsceneID = 0;
+                MetricsFontSize = 0;
             }
         }
 

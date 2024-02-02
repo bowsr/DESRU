@@ -1,5 +1,7 @@
-﻿namespace DESpeedrunUtil {
-    partial class SettingsPage {
+﻿namespace DESpeedrunUtil
+{
+    partial class SettingsPage
+    {
         /// <summary>
         /// Required designer variable.
         /// </summary>
@@ -37,6 +39,11 @@
             settingsResetRunHotkeyField = new Label();
             settingsResetBindDescription = new TextBox();
             settingsResetBindCheckbox = new CheckBox();
+            settingsFontSlider = new TrackBar();
+            settingsFontSizeDescription = new TextBox();
+            settingsFontSizeCheckbox = new CheckBox();
+            settingsFontSliderText = new TextBox();
+            ((System.ComponentModel.ISupportInitialize) settingsFontSlider).BeginInit();
             SuspendLayout();
             // 
             // settingsCVARLabel
@@ -57,7 +64,7 @@
             settingsAACheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             settingsAACheckbox.Location = new Point(27, 45);
             settingsAACheckbox.Name = "settingsAACheckbox";
-            settingsAACheckbox.Size = new Size(158, 22);
+            settingsAACheckbox.Size = new Size(148, 22);
             settingsAACheckbox.TabIndex = 1;
             settingsAACheckbox.Tag = "antialiasing";
             settingsAACheckbox.Text = "Disable Anti-Aliasing";
@@ -71,7 +78,7 @@
             settingsUNCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             settingsUNCheckbox.Location = new Point(27, 98);
             settingsUNCheckbox.Name = "settingsUNCheckbox";
-            settingsUNCheckbox.Size = new Size(273, 22);
+            settingsUNCheckbox.Size = new Size(253, 22);
             settingsUNCheckbox.TabIndex = 2;
             settingsUNCheckbox.Tag = "undelay";
             settingsUNCheckbox.Text = "Disable Ultra-Nightmare Quitout Delay";
@@ -85,7 +92,7 @@
             settingsAutoContinueCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             settingsAutoContinueCheckbox.Location = new Point(27, 151);
             settingsAutoContinueCheckbox.Name = "settingsAutoContinueCheckbox";
-            settingsAutoContinueCheckbox.Size = new Size(242, 22);
+            settingsAutoContinueCheckbox.Size = new Size(224, 22);
             settingsAutoContinueCheckbox.TabIndex = 3;
             settingsAutoContinueCheckbox.Tag = "autocontinue";
             settingsAutoContinueCheckbox.Text = "Auto Continue in Loading Screens";
@@ -141,7 +148,7 @@
             settingsCloseButton.FlatStyle = FlatStyle.Flat;
             settingsCloseButton.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Bold, GraphicsUnit.Point);
             settingsCloseButton.ForeColor = Color.FromArgb(  230,   230,   230);
-            settingsCloseButton.Location = new Point(232, 507);
+            settingsCloseButton.Location = new Point(602, 507);
             settingsCloseButton.Name = "settingsCloseButton";
             settingsCloseButton.Size = new Size(150, 28);
             settingsCloseButton.TabIndex = 8;
@@ -154,7 +161,7 @@
             titleSeparator.BackColor = Color.FromArgb(  85,   85,   85);
             titleSeparator.Location = new Point(12, 215);
             titleSeparator.Name = "titleSeparator";
-            titleSeparator.Size = new Size(370, 2);
+            titleSeparator.Size = new Size(740, 2);
             titleSeparator.TabIndex = 32;
             // 
             // settingsHotkeyLabel
@@ -203,19 +210,74 @@
             settingsResetBindCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             settingsResetBindCheckbox.Location = new Point(27, 262);
             settingsResetBindCheckbox.Name = "settingsResetBindCheckbox";
-            settingsResetBindCheckbox.Size = new Size(341, 22);
+            settingsResetBindCheckbox.Size = new Size(319, 22);
             settingsResetBindCheckbox.TabIndex = 37;
             settingsResetBindCheckbox.Tag = "autocontinue";
             settingsResetBindCheckbox.Text = "Enable Reset Run / Kill Script Hotkey (Double Tap)";
             settingsResetBindCheckbox.UseVisualStyleBackColor = true;
             settingsResetBindCheckbox.CheckedChanged += ResetRunCheckbox_CheckChanged;
             // 
+            // settingsFontSlider
+            // 
+            settingsFontSlider.Location = new Point(408, 95);
+            settingsFontSlider.Name = "settingsFontSlider";
+            settingsFontSlider.Size = new Size(302, 45);
+            settingsFontSlider.TabIndex = 38;
+            settingsFontSlider.Value = 10;
+            settingsFontSlider.Scroll += FontSlider_Changed;
+            // 
+            // settingsFontSizeDescription
+            // 
+            settingsFontSizeDescription.BackColor = Color.FromArgb(  35,   35,   35);
+            settingsFontSizeDescription.BorderStyle = BorderStyle.None;
+            settingsFontSizeDescription.Font = new Font("Eternal UI 2", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsFontSizeDescription.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsFontSizeDescription.Location = new Point(418, 65);
+            settingsFontSizeDescription.Multiline = true;
+            settingsFontSizeDescription.Name = "settingsFontSizeDescription";
+            settingsFontSizeDescription.ReadOnly = true;
+            settingsFontSizeDescription.Size = new Size(315, 138);
+            settingsFontSizeDescription.TabIndex = 40;
+            settingsFontSizeDescription.Text = resources.GetString("settingsFontSizeDescription.Text");
+            // 
+            // settingsFontSizeCheckbox
+            // 
+            settingsFontSizeCheckbox.AutoSize = true;
+            settingsFontSizeCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsFontSizeCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsFontSizeCheckbox.Location = new Point(397, 45);
+            settingsFontSizeCheckbox.Name = "settingsFontSizeCheckbox";
+            settingsFontSizeCheckbox.Size = new Size(241, 22);
+            settingsFontSizeCheckbox.TabIndex = 39;
+            settingsFontSizeCheckbox.Tag = "antialiasing";
+            settingsFontSizeCheckbox.Text = "Change On-Screen Display Font Size";
+            settingsFontSizeCheckbox.UseVisualStyleBackColor = true;
+            settingsFontSizeCheckbox.CheckedChanged += FontSizeCheckbox_CheckChanged;
+            // 
+            // settingsFontSliderText
+            // 
+            settingsFontSliderText.BackColor = Color.FromArgb(  35,   35,   35);
+            settingsFontSliderText.BorderStyle = BorderStyle.None;
+            settingsFontSliderText.Font = new Font("Eternal UI 2", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
+            settingsFontSliderText.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsFontSliderText.Location = new Point(709, 90);
+            settingsFontSliderText.Multiline = true;
+            settingsFontSliderText.Name = "settingsFontSliderText";
+            settingsFontSliderText.ReadOnly = true;
+            settingsFontSliderText.Size = new Size(50, 34);
+            settingsFontSliderText.TabIndex = 41;
+            settingsFontSliderText.Text = "10";
+            // 
             // SettingsPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(  35,   35,   35);
-            ClientSize = new Size(394, 547);
+            ClientSize = new Size(764, 547);
+            Controls.Add(settingsFontSliderText);
+            Controls.Add(settingsFontSlider);
+            Controls.Add(settingsFontSizeDescription);
+            Controls.Add(settingsFontSizeCheckbox);
             Controls.Add(settingsResetBindCheckbox);
             Controls.Add(settingsResetBindDescription);
             Controls.Add(settingsResetRunHotkeyField);
@@ -240,6 +302,7 @@
             FormClosing += SettingsPage_FormClosing;
             Load += SettingsPage_Load;
             KeyDown += HotkeyAssignment_KeyDown;
+            ((System.ComponentModel.ISupportInitialize) settingsFontSlider).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -259,5 +322,9 @@
         private Label settingsResetRunHotkeyField;
         private TextBox settingsResetBindDescription;
         private CheckBox settingsResetBindCheckbox;
+        private TrackBar settingsFontSlider;
+        private TextBox settingsFontSizeDescription;
+        private CheckBox settingsFontSizeCheckbox;
+        private TextBox settingsFontSliderText;
     }
 }

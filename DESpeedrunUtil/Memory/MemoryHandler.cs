@@ -23,7 +23,7 @@ namespace DESpeedrunUtil.Memory {
 
         DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _skipIntroDP, _aliasingDP, _unDelayDP, _continueDP,
                     _row1DP, _row6DP,
-                    _gpuVendorDP, _gpuNameDP, _cpuDP,
+                    _gpuVendorDP, _gpuNameDP, _cpuDP, _fontSizeDP,
                     _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP, _forceResDP, _currentResScaleDP,
                     _velocityDP, _positionDP, _rotationDP,
                     _isLoadingDP, _isLoading2DP, _isInGameDP, _levelNameDP, _cutsceneIDDP,
@@ -31,7 +31,7 @@ namespace DESpeedrunUtil.Memory {
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _skipIntroPtr, _aliasingPtr, _unDelayPtr, _continuePtr,
                _row1Ptr, _row6Ptr,
-               _gpuVendorPtr, _gpuNamePtr, _cpuPtr,
+               _gpuVendorPtr, _gpuNamePtr, _cpuPtr, _fontSizePtr,
                _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr, _forceResPtr, _currentResScalePtr,
                _velocityPtr, _positionPtr, _rotationPtr,
                _isLoadingPtr, _isLoading2Ptr, _isInGamePtr, _levelNamePtr, _cutsceneIDPtr,
@@ -159,6 +159,11 @@ namespace DESpeedrunUtil.Memory {
                 _resetRunLeftLoad = true;
                 _resetRunLeftLoadTime = DateTime.Now;
             }
+
+            if(Properties.Settings.Default.EnableFontSizeChange)
+                SetOSDFontSize(5 + (Properties.Settings.Default.OSDFontSize * 0.5f));
+            else
+                ResetOSDFontSize();
 
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
             _row1 = METRICS_FPS_TEXT + ((_osdFlagOutOfDate) ? "*" : "");
@@ -621,6 +626,20 @@ namespace DESpeedrunUtil.Memory {
         }
 
         /// <summary>
+        /// Sets the font size of the performance metrics display
+        /// </summary>
+        /// <param name="size">Size of the font</param>
+        public void SetOSDFontSize(float size) {
+            if(_fontSizePtr != IntPtr.Zero && _game.ReadValue<float>(_fontSizePtr) != size)
+                _game.WriteValue(_fontSizePtr, size);
+        }
+
+        /// <summary>
+        /// Resets the OSD font size to the default of 10
+        /// </summary>
+        public void ResetOSDFontSize() => SetOSDFontSize(10f);
+
+        /// <summary>
         /// Sets the state of the flags that will be shown next to the FPS counter.
         /// </summary>
         /// <param name="flag">State of the flag</param>
@@ -817,6 +836,8 @@ namespace DESpeedrunUtil.Memory {
                 _gpuNameDP?.DerefOffsets(_game, out _gpuNamePtr);
                 _cpuDP?.DerefOffsets(_game, out _cpuPtr);
 
+                _fontSizeDP?.DerefOffsets(_game, out _fontSizePtr);
+
                 _metricsDP?.DerefOffsets(_game, out _metricsPtr);
                 _maxHzDP?.DerefOffsets(_game, out _maxHzPtr);
                 _skipIntroDP?.DerefOffsets(_game, out _skipIntroPtr);
@@ -897,6 +918,8 @@ namespace DESpeedrunUtil.Memory {
             _gpuVendorDP = CreateDP(_currentOffsets.GPUVendor);
             _gpuNameDP = CreateDP(_currentOffsets.GPUName);
             _cpuDP = CreateDP(_currentOffsets.CPU, 0x0);
+
+            _fontSizeDP = CreateDP(_currentOffsets.MetricsFontSize);
 
             _metricsDP = CreateDP(_currentOffsets.Metrics);
             if(_currentOffsets.Metrics == 0) SetFlag(true, "minimal");

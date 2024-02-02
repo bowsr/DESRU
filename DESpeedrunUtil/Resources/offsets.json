@@ -26,7 +26,8 @@
     "IsLoading2": 111068688,
     "IsInGame": 110753808,
     "LevelName": 112999392,
-    "CutsceneID": 86112072
+    "CutsceneID": 86112072,
+    "MetricsFontSize": 0
   },
   {
     "Version": "6.66 Rev 2.2",
@@ -55,7 +56,8 @@
     "IsLoading2": 110298128,
     "IsInGame": 109987952,
     "LevelName": 112229808,
-    "CutsceneID": 85342792
+    "CutsceneID": 85342792,
+    "MetricsFontSize": 71333844
   },
   {
     "Version": "6.66 Rev 2",
@@ -84,7 +86,8 @@
     "IsLoading2": 110478480,
     "IsInGame": 110163728,
     "LevelName": 112410160,
-    "CutsceneID": 85523144
+    "CutsceneID": 85523144,
+    "MetricsFontSize": 0
   },
   {
     "Version": "6.4",
@@ -113,7 +116,8 @@
     "IsLoading2": 108551696,
     "IsInGame": 108241872,
     "LevelName": 110483104,
-    "CutsceneID": 83527080
+    "CutsceneID": 83527080,
+    "MetricsFontSize": 0
   },
   {
     "Version": "6.3",
@@ -142,7 +146,8 @@
     "IsLoading2": 108551696,
     "IsInGame": 108241872,
     "LevelName": 110483104,
-    "CutsceneID": 83527080
+    "CutsceneID": 83527080,
+    "MetricsFontSize": 0
   },
   {
     "Version": "6.2",
@@ -171,7 +176,8 @@
     "IsLoading2": 108551696,
     "IsInGame": 108241872,
     "LevelName": 110483104,
-    "CutsceneID": 83527080
+    "CutsceneID": 83527080,
+    "MetricsFontSize": 0
   },
   {
     "Version": "6.1",
@@ -200,7 +206,8 @@
     "IsLoading2": 108542096,
     "IsInGame": 108231408,
     "LevelName": 110473504,
-    "CutsceneID": 83522888
+    "CutsceneID": 83522888,
+    "MetricsFontSize": 0
   },
   {
     "Version": "6.0",
@@ -229,7 +236,8 @@
     "IsLoading2": 108542096,
     "IsInGame": 108231408,
     "LevelName": 110473504,
-    "CutsceneID": 83522888
+    "CutsceneID": 83522888,
+    "MetricsFontSize": 0
   },
   {
     "Version": "5.1",
@@ -258,7 +266,8 @@
     "IsLoading2": 104490256,
     "IsInGame": 104183920,
     "LevelName": 106421728,
-    "CutsceneID": 82452344
+    "CutsceneID": 82452344,
+    "MetricsFontSize": 0
   },
   {
     "Version": "5.0",
@@ -287,7 +296,8 @@
     "IsLoading2": 104490256,
     "IsInGame": 104183920,
     "LevelName": 106421728,
-    "CutsceneID": 82452344
+    "CutsceneID": 82452344,
+    "MetricsFontSize": 0
   },
   {
     "Version": "4.1",
@@ -316,7 +326,8 @@
     "IsLoading2": 107681672,
     "IsInGame": 107371664,
     "LevelName": 108577472,
-    "CutsceneID": 103713232
+    "CutsceneID": 103713232,
+    "MetricsFontSize": 0
   },
   {
     "Version": "4.0",
@@ -345,7 +356,8 @@
     "IsLoading2": 107678600,
     "IsInGame": 107368592,
     "LevelName": 108574400,
-    "CutsceneID": 103713232
+    "CutsceneID": 103713232,
+    "MetricsFontSize": 0
   },
   {
     "Version": "3.1",
@@ -374,7 +386,8 @@
     "IsLoading2": 107568472,
     "IsInGame": 107249568,
     "LevelName": 108463856,
-    "CutsceneID": 103983264
+    "CutsceneID": 103983264,
+    "MetricsFontSize": 0
   },
   {
     "Version": "3.0",
@@ -403,7 +416,8 @@
     "IsLoading2": 107568344,
     "IsInGame": 107249440,
     "LevelName": 107606552,
-    "CutsceneID": 106434880
+    "CutsceneID": 106434880,
+    "MetricsFontSize": 0
   },
   {
     "Version": "2.1",
@@ -432,7 +446,8 @@
     "IsLoading2": 104616600,
     "IsInGame": 104306280,
     "LevelName": 104654600,
-    "CutsceneID": 83809476
+    "CutsceneID": 83809476,
+    "MetricsFontSize": 0
   },
   {
     "Version": "2.0",
@@ -461,7 +476,8 @@
     "IsLoading2": 84418216,
     "IsInGame": 104294248,
     "LevelName": 0,
-    "CutsceneID": 0
+    "CutsceneID": 0,
+    "MetricsFontSize": 0
   },
   {
     "Version": "1.1",
@@ -490,7 +506,8 @@
     "IsLoading2": 100936512,
     "IsInGame": 100626136,
     "LevelName": 101827824,
-    "CutsceneID": 80132484
+    "CutsceneID": 80132484,
+    "MetricsFontSize": 0
   },
   {
     "Version": "1.0 (Release)",
@@ -519,6 +536,7 @@
     "IsLoading2": 100995648,
     "IsInGame": 101892568,
     "LevelName": 101886032,
-    "CutsceneID": 80191620
+    "CutsceneID": 80191620,
+    "MetricsFontSize": 0
   }
 ]

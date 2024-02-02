@@ -18,7 +18,7 @@
     <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
     <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
     <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
-    <data name="Color1" type="System.Drawing.Color, System.Drawing"">Blue</data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
     <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
         <value>[base64 mime encoded serialized .NET Framework object]</value>
     </data>
@@ -124,6 +124,15 @@ Allows you to quickly reset Ultra-Nightmare runs.
 Your run will be rejected if you use this bind during a non-UN run and don't reset.
 
 Can be used to skip the intro cutscene on the level Hell on Earth, but doing so prevents the acquisition of the Doomblade codex page, which is required for 100% runs to be valid.</value>
+  </data>
+  <data name="settingsFontSizeDescription.Text" xml:space="preserve">
+    <value>Changes the size of the On-Screen Display text.
+
+
+
+
+NOTE: The OSD text must still be fully legible in your video, otherwise your run will not be verifiable for the leaderboards.
+This setting also changes the size of the in-game dev console's text.</value>
   </data>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

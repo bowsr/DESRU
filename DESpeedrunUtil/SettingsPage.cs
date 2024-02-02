@@ -2,8 +2,10 @@
 using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Interop.DLLImports;
 
-namespace DESpeedrunUtil {
-    internal partial class SettingsPage: Form {
+namespace DESpeedrunUtil
+{
+    internal partial class SettingsPage: Form
+    {
 
         bool _enableEvents = false;
         bool _hkAssignmentMode = false;
@@ -16,6 +18,11 @@ namespace DESpeedrunUtil {
             settingsUNCheckbox.Checked = !Properties.Settings.Default.UNDelay;
             settingsAutoContinueCheckbox.Checked = Properties.Settings.Default.AutoContinue;
             settingsResetBindCheckbox.Checked = Properties.Settings.Default.EnableResetRunHotkey;
+            settingsFontSizeCheckbox.Checked = Properties.Settings.Default.EnableFontSizeChange;
+            settingsFontSlider.Value = Properties.Settings.Default.OSDFontSize;
+
+            settingsFontSlider.Enabled = settingsFontSizeCheckbox.Checked;
+            UpdateOSDFontSize();
             UpdateHotkeyFields();
             SetFonts();
             _enableEvents = true;
@@ -79,14 +86,36 @@ namespace DESpeedrunUtil {
             UpdateSettings();
         }
 
+        private void FontSizeCheckbox_CheckChanged(object sender, EventArgs e) {
+            if(!_enableEvents) return;
+            if(settingsFontSizeCheckbox.Checked) {
+                System.Media.SystemSounds.Asterisk.Play();
+                MessageBox.Show("Make sure the On-Screen Display text is still fully legible in your recorded videos.\n" +
+                    "If the text is not readable at any point, your run cannot be verified for the leaderboards", "Font Size Warning");
+                UpdateOSDFontSize();
+            } else {
+                ResetOSDFontSize();
+            }
+            settingsFontSlider.Enabled = settingsFontSizeCheckbox.Checked;
+            UpdateSettings();
+        }
+
+        private void FontSlider_Changed(object sender, EventArgs e) {
+            var val = 5 + (settingsFontSlider.Value * 0.5f);
+            settingsFontSliderText.Text = val switch {
+                10 => "10",
+                _ => val.ToString("0.0")
+            };
+            UpdateOSDFontSize();
+            UpdateSettings();
+        }
+
         private void CloseButton_Click(object sender, EventArgs e) {
             UpdateSettings();
             this.Close();
         }
 
-        private void SettingsPage_Load(object sender, EventArgs e) {
-            //this.Location = new Point(MainWindow.Instance.Location.X + 100, MainWindow.Instance.Location.Y + 150);
-        }
+        private void SettingsPage_Load(object sender, EventArgs e) { }
 
         private void SettingsPage_FormClosing(object sender, FormClosingEventArgs e) {
             MainWindow.Instance.ToggleButtonStates("settings", true);
@@ -95,10 +124,13 @@ namespace DESpeedrunUtil {
         #endregion
 
         private void UpdateSettings() {
-            Properties.Settings.Default.AntiAliasing = !settingsAACheckbox.Checked;
-            Properties.Settings.Default.UNDelay = !settingsUNCheckbox.Checked;
-            Properties.Settings.Default.AutoContinue = settingsAutoContinueCheckbox.Checked;
-            Properties.Settings.Default.EnableResetRunHotkey = settingsResetBindCheckbox.Checked;
+            var props = Properties.Settings.Default;
+            props.AntiAliasing = !settingsAACheckbox.Checked;
+            props.UNDelay = !settingsUNCheckbox.Checked;
+            props.AutoContinue = settingsAutoContinueCheckbox.Checked;
+            props.EnableResetRunHotkey = settingsResetBindCheckbox.Checked;
+            props.EnableFontSizeChange = settingsFontSizeCheckbox.Checked;
+            props.OSDFontSize = settingsFontSlider.Value;
         }
 
         private void UpdateHotkeyFields() {
@@ -107,14 +139,25 @@ namespace DESpeedrunUtil {
             settingsResetRunHotkeyField.BackColor = COLOR_TEXT_BACK;
         }
 
+        private void UpdateOSDFontSize() {
+            if(settingsFontSizeCheckbox.Checked)
+                MainWindow.Instance.Memory?.SetOSDFontSize(5 + (settingsFontSlider.Value * 0.5f));
+            else
+                ResetOSDFontSize();
+        }
+
+        private void ResetOSDFontSize() => MainWindow.Instance.Memory?.ResetOSDFontSize();
+
         private void SetFonts() {
             settingsCVARLabel.Font = MainWindow.EternalUIBold20;
             settingsHotkeyLabel.Font = MainWindow.EternalUIBold20;
+            settingsFontSliderText.Font = MainWindow.EternalUIBold20;
 
             settingsAACheckbox.Font = MainWindow.EternalUIRegular;
             settingsUNCheckbox.Font = MainWindow.EternalUIRegular;
             settingsAutoContinueCheckbox.Font = MainWindow.EternalUIRegular;
             settingsResetBindCheckbox.Font = MainWindow.EternalUIRegular;
+            settingsFontSizeCheckbox.Font = MainWindow.EternalUIRegular;
             settingsResetRunHotkeyField.Font = MainWindow.EternalUIRegular;
 
             settingsCloseButton.Font = MainWindow.EternalUIBold;
@@ -123,6 +166,7 @@ namespace DESpeedrunUtil {
             settingsUNDescription.Font = MainWindow.EternalUIRegular10;
             settingsAutoContinueDescription.Font = MainWindow.EternalUIRegular10;
             settingsResetBindDescription.Font = MainWindow.EternalUIRegular10;
+            settingsFontSizeDescription.Font = MainWindow.EternalUIRegular10;
         }
     }
 }
