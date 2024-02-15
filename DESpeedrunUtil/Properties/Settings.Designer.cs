@@ -550,5 +550,17 @@ namespace DESpeedrunUtil.Properties {
                 this["OSDFontSize"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AdvancedKeypress {
+            get {
+                return ((bool)(this["AdvancedKeypress"]));
+            }
+            set {
+                this["AdvancedKeypress"] = value;
+            }
+        }
     }
 }

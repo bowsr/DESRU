@@ -23,7 +23,7 @@ namespace DESpeedrunUtil.Memory {
 
         DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _skipIntroDP, _aliasingDP, _unDelayDP, _continueDP,
                     _row1DP, _row6DP,
-                    _gpuVendorDP, _gpuNameDP, _cpuDP, _fontSizeDP,
+                    _gpuVendorDP, _gpuNameDP, _cpuDP, _fontSizeDP, _advConsoleDP,
                     _dynamicResDP, _resScalesDP, _raiseMSDP, _dropMSDP, _forceResDP, _currentResScaleDP,
                     _velocityDP, _positionDP, _rotationDP,
                     _isLoadingDP, _isLoading2DP, _isInGameDP, _levelNameDP, _cutsceneIDDP,
@@ -31,7 +31,7 @@ namespace DESpeedrunUtil.Memory {
 
         IntPtr _maxHzPtr, _metricsPtr, _rampJumpPtr, _minResPtr, _skipIntroPtr, _aliasingPtr, _unDelayPtr, _continuePtr,
                _row1Ptr, _row6Ptr,
-               _gpuVendorPtr, _gpuNamePtr, _cpuPtr, _fontSizePtr,
+               _gpuVendorPtr, _gpuNamePtr, _cpuPtr, _fontSizePtr, _advConsolePtr,
                _dynamicResPtr, _resScalesPtr, _raiseMSPtr, _dropMSPtr, _forceResPtr, _currentResScalePtr,
                _velocityPtr, _positionPtr, _rotationPtr,
                _isLoadingPtr, _isLoading2Ptr, _isInGamePtr, _levelNamePtr, _cutsceneIDPtr,
@@ -106,42 +106,42 @@ namespace DESpeedrunUtil.Memory {
 
             if(Version.Name == "1.0 (Release)") SetFlag(!_game.ReadValue<bool>(_rampJumpPtr), "slopeboost");
 
-            TrainerSupported = _positionPtr != IntPtr.Zero;
+            TrainerSupported = CheckNonZeroPtr(_positionPtr);
             if(TrainerSupported) ReadTrainerValues();
 
-            if(_cheatsConsolePtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsConsolePtr) != !EnableCheats) {
+            if(CheckNonZeroPtr(_cheatsConsolePtr) && _game.ReadValue<bool>(_cheatsConsolePtr) != !EnableCheats) {
                 //_game.VirtualProtect(_cheatsConsolePtr, 128, MemPageProtect.PAGE_READWRITE);
                 if(!_preventCheatsToggle) _game.WriteBytes(_cheatsConsolePtr, new byte[1] { Convert.ToByte(!EnableCheats) });
                 PotentiallyModdedUWP = true;
             }
 
-            if(_cheatsBindsPtr != IntPtr.Zero && _game.ReadValue<bool>(_cheatsBindsPtr) != !EnableCheats) {
+            if(CheckNonZeroPtr(_cheatsBindsPtr) && _game.ReadValue<bool>(_cheatsBindsPtr) != !EnableCheats) {
                 //_game.VirtualProtect(_cheatsBindsPtr, 128, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_cheatsBindsPtr, new byte[1] { Convert.ToByte(!EnableCheats) });
                 PotentiallyModdedUWP = true;
             }
 
             // Read current resolution scaling percentage
-            if(_currentResScalePtr != IntPtr.Zero) CurrentResScaling = _game.ReadValue<float>(_currentResScalePtr);
+            if(CheckNonZeroPtr(_currentResScalePtr)) CurrentResScaling = _game.ReadValue<float>(_currentResScalePtr);
             if(CurrentResScaling != _prevScaling) {
                 _prevScaling = CurrentResScaling;
                 _scalingTime = DateTime.Now.Ticks;
             }
 
             // com_skipIntroVideo
-            if(_skipIntroPtr != IntPtr.Zero && !_game.ReadValue<bool>(_skipIntroPtr))
+            if(CheckNonZeroPtr(_skipIntroPtr) && !_game.ReadValue<bool>(_skipIntroPtr))
                 _game.WriteBytes(_skipIntroPtr, new byte[1] { 1 });
 
             // r_antialiasing
-            if(_aliasingPtr != IntPtr.Zero && _game.ReadValue<byte>(_aliasingPtr) < 2 && _game.ReadValue<bool>(_aliasingPtr) != _antiAliasing)
+            if(CheckNonZeroPtr(_aliasingPtr) && _game.ReadValue<byte>(_aliasingPtr) < 2 && _game.ReadValue<bool>(_aliasingPtr) != _antiAliasing)
                 _game.WriteBytes(_aliasingPtr, new byte[1] { Convert.ToByte(_antiAliasing) });
 
             // pauseMenu_delayUNPrompt
-            if(_unDelayPtr != IntPtr.Zero && _game.ReadValue<bool>(_unDelayPtr) != _unDelay)
+            if(CheckNonZeroPtr(_unDelayPtr) && _game.ReadValue<bool>(_unDelayPtr) != _unDelay)
                 _game.WriteBytes(_unDelayPtr, new byte[1] { Convert.ToByte(_unDelay) });
 
             // com_skipKeyPressOnLoadScreens
-            if(_continuePtr != IntPtr.Zero && _game.ReadValue<bool>(_continuePtr) != _autoContinue)
+            if(CheckNonZeroPtr(_continuePtr) && _game.ReadValue<bool>(_continuePtr) != _autoContinue)
                 _game.WriteBytes(_continuePtr, new byte[1] { Convert.ToByte(_autoContinue) });
 
             if(_waitForLoad && IsLoadingOrInMenu()) _waitForLoad = false;
@@ -160,10 +160,16 @@ namespace DESpeedrunUtil.Memory {
                 _resetRunLeftLoadTime = DateTime.Now;
             }
 
+            // con_fontSize
             if(Properties.Settings.Default.EnableFontSizeChange)
                 SetOSDFontSize(5 + (Properties.Settings.Default.OSDFontSize * 0.5f));
             else
                 ResetOSDFontSize();
+
+            // con_AdvancedKeypress
+            var advkp = Properties.Settings.Default.AdvancedKeypress;
+            if(CheckNonZeroPtr(_advConsolePtr) && _game.ReadValue<bool>(_advConsolePtr) != advkp)
+                _game.WriteBytes(_advConsolePtr, new byte[1] { Convert.ToByte(advkp) });
 
             _row1 = _row2 = _row3 = _row4 = _row5 = _row6 = _row7 = _row8 = _row9 = _cpu = _gpuV = _gpuN = "";
             _row1 = METRICS_FPS_TEXT + ((_osdFlagOutOfDate) ? "*" : "");
@@ -263,7 +269,7 @@ namespace DESpeedrunUtil.Memory {
                             _row3 = "";
                         }
                     }
-                    if(_metricsPtr != IntPtr.Zero) SetMetrics((byte) (_minimalOSD ? 1 : 2));
+                    if(CheckNonZeroPtr(_metricsPtr)) SetMetrics((byte) (_minimalOSD ? 1 : 2));
                     ModifyMetricRows();
                     _osdReset = false;
                 } else {
@@ -275,26 +281,26 @@ namespace DESpeedrunUtil.Memory {
 
                     _row2 = velocity;
                     _gpuN = position;
-                    if(_cpuPtr != IntPtr.Zero) {
+                    if(CheckNonZeroPtr(_cpuPtr)) {
                         _cpu = hzVelocity;
                     } else {
                         _row3 = hzVelocity;
                         _cpu = "";
                     }
-                    if(_row6Ptr != IntPtr.Zero) {
+                    if(CheckNonZeroPtr(_row6Ptr)) {
                         _row8 = yaw;
                         _row9 = pitch;
                     } else {
                         _row6 = yaw;
                         _row7 = pitch;
                     }
-                    if(_metricsPtr != IntPtr.Zero) SetMetrics(2);
+                    if(CheckNonZeroPtr(_metricsPtr)) SetMetrics(2);
                     ModifyMetricRows();
                     _osdReset = false;
                 }
             }
 
-            if(_minResPtr != IntPtr.Zero && ReadyToUnlockRes()) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
+            if(CheckNonZeroPtr(_minResPtr) && ReadyToUnlockRes()) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
             if(CanCapFPS() && _fpsLimit != ReadMaxHz()) _game.WriteBytes(_maxHzPtr, BitConverter.GetBytes((short) _fpsLimit));
             if(_unlockResFlag) {
                 if(ReadyToUnlockRes()) {
@@ -390,8 +396,13 @@ namespace DESpeedrunUtil.Memory {
             // Keyboard Input Script
             var eventBuilder = Simulate.Events()
                 .WaitUntilResponsive(_game.MainWindowHandle, new TimeSpan(0, 0, 0, 5, 0))
-                .Wait(250)
-                .ClickChord(KeyCode.RShift, KeyCode.Oem3).Wait(50)
+                .Wait(250);
+            if(Properties.Settings.Default.AdvancedKeypress) {
+                eventBuilder.ClickChord(KeyCode.RControl, KeyCode.RShift, KeyCode.Oem3);
+            } else {
+                eventBuilder.ClickChord(KeyCode.RShift, KeyCode.Oem3);
+            }
+            eventBuilder.Wait(50)
                 .Click(KeyCode.Backspace).Wait(5).Click(KeyCode.Backspace).Wait(10)
                 .Click(cmd).Wait(50)
                 .Click(KeyCode.Return).Wait(50)
@@ -443,8 +454,8 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private void ModifyMetricRows() {
-            if(_row1Ptr != IntPtr.Zero) {
-                var r6 = (_row6Ptr != IntPtr.Zero) ? _row6Ptr : _row1Ptr + OFFSET_ROW6;
+            if(CheckNonZeroPtr(_row1Ptr)) {
+                var r6 = (CheckNonZeroPtr(_row6Ptr)) ? _row6Ptr : _row1Ptr + OFFSET_ROW6;
                 _game.VirtualProtect(_row1Ptr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_row1Ptr, ToByteArray(_row1, 20));
                 _game.WriteBytes(_row1Ptr + OFFSET_ROW2, ToByteArray(_row2, 18));
@@ -454,17 +465,17 @@ namespace DESpeedrunUtil.Memory {
                 _game.WriteBytes(r6, ToByteArray(_row6, 34));
                 _game.WriteBytes(r6 + OFFSET_ROW7, ToByteArray(_row7, 34));
             }
-            if(_row6Ptr != IntPtr.Zero) _game.WriteBytes(_row6Ptr + OFFSET_ROW8, ToByteArray(_row8, 34));
-            if(_row6Ptr != IntPtr.Zero) _game.WriteBytes(_row6Ptr + OFFSET_ROW9, ToByteArray(_row9, 34));
-            if(_cpuPtr != IntPtr.Zero) {
+            if(CheckNonZeroPtr(_row6Ptr)) _game.WriteBytes(_row6Ptr + OFFSET_ROW8, ToByteArray(_row8, 34));
+            if(CheckNonZeroPtr(_row6Ptr)) _game.WriteBytes(_row6Ptr + OFFSET_ROW9, ToByteArray(_row9, 34));
+            if(CheckNonZeroPtr(_cpuPtr)) {
                 _game.VirtualProtect(_cpuPtr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_cpuPtr, ToByteArray(_cpu, 64));
             }
-            if(_gpuVendorPtr != IntPtr.Zero) {
+            if(CheckNonZeroPtr(_gpuVendorPtr)) {
                 _game.VirtualProtect(_gpuVendorPtr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_gpuVendorPtr, ToByteArray(_gpuV, 64));
             }
-            if(_gpuNamePtr != IntPtr.Zero) {
+            if(CheckNonZeroPtr(_gpuNamePtr)) {
                 _game.VirtualProtect(_gpuNamePtr, 1024, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_gpuNamePtr, ToByteArray(_gpuN, 64));
             }
@@ -523,7 +534,7 @@ namespace DESpeedrunUtil.Memory {
 
         private bool UnlockResScale() {
             var result = SetResScales();
-            if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
+            if(CheckNonZeroPtr(_minResPtr)) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
             if(_autoScaling) {
                 EnableResolutionScaling();
                 _autoScaling = false;
@@ -546,15 +557,15 @@ namespace DESpeedrunUtil.Memory {
         /// <param name="targetFPS">FPS Target the scaling will try to hit</param>
         public void EnableDynamicScaling(int targetFPS) {
             DisableStaticScaling();
-            if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
-            if(_raiseMSPtr != IntPtr.Zero) _game.WriteBytes(_raiseMSPtr, FloatToBytes((1000f / targetFPS) * 0.95f));
-            if(_dropMSPtr != IntPtr.Zero) _game.WriteBytes(_dropMSPtr, FloatToBytes((1000f / targetFPS) * 0.99f));
+            if(CheckNonZeroPtr(_dynamicResPtr)) _game.WriteBytes(_dynamicResPtr, new byte[] { 1 });
+            if(CheckNonZeroPtr(_raiseMSPtr)) _game.WriteBytes(_raiseMSPtr, FloatToBytes((1000f / targetFPS) * 0.95f));
+            if(CheckNonZeroPtr(_dropMSPtr)) _game.WriteBytes(_dropMSPtr, FloatToBytes((1000f / targetFPS) * 0.99f));
         }
         /// <summary>
         /// Disables dynamic resolution scaling
         /// </summary>
         public void DisableDynamicScaling() {
-            if(_dynamicResPtr != IntPtr.Zero) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
+            if(CheckNonZeroPtr(_dynamicResPtr)) _game.WriteBytes(_dynamicResPtr, new byte[] { 0 });
         }
         /// <summary>
         /// Enables static resolution scaling.<br/>
@@ -567,13 +578,13 @@ namespace DESpeedrunUtil.Memory {
             //  Other values will take the next highest corresponding value. e.g. 0.55f would select 0.56f normally, which is the 29th value of the array, so the 29th value of the new array is selected
             // Because DESRU generates a new array depending on what minimum res scale value the user selected, the forced res will be set to 0.5f to keep that min value selected
             float scale = Version.Name.Contains("6.66 Rev 2") ? 0.5f : _minRes;
-            if(_forceResPtr != IntPtr.Zero) _game.WriteValue(_forceResPtr, scale);
+            if(CheckNonZeroPtr(_forceResPtr)) _game.WriteValue(_forceResPtr, scale);
         }
         /// <summary>
         /// Disables static resolution scaling
         /// </summary>
         public void DisableStaticScaling() {
-            if(_forceResPtr != IntPtr.Zero) _game.WriteValue(_forceResPtr, 0f);
+            if(CheckNonZeroPtr(_forceResPtr)) _game.WriteValue(_forceResPtr, 0f);
         }
         /// <summary>
         /// Toggles Dynamic Resolution Scaling
@@ -618,7 +629,7 @@ namespace DESpeedrunUtil.Memory {
             }
             byte[] resBytes = new byte[32 * 4];
             Buffer.BlockCopy(scales, 0, resBytes, 0, resBytes.Length);
-            if(_resScalesPtr != IntPtr.Zero) {
+            if(CheckNonZeroPtr(_resScalesPtr)) {
                 _game.VirtualProtect(_resScalesPtr, 32 * 4, MemPageProtect.PAGE_READWRITE);
                 _game.WriteBytes(_resScalesPtr, resBytes);
             }
@@ -630,7 +641,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <param name="size">Size of the font</param>
         public void SetOSDFontSize(float size) {
-            if(_fontSizePtr != IntPtr.Zero && _game.ReadValue<float>(_fontSizePtr) != size)
+            if(CheckNonZeroPtr(_fontSizePtr) && _game.ReadValue<float>(_fontSizePtr) != size)
                 _game.WriteValue(_fontSizePtr, size);
         }
 
@@ -684,6 +695,8 @@ namespace DESpeedrunUtil.Memory {
 
         public void SetCVAR(bool cvar, string cvarName) {
             switch(cvarName) {
+                default:
+                    return;
                 case "antialiasing":
                     _antiAliasing = cvar;
                     break;
@@ -726,7 +739,7 @@ namespace DESpeedrunUtil.Memory {
             if(Version.Name.Contains("Unknown")) return;
             _targetFPS = targetFPS;
             if(_resUnlocked && !Version.Name.Contains("6.66 Rev 2")) {
-                if(_minResPtr != IntPtr.Zero) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
+                if(CheckNonZeroPtr(_minResPtr)) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
                 return;
             }
             _unlockResFlag = true;
@@ -737,7 +750,7 @@ namespace DESpeedrunUtil.Memory {
         /// Checks if the current game version can cap FPS
         /// </summary>
         /// <returns><see langword="true"/> if the MaxHzPtr exists</returns>
-        public bool CanCapFPS() => _maxHzPtr != IntPtr.Zero;
+        public bool CanCapFPS() => CheckNonZeroPtr(_maxHzPtr);
 
         /// <summary>
         /// Sets the stored fps limit and also modifies the value in DOOMEternal's memory for an instant response
@@ -758,7 +771,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <returns><see langword="true"/> if rs_enable is set to 1. <see langword="false"/> otherwise</returns>
         public bool ReadDynamicRes() {
-            if(_dynamicResPtr != IntPtr.Zero) return _game.ReadValue<bool>(_dynamicResPtr);
+            if(CheckNonZeroPtr(_dynamicResPtr)) return _game.ReadValue<bool>(_dynamicResPtr);
             return false;
         }
         /// <summary>
@@ -766,7 +779,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <returns><see cref="float"/> value of rs_forceResolution</returns>
         public float ReadForceRes() {
-            if(_forceResPtr != IntPtr.Zero) return _game.ReadValue<float>(_forceResPtr);
+            if(CheckNonZeroPtr(_forceResPtr)) return _game.ReadValue<float>(_forceResPtr);
             return 0f;
         }
         /// <summary>
@@ -783,7 +796,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <returns>A <see cref="float"/> representing minimum frametime for scaling. <c>-1f</c> if it cannot be read from memory</returns>
         public float ReadRaiseMillis() {
-            if(_raiseMSPtr != IntPtr.Zero) return _game.ReadValue<float>(_raiseMSPtr);
+            if(CheckNonZeroPtr(_raiseMSPtr)) return _game.ReadValue<float>(_raiseMSPtr);
             return -1f;
         }
         /// <summary>
@@ -792,7 +805,7 @@ namespace DESpeedrunUtil.Memory {
         /// <returns>A <see cref="string"/> representing the current level name</returns>
         public string ReadLevelName() {
             var sb = new StringBuilder(31);
-            if(_levelNamePtr != IntPtr.Zero) {
+            if(CheckNonZeroPtr(_levelNamePtr)) {
                 _game.ReadString(_levelNamePtr, sb);
                 return sb.ToString();
             } else {
@@ -804,7 +817,7 @@ namespace DESpeedrunUtil.Memory {
         /// </summary>
         /// <returns>The <see cref="int"/> ID of the current cutscene, or 1 if not in a cutscene</returns>
         public int ReadCutsceneID() {
-            if(_cutsceneIDPtr != IntPtr.Zero) return _game.ReadValue<int>(_cutsceneIDPtr);
+            if(CheckNonZeroPtr(_cutsceneIDPtr)) return _game.ReadValue<int>(_cutsceneIDPtr);
             return -1;
         }
         /// <summary>
@@ -837,6 +850,7 @@ namespace DESpeedrunUtil.Memory {
                 _cpuDP?.DerefOffsets(_game, out _cpuPtr);
 
                 _fontSizeDP?.DerefOffsets(_game, out _fontSizePtr);
+                _advConsoleDP?.DerefOffsets(_game, out _advConsolePtr);
 
                 _metricsDP?.DerefOffsets(_game, out _metricsPtr);
                 _maxHzDP?.DerefOffsets(_game, out _maxHzPtr);
@@ -889,6 +903,8 @@ namespace DESpeedrunUtil.Memory {
             return output;
         }
 
+        public static bool CheckNonZeroPtr(IntPtr ptr) => ptr != IntPtr.Zero;
+
         private void Initialize() {
             _row1DP = _row6DP = _gpuVendorDP = _gpuNameDP = _cpuDP = null;
             _metricsDP = _maxHzDP = _rampJumpDP = _resScalesDP = _minResDP = _dynamicResDP = _raiseMSDP = _dropMSDP = _skipIntroDP = null;
@@ -920,6 +936,7 @@ namespace DESpeedrunUtil.Memory {
             _cpuDP = CreateDP(_currentOffsets.CPU, 0x0);
 
             _fontSizeDP = CreateDP(_currentOffsets.MetricsFontSize);
+            _advConsoleDP = CreateDP(_currentOffsets.AdvancedConsoleKeypress);
 
             _metricsDP = CreateDP(_currentOffsets.Metrics);
             if(_currentOffsets.Metrics == 0) SetFlag(true, "minimal");
@@ -976,7 +993,7 @@ namespace DESpeedrunUtil.Memory {
             SignatureScanner scanner = new(_game, _game.MainModule.BaseAddress, _game.MainModule.ModuleMemorySize);
             Log.Information("Scanning for FPS counter.");
             r1 = scanner.Scan(fpsTarget);
-            if(r1 != IntPtr.Zero) {
+            if(CheckNonZeroPtr(r1)) {
                 Log.Information("Found FPS counter.");
                 r6 = IntPtr.Zero;
                 Log.Information("Scanning for DLSS string.");
@@ -991,7 +1008,7 @@ namespace DESpeedrunUtil.Memory {
             }
             Log.Information("Scanning for resolution scale values.");
             res = scanner.Scan(resTarget);
-            if(res != IntPtr.Zero) Log.Information("Found resolution scale values.");
+            if(CheckNonZeroPtr(res)) Log.Information("Found resolution scale values.");
             KnownOffsets ko = new(Version.Name, GetOffset(r1), GetOffset(r6), GetOffset(res));
             ScannedOffsetList.Add(ko);
             _currentOffsets = ko;
@@ -1049,7 +1066,7 @@ namespace DESpeedrunUtil.Memory {
             File.WriteAllText(@".\cheatOffsets.json", jsonString);
             Log.Information("Added Version {Version} ({ModuleSize}) to cheat offset list.", Version.Name, _moduleSize);
         }
-        private int GetOffset(IntPtr pointer) => (pointer != IntPtr.Zero) ? (int) (pointer.ToInt64() - _game.MainModule.BaseAddress.ToInt64()) : 0;
+        private int GetOffset(IntPtr pointer) => (CheckNonZeroPtr(pointer)) ? (int) (pointer.ToInt64() - _game.MainModule.BaseAddress.ToInt64()) : 0;
 
         private bool SetCurrentKnownOffsets() {
             foreach(KnownOffsets k in OffsetList) {

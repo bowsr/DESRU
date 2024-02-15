@@ -27,7 +27,8 @@
     "IsInGame": 110753808,
     "LevelName": 112999392,
     "CutsceneID": 86112072,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "6.66 Rev 2.2",
@@ -57,7 +58,8 @@
     "IsInGame": 109987952,
     "LevelName": 112229808,
     "CutsceneID": 85342792,
-    "MetricsFontSize": 71333844
+    "MetricsFontSize": 71333844,
+    "AdvancedConsoleKeypress": 71332304
   },
   {
     "Version": "6.66 Rev 2",
@@ -87,7 +89,8 @@
     "IsInGame": 110163728,
     "LevelName": 112410160,
     "CutsceneID": 85523144,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "6.4",
@@ -117,7 +120,8 @@
     "IsInGame": 108241872,
     "LevelName": 110483104,
     "CutsceneID": 83527080,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 69549108,
+    "AdvancedConsoleKeypress": 69547568
   },
   {
     "Version": "6.3",
@@ -147,7 +151,8 @@
     "IsInGame": 108241872,
     "LevelName": 110483104,
     "CutsceneID": 83527080,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 69549108,
+    "AdvancedConsoleKeypress": 69547568
   },
   {
     "Version": "6.2",
@@ -177,7 +182,8 @@
     "IsInGame": 108241872,
     "LevelName": 110483104,
     "CutsceneID": 83527080,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 69549108,
+    "AdvancedConsoleKeypress": 69547568
   },
   {
     "Version": "6.1",
@@ -207,7 +213,8 @@
     "IsInGame": 108231408,
     "LevelName": 110473504,
     "CutsceneID": 83522888,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "6.0",
@@ -237,7 +244,8 @@
     "IsInGame": 108231408,
     "LevelName": 110473504,
     "CutsceneID": 83522888,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "5.1",
@@ -267,7 +275,8 @@
     "IsInGame": 104183920,
     "LevelName": 106421728,
     "CutsceneID": 82452344,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 67670116,
+    "AdvancedConsoleKeypress": 67668576
   },
   {
     "Version": "5.0",
@@ -297,7 +306,8 @@
     "IsInGame": 104183920,
     "LevelName": 106421728,
     "CutsceneID": 82452344,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 67670116,
+    "AdvancedConsoleKeypress": 67668576
   },
   {
     "Version": "4.1",
@@ -327,7 +337,8 @@
     "IsInGame": 107371664,
     "LevelName": 108577472,
     "CutsceneID": 103713232,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "4.0",
@@ -357,7 +368,8 @@
     "IsInGame": 107368592,
     "LevelName": 108574400,
     "CutsceneID": 103713232,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "3.1",
@@ -387,7 +399,8 @@
     "IsInGame": 107249568,
     "LevelName": 108463856,
     "CutsceneID": 103983264,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 66851780,
+    "AdvancedConsoleKeypress": 66850240
   },
   {
     "Version": "3.0",
@@ -417,7 +430,8 @@
     "IsInGame": 107249440,
     "LevelName": 107606552,
     "CutsceneID": 106434880,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "2.1",
@@ -447,7 +461,8 @@
     "IsInGame": 104306280,
     "LevelName": 104654600,
     "CutsceneID": 83809476,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "2.0",
@@ -477,7 +492,8 @@
     "IsInGame": 104294248,
     "LevelName": 0,
     "CutsceneID": 0,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 0,
+    "AdvancedConsoleKeypress": 0
   },
   {
     "Version": "1.1",
@@ -507,7 +523,8 @@
     "IsInGame": 100626136,
     "LevelName": 101827824,
     "CutsceneID": 80132484,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 64501796,
+    "AdvancedConsoleKeypress": 64500384
   },
   {
     "Version": "1.0 (Release)",
@@ -537,6 +554,7 @@
     "IsInGame": 101892568,
     "LevelName": 101886032,
     "CutsceneID": 80191620,
-    "MetricsFontSize": 0
+    "MetricsFontSize": 64036644,
+    "AdvancedConsoleKeypress": 64035232
   }
 ]

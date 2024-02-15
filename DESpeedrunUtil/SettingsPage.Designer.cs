@@ -43,6 +43,8 @@
             settingsFontSizeDescription = new TextBox();
             settingsFontSizeCheckbox = new CheckBox();
             settingsFontSliderText = new TextBox();
+            settingsConsoleHotkeyDescription = new TextBox();
+            settingsConsoleHotkeyCheckbox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize) settingsFontSlider).BeginInit();
             SuspendLayout();
             // 
@@ -212,14 +214,14 @@
             settingsResetBindCheckbox.Name = "settingsResetBindCheckbox";
             settingsResetBindCheckbox.Size = new Size(319, 22);
             settingsResetBindCheckbox.TabIndex = 37;
-            settingsResetBindCheckbox.Tag = "autocontinue";
+            settingsResetBindCheckbox.Tag = "";
             settingsResetBindCheckbox.Text = "Enable Reset Run / Kill Script Hotkey (Double Tap)";
             settingsResetBindCheckbox.UseVisualStyleBackColor = true;
             settingsResetBindCheckbox.CheckedChanged += ResetRunCheckbox_CheckChanged;
             // 
             // settingsFontSlider
             // 
-            settingsFontSlider.Location = new Point(408, 95);
+            settingsFontSlider.Location = new Point(408, 82);
             settingsFontSlider.Name = "settingsFontSlider";
             settingsFontSlider.Size = new Size(302, 45);
             settingsFontSlider.TabIndex = 38;
@@ -236,9 +238,9 @@
             settingsFontSizeDescription.Multiline = true;
             settingsFontSizeDescription.Name = "settingsFontSizeDescription";
             settingsFontSizeDescription.ReadOnly = true;
-            settingsFontSizeDescription.Size = new Size(315, 138);
+            settingsFontSizeDescription.Size = new Size(315, 77);
             settingsFontSizeDescription.TabIndex = 40;
-            settingsFontSizeDescription.Text = "Changes the size of the On-Screen Display text.\r\n\r\n\r\n\r\n\r\nThis setting also changes the size of the in-game dev console's text.";
+            settingsFontSizeDescription.Text = "Changes the size of the On-Screen Display text.\r\n\r\n\r\n\r\nThis also changes the size of the in-game dev console's text.";
             // 
             // settingsFontSizeCheckbox
             // 
@@ -249,7 +251,7 @@
             settingsFontSizeCheckbox.Name = "settingsFontSizeCheckbox";
             settingsFontSizeCheckbox.Size = new Size(241, 22);
             settingsFontSizeCheckbox.TabIndex = 39;
-            settingsFontSizeCheckbox.Tag = "antialiasing";
+            settingsFontSizeCheckbox.Tag = "";
             settingsFontSizeCheckbox.Text = "Change On-Screen Display Font Size";
             settingsFontSizeCheckbox.UseVisualStyleBackColor = true;
             settingsFontSizeCheckbox.CheckedChanged += FontSizeCheckbox_CheckChanged;
@@ -260,7 +262,7 @@
             settingsFontSliderText.BorderStyle = BorderStyle.None;
             settingsFontSliderText.Font = new Font("Eternal UI 2", 20.25F, FontStyle.Bold, GraphicsUnit.Point);
             settingsFontSliderText.ForeColor = Color.FromArgb(  230,   230,   230);
-            settingsFontSliderText.Location = new Point(709, 90);
+            settingsFontSliderText.Location = new Point(709, 77);
             settingsFontSliderText.Multiline = true;
             settingsFontSliderText.Name = "settingsFontSliderText";
             settingsFontSliderText.ReadOnly = true;
@@ -268,12 +270,42 @@
             settingsFontSliderText.TabIndex = 41;
             settingsFontSliderText.Text = "10";
             // 
+            // settingsConsoleHotkeyDescription
+            // 
+            settingsConsoleHotkeyDescription.BackColor = Color.FromArgb(  35,   35,   35);
+            settingsConsoleHotkeyDescription.BorderStyle = BorderStyle.None;
+            settingsConsoleHotkeyDescription.Font = new Font("Eternal UI 2", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsConsoleHotkeyDescription.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsConsoleHotkeyDescription.Location = new Point(418, 171);
+            settingsConsoleHotkeyDescription.Multiline = true;
+            settingsConsoleHotkeyDescription.Name = "settingsConsoleHotkeyDescription";
+            settingsConsoleHotkeyDescription.ReadOnly = true;
+            settingsConsoleHotkeyDescription.Size = new Size(315, 32);
+            settingsConsoleHotkeyDescription.TabIndex = 43;
+            settingsConsoleHotkeyDescription.Text = "Helps prevent accidental dev console openings when pressing other nearby keys.";
+            // 
+            // settingsConsoleHotkeyCheckbox
+            // 
+            settingsConsoleHotkeyCheckbox.AutoSize = true;
+            settingsConsoleHotkeyCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsConsoleHotkeyCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsConsoleHotkeyCheckbox.Location = new Point(397, 151);
+            settingsConsoleHotkeyCheckbox.Name = "settingsConsoleHotkeyCheckbox";
+            settingsConsoleHotkeyCheckbox.Size = new Size(288, 22);
+            settingsConsoleHotkeyCheckbox.TabIndex = 42;
+            settingsConsoleHotkeyCheckbox.Tag = "";
+            settingsConsoleHotkeyCheckbox.Text = "Change Console Hotkey to CTRL + SHIFT + ~";
+            settingsConsoleHotkeyCheckbox.UseVisualStyleBackColor = true;
+            settingsConsoleHotkeyCheckbox.CheckedChanged += CVARCheckbox_CheckedChanged;
+            // 
             // SettingsPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(  35,   35,   35);
             ClientSize = new Size(764, 547);
+            Controls.Add(settingsConsoleHotkeyDescription);
+            Controls.Add(settingsConsoleHotkeyCheckbox);
             Controls.Add(settingsFontSliderText);
             Controls.Add(settingsFontSlider);
             Controls.Add(settingsFontSizeDescription);
@@ -326,5 +358,7 @@
         private TextBox settingsFontSizeDescription;
         private CheckBox settingsFontSizeCheckbox;
         private TextBox settingsFontSliderText;
+        private TextBox settingsConsoleHotkeyDescription;
+        private CheckBox settingsConsoleHotkeyCheckbox;
     }
 }

@@ -64,6 +64,7 @@
             public int CutsceneID { get; init; }
 
             public int MetricsFontSize { get; init; }
+            public int AdvancedConsoleKeypress { get; init; }
 
             public KnownOffsets(string v, int r1, int r6, int res) {
                 Version = v;
@@ -94,6 +95,7 @@
                 LevelName = 0;
                 CutsceneID = 0;
                 MetricsFontSize = 0;
+                AdvancedConsoleKeypress = 0;
             }
         }
 

@@ -20,6 +20,8 @@ namespace DESpeedrunUtil
             settingsResetBindCheckbox.Checked = Properties.Settings.Default.EnableResetRunHotkey;
             settingsFontSizeCheckbox.Checked = Properties.Settings.Default.EnableFontSizeChange;
             settingsFontSlider.Value = Properties.Settings.Default.OSDFontSize;
+            settingsFontSliderText.Text = (5 + (Properties.Settings.Default.OSDFontSize * 0.5)).ToString();
+            settingsConsoleHotkeyCheckbox.Checked = Properties.Settings.Default.AdvancedKeypress;
 
             settingsFontSlider.Enabled = settingsFontSizeCheckbox.Checked;
             UpdateOSDFontSize();
@@ -64,7 +66,7 @@ namespace DESpeedrunUtil
         private void CVARCheckbox_CheckedChanged(object sender, EventArgs e) {
             if(!_enableEvents) return;
             var cb = (CheckBox) sender;
-            string tag = cb.Tag.ToString();
+            string tag = cb.Tag.ToString() ?? "null";
             bool state = tag switch {
                 "antialiasing" or "undelay" => !cb.Checked,
                 "autocontinue" => cb.Checked,
@@ -79,7 +81,7 @@ namespace DESpeedrunUtil
             if(settingsResetBindCheckbox.Checked) {
                 System.Media.SystemSounds.Asterisk.Play();
                 MessageBox.Show("While this hotkey can be used to skip the intro cutscene of Hell on Earth," +
-                    "doing so will prevent the acquisition of the Doomblade codex page, which is required" +
+                    " doing so will prevent the acquisition of the Doomblade codex page, which is required" +
                     " for 100% runs to be valid.\n\n" +
                     "Do not use this hotkey to skip that cutscene if you are running 100%.", "Skipping Hell on Earth Intro Cutscene Warning");
             }
@@ -131,6 +133,7 @@ namespace DESpeedrunUtil
             props.EnableResetRunHotkey = settingsResetBindCheckbox.Checked;
             props.EnableFontSizeChange = settingsFontSizeCheckbox.Checked;
             props.OSDFontSize = settingsFontSlider.Value;
+            props.AdvancedKeypress = settingsConsoleHotkeyCheckbox.Checked;
         }
 
         private void UpdateHotkeyFields() {
@@ -158,6 +161,7 @@ namespace DESpeedrunUtil
             settingsAutoContinueCheckbox.Font = MainWindow.EternalUIRegular;
             settingsResetBindCheckbox.Font = MainWindow.EternalUIRegular;
             settingsFontSizeCheckbox.Font = MainWindow.EternalUIRegular;
+            settingsConsoleHotkeyCheckbox.Font = MainWindow.EternalUIRegular;
             settingsResetRunHotkeyField.Font = MainWindow.EternalUIRegular;
 
             settingsCloseButton.Font = MainWindow.EternalUIBold;
@@ -167,6 +171,7 @@ namespace DESpeedrunUtil
             settingsAutoContinueDescription.Font = MainWindow.EternalUIRegular10;
             settingsResetBindDescription.Font = MainWindow.EternalUIRegular10;
             settingsFontSizeDescription.Font = MainWindow.EternalUIRegular10;
+            settingsConsoleHotkeyDescription.Font = MainWindow.EternalUIRegular10;
         }
     }
 }
