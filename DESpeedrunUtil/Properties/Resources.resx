@@ -124,12 +124,6 @@
   <data name="gameVersions" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\gameVersions.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
-  <data name="hashes_srmod" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hashes_srmod.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
-  <data name="hashes_vnl" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\hashes_vnl.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
-  </data>
   <data name="HelpPage_InfoPanel" xml:space="preserve">
     <value>The Info Panel will show you the status of DOOM Eternal and DESRU.
 

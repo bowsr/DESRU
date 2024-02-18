@@ -81,26 +81,6 @@ namespace DESpeedrunUtil.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] hashes_srmod {
-            get {
-                object obj = ResourceManager.GetObject("hashes_srmod", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] hashes_vnl {
-            get {
-                object obj = ResourceManager.GetObject("hashes_vnl", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The Info Panel will show you the status of DOOM Eternal and DESRU.
         ///
         ///Starting from the top, this panel will show you what version of DOOM Eternal is currently running.
