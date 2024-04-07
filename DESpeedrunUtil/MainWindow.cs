@@ -218,7 +218,7 @@ namespace DESpeedrunUtil {
                 return;
             }
 
-            /** Toggling Hotkeys/Macro when game changes focus **/
+            /** Toggling Hotkeys when game changes focus **/
             try {
                 _gameInFocus = CheckIfGameIsInFocus();
                 if(enableHotkeysCheckbox.Checked) {
@@ -230,27 +230,22 @@ namespace DESpeedrunUtil {
                         }
                     }
                 }
-                if(!_gameInFocus) {
-                    FreescrollMacro.Instance.Stop(true);
-                    _startingMacro = false;
-                } else {
-                    if(_enableMacro) {
-                        if(_openProcesses.FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
-                            FreescrollMacro.Instance.Restart();
-                            _openProcesses.Clear();
-                        }
-                        if(!FreescrollMacro.Instance.IsRunning && !_startingMacro) {
-                            FreescrollMacro.Instance.Start();
-                            _startingMacro = true;
-                        } else if(FreescrollMacro.Instance.IsRunning && _startingMacro) {
-                            _startingMacro = false;
-                        }
-                    }
-                }
             } catch(Exception e) {
                 Log.Error(e, "Failed to check if DOOM Eternal was in focus.");
             }
 
+            if(_enableMacro) {
+                if(_openProcesses.FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
+                    FreescrollMacro.Instance.Restart();
+                    _openProcesses.Clear();
+                }
+                if(!FreescrollMacro.Instance.IsRunning && !_startingMacro) {
+                    FreescrollMacro.Instance.Start();
+                    _startingMacro = true;
+                } else if(FreescrollMacro.Instance.IsRunning && _startingMacro) {
+                    _startingMacro = false;
+                }
+            }
             if(!_enableMacro) FreescrollMacro.Instance.Stop(true);
 
             /** Memory Flags **/
