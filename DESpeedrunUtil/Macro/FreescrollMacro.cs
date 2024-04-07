@@ -19,6 +19,8 @@ namespace DESpeedrunUtil.Macro {
 
         private bool _incorrectMacroVersion = false;
 
+        private int _recurseCount = 0;
+
         public FreescrollMacro(Keys downScroll, Keys upScroll) {
             MACRO_START_INFO = new ProcessStartInfo(@".\macro\DOOMEternalMacro.exe");
             MACRO_START_INFO.WorkingDirectory = @".\macro";
@@ -65,7 +67,7 @@ namespace DESpeedrunUtil.Macro {
                 Log.Error(e, "Failed to start Freescroll Macro.");
                 return;
             }
-            Log.Verbose("Macro process started.");
+            Log.Information("Macro process started.");
             try {
                 if(!CheckModuleSize()) {
                     Stop(true);
@@ -80,16 +82,18 @@ namespace DESpeedrunUtil.Macro {
             } catch(ArgumentNullException n) {
                 Log.Error(n, "Macro process is null. Aborting module size check.");
             } finally {
+                _recurseCount++;
                 if(_macroProcess == null) {
                     Restart();
                 } else {
-                    if(_macroProcess.HasExited) {
+                    if(_macroProcess.HasExited || _macroProcess.MainModule == null) {
                         Restart();
                     } else {
                         IsRunning = true;
-                        Log.Verbose("Freescroll Macro is running.");
+                        Log.Information("Freescroll Macro is running.");
                     }
                 }
+                _recurseCount = 0;
             }
         }
 
@@ -102,7 +106,7 @@ namespace DESpeedrunUtil.Macro {
             _macroProcess.Kill();
             _macroProcess = null;
             IsRunning = false;
-            Log.Verbose("Freescroll macro stopped.");
+            Log.Information("Freescroll macro stopped.");
             if(startTimer) _timer.Start();
         }
 
@@ -110,7 +114,17 @@ namespace DESpeedrunUtil.Macro {
         /// Restarts the macro process.
         /// </summary>
         public void Restart() {
-            Log.Verbose("Restarting Freescroll macro.");
+            if(_recurseCount > 5) {
+                Log.Error("Failed to restart macro.");
+                Stop(true);
+                if(!_timer.Enabled) _timer.Start();
+                _recurseCount = 0;
+                return;
+            }
+            if(_recurseCount > 0)
+                Log.Information("Attempting to restart Freescroll macro. ({Count})", _recurseCount);
+            else
+                Log.Information("Restarting Freescroll macro.");
             Stop(false);
             Start();
         }
@@ -143,7 +157,15 @@ namespace DESpeedrunUtil.Macro {
             if(_macroProcess == null) {
                 throw new ArgumentNullException("Macro Process is currently null.");
             } else {
-                if(_macroProcess.HasExited || _macroProcess.MainModule == null) throw new ArgumentNullException("Macro Process may have crashed or exited.");
+                if(_macroProcess.HasExited || _macroProcess.MainModule == null) {
+                    try {
+                        _macroProcess.Kill();
+                    } catch {
+                        Log.Warning("Attempted to kill null macro process.");
+                    }
+                    _macroProcess = null;
+                    throw new ArgumentNullException("Macro Process may have crashed or exited.");
+                }
             }
             return _macroProcess.MainModule.ModuleMemorySize == 49152;
         }
