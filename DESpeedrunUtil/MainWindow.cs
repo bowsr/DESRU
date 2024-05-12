@@ -1090,7 +1090,7 @@ namespace DESpeedrunUtil {
                 File.WriteAllText(dir + "\\gameVersion.txt", "version=" + Memory.Version.Name);
             }
 
-            if(!gamePath.Contains(_gameDirectory)) {
+            if(!gamePath.Contains(_gameDirectory) || !(gamePath.Contains(_gameDirectory) && gamePath.Equals(_gameDirectory))) {
                 if(!_extraGameDirectories.Contains(dir)) {
                     _extraGameDirectories.Add(dir);
                     FirewallHandler.CreateFirewallRule(gamePath, _extraGameDirectories.Count);
