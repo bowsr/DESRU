@@ -29,7 +29,7 @@ namespace DESpeedrunUtil {
 
             ApplicationConfiguration.Initialize();
 
-            var logCfg = new LoggerConfiguration().WriteTo.File(@".\logs\desru_.log", rollingInterval: RollingInterval.Day);
+            var logCfg = new LoggerConfiguration().WriteTo.File(@".\logs\desru_.log", rollingInterval: RollingInterval.Day).WriteTo.Debug();
             bool verbose = false, timer = false;
             uint interval = 0;
             if(args.Length > 0) {
