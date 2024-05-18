@@ -376,6 +376,8 @@ namespace DESpeedrunUtil.Memory {
         public async Task ResetRunScript() {
             if(IsLoadingOrInMenu()) return;
 
+            Log.Information("-- Starting Reset Run Script --");
+
             // 3.0 fixed the issue where you couldn't pause the game or open the console during the
             //   Hell on Earth intro cutscene.
             // This detects the game version to determine if the script needs to switch window focus
@@ -394,10 +396,12 @@ namespace DESpeedrunUtil.Memory {
             }
 
             // Keyboard Input Script
+            Log.Verbose("Building Script Object");
             var eventBuilder = Simulate.Events()
                 .WaitUntilResponsive(_game.MainWindowHandle, new TimeSpan(0, 0, 0, 5, 0))
                 .Wait(250);
             if(Properties.Settings.Default.AdvancedKeypress) {
+                Log.Verbose("User enabled Advanced Console Keypress option");
                 eventBuilder.ClickChord(KeyCode.RControl, KeyCode.RShift, KeyCode.Oem3);
             } else {
                 eventBuilder.ClickChord(KeyCode.RShift, KeyCode.Oem3);
@@ -415,25 +419,33 @@ namespace DESpeedrunUtil.Memory {
             // Briefly enables cheats if they aren't already to allow the use of the commands
             var cheatsEnabled = EnableCheats || _osdFlagMeath00k;
             if(!cheatsEnabled) {
+                Log.Information("Enabling Cheats for script");
                 _preventCheatsToggle = true; // Prevents the Timer from toggling cheats while this script is running
                 _game.WriteBytes(_cheatsConsolePtr, new byte[1] { 0 });
             }
 
             // Switching window focus to force the game to pause on versions that cannot pause during the intro cutscene
             if(e1m1_cutscene && mustPauseGame) {
+                Log.Information("Tabbing out and in of game to force a pause");
+                await Task.Delay(100);
                 SetForegroundWindow(MainWindow.Instance.Handle);
-                await Task.Delay(250);
+                await Task.Delay(500);
                 SendKeys.SendWait("%{TAB}");
+                await Task.Delay(500);
             }
 
             // Running the Keyboard Script
+            Log.Information("Running Script...");
             await eventBuilder.Invoke();
 
             // Disables cheats again
             if(!cheatsEnabled) {
+                Log.Information("Disabling Cheats");
                 _game.WriteBytes(_cheatsConsolePtr, new byte[1] { 1 });
                 _preventCheatsToggle = false;
             }
+
+            Log.Information("-- Reset Run Script Completed --");
         }
 
         private void ReadTrainerValues() {
