@@ -78,13 +78,6 @@ namespace DESpeedrunUtil
 
         private void ResetRunCheckbox_CheckChanged(object sender, EventArgs e) {
             if(!_enableEvents) return;
-            if(settingsResetBindCheckbox.Checked) {
-                System.Media.SystemSounds.Asterisk.Play();
-                MessageBox.Show("While this hotkey can be used to skip the intro cutscene of Hell on Earth," +
-                    " doing so will prevent the acquisition of the Doomblade codex page, which is required" +
-                    " for 100% runs to be valid.\n\n" +
-                    "Do not use this hotkey to skip that cutscene if you are running 100%.", "Skipping Hell on Earth Intro Cutscene Warning");
-            }
             UpdateSettings();
         }
 
