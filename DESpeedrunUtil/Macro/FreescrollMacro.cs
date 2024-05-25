@@ -5,7 +5,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Macro {
     internal class FreescrollMacro {
-        private const string MD5_CHECKSUM = "E3FAFF78692ED423EEE83BB8C4817261";
+        private const string MD5_CHECKSUM = "C0843017C93A17DA48F23C77B0DFF1DE";
 
         public static FreescrollMacro Instance { get; private set; }
 
@@ -70,10 +70,10 @@ namespace DESpeedrunUtil.Macro {
             }
             Log.Information("Macro process started.");
             try {
-                if(!CheckModuleSize()) {
+                if(!CheckMacroVersion(out var output)) {
                     Stop(true);
                     _incorrectMacroVersion = true;
-                    Log.Warning("Macro version mismatch. Please redownload DESRU.");
+                    Log.Warning("Macro version mismatch. Please redownload DESRU.\n[Expected hash: {Expected}, got {Actual}]", MD5_CHECKSUM.ToLower(), output.ToLower());
                     System.Media.SystemSounds.Asterisk.Play();
                     MessageBox.Show("The version of the macro currently installed does not match what is expected.\n" +
                         "Please redownload and reinstall DESRU to make sure your files are up to date.", "Macro Executable Mismatch");
@@ -152,9 +152,9 @@ namespace DESpeedrunUtil.Macro {
         /// <summary>
         /// Checks if the installed version of the macro matches what is expected.
         /// </summary>
-        /// <returns><see langword="true"/> if the main module size matches</returns>
+        /// <returns><see langword="true"/> if the file hash matches</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public bool CheckModuleSize() {
+        public bool CheckMacroVersion(out string md5) {
             if(_macroProcess == null) {
                 throw new ArgumentNullException("Macro Process is currently null.");
             } else {
@@ -168,7 +168,8 @@ namespace DESpeedrunUtil.Macro {
                     throw new ArgumentNullException("Macro Process may have crashed or exited.");
                 }
             }
-            return _macroProcess.MainModule.ModuleMemorySize == 49152;
+            md5 = Checksums.GetMD5ChecksumFromFile(_macroProcess.MainModule.FileName);
+            return Checksums.Compare(md5, MD5_CHECKSUM);
         }
 
         // Overwrites the bindings.txt file for the DOOMEternalMacro
@@ -184,7 +185,7 @@ namespace DESpeedrunUtil.Macro {
         }
 
         // Timer method that periodically terminates any Macro processes.
-        private void MacroCheck(object sender, EventArgs e) {
+        private void MacroCheck(object? sender, EventArgs e) {
             if(_macroProcess == null) TerminateUnmanagedMacros(); // Prevents the user from running the macro outside the scope of this utility
         }
         /// <summary>
