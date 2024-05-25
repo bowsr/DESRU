@@ -1,4 +1,5 @@
-﻿using Serilog;
+﻿using DESpeedrunUtil.Util;
+using Serilog;
 using System.Diagnostics;
 using static DESpeedrunUtil.Define.Constants;
 using Timer = System.Windows.Forms.Timer;
@@ -23,9 +24,11 @@ namespace DESpeedrunUtil.Macro {
         private int _recurseCount = 0;
 
         public FreescrollMacro(Keys downScroll, Keys upScroll) {
-            MACRO_START_INFO = new ProcessStartInfo(@".\macro\DOOMEternalMacro.exe");
-            MACRO_START_INFO.WorkingDirectory = @".\macro";
-            MACRO_START_INFO.CreateNoWindow = true;
+            MACRO_START_INFO = new ProcessStartInfo(@".\macro\DOOMEternalMacro.exe") {
+                WorkingDirectory = @".\macro",
+                CreateNoWindow = true,
+                RedirectStandardError = true
+            };
             IsRunning = false;
 
             // Timer that runs every five seconds to prevent unmanaged macro processes
@@ -63,7 +66,11 @@ namespace DESpeedrunUtil.Macro {
             if(_timer.Enabled) _timer.Stop();
             TerminateUnmanagedMacros(); // One final check before running our own macro instance
             try {
-                _macroProcess = Process.Start(MACRO_START_INFO);
+                _macroProcess = new();
+                _macroProcess.ErrorDataReceived += (s, e) => { LogMacroOutput(e.Data); };
+                _macroProcess.StartInfo = MACRO_START_INFO;
+                _macroProcess.Start();
+                _macroProcess.BeginErrorReadLine();
             } catch(Exception e) {
                 Log.Error(e, "Failed to start Freescroll Macro.");
                 return;
@@ -201,6 +208,13 @@ namespace DESpeedrunUtil.Macro {
                 c++;
             }
             Log.Verbose("Terminated {Count} macro processes.", c);
+        }
+
+        private static void LogMacroOutput(string? data) {
+            if(string.IsNullOrEmpty(data)) return;
+            var output = "[Freescroll Macro] " + data;
+
+            Log.Error(output);
         }
     }
 }
