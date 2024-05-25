@@ -239,10 +239,10 @@ namespace DESpeedrunUtil {
                     FreescrollMacro.Instance.Restart();
                     _openProcesses.Clear();
                 }
-                if(!FreescrollMacro.Instance.IsRunning && !_startingMacro) {
-                    FreescrollMacro.Instance.Start();
+                if(!FreescrollMacro.Instance.IsRunning() && !_startingMacro) {
                     _startingMacro = true;
-                } else if(FreescrollMacro.Instance.IsRunning && _startingMacro) {
+                    FreescrollMacro.Instance.Start();
+                } else if(FreescrollMacro.Instance.IsRunning() && _startingMacro) {
                     _startingMacro = false;
                 }
             }
@@ -375,8 +375,8 @@ namespace DESpeedrunUtil {
                 Log.Error(e, "Failed to check if firewall rule exists.");
             }
 
-            macroStatus.Text = (FreescrollMacro.Instance.IsRunning) ? "Running" : "Stopped";
-            macroStatus.ForeColor = (FreescrollMacro.Instance.IsRunning) ? Color.Lime : COLOR_TEXT_FORE;
+            macroStatus.Text = (FreescrollMacro.Instance.IsRunning()) ? "Running" : "Stopped";
+            macroStatus.ForeColor = (FreescrollMacro.Instance.IsRunning()) ? Color.Lime : COLOR_TEXT_FORE;
             hotkeyStatus.Text = (HotkeyHandler.Instance.Enabled) ? "Enabled" : "Disabled";
             rtssStatus.Text = (_openProcesses.FindAll(p => p.ProcessName.ToLower().Contains("rtss")).Count > 0) ? "Running" : "Closed";
 

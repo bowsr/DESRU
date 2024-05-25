@@ -11,15 +11,15 @@ namespace DESpeedrunUtil.Macro {
         public static FreescrollMacro Instance { get; private set; }
 
         private readonly ProcessStartInfo MACRO_START_INFO;
-        private Process _macroProcess = null;
+        private Process _macroProcess;
 
         private Timer _timer;
 
-        public bool IsRunning { get; private set; }
         private Keys _downScrollKey { get; set; }
         private Keys _upScrollKey { get; set; }
 
         private bool _incorrectMacroVersion = false;
+        private bool _processStarted = false;
 
         private int _recurseCount = 0;
 
@@ -29,7 +29,6 @@ namespace DESpeedrunUtil.Macro {
                 CreateNoWindow = true,
                 RedirectStandardError = true
             };
-            IsRunning = false;
 
             // Timer that runs every five seconds to prevent unmanaged macro processes
             _timer = new Timer();
@@ -41,6 +40,8 @@ namespace DESpeedrunUtil.Macro {
             _upScrollKey = upScroll;
             CreateBindingsFile();
 
+            _macroProcess = new();
+
             Instance = this;
 
             Log.Information("Initialized FreescrollMacro");
@@ -50,7 +51,7 @@ namespace DESpeedrunUtil.Macro {
         /// Checks if the macro can start.
         /// </summary>
         /// <returns><see langword="true"/> if the macro process doesn't exist and at least one bind is enabled.</returns>
-        public bool CanStart() => _macroProcess == null && HasKeyBound() && !_incorrectMacroVersion;
+        public bool CanStart() => !IsRunning() && HasKeyBound() && !_incorrectMacroVersion;
 
         /// <summary>
         /// Checks if any macro hotkeys are bound.
@@ -69,37 +70,36 @@ namespace DESpeedrunUtil.Macro {
                 _macroProcess = new();
                 _macroProcess.ErrorDataReceived += (s, e) => { LogMacroOutput(e.Data); };
                 _macroProcess.StartInfo = MACRO_START_INFO;
-                _macroProcess.Start();
+                _processStarted = _macroProcess.Start();
                 _macroProcess.BeginErrorReadLine();
             } catch(Exception e) {
                 Log.Error(e, "Failed to start Freescroll Macro.");
                 return;
             }
-            Log.Information("Macro process started.");
+            Log.Information("Starting macro process...");
+            var crash = false;
             try {
-                if(!CheckMacroVersion(out var output)) {
-                    Stop(true);
-                    _incorrectMacroVersion = true;
-                    Log.Warning("Macro version mismatch. Please redownload DESRU.\n[Expected hash: {Expected}, got {Actual}]", MD5_CHECKSUM.ToLower(), output.ToLower());
-                    System.Media.SystemSounds.Asterisk.Play();
-                    MessageBox.Show("The version of the macro currently installed does not match what is expected.\n" +
-                        "Please redownload and reinstall DESRU to make sure your files are up to date.", "Macro Executable Mismatch");
+                if(_processStarted) {
+                    if(!CheckMacroVersion(out var output)) {
+                        Stop(true);
+                        _incorrectMacroVersion = true;
+                        Log.Warning("Macro version mismatch. Please redownload DESRU.\n[Expected hash: {Expected}, got {Actual}]", MD5_CHECKSUM.ToLower(), output.ToLower());
+                        System.Media.SystemSounds.Asterisk.Play();
+                        MessageBox.Show("The version of the macro currently installed does not match what is expected.\n" +
+                            "Please redownload and reinstall DESRU to make sure your files are up to date.", "Macro Executable Mismatch");
+                    }
+                } else {
+                    crash = true;
                 }
-            } catch(NullReferenceException e) {
-                Log.Error(e, "Macro process was somehow null when checking module size.");
-            } catch(ArgumentNullException n) {
-                Log.Error(n, "Macro process is null. Aborting module size check.");
+            } catch(Exception e) {
+                Log.Error(e, "Something went wrong when checking the macro md5 file hash.");
+                crash = true;
             } finally {
                 _recurseCount++;
-                if(_macroProcess == null) {
+                if(crash) {
                     Restart();
                 } else {
-                    if(_macroProcess.HasExited || _macroProcess.MainModule == null) {
-                        Restart();
-                    } else {
-                        IsRunning = true;
-                        Log.Information("Freescroll Macro is running.");
-                    }
+                    Log.Information("Freescroll Macro is running.");
                 }
                 _recurseCount = 0;
             }
@@ -110,10 +110,9 @@ namespace DESpeedrunUtil.Macro {
         /// </summary>
         /// <param name="startTimer"></param>
         public void Stop(bool startTimer) {
-            if(_macroProcess == null) return;
+            if(!IsRunning()) return;
             _macroProcess.Kill();
-            _macroProcess = null;
-            IsRunning = false;
+            _processStarted = false;
             Log.Information("Freescroll macro stopped.");
             if(startTimer) _timer.Start();
         }
@@ -137,6 +136,8 @@ namespace DESpeedrunUtil.Macro {
             Start();
         }
 
+        public bool IsRunning() => _processStarted && !_macroProcess.HasExited;
+
         /// <summary>
         /// Retrieves the hotkey specified by the bool parameter.
         /// </summary>
@@ -154,28 +155,18 @@ namespace DESpeedrunUtil.Macro {
             else _upScrollKey = newKey;
 
             CreateBindingsFile();
-            if(IsRunning) Restart(); // Macro is restarted for binding changes to take place
+            if(IsRunning()) Restart(); // Macro is restarted for binding changes to take place
         }
         /// <summary>
         /// Checks if the installed version of the macro matches what is expected.
         /// </summary>
         /// <returns><see langword="true"/> if the file hash matches</returns>
-        /// <exception cref="ArgumentNullException"></exception>
         public bool CheckMacroVersion(out string md5) {
-            if(_macroProcess == null) {
-                throw new ArgumentNullException("Macro Process is currently null.");
-            } else {
-                if(_macroProcess.HasExited || _macroProcess.MainModule == null) {
-                    try {
-                        _macroProcess.Kill();
-                    } catch {
-                        Log.Warning("Attempted to kill null macro process.");
-                    }
-                    _macroProcess = null;
-                    throw new ArgumentNullException("Macro Process may have crashed or exited.");
-                }
+            try {
+                md5 = Checksums.GetMD5ChecksumFromFile(_macroProcess.MainModule.FileName);
+            } catch(Exception) {
+                throw;
             }
-            md5 = Checksums.GetMD5ChecksumFromFile(_macroProcess.MainModule.FileName);
             return Checksums.Compare(md5, MD5_CHECKSUM);
         }
 
@@ -193,7 +184,7 @@ namespace DESpeedrunUtil.Macro {
 
         // Timer method that periodically terminates any Macro processes.
         private void MacroCheck(object? sender, EventArgs e) {
-            if(_macroProcess == null) TerminateUnmanagedMacros(); // Prevents the user from running the macro outside the scope of this utility
+            if(!IsRunning()) TerminateUnmanagedMacros(); // Prevents the user from running the macro outside the scope of this utility
         }
         /// <summary>
         /// Terminates any DOOMEternalMacro.exe processes that are running outside the scope of this utility.
