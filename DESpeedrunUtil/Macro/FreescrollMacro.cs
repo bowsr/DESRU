@@ -80,6 +80,7 @@ namespace DESpeedrunUtil.Macro {
             var crash = false;
             try {
                 if(_processStarted) {
+                    Thread.Sleep(1000);
                     if(!CheckMacroVersion(out var output)) {
                         Stop(true);
                         _incorrectMacroVersion = true;
@@ -162,11 +163,7 @@ namespace DESpeedrunUtil.Macro {
         /// </summary>
         /// <returns><see langword="true"/> if the file hash matches</returns>
         public bool CheckMacroVersion(out string md5) {
-            try {
                 md5 = Checksums.GetMD5ChecksumFromFile(_macroProcess.MainModule.FileName);
-            } catch(Exception) {
-                throw;
-            }
             return Checksums.Compare(md5, MD5_CHECKSUM);
         }
 
