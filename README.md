@@ -13,7 +13,7 @@ You are **required** to use this program during your speedruns if you are runnin
   - [Feedback and Questions](https://github.com/bowsr/DESRU#feedback-and-questions)
 
 ## Features
-- [Freescroll Emulation Macro](https://github.com/henyK/doom-eternal-macro)
+- [Freescroll Emulation Macro](https://github.com/bowsr/desru-macro)
   - The macro comes bundled with DESRU
   - If enabled in DESRU, it will automatically run in the background when DOOM Eternal is running
 - FPS Limiter
@@ -58,7 +58,7 @@ All this, and more, can be read about in the HELP page of DESRU.
 .NET 6.0 is ***required*** for the use of this program. Download the ***Desktop x64*** version found [here](https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime).
 
 Once .NET 6.0 is installed, download the latest **DESRU.zip** file from the releases page [here](https://github.com/bowsr/DESRU/releases/latest/download/DESRU.zip). Extract ***all files*** from this zip to your desired folder.  
-When updating, download the latest **DESRU.zip** and extract all files to the same folder, replacing **all of them**.
+If manually updating, download the latest **DESRU.zip** and extract all files to the same folder, replacing **all of them**.
 
 When you first run DESRU, Windows may show a popup saying the program is unsafe.  
 This can be safely ignored by pressing "More Info" then "Run Anyway"
@@ -66,7 +66,7 @@ This can be safely ignored by pressing "More Info" then "Run Anyway"
 If you're worried about DESRU doing anything malicious, the full source code is available in this repository.
 ## Usage
 You can find instructions for usage of this utility by clicking the **HELP** button in DESRU.
-### Known Issues
+### Known Limitations
 #### Modbot Input Duplication
 If your melee/interact action is bound to `E` or `Q`, interacting with a Modbot may duplicate the input, causing the mod selection menu to tab over to another weapon. If you use either of these keys for your interact action, you will either need to rebind it to another key, or disable the Max FPS Limit in DESRU's options.  
 If you disable the Max FPS Limit, you are **REQUIRED** to limit your framerate to 250 (or lower) through external means. Your options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, among others. Make sure that this external limit is running **at all times**. NVIDIA Control Panel is recommended for this reason as you'll only need to set it once.
