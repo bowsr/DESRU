@@ -6,7 +6,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Macro {
     internal class FreescrollMacro {
-        private const string MD5_CHECKSUM = "C0843017C93A17DA48F23C77B0DFF1DE";
+        private const string MD5_CHECKSUM = "A4B78DE0DB3E068A8F64CA826ED873F8";
 
         public static FreescrollMacro Instance { get; private set; }
 
@@ -163,7 +163,7 @@ namespace DESpeedrunUtil.Macro {
         /// </summary>
         /// <returns><see langword="true"/> if the file hash matches</returns>
         public bool CheckMacroVersion(out string md5) {
-                md5 = Checksums.GetMD5ChecksumFromFile(_macroProcess.MainModule.FileName);
+            md5 = Checksums.GetMD5ChecksumFromFile(_macroProcess.MainModule.FileName);
             return Checksums.Compare(md5, MD5_CHECKSUM);
         }
 
