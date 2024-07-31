@@ -141,7 +141,7 @@ namespace DESpeedrunUtil.Hotkeys {
             } else if(e.KeyCode == ResetRunHotkey && Properties.Settings.Default.EnableResetRunHotkey) {
                 var timespan = DateTime.Now - _resetRunKeyLastHit;
                 if(timespan.TotalMilliseconds <= RESETKEY_DOUBLETAP_DURATION_MS) {
-                    _ = MainWindow.Instance.Memory?.ResetRunScript();
+                    _ = MainWindow.Instance.Memory?.ResetRunScript(Properties.Settings.Default.ManualAltTab);
                 } else {
                     _resetRunKeyLastHit = DateTime.Now;
                 }

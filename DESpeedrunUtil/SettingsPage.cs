@@ -22,8 +22,10 @@ namespace DESpeedrunUtil
             settingsFontSlider.Value = Properties.Settings.Default.OSDFontSize;
             settingsFontSliderText.Text = (5 + (Properties.Settings.Default.OSDFontSize * 0.5)).ToString();
             settingsConsoleHotkeyCheckbox.Checked = Properties.Settings.Default.AdvancedKeypress;
+            settingsManualAltTabCheckbox.Checked = Properties.Settings.Default.ManualAltTab;
 
             settingsFontSlider.Enabled = settingsFontSizeCheckbox.Checked;
+            settingsManualAltTabCheckbox.Enabled = settingsResetBindCheckbox.Checked;
             UpdateOSDFontSize();
             UpdateHotkeyFields();
             SetFonts();
@@ -78,6 +80,12 @@ namespace DESpeedrunUtil
 
         private void ResetRunCheckbox_CheckChanged(object sender, EventArgs e) {
             if(!_enableEvents) return;
+            settingsManualAltTabCheckbox.Enabled = ((CheckBox) sender).Checked;
+            UpdateSettings();
+        }
+
+        private void GenericCheckbox_CheckChanged(object sender, EventArgs eventArgs) {
+            if(!_enableEvents) return;
             UpdateSettings();
         }
 
@@ -127,6 +135,7 @@ namespace DESpeedrunUtil
             props.EnableFontSizeChange = settingsFontSizeCheckbox.Checked;
             props.OSDFontSize = settingsFontSlider.Value;
             props.AdvancedKeypress = settingsConsoleHotkeyCheckbox.Checked;
+            props.ManualAltTab = settingsManualAltTabCheckbox.Checked;
         }
 
         private void UpdateHotkeyFields() {
@@ -156,6 +165,7 @@ namespace DESpeedrunUtil
             settingsFontSizeCheckbox.Font = MainWindow.EternalUIRegular;
             settingsConsoleHotkeyCheckbox.Font = MainWindow.EternalUIRegular;
             settingsResetRunHotkeyField.Font = MainWindow.EternalUIRegular;
+            settingsManualAltTabCheckbox.Font = MainWindow.EternalUIRegular;
 
             settingsCloseButton.Font = MainWindow.EternalUIBold;
 

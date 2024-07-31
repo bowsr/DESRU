@@ -45,6 +45,7 @@
             settingsFontSliderText = new TextBox();
             settingsConsoleHotkeyDescription = new TextBox();
             settingsConsoleHotkeyCheckbox = new CheckBox();
+            settingsManualAltTabCheckbox = new CheckBox();
             ((System.ComponentModel.ISupportInitialize) settingsFontSlider).BeginInit();
             SuspendLayout();
             // 
@@ -183,7 +184,7 @@
             settingsResetRunHotkeyField.BorderStyle = BorderStyle.FixedSingle;
             settingsResetRunHotkeyField.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
             settingsResetRunHotkeyField.ForeColor = Color.FromArgb(  230,   230,   230);
-            settingsResetRunHotkeyField.Location = new Point(48, 287);
+            settingsResetRunHotkeyField.Location = new Point(48, 312);
             settingsResetRunHotkeyField.Name = "settingsResetRunHotkeyField";
             settingsResetRunHotkeyField.Padding = new Padding(0, 3, 0, 0);
             settingsResetRunHotkeyField.Size = new Size(135, 26);
@@ -197,7 +198,7 @@
             settingsResetBindDescription.BorderStyle = BorderStyle.None;
             settingsResetBindDescription.Font = new Font("Eternal UI 2", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
             settingsResetBindDescription.ForeColor = Color.FromArgb(  230,   230,   230);
-            settingsResetBindDescription.Location = new Point(48, 319);
+            settingsResetBindDescription.Location = new Point(48, 344);
             settingsResetBindDescription.Multiline = true;
             settingsResetBindDescription.Name = "settingsResetBindDescription";
             settingsResetBindDescription.ReadOnly = true;
@@ -298,12 +299,27 @@
             settingsConsoleHotkeyCheckbox.UseVisualStyleBackColor = true;
             settingsConsoleHotkeyCheckbox.CheckedChanged += CVARCheckbox_CheckedChanged;
             // 
+            // settingsManualAltTabCheckbox
+            // 
+            settingsManualAltTabCheckbox.AutoSize = true;
+            settingsManualAltTabCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsManualAltTabCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsManualAltTabCheckbox.Location = new Point(50, 283);
+            settingsManualAltTabCheckbox.Name = "settingsManualAltTabCheckbox";
+            settingsManualAltTabCheckbox.Size = new Size(178, 22);
+            settingsManualAltTabCheckbox.TabIndex = 44;
+            settingsManualAltTabCheckbox.Tag = "";
+            settingsManualAltTabCheckbox.Text = "Prevent automatic alt-tab";
+            settingsManualAltTabCheckbox.UseVisualStyleBackColor = true;
+            settingsManualAltTabCheckbox.CheckedChanged += GenericCheckbox_CheckChanged;
+            // 
             // SettingsPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(  35,   35,   35);
             ClientSize = new Size(764, 547);
+            Controls.Add(settingsManualAltTabCheckbox);
             Controls.Add(settingsConsoleHotkeyDescription);
             Controls.Add(settingsConsoleHotkeyCheckbox);
             Controls.Add(settingsFontSliderText);
@@ -360,5 +376,6 @@
         private TextBox settingsFontSliderText;
         private TextBox settingsConsoleHotkeyDescription;
         private CheckBox settingsConsoleHotkeyCheckbox;
+        private CheckBox settingsManualAltTabCheckbox;
     }
 }

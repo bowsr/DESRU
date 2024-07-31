@@ -373,7 +373,7 @@ namespace DESpeedrunUtil.Memory {
         /// Task that runs a script to enable cheats, input a command to reset a UN run, then disable cheats.
         /// <br>Will change how the script is ran depending on what level and cutscene are currently loaded in-game.</br>
         /// </summary>
-        public async Task ResetRunScript() {
+        public async Task ResetRunScript(bool skipAltTab) {
             if(IsLoadingOrInMenu()) return;
 
             Log.Information("-- Starting Reset Run Script --");
@@ -425,8 +425,8 @@ namespace DESpeedrunUtil.Memory {
             }
 
             // Switching window focus to force the game to pause on versions that cannot pause during the intro cutscene
-            if(e1m1_cutscene && mustPauseGame) {
-                Log.Information("Tabbing out and in of game to force a pause");
+            if(e1m1_cutscene && mustPauseGame && !skipAltTab) {
+                Log.Information("Tabbing out of and in to the game to force a pause");
                 await Task.Delay(100);
                 SetForegroundWindow(MainWindow.Instance.Handle);
                 await Task.Delay(500);
