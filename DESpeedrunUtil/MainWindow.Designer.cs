@@ -70,7 +70,7 @@
             enableOSDCheckbox = new CheckBox();
             minimalOSDCheckbox = new CheckBox();
             launchRTSSCheckbox = new CheckBox();
-            enableMaxFPSCheckbox = new CheckBox();
+            enforce250FPSCheckbox = new CheckBox();
             panel3 = new Panel();
             defaultFPS = new TextBox();
             titleSeparator = new Panel();
@@ -281,7 +281,7 @@
             autorunMacroCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             autorunMacroCheckbox.Location = new Point(6, 3);
             autorunMacroCheckbox.Name = "autorunMacroCheckbox";
-            autorunMacroCheckbox.Size = new Size(179, 22);
+            autorunMacroCheckbox.Size = new Size(169, 22);
             autorunMacroCheckbox.TabIndex = 8;
             autorunMacroCheckbox.Text = "Enable Freescroll Macro";
             autorunMacroCheckbox.UseVisualStyleBackColor = true;
@@ -294,7 +294,7 @@
             macroUpKeyLabel.ForeColor = Color.FromArgb(  230,   230,   230);
             macroUpKeyLabel.Location = new Point(21, 8);
             macroUpKeyLabel.Name = "macroUpKeyLabel";
-            macroUpKeyLabel.Size = new Size(102, 18);
+            macroUpKeyLabel.Size = new Size(96, 18);
             macroUpKeyLabel.TabIndex = 7;
             macroUpKeyLabel.Text = "Macro Upscroll";
             // 
@@ -305,7 +305,7 @@
             macroDownKeyLabel.ForeColor = Color.FromArgb(  230,   230,   230);
             macroDownKeyLabel.Location = new Point(4, 37);
             macroDownKeyLabel.Name = "macroDownKeyLabel";
-            macroDownKeyLabel.Size = new Size(119, 18);
+            macroDownKeyLabel.Size = new Size(113, 18);
             macroDownKeyLabel.TabIndex = 6;
             macroDownKeyLabel.Text = "Macro Downscroll";
             // 
@@ -316,7 +316,7 @@
             macroStatus.ForeColor = Color.FromArgb(  230,   230,   230);
             macroStatus.Location = new Point(171, 59);
             macroStatus.Name = "macroStatus";
-            macroStatus.Size = new Size(62, 18);
+            macroStatus.Size = new Size(56, 18);
             macroStatus.TabIndex = 5;
             macroStatus.Text = "Stopped";
             // 
@@ -327,7 +327,7 @@
             hotkeysTitle.ForeColor = Color.FromArgb(  230,   230,   230);
             hotkeysTitle.Location = new Point(5, 14);
             hotkeysTitle.Name = "hotkeysTitle";
-            hotkeysTitle.Size = new Size(147, 21);
+            hotkeysTitle.Size = new Size(148, 21);
             hotkeysTitle.TabIndex = 5;
             hotkeysTitle.Text = "KEYBINDS";
             hotkeysTitle.Visible = false;
@@ -339,7 +339,7 @@
             gameStatus.ForeColor = Color.FromArgb(  230,   230,   230);
             gameStatus.Location = new Point(171, 5);
             gameStatus.Name = "gameStatus";
-            gameStatus.Size = new Size(87, 18);
+            gameStatus.Size = new Size(79, 18);
             gameStatus.TabIndex = 6;
             gameStatus.Text = "Not Running";
             // 
@@ -350,7 +350,7 @@
             fpsLabel2.ForeColor = Color.FromArgb(  230,   230,   230);
             fpsLabel2.Location = new Point(264, 158);
             fpsLabel2.Name = "fpsLabel2";
-            fpsLabel2.Size = new Size(33, 18);
+            fpsLabel2.Size = new Size(31, 18);
             fpsLabel2.TabIndex = 19;
             fpsLabel2.Text = "FPS";
             // 
@@ -361,7 +361,7 @@
             fpsLabel1.ForeColor = Color.FromArgb(  230,   230,   230);
             fpsLabel1.Location = new Point(264, 129);
             fpsLabel1.Name = "fpsLabel1";
-            fpsLabel1.Size = new Size(33, 18);
+            fpsLabel1.Size = new Size(31, 18);
             fpsLabel1.TabIndex = 18;
             fpsLabel1.Text = "FPS";
             // 
@@ -372,7 +372,7 @@
             fpsLabel0.ForeColor = Color.FromArgb(  230,   230,   230);
             fpsLabel0.Location = new Point(264, 100);
             fpsLabel0.Name = "fpsLabel0";
-            fpsLabel0.Size = new Size(33, 18);
+            fpsLabel0.Size = new Size(31, 18);
             fpsLabel0.TabIndex = 17;
             fpsLabel0.Text = "FPS";
             // 
@@ -385,7 +385,7 @@
             enableHotkeysCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             enableHotkeysCheckbox.Location = new Point(6, 24);
             enableHotkeysCheckbox.Name = "enableHotkeysCheckbox";
-            enableHotkeysCheckbox.Size = new Size(165, 22);
+            enableHotkeysCheckbox.Size = new Size(156, 22);
             enableHotkeysCheckbox.TabIndex = 9;
             enableHotkeysCheckbox.Text = "Enable Global Hotkeys";
             enableHotkeysCheckbox.UseVisualStyleBackColor = true;
@@ -412,7 +412,7 @@
             fpsKey2Label.ForeColor = Color.FromArgb(  230,   230,   230);
             fpsKey2Label.Location = new Point(21, 158);
             fpsKey2Label.Name = "fpsKey2Label";
-            fpsKey2Label.Size = new Size(102, 18);
+            fpsKey2Label.Size = new Size(96, 18);
             fpsKey2Label.TabIndex = 13;
             fpsKey2Label.Text = "FPS Toggle #3";
             // 
@@ -437,7 +437,7 @@
             fpsKey1Label.ForeColor = Color.FromArgb(  230,   230,   230);
             fpsKey1Label.Location = new Point(21, 129);
             fpsKey1Label.Name = "fpsKey1Label";
-            fpsKey1Label.Size = new Size(102, 18);
+            fpsKey1Label.Size = new Size(96, 18);
             fpsKey1Label.TabIndex = 11;
             fpsKey1Label.Text = "FPS Toggle #2";
             // 
@@ -462,7 +462,7 @@
             fpsKey0Label.ForeColor = Color.FromArgb(  230,   230,   230);
             fpsKey0Label.Location = new Point(21, 100);
             fpsKey0Label.Name = "fpsKey0Label";
-            fpsKey0Label.Size = new Size(102, 18);
+            fpsKey0Label.Size = new Size(97, 18);
             fpsKey0Label.TabIndex = 10;
             fpsKey0Label.Text = "FPS Toggle #1";
             // 
@@ -555,9 +555,9 @@
             defaultFPSLabel.AutoSize = true;
             defaultFPSLabel.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             defaultFPSLabel.ForeColor = Color.FromArgb(  230,   230,   230);
-            defaultFPSLabel.Location = new Point(197, 86);
+            defaultFPSLabel.Location = new Point(191, 86);
             defaultFPSLabel.Name = "defaultFPSLabel";
-            defaultFPSLabel.Size = new Size(64, 18);
+            defaultFPSLabel.Size = new Size(59, 18);
             defaultFPSLabel.TabIndex = 20;
             defaultFPSLabel.Text = "Max FPS";
             // 
@@ -675,7 +675,7 @@
             resKeyLabel.ForeColor = Color.FromArgb(  230,   230,   230);
             resKeyLabel.Location = new Point(3, 68);
             resKeyLabel.Name = "resKeyLabel";
-            resKeyLabel.Size = new Size(120, 18);
+            resKeyLabel.Size = new Size(111, 18);
             resKeyLabel.TabIndex = 31;
             resKeyLabel.Text = "Res. Scale Toggle";
             // 
@@ -775,7 +775,7 @@
             replaceProfileCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             replaceProfileCheckbox.Location = new Point(6, 42);
             replaceProfileCheckbox.Name = "replaceProfileCheckbox";
-            replaceProfileCheckbox.Size = new Size(203, 22);
+            replaceProfileCheckbox.Size = new Size(191, 22);
             replaceProfileCheckbox.TabIndex = 30;
             replaceProfileCheckbox.Text = "Replace profile.bin (3.1 only)";
             replaceProfileCheckbox.UseVisualStyleBackColor = true;
@@ -787,7 +787,7 @@
             panel2.Controls.Add(enableOSDCheckbox);
             panel2.Controls.Add(minimalOSDCheckbox);
             panel2.Controls.Add(launchRTSSCheckbox);
-            panel2.Controls.Add(enableMaxFPSCheckbox);
+            panel2.Controls.Add(enforce250FPSCheckbox);
             panel2.Controls.Add(panel3);
             panel2.Controls.Add(enableHotkeysCheckbox);
             panel2.Controls.Add(autorunMacroCheckbox);
@@ -809,7 +809,7 @@
             enableOSDCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             enableOSDCheckbox.Location = new Point(6, 45);
             enableOSDCheckbox.Name = "enableOSDCheckbox";
-            enableOSDCheckbox.Size = new Size(191, 22);
+            enableOSDCheckbox.Size = new Size(178, 22);
             enableOSDCheckbox.TabIndex = 38;
             enableOSDCheckbox.Text = "Enable On-Screen Display";
             enableOSDCheckbox.UseVisualStyleBackColor = true;
@@ -822,7 +822,7 @@
             minimalOSDCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             minimalOSDCheckbox.Location = new Point(22, 63);
             minimalOSDCheckbox.Name = "minimalOSDCheckbox";
-            minimalOSDCheckbox.Size = new Size(197, 22);
+            minimalOSDCheckbox.Size = new Size(184, 22);
             minimalOSDCheckbox.TabIndex = 37;
             minimalOSDCheckbox.Text = "Minimal On-Screen Display";
             minimalOSDCheckbox.UseVisualStyleBackColor = true;
@@ -836,26 +836,26 @@
             launchRTSSCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             launchRTSSCheckbox.Location = new Point(22, 103);
             launchRTSSCheckbox.Name = "launchRTSSCheckbox";
-            launchRTSSCheckbox.Size = new Size(190, 22);
+            launchRTSSCheckbox.Size = new Size(176, 22);
             launchRTSSCheckbox.TabIndex = 36;
             launchRTSSCheckbox.Text = "Launch RTSS with DESRU";
             launchRTSSCheckbox.UseVisualStyleBackColor = true;
             launchRTSSCheckbox.CheckedChanged += LaunchRTSS_CheckChanged;
             // 
-            // enableMaxFPSCheckbox
+            // enforce250FPSCheckbox
             // 
-            enableMaxFPSCheckbox.AutoSize = true;
-            enableMaxFPSCheckbox.Checked = true;
-            enableMaxFPSCheckbox.CheckState = CheckState.Checked;
-            enableMaxFPSCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
-            enableMaxFPSCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
-            enableMaxFPSCheckbox.Location = new Point(6, 85);
-            enableMaxFPSCheckbox.Name = "enableMaxFPSCheckbox";
-            enableMaxFPSCheckbox.Size = new Size(163, 22);
-            enableMaxFPSCheckbox.TabIndex = 30;
-            enableMaxFPSCheckbox.Text = "Enable Max FPS Limit";
-            enableMaxFPSCheckbox.UseVisualStyleBackColor = true;
-            enableMaxFPSCheckbox.CheckedChanged += MaxFPS_CheckChanged;
+            enforce250FPSCheckbox.AutoSize = true;
+            enforce250FPSCheckbox.Checked = true;
+            enforce250FPSCheckbox.CheckState = CheckState.Checked;
+            enforce250FPSCheckbox.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            enforce250FPSCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
+            enforce250FPSCheckbox.Location = new Point(6, 85);
+            enforce250FPSCheckbox.Name = "enforce250FPSCheckbox";
+            enforce250FPSCheckbox.Size = new Size(159, 22);
+            enforce250FPSCheckbox.TabIndex = 30;
+            enforce250FPSCheckbox.Text = "Enforce 250 FPS Limit";
+            enforce250FPSCheckbox.UseVisualStyleBackColor = true;
+            enforce250FPSCheckbox.CheckedChanged += MaxFPS_CheckChanged;
             // 
             // panel3
             // 
@@ -863,9 +863,9 @@
             panel3.BorderStyle = BorderStyle.FixedSingle;
             panel3.Controls.Add(defaultFPS);
             panel3.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
-            panel3.Location = new Point(264, 82);
+            panel3.Location = new Point(255, 82);
             panel3.Name = "panel3";
-            panel3.Size = new Size(34, 26);
+            panel3.Size = new Size(43, 26);
             panel3.TabIndex = 29;
             // 
             // defaultFPS
@@ -874,10 +874,10 @@
             defaultFPS.BorderStyle = BorderStyle.None;
             defaultFPS.Font = new Font("Eternal UI 2", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             defaultFPS.ForeColor = Color.FromArgb(  230,   230,   230);
-            defaultFPS.Location = new Point(-4, 3);
+            defaultFPS.Location = new Point(-1, 3);
             defaultFPS.MaxLength = 3;
             defaultFPS.Name = "defaultFPS";
-            defaultFPS.Size = new Size(34, 20);
+            defaultFPS.Size = new Size(39, 20);
             defaultFPS.TabIndex = 14;
             defaultFPS.Tag = "maxfps";
             defaultFPS.Text = "250";
@@ -1142,7 +1142,7 @@
             infoPanelTitle.ForeColor = Color.FromArgb(  230,   230,   230);
             infoPanelTitle.Location = new Point(316, 14);
             infoPanelTitle.Name = "infoPanelTitle";
-            infoPanelTitle.Size = new Size(166, 21);
+            infoPanelTitle.Size = new Size(168, 21);
             infoPanelTitle.TabIndex = 33;
             infoPanelTitle.Text = "INFO PANEL";
             infoPanelTitle.Visible = false;
@@ -1171,11 +1171,11 @@
             // 
             dynScalingRadioButton.AutoSize = true;
             dynScalingRadioButton.Checked = true;
-            dynScalingRadioButton.Font = new Font("Eternal UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            dynScalingRadioButton.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             dynScalingRadioButton.ForeColor = Color.FromArgb(  230,   230,   230);
             dynScalingRadioButton.Location = new Point(215, 23);
             dynScalingRadioButton.Name = "dynScalingRadioButton";
-            dynScalingRadioButton.Size = new Size(75, 21);
+            dynScalingRadioButton.Size = new Size(84, 22);
             dynScalingRadioButton.TabIndex = 55;
             dynScalingRadioButton.TabStop = true;
             dynScalingRadioButton.Text = "Dynamic";
@@ -1189,18 +1189,18 @@
             dynamicTargetLabel.ForeColor = Color.FromArgb(  230,   230,   230);
             dynamicTargetLabel.Location = new Point(22, 91);
             dynamicTargetLabel.Name = "dynamicTargetLabel";
-            dynamicTargetLabel.Size = new Size(187, 18);
+            dynamicTargetLabel.Size = new Size(172, 18);
             dynamicTargetLabel.TabIndex = 33;
             dynamicTargetLabel.Text = "Dynamic Scaling Target FPS";
             // 
             // staticScalingRadioButton
             // 
             staticScalingRadioButton.AutoSize = true;
-            staticScalingRadioButton.Font = new Font("Eternal UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            staticScalingRadioButton.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             staticScalingRadioButton.ForeColor = Color.FromArgb(  230,   230,   230);
             staticScalingRadioButton.Location = new Point(215, 2);
             staticScalingRadioButton.Name = "staticScalingRadioButton";
-            staticScalingRadioButton.Size = new Size(61, 21);
+            staticScalingRadioButton.Size = new Size(63, 22);
             staticScalingRadioButton.TabIndex = 54;
             staticScalingRadioButton.Text = "Static";
             staticScalingRadioButton.UseVisualStyleBackColor = true;
@@ -1212,7 +1212,7 @@
             targetFPSLabel.ForeColor = Color.FromArgb(  230,   230,   230);
             targetFPSLabel.Location = new Point(264, 91);
             targetFPSLabel.Name = "targetFPSLabel";
-            targetFPSLabel.Size = new Size(33, 18);
+            targetFPSLabel.Size = new Size(31, 18);
             targetFPSLabel.TabIndex = 30;
             targetFPSLabel.Text = "FPS";
             // 
@@ -1250,7 +1250,7 @@
             autoScalingCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             autoScalingCheckbox.Location = new Point(6, 24);
             autoScalingCheckbox.Name = "autoScalingCheckbox";
-            autoScalingCheckbox.Size = new Size(184, 22);
+            autoScalingCheckbox.Size = new Size(170, 22);
             autoScalingCheckbox.TabIndex = 32;
             autoScalingCheckbox.Text = "Auto Enable Res. Scaling";
             autoScalingCheckbox.UseVisualStyleBackColor = true;
@@ -1263,7 +1263,7 @@
             unlockOnStartupCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             unlockOnStartupCheckbox.Location = new Point(6, 3);
             unlockOnStartupCheckbox.Name = "unlockOnStartupCheckbox";
-            unlockOnStartupCheckbox.Size = new Size(142, 22);
+            unlockOnStartupCheckbox.Size = new Size(132, 22);
             unlockOnStartupCheckbox.TabIndex = 30;
             unlockOnStartupCheckbox.Text = "Unlock on Startup";
             unlockOnStartupCheckbox.UseVisualStyleBackColor = true;
@@ -1291,7 +1291,7 @@
             percentLabel.ForeColor = Color.FromArgb(  230,   230,   230);
             percentLabel.Location = new Point(263, 63);
             percentLabel.Name = "percentLabel";
-            percentLabel.Size = new Size(21, 18);
+            percentLabel.Size = new Size(20, 18);
             percentLabel.TabIndex = 31;
             percentLabel.Text = "%";
             // 
@@ -1302,7 +1302,7 @@
             minResLabel.ForeColor = Color.FromArgb(  230,   230,   230);
             minResLabel.Location = new Point(36, 63);
             minResLabel.Name = "minResLabel";
-            minResLabel.Size = new Size(173, 18);
+            minResLabel.Size = new Size(159, 18);
             minResLabel.TabIndex = 30;
             minResLabel.Text = "Minimum Resolution Scale";
             // 
@@ -1340,7 +1340,7 @@
             resTitle.ForeColor = Color.FromArgb(  230,   230,   230);
             resTitle.Location = new Point(5, 272);
             resTitle.Name = "resTitle";
-            resTitle.Size = new Size(302, 21);
+            resTitle.Size = new Size(305, 21);
             resTitle.TabIndex = 34;
             resTitle.Text = "RESOLUTION SCALING";
             resTitle.Visible = false;
@@ -1481,7 +1481,7 @@
             resToggleLabel3.ForeColor = Color.FromArgb(  230,   230,   230);
             resToggleLabel3.Location = new Point(337, 212);
             resToggleLabel3.Name = "resToggleLabel3";
-            resToggleLabel3.Size = new Size(97, 18);
+            resToggleLabel3.Size = new Size(90, 18);
             resToggleLabel3.TabIndex = 77;
             resToggleLabel3.Text = "Res. Scale #4";
             // 
@@ -1492,7 +1492,7 @@
             resToggleLabel2.ForeColor = Color.FromArgb(  230,   230,   230);
             resToggleLabel2.Location = new Point(337, 183);
             resToggleLabel2.Name = "resToggleLabel2";
-            resToggleLabel2.Size = new Size(97, 18);
+            resToggleLabel2.Size = new Size(90, 18);
             resToggleLabel2.TabIndex = 75;
             resToggleLabel2.Text = "Res. Scale #3";
             // 
@@ -1543,7 +1543,7 @@
             label24.ForeColor = Color.FromArgb(  230,   230,   230);
             label24.Location = new Point(575, 183);
             label24.Name = "label24";
-            label24.Size = new Size(21, 18);
+            label24.Size = new Size(20, 18);
             label24.TabIndex = 78;
             label24.Text = "%";
             // 
@@ -1594,7 +1594,7 @@
             label29.ForeColor = Color.FromArgb(  230,   230,   230);
             label29.Location = new Point(575, 212);
             label29.Name = "label29";
-            label29.Size = new Size(21, 18);
+            label29.Size = new Size(20, 18);
             label29.TabIndex = 79;
             label29.Text = "%";
             // 
@@ -1605,7 +1605,7 @@
             resToggleLabel1.ForeColor = Color.FromArgb(  230,   230,   230);
             resToggleLabel1.Location = new Point(26, 212);
             resToggleLabel1.Name = "resToggleLabel1";
-            resToggleLabel1.Size = new Size(97, 18);
+            resToggleLabel1.Size = new Size(90, 18);
             resToggleLabel1.TabIndex = 69;
             resToggleLabel1.Text = "Res. Scale #2";
             // 
@@ -1616,7 +1616,7 @@
             resToggleLabel0.ForeColor = Color.FromArgb(  230,   230,   230);
             resToggleLabel0.Location = new Point(26, 183);
             resToggleLabel0.Name = "resToggleLabel0";
-            resToggleLabel0.Size = new Size(97, 18);
+            resToggleLabel0.Size = new Size(91, 18);
             resToggleLabel0.TabIndex = 67;
             resToggleLabel0.Text = "Res. Scale #1";
             // 
@@ -1667,7 +1667,7 @@
             label34.ForeColor = Color.FromArgb(  230,   230,   230);
             label34.Location = new Point(264, 183);
             label34.Name = "label34";
-            label34.Size = new Size(21, 18);
+            label34.Size = new Size(20, 18);
             label34.TabIndex = 70;
             label34.Text = "%";
             // 
@@ -1718,7 +1718,7 @@
             label36.ForeColor = Color.FromArgb(  230,   230,   230);
             label36.Location = new Point(264, 212);
             label36.Name = "label36";
-            label36.Size = new Size(21, 18);
+            label36.Size = new Size(20, 18);
             label36.TabIndex = 71;
             label36.Text = "%";
             // 
@@ -1729,7 +1729,7 @@
             label4.ForeColor = Color.FromArgb(  230,   230,   230);
             label4.Location = new Point(323, 154);
             label4.Name = "label4";
-            label4.Size = new Size(111, 18);
+            label4.Size = new Size(105, 18);
             label4.TabIndex = 59;
             label4.Text = "FPS Toggle #15";
             // 
@@ -1740,7 +1740,7 @@
             label6.ForeColor = Color.FromArgb(  230,   230,   230);
             label6.Location = new Point(323, 125);
             label6.Name = "label6";
-            label6.Size = new Size(111, 18);
+            label6.Size = new Size(105, 18);
             label6.TabIndex = 57;
             label6.Text = "FPS Toggle #14";
             // 
@@ -1764,7 +1764,7 @@
             label12.ForeColor = Color.FromArgb(  230,   230,   230);
             label12.Location = new Point(323, 96);
             label12.Name = "label12";
-            label12.Size = new Size(111, 18);
+            label12.Size = new Size(105, 18);
             label12.TabIndex = 56;
             label12.Text = "FPS Toggle #13";
             // 
@@ -1788,7 +1788,7 @@
             label17.ForeColor = Color.FromArgb(  230,   230,   230);
             label17.Location = new Point(575, 96);
             label17.Name = "label17";
-            label17.Size = new Size(33, 18);
+            label17.Size = new Size(31, 18);
             label17.TabIndex = 60;
             label17.Text = "FPS";
             // 
@@ -1824,7 +1824,7 @@
             label19.ForeColor = Color.FromArgb(  230,   230,   230);
             label19.Location = new Point(575, 125);
             label19.Name = "label19";
-            label19.Size = new Size(33, 18);
+            label19.Size = new Size(31, 18);
             label19.TabIndex = 61;
             label19.Text = "FPS";
             // 
@@ -1898,7 +1898,7 @@
             label21.ForeColor = Color.FromArgb(  230,   230,   230);
             label21.Location = new Point(575, 154);
             label21.Name = "label21";
-            label21.Size = new Size(33, 18);
+            label21.Size = new Size(31, 18);
             label21.TabIndex = 62;
             label21.Text = "FPS";
             // 
@@ -1909,7 +1909,7 @@
             label22.ForeColor = Color.FromArgb(  230,   230,   230);
             label22.Location = new Point(323, 67);
             label22.Name = "label22";
-            label22.Size = new Size(111, 18);
+            label22.Size = new Size(105, 18);
             label22.TabIndex = 47;
             label22.Text = "FPS Toggle #12";
             // 
@@ -1920,7 +1920,7 @@
             label23.ForeColor = Color.FromArgb(  230,   230,   230);
             label23.Location = new Point(323, 38);
             label23.Name = "label23";
-            label23.Size = new Size(111, 18);
+            label23.Size = new Size(106, 18);
             label23.TabIndex = 45;
             label23.Text = "FPS Toggle #11";
             // 
@@ -1944,7 +1944,7 @@
             label25.ForeColor = Color.FromArgb(  230,   230,   230);
             label25.Location = new Point(323, 9);
             label25.Name = "label25";
-            label25.Size = new Size(111, 18);
+            label25.Size = new Size(105, 18);
             label25.TabIndex = 44;
             label25.Text = "FPS Toggle #10";
             // 
@@ -1968,7 +1968,7 @@
             label27.ForeColor = Color.FromArgb(  230,   230,   230);
             label27.Location = new Point(575, 9);
             label27.Name = "label27";
-            label27.Size = new Size(33, 18);
+            label27.Size = new Size(31, 18);
             label27.TabIndex = 48;
             label27.Text = "FPS";
             // 
@@ -2004,7 +2004,7 @@
             label28.ForeColor = Color.FromArgb(  230,   230,   230);
             label28.Location = new Point(575, 38);
             label28.Name = "label28";
-            label28.Size = new Size(33, 18);
+            label28.Size = new Size(31, 18);
             label28.TabIndex = 49;
             label28.Text = "FPS";
             // 
@@ -2078,7 +2078,7 @@
             label30.ForeColor = Color.FromArgb(  230,   230,   230);
             label30.Location = new Point(575, 67);
             label30.Name = "label30";
-            label30.Size = new Size(33, 18);
+            label30.Size = new Size(31, 18);
             label30.TabIndex = 50;
             label30.Text = "FPS";
             // 
@@ -2089,7 +2089,7 @@
             label1.ForeColor = Color.FromArgb(  230,   230,   230);
             label1.Location = new Point(21, 154);
             label1.Name = "label1";
-            label1.Size = new Size(102, 18);
+            label1.Size = new Size(96, 18);
             label1.TabIndex = 35;
             label1.Text = "FPS Toggle #9";
             // 
@@ -2100,7 +2100,7 @@
             label3.ForeColor = Color.FromArgb(  230,   230,   230);
             label3.Location = new Point(21, 125);
             label3.Name = "label3";
-            label3.Size = new Size(102, 18);
+            label3.Size = new Size(96, 18);
             label3.TabIndex = 33;
             label3.Text = "FPS Toggle #8";
             // 
@@ -2124,7 +2124,7 @@
             label9.ForeColor = Color.FromArgb(  230,   230,   230);
             label9.Location = new Point(21, 96);
             label9.Name = "label9";
-            label9.Size = new Size(102, 18);
+            label9.Size = new Size(96, 18);
             label9.TabIndex = 32;
             label9.Text = "FPS Toggle #7";
             // 
@@ -2148,7 +2148,7 @@
             label14.ForeColor = Color.FromArgb(  230,   230,   230);
             label14.Location = new Point(264, 96);
             label14.Name = "label14";
-            label14.Size = new Size(33, 18);
+            label14.Size = new Size(31, 18);
             label14.TabIndex = 36;
             label14.Text = "FPS";
             // 
@@ -2184,7 +2184,7 @@
             label16.ForeColor = Color.FromArgb(  230,   230,   230);
             label16.Location = new Point(264, 125);
             label16.Name = "label16";
-            label16.Size = new Size(33, 18);
+            label16.Size = new Size(31, 18);
             label16.TabIndex = 37;
             label16.Text = "FPS";
             // 
@@ -2258,7 +2258,7 @@
             label18.ForeColor = Color.FromArgb(  230,   230,   230);
             label18.Location = new Point(264, 154);
             label18.Name = "label18";
-            label18.Size = new Size(33, 18);
+            label18.Size = new Size(31, 18);
             label18.TabIndex = 38;
             label18.Text = "FPS";
             // 
@@ -2269,7 +2269,7 @@
             label2.ForeColor = Color.FromArgb(  230,   230,   230);
             label2.Location = new Point(21, 67);
             label2.Name = "label2";
-            label2.Size = new Size(102, 18);
+            label2.Size = new Size(96, 18);
             label2.TabIndex = 13;
             label2.Text = "FPS Toggle #6";
             // 
@@ -2280,7 +2280,7 @@
             label5.ForeColor = Color.FromArgb(  230,   230,   230);
             label5.Location = new Point(21, 38);
             label5.Name = "label5";
-            label5.Size = new Size(102, 18);
+            label5.Size = new Size(96, 18);
             label5.TabIndex = 11;
             label5.Text = "FPS Toggle #5";
             // 
@@ -2304,7 +2304,7 @@
             label7.ForeColor = Color.FromArgb(  230,   230,   230);
             label7.Location = new Point(21, 9);
             label7.Name = "label7";
-            label7.Size = new Size(102, 18);
+            label7.Size = new Size(96, 18);
             label7.TabIndex = 10;
             label7.Text = "FPS Toggle #4";
             // 
@@ -2328,7 +2328,7 @@
             label10.ForeColor = Color.FromArgb(  230,   230,   230);
             label10.Location = new Point(264, 9);
             label10.Name = "label10";
-            label10.Size = new Size(33, 18);
+            label10.Size = new Size(31, 18);
             label10.TabIndex = 17;
             label10.Text = "FPS";
             // 
@@ -2364,7 +2364,7 @@
             label11.ForeColor = Color.FromArgb(  230,   230,   230);
             label11.Location = new Point(264, 38);
             label11.Name = "label11";
-            label11.Size = new Size(33, 18);
+            label11.Size = new Size(31, 18);
             label11.TabIndex = 18;
             label11.Text = "FPS";
             // 
@@ -2438,7 +2438,7 @@
             label15.ForeColor = Color.FromArgb(  230,   230,   230);
             label15.Location = new Point(264, 67);
             label15.Name = "label15";
-            label15.Size = new Size(33, 18);
+            label15.Size = new Size(31, 18);
             label15.TabIndex = 19;
             label15.Text = "FPS";
             // 
@@ -2449,7 +2449,7 @@
             moreHotkeysTitle.ForeColor = Color.FromArgb(  230,   230,   230);
             moreHotkeysTitle.Location = new Point(203, 763);
             moreHotkeysTitle.Name = "moreHotkeysTitle";
-            moreHotkeysTitle.Size = new Size(238, 21);
+            moreHotkeysTitle.Size = new Size(241, 21);
             moreHotkeysTitle.TabIndex = 39;
             moreHotkeysTitle.Text = "EXTRA HOTKEYS";
             moreHotkeysTitle.Visible = false;
@@ -2549,7 +2549,7 @@
             hideDuringLoadsCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             hideDuringLoadsCheckbox.Location = new Point(22, 84);
             hideDuringLoadsCheckbox.Name = "hideDuringLoadsCheckbox";
-            hideDuringLoadsCheckbox.Size = new Size(142, 22);
+            hideDuringLoadsCheckbox.Size = new Size(135, 22);
             hideDuringLoadsCheckbox.TabIndex = 54;
             hideDuringLoadsCheckbox.Text = "Hide During Loads";
             hideDuringLoadsCheckbox.UseVisualStyleBackColor = true;
@@ -2562,7 +2562,7 @@
             rightAlignCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             rightAlignCheckbox.Location = new Point(22, 63);
             rightAlignCheckbox.Name = "rightAlignCheckbox";
-            rightAlignCheckbox.Size = new Size(145, 22);
+            rightAlignCheckbox.Size = new Size(134, 22);
             rightAlignCheckbox.TabIndex = 53;
             rightAlignCheckbox.Text = "Align to Right Side";
             rightAlignCheckbox.UseVisualStyleBackColor = true;
@@ -2589,7 +2589,7 @@
             trainerRadioLabel.ForeColor = Color.FromArgb(  230,   230,   230);
             trainerRadioLabel.Location = new Point(207, 4);
             trainerRadioLabel.Name = "trainerRadioLabel";
-            trainerRadioLabel.Size = new Size(86, 18);
+            trainerRadioLabel.Size = new Size(79, 18);
             trainerRadioLabel.TabIndex = 48;
             trainerRadioLabel.Text = "2nd Velocity";
             trainerRadioLabel.Visible = false;
@@ -2597,11 +2597,11 @@
             // velocityRadioVertical
             // 
             velocityRadioVertical.AutoSize = true;
-            velocityRadioVertical.Font = new Font("Eternal UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            velocityRadioVertical.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             velocityRadioVertical.ForeColor = Color.FromArgb(  230,   230,   230);
             velocityRadioVertical.Location = new Point(210, 57);
             velocityRadioVertical.Name = "velocityRadioVertical";
-            velocityRadioVertical.Size = new Size(72, 21);
+            velocityRadioVertical.Size = new Size(74, 22);
             velocityRadioVertical.TabIndex = 51;
             velocityRadioVertical.Text = "Vertical";
             velocityRadioVertical.UseVisualStyleBackColor = true;
@@ -2611,11 +2611,11 @@
             // 
             velocityRadioTotal.AutoSize = true;
             velocityRadioTotal.Checked = true;
-            velocityRadioTotal.Font = new Font("Eternal UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            velocityRadioTotal.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             velocityRadioTotal.ForeColor = Color.FromArgb(  230,   230,   230);
             velocityRadioTotal.Location = new Point(210, 39);
             velocityRadioTotal.Name = "velocityRadioTotal";
-            velocityRadioTotal.Size = new Size(53, 21);
+            velocityRadioTotal.Size = new Size(59, 22);
             velocityRadioTotal.TabIndex = 50;
             velocityRadioTotal.TabStop = true;
             velocityRadioTotal.Text = "Total";
@@ -2625,11 +2625,11 @@
             // velocityRadioNone
             // 
             velocityRadioNone.AutoSize = true;
-            velocityRadioNone.Font = new Font("Eternal UI", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
+            velocityRadioNone.Font = new Font("Microsoft Sans Serif", 11.25F, FontStyle.Regular, GraphicsUnit.Point);
             velocityRadioNone.ForeColor = Color.FromArgb(  230,   230,   230);
             velocityRadioNone.Location = new Point(210, 21);
             velocityRadioNone.Name = "velocityRadioNone";
-            velocityRadioNone.Size = new Size(52, 21);
+            velocityRadioNone.Size = new Size(56, 22);
             velocityRadioNone.TabIndex = 49;
             velocityRadioNone.Text = "Hide";
             velocityRadioNone.UseVisualStyleBackColor = true;
@@ -2642,7 +2642,7 @@
             speedometerPrecisionCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             speedometerPrecisionCheckbox.Location = new Point(22, 42);
             speedometerPrecisionCheckbox.Name = "speedometerPrecisionCheckbox";
-            speedometerPrecisionCheckbox.Size = new Size(152, 22);
+            speedometerPrecisionCheckbox.Size = new Size(142, 22);
             speedometerPrecisionCheckbox.TabIndex = 44;
             speedometerPrecisionCheckbox.Text = "Increased Precision";
             speedometerPrecisionCheckbox.UseVisualStyleBackColor = true;
@@ -2655,7 +2655,7 @@
             speedometerCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             speedometerCheckbox.Location = new Point(6, 24);
             speedometerCheckbox.Name = "speedometerCheckbox";
-            speedometerCheckbox.Size = new Size(152, 22);
+            speedometerCheckbox.Size = new Size(140, 22);
             speedometerCheckbox.TabIndex = 43;
             speedometerCheckbox.Text = "Show Speedometer";
             speedometerCheckbox.UseVisualStyleBackColor = true;
@@ -2705,7 +2705,7 @@
             trainerOSDCheckbox.ForeColor = Color.FromArgb(  230,   230,   230);
             trainerOSDCheckbox.Location = new Point(6, 3);
             trainerOSDCheckbox.Name = "trainerOSDCheckbox";
-            trainerOSDCheckbox.Size = new Size(166, 22);
+            trainerOSDCheckbox.Size = new Size(156, 22);
             trainerOSDCheckbox.TabIndex = 38;
             trainerOSDCheckbox.Text = "Show In-Game Display";
             trainerOSDCheckbox.UseVisualStyleBackColor = true;
@@ -2943,7 +2943,7 @@
         private Label label15;
         private Label moreHotkeysTitle;
         private ToolTip toolTip7500;
-        private CheckBox enableMaxFPSCheckbox;
+        private CheckBox enforce250FPSCheckbox;
         private CheckBox launchRTSSCheckbox;
         private Label rtssStatus;
         private Label rtssStatusLabel;

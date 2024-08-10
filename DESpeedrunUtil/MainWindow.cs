@@ -252,10 +252,10 @@ namespace DESpeedrunUtil {
             var v = Memory.Version.Name.Contains("Unknown");
             if(!_fwRuleExists) Memory.SetFlag(false, "firewall");
             Memory.SetFlag(_enableMacro && FreescrollMacro.Instance.HasKeyBound(), "macro");
-            Memory.SetFlag(!v && enableMaxFPSCheckbox.Checked, "limiter");
+            Memory.SetFlag(!v && enforce250FPSCheckbox.Checked, "limiter");
             Memory.SetFlag(trainerOSDCheckbox.Checked, "trainer");
 
-            enableMaxFPSCheckbox.Enabled = !v;
+            enforce250FPSCheckbox.Enabled = !v;
             if(!v) {
                 if(Memory.GetFlag("resunlocked") && !Memory.GetFlag("unlockscheduled")) {
                     unlockResButton.Enabled = true;
@@ -568,7 +568,7 @@ namespace DESpeedrunUtil {
         public void ToggleFPSCap(int fps) {
             if(!Hooked || fps == -1) return;
             int current = Memory.ReadMaxHz();
-            Memory.SetMaxHz((current != fps) ? fps : (enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
+            Memory.SetMaxHz((current != fps) ? fps : _fpsDefault);
         }
 
         public void ToggleResScaling() {
@@ -1059,7 +1059,7 @@ namespace DESpeedrunUtil {
             Memory.FirstRun = _firstRun;
             Memory.EnableOSD = enableOSDCheckbox.Checked;
             Memory.UseDynamicScaling = dynScalingRadioButton.Checked;
-            Memory.SetFlag(!Memory.Version.Name.Contains("Unknown") && enableMaxFPSCheckbox.Checked, "limiter");
+            Memory.SetFlag(!Memory.Version.Name.Contains("Unknown") && enforce250FPSCheckbox.Checked, "limiter");
             Memory.SetFlag(minimalOSDCheckbox.Checked, "minimal");
             if(Memory.GetFlag("restart")) Log.Warning("Game requires a restart. Utility must be running before the game is launched.");
             Memory.SetMinRes(_minResPercent / 100f);
@@ -1069,7 +1069,7 @@ namespace DESpeedrunUtil {
             } else {
                 if(autoScalingCheckbox.Checked) Memory.ScheduleResolutionScaling(_targetFPS);
             }
-            Memory.SetMaxHz((enableMaxFPSCheckbox.Checked) ? _fpsDefault : 1000);
+            Memory.SetMaxHz(_fpsDefault);
 
             Memory.SetCVAR(Properties.Settings.Default.AntiAliasing, "antialiasing");
             Memory.SetCVAR(Properties.Settings.Default.UNDelay, "undelay");
@@ -1114,7 +1114,7 @@ namespace DESpeedrunUtil {
             unlockResButton.Enabled = false;
             unlockResButton.Text = "Game Not Running";
 
-            enableMaxFPSCheckbox.Enabled = true;
+            enforce250FPSCheckbox.Enabled = true;
 
             HideTrainerControls();
         }
@@ -1134,7 +1134,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.SteamID3 = _steamID3;
             Properties.Settings.Default.ReplaceProfile = replaceProfileCheckbox.Checked;
             Properties.Settings.Default.ResScaleKey = (int) HotkeyHandler.Instance.ResScaleHotkey;
-            Properties.Settings.Default.EnableMaxFPSLimit = enableMaxFPSCheckbox.Checked;
+            Properties.Settings.Default.EnableMaxFPSLimit = enforce250FPSCheckbox.Checked;
             Properties.Settings.Default.RTSSPath = _rtssExecutable;
             Properties.Settings.Default.LaunchRTSS = launchRTSSCheckbox.Checked;
             Properties.Settings.Default.MinimalOSD = minimalOSDCheckbox.Checked;
@@ -1242,7 +1242,9 @@ namespace DESpeedrunUtil {
             toolTip7500.SetToolTip(autorunMacroCheckbox, "Toggle the Freescroll Emulation Macro");
             toolTip7500.SetToolTip(minimalOSDCheckbox, "Displays the in-game information on a single line if enabled");
             toolTip7500.SetToolTip(defaultFPS, "Set the max FPS you want DOOM Eternal to run at\n" +
-                "Value must be in the range 1-250");
+                "Value must be in the range 1-250 (or 1-1000)");
+            toolTip7500.SetToolTip(enforce250FPSCheckbox, "Allows FPS limits greater than 250 (except for hotkeys)\n" +
+                "The 250 FPS limit is still required regardless of this setting.\n");
             toolTip7500.SetToolTip(launchRTSSCheckbox, "Automatically launches RTSS with DESRU\n" +
                 "Will launch RTSS immediately if it isn't open");
             toolTip7500.SetToolTip(firewallToggleButton, "Toggle a firewall rule blocking DOOM Eternal's connection\n" +
@@ -1291,7 +1293,7 @@ namespace DESpeedrunUtil {
             autorunMacroCheckbox.Font = EternalUIRegular;
             enableHotkeysCheckbox.Font = EternalUIRegular;
             minimalOSDCheckbox.Font = EternalUIRegular;
-            enableMaxFPSCheckbox.Font = EternalUIRegular;
+            enforce250FPSCheckbox.Font = EternalUIRegular;
             launchRTSSCheckbox.Font = EternalUIRegular;
             gameStatus.Font = EternalUIRegular;
             currentFPSCap.Font = EternalUIRegular;

@@ -145,23 +145,29 @@ namespace DESpeedrunUtil {
             var text = ((TextBox) sender).Text;
             string tag = (string) ((Control) sender).Tag;
 
-            if(!int.TryParse(text, out int p)) p = -1;
+            if(!int.TryParse(text, out int fps)) fps = -1;
 
-            if(p > 250) p = 250;
-            if(tag == "maxfps" && p <= 0) p = 250;
-            if(p != -1) {
-                if(p == 0) p = 1;
-                ((TextBox) sender).Text = p.ToString();
+            if(fps > 250) {
+                if(tag == "maxfps" && !enforce250FPSCheckbox.Checked) {
+                    if(fps > 1000) fps = 1000;
+                } else {
+                    fps = 250;
+                }
+            }
+            if(tag == "maxfps" && fps <= 0) fps = 250;
+            if(fps != -1) {
+                if(fps == 0) fps = 1;
+                ((TextBox) sender).Text = fps.ToString();
             } else {
                 ((TextBox) sender).Text = "";
             }
 
             switch(tag) {
                 case "maxfps":
-                    _fpsDefault = p;
+                    _fpsDefault = fps;
                     break;
                 default:
-                    HotkeyHandler.Instance.FPSHotkeys.ChangeLimit(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1, p);
+                    HotkeyHandler.Instance.FPSHotkeys.ChangeLimit(int.TryParse(tag.Replace("fpscap", ""), out int id) ? id : -1, fps);
                     break;
             }
         }
@@ -239,18 +245,28 @@ namespace DESpeedrunUtil {
         private void MaxFPS_CheckChanged(object sender, EventArgs e) {
             if(!((CheckBox) sender).Checked && !_justLaunched) {
                 Log.Warning("Max FPS Limiter disabled.");
+                defaultFPS.MaxLength = 4;
+                if(_fpsDefault == 250) {
+                    _fpsDefault = 1000;
+                    defaultFPS.Text = "1000";
+                }
                 if(Hooked) {
-                    Memory.SetMaxHz(1000);
+                    Memory.SetMaxHz(_fpsDefault);
                     Memory.SetFlag(false, "limiter");
                 }
                 launchRTSSCheckbox.Enabled = true;
                 System.Media.SystemSounds.Asterisk.Play();
-                MessageBox.Show("Disabling this option means you MUST limit your framerate to 250 or lower through external means.\n\n" +
+                MessageBox.Show("Disabling this option means you MUST limit your framerate to 250 or lower through external means if you set an FPS value greater than 250.\n\n" +
                     "Common options include Rivatuner Statistics Server (RTSS), NVIDIA Control Panel, etc.\n\n" +
                     "If you use a 3rd party program like RTSS, ensure that it is running at all times during your run.\n" +
                     "If you use RTSS specifically, DESRU can launch it for you if you enable the \"Launch RTSS with DESRU\" option.", "External FPS Limit Required");
             } else {
                 Log.Information("Max FPS Limiter enabled.");
+                if(_fpsDefault > 250 && !_justLaunched) {
+                    _fpsDefault = 250;
+                    defaultFPS.Text = "250";
+                }
+                defaultFPS.MaxLength = 3;
                 if(Hooked) {
                     Memory.SetMaxHz(_fpsDefault);
                     Memory.SetFlag(true, "limiter");
@@ -505,7 +521,7 @@ namespace DESpeedrunUtil {
             _steamInstallation = Properties.Settings.Default.SteamInstallation;
             _steamID3 = Properties.Settings.Default.SteamID3;
             replaceProfileCheckbox.Checked = Properties.Settings.Default.ReplaceProfile;
-            enableMaxFPSCheckbox.Checked = Properties.Settings.Default.EnableMaxFPSLimit;
+            enforce250FPSCheckbox.Checked = Properties.Settings.Default.EnableMaxFPSLimit;
             minimalOSDCheckbox.Checked = Properties.Settings.Default.MinimalOSD;
             trainerOSDCheckbox.Checked = Properties.Settings.Default.TrainerOSD;
             speedometerCheckbox.Checked = Properties.Settings.Default.ShowSpeedometer;
@@ -596,7 +612,7 @@ namespace DESpeedrunUtil {
                 Log.Information("Displayed FPS Limiter Warning to user.");
                 if(dialog.ShowDialog() == DialogResult.Yes) {
                     _justLaunched = true;
-                    enableMaxFPSCheckbox.Checked = false;
+                    enforce250FPSCheckbox.Checked = false;
                     _justLaunched = false;
                     Log.Warning("User chose to disable the max FPS limiter.");
                 }
