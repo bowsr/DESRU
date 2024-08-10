@@ -9,7 +9,7 @@ using System.Reflection;
 namespace DESpeedrunUtil {
     internal static class Program {
 
-        public const string APP_VERSION = "1.6.8";
+        public const string APP_VERSION = "1.6.9";
         public static bool UpdateDetected = false;
         private static string _latestVersion, _changelog;
         private static bool _checkFailed = false;

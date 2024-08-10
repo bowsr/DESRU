@@ -113,5 +113,10 @@
     "Name": "6.66 Rev 2.2 (Gamepass)",
     "ModuleSize": 122580992,
     "MD5": "cantcheckmd5onuwpclients"
+  },
+  {
+    "Name": "6.66 Rev 3",
+    "ModuleSize": 121950208,
+    "MD5": "0c3f5a94244023ae2c55d6ff0b62e1ab"
   }
 ]
