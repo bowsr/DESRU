@@ -195,6 +195,20 @@ namespace DESpeedrunUtil {
 
             CheckForMeathook();
 
+            if(_enableMacro) {
+                if(_openProcesses.FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
+                    FreescrollMacro.Instance.Restart();
+                    _openProcesses.Clear();
+                }
+                if(!FreescrollMacro.Instance.IsRunning() && !_startingMacro) {
+                    _startingMacro = true;
+                    FreescrollMacro.Instance.Start();
+                } else if(FreescrollMacro.Instance.IsRunning() && _startingMacro) {
+                    _startingMacro = false;
+                }
+            }
+            if(!_enableMacro) FreescrollMacro.Instance.Stop(true);
+
             if(!Hooked) {
                 try {
                     Hooked = Hook();
@@ -209,7 +223,7 @@ namespace DESpeedrunUtil {
             }
             if(!Hooked) {
                 if(_gameDirectory.ToLower().Contains("steam")) versionDropDownSelector.Enabled = true;
-                FreescrollMacro.Instance.Stop(true);
+                //FreescrollMacro.Instance.Stop(true);
                 _fwRestart = false;
                 if(!_mhInstallation) {
                     cheatsToggleButton.Enabled = true;
@@ -233,20 +247,6 @@ namespace DESpeedrunUtil {
             } catch(Exception e) {
                 Log.Error(e, "Failed to check if DOOM Eternal was in focus.");
             }
-
-            if(_enableMacro) {
-                if(_openProcesses.FindAll(x => x.ProcessName.Contains("DOOMEternalMacro")).Count > 1) {
-                    FreescrollMacro.Instance.Restart();
-                    _openProcesses.Clear();
-                }
-                if(!FreescrollMacro.Instance.IsRunning() && !_startingMacro) {
-                    _startingMacro = true;
-                    FreescrollMacro.Instance.Start();
-                } else if(FreescrollMacro.Instance.IsRunning() && _startingMacro) {
-                    _startingMacro = false;
-                }
-            }
-            if(!_enableMacro) FreescrollMacro.Instance.Stop(true);
 
             /** Memory Flags **/
             var v = Memory.Version.Name.Contains("Unknown");

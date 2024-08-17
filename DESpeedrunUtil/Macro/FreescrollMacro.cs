@@ -6,7 +6,7 @@ using Timer = System.Windows.Forms.Timer;
 
 namespace DESpeedrunUtil.Macro {
     internal class FreescrollMacro {
-        private const string MD5_CHECKSUM = "A4B78DE0DB3E068A8F64CA826ED873F8";
+        private const string MD5_CHECKSUM = "EDAC822E46809BC87F15456555F22FB5";
 
         public static FreescrollMacro Instance { get; private set; }
 
