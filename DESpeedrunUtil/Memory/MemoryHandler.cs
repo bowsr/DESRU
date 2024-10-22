@@ -589,7 +589,7 @@ namespace DESpeedrunUtil.Memory {
             //  So since 0.5f is the smallest value in the default array, 0.5f and anything below it will select the final value of the array, which is the lowest scaling value
             //  Other values will take the next highest corresponding value. e.g. 0.55f would select 0.56f normally, which is the 29th value of the array, so the 29th value of the new array is selected
             // Because DESRU generates a new array depending on what minimum res scale value the user selected, the forced res will be set to 0.5f to keep that min value selected
-            float scale = Version.Name.Contains("6.66 Rev 2") ? 0.5f : _minRes;
+            float scale = CheckVersionRevision() ? 0.5f : _minRes;
             if(CheckNonZeroPtr(_forceResPtr)) _game.WriteValue(_forceResPtr, scale);
         }
         /// <summary>
@@ -627,9 +627,10 @@ namespace DESpeedrunUtil.Memory {
         }
 
         private bool SetResScales() {
-            if(!Version.Name.Contains("6.66 Rev 2") && _minRes >= 0.5f) return false; // No need to change res scales since 50% is the default minimum in game
+            var inferredResScales = CheckVersionRevision();
+            if(!inferredResScales && _minRes >= 0.5f) return false; // No need to change res scales since 50% is the default minimum in game
             float[] scales = ONEPERCENT_RES_SCALES;
-            if(Version.Name.Contains("6.66 Rev 2") && _minRes >= 0.02f) {
+            if(inferredResScales && _minRes >= 0.02f) {
                 // rs_minimumResolutionScale does not exist on 6.66 Rev 2. It is dynamically inferred based off the 128 byte set of res scale values.
                 // Because of this, we cannot set the min res scale directly, so a new set of res scale values must be generated,
                 //   based off of the desired minimum resolution set by the user.
@@ -750,7 +751,7 @@ namespace DESpeedrunUtil.Memory {
         public void ScheduleResUnlock(bool auto, int targetFPS) {
             if(Version.Name.Contains("Unknown")) return;
             _targetFPS = targetFPS;
-            if(_resUnlocked && !Version.Name.Contains("6.66 Rev 2")) {
+            if(_resUnlocked && !CheckVersionRevision()) {
                 if(CheckNonZeroPtr(_minResPtr)) _game.WriteBytes(_minResPtr, FloatToBytes(_minRes));
                 return;
             }
@@ -1108,6 +1109,13 @@ namespace DESpeedrunUtil.Memory {
             return false;
         }
 
+        private bool CheckVersionRevision() {
+            if(!Version.Name.Contains("Rev")) return false;
+            if(Version.Name.Contains("Gamepass")) return true;
+
+            return Version.Name.Contains("Rev 2") || Version.Name.Contains("Rev 3");
+        }
+
         private int[] GetOpeningCutsceneIDs() {
             var arr = new int[4] { 0, 0, 0, 0 };
 
@@ -1116,7 +1124,7 @@ namespace DESpeedrunUtil.Memory {
                 else if(versionMajor == 2) arr = INTRO_CUTSCENE_IDS_2_1;
                 else if(versionMajor == 3 || versionMajor == 4) arr = INTRO_CUTSCENE_IDS_3_0;
                 else if(versionMajor == 5) arr = INTRO_CUTSCENE_IDS_5_0;
-                else if(versionMajor == 6) arr = (Version.Name.Contains("6.66 Rev 2") ? INTRO_CUTSCENE_IDS_6_66_R2 : INTRO_CUTSCENE_IDS_6_0);
+                else if(versionMajor == 6) arr = (CheckVersionRevision() ? INTRO_CUTSCENE_IDS_6_66_R2 : INTRO_CUTSCENE_IDS_6_0);
             }
 
             return arr;
