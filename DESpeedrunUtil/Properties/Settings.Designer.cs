@@ -574,5 +574,17 @@ namespace DESpeedrunUtil.Properties {
                 this["ManualAltTab"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("192")]
+        public int DevConsoleKey {
+            get {
+                return ((int)(this["DevConsoleKey"]));
+            }
+            set {
+                this["DevConsoleKey"] = value;
+            }
+        }
     }
 }

@@ -46,6 +46,8 @@
             settingsConsoleHotkeyDescription = new TextBox();
             settingsConsoleHotkeyCheckbox = new CheckBox();
             settingsManualAltTabCheckbox = new CheckBox();
+            settingsResetRunConsoleKey = new Label();
+            settingsDevConsoleKeyDescription = new TextBox();
             ((System.ComponentModel.ISupportInitialize) settingsFontSlider).BeginInit();
             SuspendLayout();
             // 
@@ -202,7 +204,7 @@
             settingsResetBindDescription.Multiline = true;
             settingsResetBindDescription.Name = "settingsResetBindDescription";
             settingsResetBindDescription.ReadOnly = true;
-            settingsResetBindDescription.Size = new Size(315, 182);
+            settingsResetBindDescription.Size = new Size(315, 161);
             settingsResetBindDescription.TabIndex = 36;
             settingsResetBindDescription.Text = resources.GetString("settingsResetBindDescription.Text");
             // 
@@ -313,12 +315,42 @@
             settingsManualAltTabCheckbox.UseVisualStyleBackColor = true;
             settingsManualAltTabCheckbox.CheckedChanged += GenericCheckbox_CheckChanged;
             // 
+            // settingsResetRunConsoleKey
+            // 
+            settingsResetRunConsoleKey.BackColor = Color.FromArgb(  70,   70,   70);
+            settingsResetRunConsoleKey.BorderStyle = BorderStyle.FixedSingle;
+            settingsResetRunConsoleKey.Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsResetRunConsoleKey.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsResetRunConsoleKey.Location = new Point(48, 507);
+            settingsResetRunConsoleKey.Name = "settingsResetRunConsoleKey";
+            settingsResetRunConsoleKey.Padding = new Padding(0, 3, 0, 0);
+            settingsResetRunConsoleKey.Size = new Size(135, 26);
+            settingsResetRunConsoleKey.TabIndex = 45;
+            settingsResetRunConsoleKey.Tag = "hkConsoleKey";
+            settingsResetRunConsoleKey.Click += HotkeyAssignment_FieldSelected;
+            // 
+            // settingsDevConsoleKeyDesc
+            // 
+            settingsDevConsoleKeyDescription.BackColor = Color.FromArgb(  35,   35,   35);
+            settingsDevConsoleKeyDescription.BorderStyle = BorderStyle.None;
+            settingsDevConsoleKeyDescription.Font = new Font("Eternal UI 2", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            settingsDevConsoleKeyDescription.ForeColor = Color.FromArgb(  230,   230,   230);
+            settingsDevConsoleKeyDescription.Location = new Point(189, 513);
+            settingsDevConsoleKeyDescription.Multiline = true;
+            settingsDevConsoleKeyDescription.Name = "settingsDevConsoleKeyDesc";
+            settingsDevConsoleKeyDescription.ReadOnly = true;
+            settingsDevConsoleKeyDescription.Size = new Size(89, 15);
+            settingsDevConsoleKeyDescription.TabIndex = 47;
+            settingsDevConsoleKeyDescription.Text = "Dev Console Key";
+            // 
             // SettingsPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(  35,   35,   35);
             ClientSize = new Size(764, 547);
+            Controls.Add(settingsDevConsoleKeyDescription);
+            Controls.Add(settingsResetRunConsoleKey);
             Controls.Add(settingsManualAltTabCheckbox);
             Controls.Add(settingsConsoleHotkeyDescription);
             Controls.Add(settingsConsoleHotkeyCheckbox);
@@ -377,5 +409,7 @@
         private TextBox settingsConsoleHotkeyDescription;
         private CheckBox settingsConsoleHotkeyCheckbox;
         private CheckBox settingsManualAltTabCheckbox;
+        private Label settingsResetRunConsoleKey;
+        private TextBox settingsDevConsoleKeyDescription;
     }
 }

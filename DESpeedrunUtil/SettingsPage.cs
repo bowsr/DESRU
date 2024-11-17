@@ -1,4 +1,7 @@
 ﻿using DESpeedrunUtil.Hotkeys;
+using DESpeedrunUtil.Memory;
+using System.Buffers;
+using WindowsInput.Events;
 using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Interop.DLLImports;
 
@@ -53,15 +56,22 @@ namespace DESpeedrunUtil
             else if(e.Alt) pressedKey = HotkeyHandler.ModKeySelector(2);
             else pressedKey = e.KeyCode;
             if(pressedKey == Keys.Escape) pressedKey = Keys.None;
-            bool isValid = !INVALID_KEYS.Contains(pressedKey);
+
+            if(_selectedHKField.Tag.ToString().ToLower().Contains("hkconsole")) {
+                MemoryHandler.DevConsoleKey = (KeyCode) pressedKey;
+            } else {
+                bool isValid = !INVALID_KEYS.Contains(pressedKey);
+
+                if(isValid) {
+                    HotkeyHandler.ChangeHotkeys(pressedKey, 7);
+                }
+                MainWindow.Instance.UpdateHotkeyAndInputFields();
+            }
+
+            UpdateHotkeyFields();
 
             _hkAssignmentMode = false;
             _selectedHKField = null;
-            if(isValid) {
-                HotkeyHandler.ChangeHotkeys(pressedKey, 7);
-            }
-            MainWindow.Instance.UpdateHotkeyAndInputFields();
-            UpdateHotkeyFields();
             e.Handled = true;
         }
 
@@ -140,8 +150,11 @@ namespace DESpeedrunUtil
 
         private void UpdateHotkeyFields() {
             settingsResetRunHotkeyField.Text = HotkeyHandler.TranslateKeyNames(HotkeyHandler.Instance.ResetRunHotkey);
+            settingsResetRunConsoleKey.Text = HotkeyHandler.TranslateKeyNames((Keys) MemoryHandler.DevConsoleKey);
             settingsResetRunHotkeyField.ForeColor = COLOR_TEXT_FORE;
             settingsResetRunHotkeyField.BackColor = COLOR_TEXT_BACK;
+            settingsResetRunConsoleKey.ForeColor = COLOR_TEXT_FORE;
+            settingsResetRunConsoleKey.BackColor = COLOR_TEXT_BACK;
         }
 
         private void UpdateOSDFontSize() {
@@ -165,6 +178,7 @@ namespace DESpeedrunUtil
             settingsFontSizeCheckbox.Font = MainWindow.EternalUIRegular;
             settingsConsoleHotkeyCheckbox.Font = MainWindow.EternalUIRegular;
             settingsResetRunHotkeyField.Font = MainWindow.EternalUIRegular;
+            settingsResetRunConsoleKey.Font = MainWindow.EternalUIRegular;
             settingsManualAltTabCheckbox.Font = MainWindow.EternalUIRegular;
 
             settingsCloseButton.Font = MainWindow.EternalUIBold;
@@ -175,6 +189,7 @@ namespace DESpeedrunUtil
             settingsResetBindDescription.Font = MainWindow.EternalUIRegular10;
             settingsFontSizeDescription.Font = MainWindow.EternalUIRegular10;
             settingsConsoleHotkeyDescription.Font = MainWindow.EternalUIRegular10;
+            settingsDevConsoleKeyDescription.Font = MainWindow.EternalUIRegular10;
         }
     }
 }

@@ -7,6 +7,7 @@ using Linearstar.Windows.RawInput;
 using Newtonsoft.Json;
 using Serilog;
 using System.Diagnostics;
+using WindowsInput.Events;
 using static DESpeedrunUtil.Define.Constants;
 using static DESpeedrunUtil.Define.Structs;
 using static DESpeedrunUtil.Interop.DLLImports;
@@ -509,6 +510,7 @@ namespace DESpeedrunUtil {
             _ = new HotkeyHandler((Keys) Properties.Settings.Default.ResScaleKey, (Keys) Properties.Settings.Default.ResToggleKey0,
                 (Keys) Properties.Settings.Default.ResToggleKey1, (Keys) Properties.Settings.Default.ResToggleKey2,
                 (Keys) Properties.Settings.Default.ResToggleKey3, (Keys) Properties.Settings.Default.ResetRunHotkey, fpsJson);
+            MemoryHandler.DevConsoleKey = (KeyCode) Properties.Settings.Default.DevConsoleKey;
             _fpsDefault = Properties.Settings.Default.DefaultFPSCap;
             autorunMacroCheckbox.Checked = Properties.Settings.Default.MacroEnabled;
             _enableMacro = Properties.Settings.Default.MacroEnabled;

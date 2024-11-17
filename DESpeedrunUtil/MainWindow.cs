@@ -1156,6 +1156,7 @@ namespace DESpeedrunUtil {
             Properties.Settings.Default.RightAlignSpeedometer = rightAlignCheckbox.Checked;
             Properties.Settings.Default.HideSpeedometerDuringLoads = hideDuringLoadsCheckbox.Checked;
             Properties.Settings.Default.ResetRunHotkey = (int) HotkeyHandler.Instance.ResetRunHotkey;
+            Properties.Settings.Default.DevConsoleKey = (int) MemoryHandler.DevConsoleKey;
             int radio = 1;
             if(velocityRadioNone.Checked) radio = 0;
             if(velocityRadioVertical.Checked) radio = 2;

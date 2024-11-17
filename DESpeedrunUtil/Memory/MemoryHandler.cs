@@ -21,6 +21,8 @@ namespace DESpeedrunUtil.Memory {
         public static List<CheatOffsets> CheatOffsetList = new();
         CheatOffsets _currentCheatOffsets;
 
+        public static KeyCode DevConsoleKey = KeyCode.Oem3;
+
         DeepPointer? _maxHzDP, _metricsDP, _rampJumpDP, _minResDP, _skipIntroDP, _aliasingDP, _unDelayDP, _continueDP,
                     _row1DP, _row6DP,
                     _gpuVendorDP, _gpuNameDP, _cpuDP, _fontSizeDP, _advConsoleDP,
@@ -402,15 +404,15 @@ namespace DESpeedrunUtil.Memory {
                 .Wait(250);
             if(Properties.Settings.Default.AdvancedKeypress) {
                 Log.Verbose("User enabled Advanced Console Keypress option");
-                eventBuilder.ClickChord(KeyCode.RControl, KeyCode.RShift, KeyCode.Oem3);
+                eventBuilder.ClickChord(KeyCode.RControl, KeyCode.RShift, DevConsoleKey);
             } else {
-                eventBuilder.ClickChord(KeyCode.RShift, KeyCode.Oem3);
+                eventBuilder.ClickChord(KeyCode.RShift, DevConsoleKey);
             }
             eventBuilder.Wait(50)
                 .Click(KeyCode.Backspace).Wait(5).Click(KeyCode.Backspace).Wait(10)
                 .Click(cmd).Wait(50)
                 .Click(KeyCode.Return).Wait(50)
-                .Click(KeyCode.Oem3).Wait(100);
+                .Click(DevConsoleKey).Wait(100);
 
             _waitForLoad = true;
             _resetRunLeftLoad = false;
