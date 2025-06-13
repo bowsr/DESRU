@@ -93,6 +93,7 @@ namespace DESpeedrunUtil {
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
             Log.Information("Selected hotkey field. tag={Tag} m1={Mouse1}", (string) ((Label) sender).Tag, _mouse1Pressed);
             if(_mouse1Pressed) {
+                Log.Information("MOUSE1 was pressed. Canceling hotkey field selection.");
                 _mouse1Pressed = false;
                 return;
             }
@@ -105,6 +106,7 @@ namespace DESpeedrunUtil {
                 this.ActiveControl = null;
 
                 _hkAssignmentMode = true;
+                Log.Information("Hotkey Assignment Mode active");
             }
         }
         #endregion

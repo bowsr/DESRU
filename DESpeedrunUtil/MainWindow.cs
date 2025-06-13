@@ -525,6 +525,8 @@ namespace DESpeedrunUtil {
             resPercent2.Text = _resPercent2 != -1 ? _resPercent2.ToString() : string.Empty;
             resPercent3.Text = _resPercent3 != -1 ? _resPercent3.ToString() : string.Empty;
             targetFPSInput.Text = _targetFPS.ToString();
+
+            Log.Information("Hotkey Assignment Mode inactive");
         }
 
         /// <summary>
