@@ -91,6 +91,7 @@ namespace DESpeedrunUtil {
         }
 
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
+            Log.Information("Selected hotkey field. tag={Tag} m1={Mouse1}", (string) ((Label) sender).Tag, _mouse1Pressed);
             if(_mouse1Pressed) {
                 _mouse1Pressed = false;
                 return;

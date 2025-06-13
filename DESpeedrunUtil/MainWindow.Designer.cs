@@ -258,7 +258,6 @@
             hotkeyField0.Size = new Size(135, 26);
             hotkeyField0.TabIndex = 2;
             hotkeyField0.Tag = "hkMacroDown";
-            hotkeyField0.Click += HotkeyAssignment_FieldSelected;
             // 
             // hotkeyField1
             // 
@@ -272,7 +271,6 @@
             hotkeyField1.Size = new Size(135, 26);
             hotkeyField1.TabIndex = 3;
             hotkeyField1.Tag = "hkMacroUp";
-            hotkeyField1.Click += HotkeyAssignment_FieldSelected;
             // 
             // autorunMacroCheckbox
             // 
@@ -428,7 +426,6 @@
             hotkeyField4.Size = new Size(95, 26);
             hotkeyField4.TabIndex = 12;
             hotkeyField4.Tag = "hkFps2";
-            hotkeyField4.Click += HotkeyAssignment_FieldSelected;
             // 
             // fpsKey1Label
             // 
@@ -453,7 +450,6 @@
             hotkeyField2.Size = new Size(95, 26);
             hotkeyField2.TabIndex = 8;
             hotkeyField2.Tag = "hkFps0";
-            hotkeyField2.Click += HotkeyAssignment_FieldSelected;
             // 
             // fpsKey0Label
             // 
@@ -478,7 +474,6 @@
             hotkeyField3.Size = new Size(95, 26);
             hotkeyField3.TabIndex = 9;
             hotkeyField3.Tag = "hkFps1";
-            hotkeyField3.Click += HotkeyAssignment_FieldSelected;
             // 
             // versionDropDownSelector
             // 
@@ -691,7 +686,6 @@
             hotkeyField5.Size = new Size(135, 26);
             hotkeyField5.TabIndex = 30;
             hotkeyField5.Tag = "hkResToggle";
-            hotkeyField5.Click += HotkeyAssignment_FieldSelected;
             // 
             // fpsPanel1
             // 
