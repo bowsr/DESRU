@@ -91,7 +91,7 @@ namespace DESpeedrunUtil {
             }
             UpdateHotkeyAndInputFields();
         }
-
+        /*
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
             var keyState = GetAsyncKeyState(Keys.LButton);
             var keyBit = keyState & 0x01;
@@ -103,6 +103,26 @@ namespace DESpeedrunUtil {
             }
 
             if(keyBit == 1) {
+                _selectedHKField = (Label) sender;
+                _selectedHKField.Text = "Press a key";
+                _selectedHKField.BackColor = Color.WhiteSmoke;
+                _selectedHKField.ForeColor = Color.Black;
+                this.ActiveControl = null;
+
+                _hkAssignmentMode = true;
+                Log.Information("Hotkey Assignment Mode active");
+            }
+        }
+        */
+        private void HotkeyAssignment_MouseFieldSelected(object sender, MouseEventArgs e) {
+            Log.Information("Selected hotkey field. tag={Tag} m1={Mouse1} MouseButton={Button}", (string) ((Label) sender).Tag, _mouse1Pressed, e.Button);
+            if(_mouse1Pressed) {
+                Log.Information("MOUSE1 was pressed. Canceling hotkey field selection.");
+                _mouse1Pressed = false;
+                return;
+            }
+
+            if(e.Button == MouseButtons.Left) {
                 _selectedHKField = (Label) sender;
                 _selectedHKField.Text = "Press a key";
                 _selectedHKField.BackColor = Color.WhiteSmoke;

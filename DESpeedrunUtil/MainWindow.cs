@@ -1200,7 +1200,8 @@ namespace DESpeedrunUtil {
                 if(c.Tag != null) {
                     string tag = (string) c.Tag;
                     if(tag.StartsWith("hk")) {
-                        c.Click += new EventHandler(HotkeyAssignment_FieldSelected);
+                        //c.Click += new EventHandler(HotkeyAssignment_FieldSelected);
+                        c.MouseClick += new MouseEventHandler(HotkeyAssignment_MouseFieldSelected);
                         _hotkeyFields.Add((Label) c);
                     } else if(tag.StartsWith("fpscap")) {
                         c.KeyPress += new KeyPressEventHandler(Input_KeyPressNumericOnly);
