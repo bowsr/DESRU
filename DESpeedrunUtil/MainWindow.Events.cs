@@ -59,11 +59,13 @@ namespace DESpeedrunUtil {
             e.Handled = true;
         }
         private void HotkeyAssignment_MouseDown(object sender, MouseEventArgs e) {
+            Log.Verbose("HotkeyAssignment_MouseDown");
             if(!_hkAssignmentMode) {
                 if((sender is MainWindow || (sender is Panel && ((Control) sender).Name == "collapsiblePanel") || (sender is DESRUShadowLabel && ((Label) sender).Text == WINDOW_TITLE)) && !_mouseDown) {
                     _mouseDown = true;
                     _lastLocation = e.Location;
                 }
+                Log.Verbose("Not in assignment mode. Exiting function.");
                 return;
             }
 
@@ -91,14 +93,16 @@ namespace DESpeedrunUtil {
         }
 
         private void HotkeyAssignment_FieldSelected(object sender, EventArgs e) {
-            Log.Information("Selected hotkey field. tag={Tag} m1={Mouse1}", (string) ((Label) sender).Tag, _mouse1Pressed);
+            var keyState = GetAsyncKeyState(Keys.LButton);
+            var keyBit = keyState & 0x01;
+            Log.Information("Selected hotkey field. tag={Tag} m1={Mouse1} GetAsyncKeyState={State}|{Bit}", (string) ((Label) sender).Tag, _mouse1Pressed, keyState, keyBit);
             if(_mouse1Pressed) {
                 Log.Information("MOUSE1 was pressed. Canceling hotkey field selection.");
                 _mouse1Pressed = false;
                 return;
             }
 
-            if((GetAsyncKeyState(Keys.LButton) & 0x01) == 1) {
+            if(keyBit == 1) {
                 _selectedHKField = (Label) sender;
                 _selectedHKField.Text = "Press a key";
                 _selectedHKField.BackColor = Color.WhiteSmoke;
